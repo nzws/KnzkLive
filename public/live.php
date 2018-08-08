@@ -64,7 +64,7 @@ $my = getMe();
     crossorigin="anonymous"></script>
   <script>
     function checkLive() {
-      fetch("http://<?=$slot["server"]?>/hls/<?=$id?>.m3u8", {
+      fetch("http://<?=$slot["server"]?>/hls/<?=$id?>stream.m3u8", {
         method: 'GET'
       }).then(function (response) {
         if (response.ok) {

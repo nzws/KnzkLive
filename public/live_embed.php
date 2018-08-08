@@ -25,7 +25,7 @@ if (!$_GET["id"]) {
 
 <body>
     <video id="my-video" class="video-js" controls preload="auto" data-setup="{}">
-    <source src="http://<?=$_GET["rtmp"]?>/hls/<?=$_GET["id"]?>.m3u8" type='application/x-mpegURL'>
+    <source src="http://<?=$_GET["rtmp"]?>/hls/<?=$_GET["id"]?>stream.m3u8" type='application/x-mpegURL'>
     <p class="vjs-no-js">
       To view this video please enable JavaScript, and consider upgrading to a web browser that
       <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>

@@ -68,7 +68,7 @@ if ($_GET["mode"] == "shutdown") {
         <div class="input-group-prepend">
           <span class="input-group-text" id="key">ストリームキー</span>
         </div>
-        <input type="text" class="form-control" aria-describedby="key" readonly value="<?=$live["id"]?>">
+        <input type="text" class="form-control" aria-describedby="key" readonly value="<?=$live["id"]?>stream">
       </div>
       </p>
         <p>
