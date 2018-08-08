@@ -1,0 +1,22 @@
+{
+  "name": "knzklive",
+  "version": "1.0.0",
+  "description": "KnzkLive",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuzulabo/KnzkLive.git"
+  },
+  "author": "nzws <git@nzws.me>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/yuzulabo/KnzkLive/issues"
+  },
+  "homepage": "https://github.com/yuzulabo/KnzkLive#readme"
+}
