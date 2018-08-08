@@ -1,6 +1,6 @@
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?>" style="margin: 10px auto;">
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;border-radius: 5px">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="<?=u("")?>">
       KnzkLive
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

@@ -34,11 +34,11 @@ if ($_POST["title"]) {
     $mysqli->close();
 
     $mysqli = db_start();
-    $stmts = $mysqli->prepare("SELECT * FROM `live` WHERE is_live = 1 AND user_id = ?;");
-    $stmts->bind_param("s", $my["id"]);
-    $stmts->execute();
-    $row = db_fetch_all($stmts);
-    $stmts->close();
+    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE is_live = 1 AND user_id = ?;");
+    $stmt->bind_param("s", $my["id"]);
+    $stmt->execute();
+    $row = db_fetch_all($stmt);
+    $stmt->close();
     $mysqli->close();
     
     setUserLive($row[0]["id"]);

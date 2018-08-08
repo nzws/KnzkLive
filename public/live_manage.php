@@ -28,10 +28,10 @@ if ($_GET["mode"] == "shutdown") {
     setUserLive(0);
 
     $mysqli = db_start();
-    $stmts = $mysqli->prepare("UPDATE `live` SET is_live = 0 WHERE id = ?;");
-    $stmts->bind_param("s", $live["id"]);
-    $stmts->execute();
-    $stmts->close();
+    $stmt = $mysqli->prepare("UPDATE `live` SET is_live = 0 WHERE id = ?;");
+    $stmt->bind_param("s", $live["id"]);
+    $stmt->execute();
+    $stmt->close();
     $mysqli->close();
 
     header("Location: ".$env["RootUrl"]);
