@@ -46,10 +46,21 @@ $my = getMe();
         </p>
       </div>
       <div class="col-md-3">
-        <div class="form-group">
-          <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)"></textarea>
-        </div>
-        <button class="btn btn-primary" >コメント</button>
+        <?php if ($my) : ?>
+          <div class="form-group">
+            <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)" onkeyup="check_limit()"></textarea>
+          </div>
+          <div class="input-group">
+            <button class="btn btn-primary" onclick="post_comment()">コメント</button>
+            <b id="limit"></b>
+          </div>
+        <?php else : ?>
+          <p>
+            <span class="text-danger">* コメントを投稿するにはログインしてください。</span>
+          </p>
+        <?php endif; ?>
+
+        <div id="comments"></div>
       </div>
     </div>
   </div>
@@ -63,6 +74,21 @@ $my = getMe();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
   <script>
+  const hashtag = " #knzklive_<?=$id?>";
+
+    function startWatching() {
+      check_limit();
+    }
+
+    function check_limit() {
+      const l = document.getElementById("limit");
+      if (!l) return; //未ログイン
+
+      const d = document.getElementById("toot").value;
+      const limit = 500 - hashtag.length - d.length;
+      l.innerText = limit;
+    }
+
     function checkLive() {
       fetch("http://<?=$slot["server"]?>/hls/<?=$id?>stream.m3u8", {
         method: 'GET'
@@ -74,19 +100,16 @@ $my = getMe();
         }
       }).then(function (data) {
         console.log("[OK]");
-        //startWatching();
+        startWatching();
       }).catch(function (error) {
         console.warn(error);
         document.getElementById("err_live").className = "text-danger";
       });
     }
+
     window.onload = function () {
       checkLive();
     };
-
-    function startWatching() {
-
-    }
   </script>
 </body>
 </html>

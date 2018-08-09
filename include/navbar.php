@@ -14,7 +14,7 @@
         if ($my) : ?>
             <?php if ($my["isLive"]) : ?>
                 <form class="form-inline">
-                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を始める</b></a>
+                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["liveNow"] ? "管理" : "始める"?></b></a>
                 </form>
             <?php endif; ?>
 
@@ -28,7 +28,7 @@
           </li>
         <?php else : ?>
             <form class="form-inline">
-              <a class="btn btn-outline-warning" href="<?=u("login")?>"><b>Knzk.meでログイン</b></a>
+              <a class="btn btn-outline-warning" href="<?=u("login")?>"><b><?=$env["masto_login"]["domain"]?>でログイン</b></a>
             </form>
         <?php endif; ?>
         </ul>
