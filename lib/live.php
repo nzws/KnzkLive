@@ -3,7 +3,8 @@ function getAbleSlot() {
     global $env;
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live_slot` WHERE is_testing = ? AND used < max;");
-    $stmt->bind_param("s", $env["is_testing"]);
+    $testing = $env["is_testing"] ? 1 : 0;
+    $stmt->bind_param("s", $testing);
     $stmt->execute();
     $row = db_fetch_all($stmt);
     $stmt->close();

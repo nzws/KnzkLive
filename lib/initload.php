@@ -26,7 +26,7 @@ if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
 
 session_start();
 if (!isset($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = $env["is_debug"] ? "CSRF_TOKEN_FOR_DEBUG" : base64_encode(openssl_random_pseudo_bytes(32));
+  $_SESSION['csrf_token'] = $env["is_testing"] ? "CSRF_TOKEN_FOR_DEBUG" : base64_encode(openssl_random_pseudo_bytes(32));
 }
 
 if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token'])) {
