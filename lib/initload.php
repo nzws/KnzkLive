@@ -14,6 +14,10 @@ if (file_exists($confpath)) {
     exit("SERVER ERROR: Config file is not found");
 }
 
+if ($env["is_testing"]) {
+  ini_set('display_errors', 1);
+}
+
 if ($env["is_maintenance"]) {
     http_response_code(503);
     //include PATH."public/errors/503.html";

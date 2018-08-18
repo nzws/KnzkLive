@@ -19,6 +19,11 @@ if ($live["is_live"] == 0) {
 }
 $slot = getSlot($live["slot_id"]);
 $my = getMe();
+if (!$my && $live["privacy_mode"] == "3") {
+    http_response_code(403);
+    exit("ERR:この配信は非公開です。");
+}
+$liveUser = getUser($live["user_id"]);
 ?>
 <!doctype html>
 <html lang="ja">
@@ -40,7 +45,9 @@ $my = getMe();
         </div>
         <p>
           <h3><?=$live["name"]?></h3>
-        </p> 
+          <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/> <?=$liveUser["name"]?>
+        </p>
+        <p><?=$live["description"]?></p>
         <p class="invisible" id="err_live">
           * 配信を読み込めませんでした。まだデータが送信されていないか、配信に問題が発生している可能性があります。
         </p>

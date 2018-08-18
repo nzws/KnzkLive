@@ -40,12 +40,13 @@ if (!$code) {
         if ($json_acct["id"]) {
             $mysqli = db_start();
             $acct = s($json_acct["acct"]."@".$env["masto_login"]["domain"]);
+            $misc = json_encode(["avatar" => $json_acct["avatar_static"], "header" => $json_acct["header_static"]]);
             if (getUser($acct, "acct")) {
-                $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `ip` = ?  WHERE `acct` = ?;");
-                $stmt->bind_param('sss', s($json_acct["display_name"]), $_SERVER["REMOTE_ADDR"], $acct);
+                $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `ip` = ?, `misc` = ?  WHERE `acct` = ?;");
+                $stmt->bind_param('ssss', s($json_acct["display_name"]), $_SERVER["REMOTE_ADDR"], $misc, $acct);
             } else { //新規
-                $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `isLive`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, '0');");
-                $stmt->bind_param('sss', s($json_acct["display_name"]), $acct, $_SERVER["REMOTE_ADDR"]);
+                $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `isLive`, `liveNow`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, '0', '0', ?);");
+                $stmt->bind_param('ssss', s($json_acct["display_name"]), $acct, $_SERVER["REMOTE_ADDR"], $misc);
             }
             $stmt->execute();
             $stmt->close();

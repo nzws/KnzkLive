@@ -12,6 +12,10 @@ function getUser($id, $mode = "") {
     $row = db_fetch_all($stmt);
     $stmt->close();
     $mysqli->close();
+    
+    if ($row[0]["id"]) {
+        $row[0]["misc"] = json_decode($row[0]["misc"], true);
+    }
 
     return $row[0]["id"] ? $row[0] : false;
 }

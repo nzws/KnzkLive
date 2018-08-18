@@ -17,12 +17,14 @@
                   <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["liveNow"] ? "管理" : "始める"?></b></a>
                 </form>
             <?php endif; ?>
-
           <li class="nav-item dropdown active mr-sm-1">
-            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <b><?=$my["name"]?></b>
+            <a class="nav-link header_avatar_dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#" disabled><b><?=$my["name"]?></b></a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
               <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
             </div>
           </li>
