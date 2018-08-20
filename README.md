@@ -4,7 +4,7 @@
   </h1>
 
   <p align="center">
-    A live-broadcasting website for @Knzkoniisan
+    広告なし, 配信時間無制限の生配信コミュニティ！
   </p>
 </div>
 

@@ -52,3 +52,16 @@ function getLive($id) {
     $mysqli->close();
     return $row[0]["id"] ? $row[0] : false;
 }
+
+function getAllLive($notId) {
+    if (!isset($notId)) $notId = 0;
+
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_live = 1 AND id != ? ORDER BY viewers_count desc;");
+    $stmt->bind_param("s", $notId);
+    $stmt->execute();
+    $row = db_fetch_all($stmt);
+    $stmt->close();
+    $mysqli->close();
+    return $row[0]["id"] ? $row : false;
+}

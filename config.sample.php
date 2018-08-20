@@ -1,4 +1,6 @@
 <?php
+$env["Title"] = "KnzkLive : 広告なし, 配信時間無制限の生配信コミュニティ！";
+
 $env["RootUrl"] = "/";
 
 $env["masto_login"]["domain"] = "knzk.me";

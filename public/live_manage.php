@@ -46,7 +46,7 @@ if ($_GET["mode"] == "shutdown") {
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-  <title>配信を管理 - KnzkLive</title>
+  <title>配信を管理 - <?=$env["Title"]?></title>
 </head>
 <body>
   <?php include "../include/navbar.php"; ?>

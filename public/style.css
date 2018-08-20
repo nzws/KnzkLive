@@ -6,6 +6,10 @@ html {
   color: #fff;
 }
 
+a, a:hover {
+  color: #4ea2df;
+}
+
 .invisible {
   display: none;
 }
@@ -19,4 +23,21 @@ html {
 .header_avatar_dropdown {
   padding: 0;
   padding-left: .5rem;
+}
+
+.footer {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.top_lists {
+  width: 100%;
+  padding: 10px 0;
+  background: #333;
+}
+
+.top_lists .no {
+  text-align: center;
+  color: #606984;
+  margin: 50px 0;
 }

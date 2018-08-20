@@ -10,7 +10,7 @@ if (!getMe() && $live["privacy_mode"] == "3") {
     http_response_code(403);
     exit("ERR:この配信は非公開です。");
 }
-$mode = "dash";
+$mode = "hls";
 ?>
 <!DOCTYPE html>
 <html>
