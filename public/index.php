@@ -11,6 +11,14 @@ $lives = getAllLive();
     crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
   <title>トップ - <?=$env["Title"]?></title>
+  <style>
+    .nav-container {
+      margin: 10px auto 0;
+    }
+    .navbar {
+      border-radius: 5px 5px 0 0;
+    }
+  </style>
 </head>
 <body>
   <?php include "../include/navbar.php"; ?>

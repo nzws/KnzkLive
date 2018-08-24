@@ -41,3 +41,11 @@ a, a:hover {
   color: #606984;
   margin: 50px 0;
 }
+
+.nav-container {
+  margin: 10px auto;
+}
+
+.navbar {
+  border-radius: 5px;
+}

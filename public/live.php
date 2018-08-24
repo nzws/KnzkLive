@@ -34,6 +34,13 @@ $liveUser = getUser($live["user_id"]);
     crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
   <title><?=$live["name"]?> - <?=$env["Title"]?></title>
+  <style>
+    #comments {
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: 600px;
+    }
+  </style>
 </head>
 <body>
   <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
@@ -53,44 +60,156 @@ $liveUser = getUser($live["user_id"]);
         </p>
       </div>
       <div class="col-md-3">
-        <?php if ($my) : ?>
-          <div class="form-group">
-            <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)" onkeyup="check_limit()"></textarea>
-          </div>
-          <div class="input-group">
-            <button class="btn btn-primary" onclick="post_comment()">コメント</button>
-            <b id="limit"></b>
-          </div>
-        <?php else : ?>
-          <p>
-            <span class="text-danger">* コメントを投稿するにはログインしてください。</span>
+        <div>
+          <?php if ($my) : ?>
+            <div class="form-group">
+              <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)" onkeyup="check_limit()"></textarea>
+            </div>
+            <div class="input-group">
+              <button class="btn btn-primary" onclick="post_comment()">コメント</button>　<b id="limit"></b>
+            </div>
+          <?php else : ?>
+            <p>
+              <span class="text-danger">* コメントを投稿するにはログインしてください。</span>
+            </p>
+          <?php endif; ?>
+          <p class="invisible" id="err_comment">
+            * コメントの読み込み中にエラーが発生しました。 <a href="javascript:loadComment()">再読込</a>
           </p>
-        <?php endif; ?>
-
+          <hr>
+        </div>
         <div id="comments"></div>
       </div>
     </div>
   </div>
-
+<script id="comment_tmpl" type="text/html">
+<div id="post_<%=id%>">
+  <div class="row">
+    <div class="col-2">
+      <img src="<%=account['avatar']%>" class="avatar_img_navbar rounded-circle"/>
+    </div>
+    <div class="col-10">
+      <b><%=account['username']%></b> <small>@<%=account['acct']%></small>
+      <%=content%>
+    </div>
+  </div>
+  <hr>
+</div>
+</script>
 <?php include "../include/footer.php"; ?>
+<script src="tmpl.min.js"></script> 
   <script>
-  const hashtag = " #knzklive_<?=$id?>";
+  const hashtag_o = "knzklive_<?=$id?>";
+  const hashtag = " #" + hashtag_o;
+  const inst = "<?=$env["masto_login"]["domain"]?>";
+  const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
+  var heartbeat, cm_ws;
+  var api_header = {'content-type': 'application/json'};
+  if (token) api_header["Authorization"] = 'Bearer ' + token;
+
+    function elemId(_id) {
+      return document.getElementById(_id);
+    }
 
     function startWatching() {
-      check_limit();
+
+    }
+
+    function loadComment() {
+      elemId("err_comment").className = "invisible";
+
+    fetch('https://' + inst + '/api/v1/timelines/tag/' + hashtag_o, {
+      headers: api_header,
+      method: 'GET'
+    })
+      .then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      })
+      .then(function(json) {
+        if (json) {
+          var reshtml = "";
+          var ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
+          if (token) ws_url += "&access_token=" + token;
+
+          cm_ws = new WebSocket(ws_url);
+          cm_ws.onopen = function() {
+            heartbeat = setInterval(() => cm_ws.send("ping"), 5000)
+            cm_ws.onmessage = function(message) {
+                var ws_resdata = JSON.parse(message.data);
+                var ws_reshtml = JSON.parse(ws_resdata.payload);
+
+                if (ws_resdata.event === 'update') {
+                  if (ws_reshtml['id']) {
+                    elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
+                  }
+                } else if (ws_resdata.event === 'delete') {
+                  var del_toot = elemId('post_' + ws_resdata.payload);
+                  if (del_toot) del_toot.parentNode.removeChild(del_toot);
+                }
+            };
+
+            cm_ws.onclose = function() {
+              clearInterval(heartbeat);
+              loadComment();
+            };
+          };
+          cm_ws.onerror = function() {
+            console.warn('err:ws');
+          };
+
+          var i = 0;
+          while (json[i]) {
+            reshtml += tmpl("comment_tmpl", json[i]);
+            i++;
+          }
+
+          elemId("comments").innerHTML = reshtml;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        elemId("err_comment").className = "text-danger";
+      });
+    }
+
+    function post_comment() {
+      fetch('https://' + inst + '/api/v1/statuses', {
+        headers: api_header,
+        method: 'POST',
+        body: JSON.stringify({status: elemId("toot").value + hashtag})
+      })
+        .then(function(response) {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        })
+        .then(function(json) {
+          if (json) {
+            elemId("toot").value = "";
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          elemId("toot").value += "\n[投稿中にエラーが発生しました]";
+        });
     }
 
     function check_limit() {
-      const l = document.getElementById("limit");
-      if (!l) return; //未ログイン
-
-      const d = document.getElementById("toot").value;
+      if (!token) return; //未ログイン
+      const l = elemId("limit");
+      const d = elemId("toot").value;
       const limit = 500 - hashtag.length - d.length;
       l.innerText = limit;
     }
 
     function checkLive() {
-      fetch("http://<?=$slot["server"]?>/hls/<?=$id?>stream.m3u8", {
+      fetch("<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$slot["server"]?>/hls/<?=$id?>stream.m3u8", {
         method: 'GET'
       }).then(function (response) {
         if (response.ok) {
@@ -103,12 +222,14 @@ $liveUser = getUser($live["user_id"]);
         startWatching();
       }).catch(function (error) {
         console.warn(error);
-        document.getElementById("err_live").className = "text-danger";
+        elemId("err_live").className = "text-danger";
       });
     }
 
     window.onload = function () {
       checkLive();
+      check_limit();
+      loadComment();
     };
   </script>
 </body>

@@ -53,7 +53,7 @@ if ($_GET["mode"] == "shutdown") {
   <div class="container">
       <p>
           <b>配信URL:</b><br>
-          <input class="form-control" type="text" value="<?=(empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . "/live?id=" . $live["id"] ?>" readonly>
+          <input class="form-control" type="text" value="<?=(empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . $env["RootUrl"] . "live?id=" . $live["id"] ?>" readonly>
       </p>
       <p>
           <b>配信サーバー情報:</b><br>

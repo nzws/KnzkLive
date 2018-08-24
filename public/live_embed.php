@@ -47,7 +47,7 @@ var player = videojs('my-video');
 
 player.ready(function() {
   player.src({
-    src: 'http://<?=$_GET["rtmp"]?>/dash/<?=$_GET["id"]?>stream.mpd',
+    src: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/dash/<?=$_GET["id"]?>stream.mpd',
     type: 'application/dash+xml'
   });
 

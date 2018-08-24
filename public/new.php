@@ -94,8 +94,8 @@ if ($_POST["title"] && $_POST["description"] && $_POST["privacy_mode"]) {
 <div class="form-check">
   <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode3" value="3">
   <label class="form-check-label" for="privacy_mode3">
-    非公開: <br>
-    <small>トップページに表示されず、視聴にはログインが必要になります</small><br>
+    非公開<br>
+    <small>トップページに表示されず、視聴にはログインが必要です</small><br>
     <small>* あなたのフォロワーでなくても、KnzkLiveにログインしていれば視聴できます</small>
   </label>
 </div>

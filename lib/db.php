@@ -7,7 +7,7 @@ function db_start() {
         echo('[DBERR]');
         exit();
     }
-    $mysqli->set_charset("utf8");
+    $mysqli->set_charset("utf8mb4");
     return $mysqli;
 }
 

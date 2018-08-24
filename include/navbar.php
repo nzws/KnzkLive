@@ -1,5 +1,5 @@
-<div class="container<?php if(isset($navmode)) echo "-fluid"; ?>" style="margin: 10px auto;">
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;border-radius: 5px">
+<div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;">
     <a class="navbar-brand" href="<?=u("")?>">
       KnzkLive
     </a>
