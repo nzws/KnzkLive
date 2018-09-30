@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/initload.php");
+require_once("../lib/bootloader.php");
 
 // http://php.net/manual/ja/function.session-destroy.php
 $_SESSION = array();

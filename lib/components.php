@@ -1,7 +1,8 @@
 <?php
-function u($p) {
+function u($p = "") {
   global $env;
-  return $env["RootUrl"].$p;
+  if (!$p && $env["is_testing"]) $p = "index";
+  return $env["RootUrl"].$p.($env["is_testing"] ? ".php" : "");
 }
 
 function s($p) {

@@ -10,8 +10,8 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
         <?php
-        if (!$my && $_SESSION["acct"]) $my = getMe();
-        if ($my) : ?>
+        if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
+        if (isset($my)) : ?>
             <?php if ($my["isLive"]) : ?>
                 <form class="form-inline">
                   <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["liveNow"] ? "管理" : "始める"?></b></a>

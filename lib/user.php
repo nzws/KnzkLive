@@ -13,19 +13,18 @@ function getUser($id, $mode = "") {
     $stmt->close();
     $mysqli->close();
     
-    if ($row[0]["id"]) {
+    if (isset($row[0]["id"])) {
         $row[0]["misc"] = json_decode($row[0]["misc"], true);
     }
 
-    return $row[0]["id"] ? $row[0] : false;
+    return isset($row[0]["id"]) ? $row[0] : false;
 }
 
 function getMe() {
-    return $_SESSION["acct"] ? getUser($_SESSION["acct"], "acct") : false;
+    return isset($_SESSION["acct"]) ? getUser($_SESSION["acct"], "acct") : false;
 }
 
 function setUserLive($id) {
-    //if (!$id) return false;
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `users` SET liveNow = ? WHERE acct = ?;");
     $stmt->bind_param("ss", $id, $_SESSION["acct"]);

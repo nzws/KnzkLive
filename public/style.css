@@ -1,51 +1,55 @@
 body,
 html {
-  width: 100%;
-  height: 100%;
-  background: #17191f;
-  color: #fff;
+    width: 100%;
+    height: 100%;
+    background: #17191f;
+    color: #fff;
 }
 
 a, a:hover {
-  color: #4ea2df;
+    color: #4ea2df;
 }
 
 .invisible {
-  display: none;
+    display: none;
 }
 
 .avatar_img_navbar {
-  width: 50px;
-  height: 50px;
-  background-color: #fff;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
 }
 
 .header_avatar_dropdown {
-  padding: 0;
-  padding-left: .5rem;
+    padding: 0;
+    padding-left: .5rem;
 }
 
 .footer {
-  text-align: center;
-  padding-top: 20px;
+    text-align: center;
+    padding-top: 20px;
 }
 
 .top_lists {
-  width: 100%;
-  padding: 10px 0;
-  background: #333;
+    width: 100%;
+    padding: 10px 0;
+    background: #333;
 }
 
 .top_lists .no {
-  text-align: center;
-  color: #606984;
-  margin: 50px 0;
+    text-align: center;
+    color: #606984;
+    margin: 50px 0;
 }
 
 .nav-container {
-  margin: 10px auto;
+    margin: 10px auto;
 }
 
 .navbar {
-  border-radius: 5px;
+    border-radius: 5px;
+}
+
+.box {
+    margin-top: 20px;
 }

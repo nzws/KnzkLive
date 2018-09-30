@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/initload.php");
+require_once("../lib/bootloader.php");
 $code = s($_GET["code"]);
 if (!$code) {
     header("Location: https://".$env["masto_login"]["domain"]."/oauth/authorize?response_type=code&redirect_uri=".$env["masto_login"]["redirect_uri"]."&scope=read+write&client_id=".$env["masto_login"]["key"]);

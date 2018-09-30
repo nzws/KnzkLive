@@ -21,4 +21,4 @@ $env["is_maintenance"] = false;
 
 // 定数: いじらないでね
 define('PATH', dirname(__FILE__) . '/');
-define('CONF_VERSION', 1); //Devtip: CONF_VERSIONを変えたらlib/initload.phpの$ConfigVersionの数字を変える
+define('CONF_VERSION', 1); //Devtip: CONF_VERSIONを変えたらlib/bootloader.phpの$ConfigVersionの数字を変える

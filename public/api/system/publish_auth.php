@@ -1,5 +1,6 @@
 <?php
-require_once("initload.php");
+require_once("../../../lib/bootloader.php");
+
 $_GET["tcurl"] = s($_GET["tcurl"]);
 if (!$_GET["tcurl"]) { //入力されてない
     http_response_code(404);
