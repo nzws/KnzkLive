@@ -24,99 +24,43 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `knzklive` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `knzklive`;
 
--- --------------------------------------------------------
+create table live
+(
+  id            int(100) auto_increment
+    primary key,
+  name          varchar(100)                          not null,
+  description   text                                  null,
+  user_id       int(100)                              not null,
+  slot_id       int(10)                               not null,
+  created_at    timestamp default current_timestamp() not null,
+  is_live       int(2)                                not null,
+  ip            varchar(100)                          not null,
+  token         varchar(255)                          not null,
+  privacy_mode  int(5)                                null,
+  viewers_count int(100)                              null
+);
 
---
--- テーブルの構造 `live`
---
+create table live_slot
+(
+  id         int(100) auto_increment
+    primary key,
+  used       int(10)      not null,
+  max        int(10)      not null,
+  server     varchar(50)  not null,
+  server_ip  varchar(100) null,
+  is_testing int(2)       not null
+);
 
-CREATE TABLE `live` (
-  `id` int(100) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `user_id` int(100) NOT NULL,
-  `slot_id` int(10) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `is_live` int(2) NOT NULL,
-  `ip` varchar(100) NOT NULL,
-  `users` int(100) NOT NULL,
-  `token` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table users
+(
+  id         int(10) auto_increment
+    primary key,
+  name       varchar(100)                            not null,
+  acct       varchar(100)                            not null,
+  created_at timestamp default current_timestamp() not null,
+  ip         varchar(100)                            not null,
+  isLive     int(2)                                  not null,
+  liveNow    int(100)                                not null,
+  misc       text                                    null
+);
 
--- --------------------------------------------------------
-
---
--- テーブルの構造 `live_slot`
---
-
-CREATE TABLE `live_slot` (
-  `id` int(100) NOT NULL,
-  `used` int(10) NOT NULL,
-  `max` int(10) NOT NULL,
-  `server` varchar(50) NOT NULL,
-  `is_testing` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `users`
---
-
-CREATE TABLE `users` (
-  `id` int(10) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `acct` varchar(100) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `ip` varchar(100) NOT NULL,
-  `isLive` int(2) NOT NULL,
-  `liveNow` int(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `live`
---
-ALTER TABLE `live`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `live_slot`
---
-ALTER TABLE `live_slot`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `live`
---
-ALTER TABLE `live`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `live_slot`
---
-ALTER TABLE `live_slot`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
