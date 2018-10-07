@@ -8,8 +8,7 @@
   </p>
 </div>
 
-**開発中です。** [RoadMap](https://github.com/yuzulabo/KnzkLive/projects/1)
+**開発中です。**
 
-### 使用技術とか
-- php
-- rtmp-nginx
+### See other
+https://github.com/yuzulabo/KnzkLive-Publish-Server
