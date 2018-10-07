@@ -222,17 +222,17 @@ $liveUser = getUser($live["user_id"]);
         while (json[i]) {
           if (!json[i]['application'] && config["live_toot"]) {
             console.log('COMMENT BLOCKED', json[i]);
-            return;
-          }
-          if (config["live_toot"] && (
-            json[i]['application']['name'] !== "KnzkLive" ||
-            json[i]['application']['website'] !== "https://github.com/yuzulabo/KnzkLive" ||
-            json[i]['acct'] !== json[i]['username']
-          )) {
-            console.log('COMMENT BLOCKED', json[i]);
           } else {
-            json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-            reshtml += tmpl("comment_tmpl", json[i]);
+            if (config["live_toot"] && (
+              json[i]['application']['name'] !== "KnzkLive" ||
+              json[i]['application']['website'] !== "https://github.com/yuzulabo/KnzkLive" ||
+              json[i]['acct'] !== json[i]['username']
+            )) {
+              console.log('COMMENT BLOCKED', json[i]);
+            } else {
+              json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
+              reshtml += tmpl("comment_tmpl", json[i]);
+            }
           }
           i++;
         }
