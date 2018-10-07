@@ -13,10 +13,6 @@ if (!$live) {
   exit("ERR:この配信は存在しません。");
 }
 
-if ($live["is_live"] == 0) {
-  http_response_code(404);
-  exit("ERR:この配信は終了しています。");
-}
 $slot = getSlot($live["slot_id"]);
 $my = getMe();
 if (!$my && $live["privacy_mode"] == "3") {
@@ -118,7 +114,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
   const hashtag = " #" + hashtag_o;
   const inst = "<?=$env["masto_login"]["domain"]?>";
   const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
-  var heartbeat, cm_ws, watch_data;
+  var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
 
@@ -140,10 +136,11 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
       const err = elemId("err_live");
       err.innerHTML = "";
 
-      if (!watch_data) watch_data = json;
-
       if (json["live_status"] === 1) err.innerHTML = "配信者からデータが送信されていません。";
-      if (json["live_status"] === 0) err.innerHTML = "この配信は終了しました。";
+      if (json["live_status"] === 0) {
+        err.innerHTML = "この配信は終了しました。";
+        if (watch_data["live_status"] !== 0) document.getElementById('iframe').src = "<?=u("api/client/live_ended")?>";
+      }
       if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
 
       if (json["name"] !== watch_data["name"]) elemId("live-name").innerHTML = json["name"];
@@ -286,6 +283,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
   window.onload = function () {
     check_limit();
     loadComment();
+    watch();
     setInterval(watch, 5000);
   };
 </script>
