@@ -80,7 +80,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
           </div>
         <?php else : ?>
           <p>
-            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=($liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから#knzklive_{$id}をつけてトゥートしてもコメントする事ができます。" : "")?></span>
+            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから#knzklive_{$id}をつけてトゥートしてもコメントする事ができます。" : "")?></span>
           </p>
         <?php endif; ?>
         <p class="invisible" id="err_comment">
