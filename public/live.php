@@ -24,6 +24,8 @@ if (!$my && $live["privacy_mode"] == "3") {
   exit("ERR:この配信は非公開です。");
 }
 $liveUser = getUser($live["user_id"]);
+
+$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("w/")) . $live["id"];
 ?>
 <!doctype html>
 <html lang="ja">
@@ -55,13 +57,14 @@ $liveUser = getUser($live["user_id"]);
       </div>
       <p>
         <button class="btn btn-primary btn-small" onclick="reloadLive()">再読込</button>
+        <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info">シェア</a>
         <span style="float: right"><b id="count"><?=$live["viewers_count"]?></b> / <span id="max"><?=$live["viewers_max"]?></span></span>
       </p>
       <p>
       <h3 id="live-name"><?=$live["name"]?></h3>
       <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/> <?=$liveUser["name"]?>
       </p>
-      <p id="live-description"><?=$live["description"]?></p>
+      <p id="live-description"><?=nl2br($live["description"])?></p>
       <p id="err_live" class="text-warning"></p>
 
       <?php if ($my["id"] === $live["user_id"]) : ?>
@@ -81,7 +84,7 @@ $liveUser = getUser($live["user_id"]);
           </div>
         <?php else : ?>
           <p>
-            <span class="text-danger">* コメントを投稿するにはログインしてください。</span>
+            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=($liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから#knzklive_{$id}をつけてトゥートしてもコメントする事ができます。" : "")?></span>
           </p>
         <?php endif; ?>
         <p class="invisible" id="err_comment">

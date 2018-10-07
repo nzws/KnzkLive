@@ -10,7 +10,7 @@ if (!$live) {
 
 api_json([
   "name" => $live["name"],
-  "description" => $live["description"],
+  "description" => nl2br($live["description"]),
   "created_at" => $live["created_at"],
   "live_status" => $live["is_live"],
   "viewers_count" => $live["viewers_count"],

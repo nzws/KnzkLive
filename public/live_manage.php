@@ -45,8 +45,11 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
   $live = getLive($live["id"]);
 }
 
-$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("live") . "?id=" . $live["id"];
+$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("w/")) . $live["id"];
 $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
+
+$share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #knzklive_{$live["id"]}";
+$share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
 ?>
 <!doctype html>
 <html lang="ja">
@@ -56,6 +59,18 @@ $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_H
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
+
+<div class="container">
+  <div class="box">
+    <b>配信をシェア:</b><br>
+    <div class="btn-group" role="group">
+      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_normal)?>" target="_blank" class="btn btn-primary">標準</a>
+      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_knzk)?>" target="_blank" class="btn btn-primary">神崎</a>
+    </div>
+  </div>
+</div>
+
+<hr>
 
 <div class="container">
   <form method="post">
@@ -135,5 +150,6 @@ $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_H
 </div>
 
 <?php include "../include/footer.php"; ?>
+  <script src="js/knzklive.js"></script>
 </body>
 </html>
