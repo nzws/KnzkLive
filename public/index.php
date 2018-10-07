@@ -1,6 +1,10 @@
 <?php
 require_once("../lib/bootloader.php");
 $lives = getAllLive();
+if ($lives[0]["id"]) { //1人用としか考えてない頭わるわる仕様なので後でなんとかする
+  header("Location: ".u("live")."?id=".$lives[0]["id"]);
+  exit();
+}
 ?>
 <!doctype html>
 <html lang="ja">

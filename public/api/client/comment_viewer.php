@@ -50,6 +50,10 @@ $liveUser = getUser($live["user_id"]);
     .com {
       margin-top: 20px;
     }
+
+    .hashtag {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -57,7 +61,8 @@ $liveUser = getUser($live["user_id"]);
   * コメントの読み込み中にエラーが発生しました。
 </p>
 <div id="comments"></div>
-<script src="../../tmpl.min.js"></script>
+<script src="../../js/tmpl.min.js"></script>
+<script src="../../js/knzklive.js"></script>
 <script id="comment_tmpl" type="text/html">
   <div id="post_<%=id%>" class="com">
     <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small>
@@ -72,10 +77,6 @@ $liveUser = getUser($live["user_id"]);
   const config = {
     "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
   };
-
-  function elemId(_id) {
-    return document.getElementById(_id);
-  }
 
   function loadComment() {
     elemId("err_comment").className = "invisible";
@@ -113,7 +114,7 @@ $liveUser = getUser($live["user_id"]);
                   console.log('COMMENT BLOCKED', ws_reshtml);
                   return;
                 }
-                ws_reshtml.content = ws_reshtml.content.replace(`<a href="https://<?=$env["masto_login"]["domain"]?>/tags/knzklive_<?=s($_GET["id"])?>" class="mention hashtag" rel="tag">#<span>knzklive_<?=s($_GET["id"])?></span></a>`, "");
+                ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
                 elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
               }
             } else if (ws_resdata.event === 'delete') {
@@ -140,7 +141,7 @@ $liveUser = getUser($live["user_id"]);
           )) {
             console.log('COMMENT BLOCKED', json[i]);
           } else {
-            json[i].content = json[i].content.replace(`<a href="https://<?=$env["masto_login"]["domain"]?>/tags/knzklive_<?=s($_GET["id"])?>" class="mention hashtag" rel="tag">#<span>knzklive_<?=s($_GET["id"])?></span></a>`, "");
+            json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
             reshtml += tmpl("comment_tmpl", json[i]);
           }
           i++;

@@ -40,6 +40,9 @@ $liveUser = getUser($live["user_id"]);
       overflow-x: hidden;
       height: 600px;
     }
+    .hashtag {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -105,7 +108,8 @@ $liveUser = getUser($live["user_id"]);
   </div>
 </script>
 <?php include "../include/footer.php"; ?>
-<script src="tmpl.min.js"></script>
+<script src="js/tmpl.min.js"></script>
+<script src="js/knzklive.js"></script>
 <script>
   const hashtag_o = "knzklive_<?=$id?>";
   const hashtag = " #" + hashtag_o;
@@ -118,10 +122,6 @@ $liveUser = getUser($live["user_id"]);
   const config = {
     "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
   };
-
-  function elemId(_id) {
-    return document.getElementById(_id);
-  }
 
   function watch() {
     fetch('<?=u("api/client/watch")?>?id=<?=s($live["id"])?>', {
@@ -181,7 +181,7 @@ $liveUser = getUser($live["user_id"]);
 
         cm_ws = new WebSocket(ws_url);
         cm_ws.onopen = function() {
-          heartbeat = setInterval(() => cm_ws.send("ping"), 5000)
+          heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
           cm_ws.onmessage = function(message) {
             var ws_resdata = JSON.parse(message.data);
             var ws_reshtml = JSON.parse(ws_resdata.payload);
@@ -196,7 +196,7 @@ $liveUser = getUser($live["user_id"]);
                   console.log('COMMENT BLOCKED', ws_reshtml);
                   return;
                 }
-                ws_reshtml.content = ws_reshtml.content.replace(`<a href="https://<?=$env["masto_login"]["domain"]?>/tags/knzklive_<?=s($_GET["id"])?>" class="mention hashtag" rel="tag">#<span>knzklive_<?=s($_GET["id"])?></span></a>`, "");
+                ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
                 elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
               }
             } else if (ws_resdata.event === 'delete') {
@@ -223,7 +223,7 @@ $liveUser = getUser($live["user_id"]);
           )) {
             console.log('COMMENT BLOCKED', json[i]);
           } else {
-            json[i].content = json[i].content.replace(`<a href="https://<?=$env["masto_login"]["domain"]?>/tags/knzklive_<?=s($_GET["id"])?>" class="mention hashtag" rel="tag">#<span>knzklive_<?=s($_GET["id"])?></span></a>`, "");
+            json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
             reshtml += tmpl("comment_tmpl", json[i]);
           }
           i++;
