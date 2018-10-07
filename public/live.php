@@ -21,7 +21,7 @@ if (!$my && $live["privacy_mode"] == "3") {
 }
 $liveUser = getUser($live["user_id"]);
 
-$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("w/")) . $live["id"];
+$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $live["id"];
 ?>
 <!doctype html>
 <html lang="ja">

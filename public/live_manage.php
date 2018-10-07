@@ -45,7 +45,7 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
   $live = getLive($live["id"]);
 }
 
-$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("w/")) . $live["id"];
+$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $live["id"];
 $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
 
 $share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #knzklive_{$live["id"]}";
