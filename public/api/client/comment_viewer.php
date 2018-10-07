@@ -106,6 +106,10 @@ $liveUser = getUser($live["user_id"]);
 
             if (ws_resdata.event === 'update') {
               if (ws_reshtml['id']) {
+                if (!ws_reshtml['application'] && config["live_toot"]) {
+                  console.log('COMMENT BLOCKED', ws_reshtml);
+                  return;
+                }
                 if (config["live_toot"] && (
                   ws_reshtml['application']['name'] !== "KnzkLive" ||
                   ws_reshtml['application']['website'] !== "https://"+<?=$env["domain"]?> ||
@@ -134,6 +138,10 @@ $liveUser = getUser($live["user_id"]);
 
         var i = 0;
         while (json[i]) {
+          if (!json[i]['application'] && config["live_toot"]) {
+            console.log('COMMENT BLOCKED', json[i]);
+            return;
+          }
           if (config["live_toot"] && (
             json[i]['application']['name'] !== "KnzkLive" ||
             json[i]['application']['website'] !== "https://github.com/yuzulabo/KnzkLive" ||
