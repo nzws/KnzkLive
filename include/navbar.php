@@ -11,7 +11,7 @@
         <ul class="navbar-nav ml-auto">
         <?php
         if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
-        if (isset($my)) : ?>
+        if (isset($my["id"])) : ?>
             <?php if ($my["isLive"]) : ?>
                 <form class="form-inline">
                   <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["liveNow"] ? "管理" : "始める"?></b></a>

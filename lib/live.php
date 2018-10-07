@@ -53,11 +53,48 @@ function getLive($id) {
 
 function getAllLive($notId = 0) {
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_live = 1 AND id != ? ORDER BY viewers_count desc;");
+    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND (is_live = 1 OR is_live = 2) AND id != ? ORDER BY viewers_count desc;");
     $stmt->bind_param("s", $notId);
     $stmt->execute();
     $row = db_fetch_all($stmt);
     $stmt->close();
     $mysqli->close();
     return isset($row[0]["id"]) ? $row : false;
+}
+
+function setLiveStatus($id, $mode) {
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");
+    $stmt->bind_param("ss", $mode, $id);
+    $stmt->execute();
+    $err = $stmt->error;
+    $stmt->close();
+    $mysqli->close();
+    return !$err;
+}
+
+function setViewersCount($id, $add = false) {
+  $mysqli = db_start();
+  if ($add) {
+    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count + 1 WHERE id = ?;");
+  } else {
+    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count - 1 WHERE id = ?;");
+  }
+  $stmt->bind_param("s", $id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+
+  if ($add) {
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_max = viewers_max + 1 WHERE id = ?;");
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $err = $stmt->error;
+    $stmt->close();
+    $mysqli->close();
+  }
+
+  return !$err;
 }

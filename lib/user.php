@@ -32,3 +32,13 @@ function setUserLive($id) {
     $stmt->close();
     $mysqli->close();
 }
+
+function setConfig($id, $misc) {
+  $misc = json_encode($misc, true);
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `users` SET misc = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $misc, $id);
+  $stmt->execute();
+  $stmt->close();
+  $mysqli->close();
+}

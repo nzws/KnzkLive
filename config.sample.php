@@ -14,6 +14,8 @@ $env["database"]["db"] = "dbname";
 $env["database"]["user"] = "Username";
 $env["database"]["pass"] = "Password";
 
+$env["publish_auth"] = "xxxxx";
+
 $env["is_testing"] = false;
 
 // メンテナンスモード: 全てのAPIとWeb UIをロックし503にします(キャッシュ分は表示されるかも)

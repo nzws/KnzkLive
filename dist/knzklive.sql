@@ -26,18 +26,20 @@ USE `knzklive`;
 
 create table live
 (
-  id            int(100) auto_increment
+  id                     int(100) auto_increment
     primary key,
-  name          varchar(100)                          not null,
-  description   text                                  null,
-  user_id       int(100)                              not null,
-  slot_id       int(10)                               not null,
-  created_at    timestamp default current_timestamp() not null,
-  is_live       int(2)                                not null,
-  ip            varchar(100)                          not null,
-  token         varchar(255)                          not null,
-  privacy_mode  int(5)                                null,
-  viewers_count int(100)                              null
+  name                   varchar(100)       not null,
+  description            text               null,
+  user_id                int(100)           not null,
+  slot_id                int(10)            not null,
+  created_at             timestamp default current_timestamp()  not null,
+  is_live                int(2)             not null,
+  ip                     varchar(100)       not null,
+  token                  varchar(255)       not null,
+  privacy_mode           int(5)             null,
+  viewers_count          int(100) default 0 null,
+  viewers_max            int(100) default 0 null,
+  viewers_max_concurrent int(100) default 0 null
 );
 
 create table live_slot
@@ -64,3 +66,6 @@ create table users
   misc       text                                    null
 );
 
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

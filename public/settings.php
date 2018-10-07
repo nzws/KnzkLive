@@ -5,6 +5,13 @@ if (!$my) {
     http_response_code(403);
     exit("ERR:ログインしてください。");
 }
+
+if ($_POST) {
+  if ($_POST["type"] === "live") {
+    $my["misc"]["live_toot"] = !!$_POST["live_toot"];
+  }
+  setConfig($my["id"], $my["misc"]);
+}
 ?>
 <!doctype html>
 <html lang="ja">
@@ -15,29 +22,38 @@ if (!$my) {
 <body>
 <?php include "../include/navbar.php"; ?>
 <div class="container">
-    <p>
+  <div class="box">
     <h4>プロフィール設定</h4>
     Mastodonで変更した後、KnzkLiveでログアウト→ログインすると更新されます。
-    </p>
+  </div>
     <?php if ($my["isLive"]) : ?>
-        <p>
-        <h4>配信者設定</h4>
-        <p>* この設定は過去、未来全ての配信に適用されます。</p>
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="conf_toot">
+    <div class="box">
+      <h4>配信者設定</h4>
+      <p>* この設定は過去、未来全ての配信に適用されます。</p>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+        <input type="hidden" name="type" value="live">
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="conf_toot" name="live_toot" value="1" <?=($my["misc"]["live_toot"] ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_toot">
-                KnzkLive外で投稿されたトゥートはコメントに表示しない <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。荒らしなどがある場合は有効化してください。')">説明</a>
+              KnzkLive外で投稿されたトゥートをある程度ブロックする <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。')">説明</a>
             </label>
+          </div>
         </div>
-        <!--
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="conf_joke_viewer">
-          <label class="custom-control-label" for="conf_joke_viewer">
-            ジョークコマンドの使用を視聴者に許可する <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。荒らしなどがある場合は有効化してください。')">説明</a>
-          </label>
-        </div>
-        -->
-        </p>
+
+        <button type="submit" class="btn btn-primary">更新</button>
+      </form>
+
+      <!--
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="conf_joke_viewer">
+        <label class="custom-control-label" for="conf_joke_viewer">
+          ジョークコマンドの使用を視聴者に許可する <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。荒らしなどがある場合は有効化してください。')">説明</a>
+        </label>
+      </div>
+      -->
+    </div>
     <?php endif; ?>
 </div>
 

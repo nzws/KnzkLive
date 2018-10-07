@@ -38,7 +38,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     $mysqli->close();
 
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE is_live = 1 AND user_id = ?;");
+    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE (is_live = 1 OR is_live = 2) AND user_id = ?;");
     $stmt->bind_param("s", $my["id"]);
     $stmt->execute();
     $row = db_fetch_all($stmt);

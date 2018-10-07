@@ -10,7 +10,7 @@ if (!getMe() && $live["privacy_mode"] == "3") {
     http_response_code(403);
     exit("ERR:この配信は非公開です。");
 }
-$mode = "dash";
+$mode = "flv";
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,9 +30,10 @@ $mode = "dash";
 </head>
 
 <body>
-    <video id="my-video" class="video-js" controls preload="auto" data-setup="{}">
-    <?php if ($mode === "hls") : ?><source src="http://<?=$_GET["rtmp"]?>/hls/<?=$_GET["id"]?>stream.m3u8" type='application/x-mpegURL'><?php endif; ?>
+    <video id="my-video" class="video-js" controls preload="auto" data-setup="{}" autoplay>
+    <?php if ($mode === "hls") : ?><source src="http://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.m3u8" type='application/x-mpegURL'><?php endif; ?>
     <?php if ($mode === "rtmp") : ?><source src="rtmp://<?=$_GET["rtmp"]?>/<?=$_GET["id"]?>stream" type='rtmp/mp4'><?php endif; ?>
+    <?php if ($mode === "flv") : ?><source src="<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream.flv" type='video/x-flv'><?php endif; ?>
     <p class="vjs-no-js">
       To view this video please enable JavaScript, and consider upgrading to a web browser that
       <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -48,13 +49,33 @@ var player = videojs('my-video');
 
 player.ready(function() {
   player.src({
-    src: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/dash/<?=$_GET["id"]?>stream.mpd',
+    src: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.mpd',
     type: 'application/dash+xml'
   });
 
   player.play();
 });
 </script>
+<?php elseif ($mode === "flv") : ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-flvjs@0.2.0/dist/videojs-flvjs.min.js" integrity="sha256-9E4vlrJpHeWFm/dzSKOps4Csfx0X1ReuUX43FWEeSJE=" crossorigin="anonymous"></script>
+    <script>
+        const player = videojs('my-video', {
+            techOrder: ['html5', 'flvjs'],
+            flvjs: {
+                mediaDataSource: {
+                    isLive: true,
+                    cors: true,
+                    withCredentials: false,
+                },
+                // config: {},
+            },
+        });
+
+        player.ready(function() {
+            player.play();
+        })
+    </script>
 <?php endif; ?>
 </body>
 </html>
