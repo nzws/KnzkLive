@@ -242,7 +242,10 @@ $liveUser = getUser($live["user_id"]);
     fetch('https://' + inst + '/api/v1/statuses', {
       headers: api_header,
       method: 'POST',
-      body: JSON.stringify({status: elemId("toot").value + hashtag})
+      body: JSON.stringify({
+        status: elemId("toot").value + hashtag,
+        visibility: "public"
+      })
     })
     .then(function(response) {
       if (response.ok) {
