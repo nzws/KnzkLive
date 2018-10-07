@@ -108,7 +108,7 @@ $liveUser = getUser($live["user_id"]);
               if (ws_reshtml['id']) {
                 if (config["live_toot"] && (
                   ws_reshtml['application']['name'] !== "KnzkLive" ||
-                  ws_reshtml['application']['website'] !== "https://github.com/yuzulabo/KnzkLive" ||
+                  ws_reshtml['application']['website'] !== "https://"+<?=$env["domain"]?> ||
                   ws_reshtml['acct'] !== ws_reshtml['username']
                 )) {
                   console.log('COMMENT BLOCKED', ws_reshtml);
