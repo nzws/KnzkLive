@@ -76,7 +76,7 @@ function setLiveStatus($id, $mode) {
 function setViewersCount($id, $add = false) {
   $mysqli = db_start();
   if ($add) {
-    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count + 1 WHERE id = ?;");
+    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count + 1 WHERE id = ? AND is_live != 0;");
   } else {
     $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count - 1 WHERE id = ?;");
   }
@@ -88,7 +88,7 @@ function setViewersCount($id, $add = false) {
 
   if ($add) {
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_max = viewers_max + 1 WHERE id = ?;");
+    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_max = viewers_max + 1 WHERE id = ? AND is_live != 0;");
     $stmt->bind_param("s", $id);
     $stmt->execute();
     $err = $stmt->error;

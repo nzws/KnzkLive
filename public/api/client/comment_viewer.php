@@ -113,7 +113,7 @@ $liveUser = getUser($live["user_id"]);
                 if (config["live_toot"] && (
                   ws_reshtml['application']['name'] !== "KnzkLive" ||
                   ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                  ws_reshtml['acct'] !== ws_reshtml['username']
+                  ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
                 )) {
                   console.log('COMMENT BLOCKED', ws_reshtml);
                   return;
@@ -144,7 +144,7 @@ $liveUser = getUser($live["user_id"]);
             if (config["live_toot"] && (
               json[i]['application']['name'] !== "KnzkLive" ||
               json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-              json[i]['acct'] !== json[i]['username']
+              json[i]['account']['acct'] !== json[i]['account']['username']
             )) {
               console.log('COMMENT BLOCKED', json[i]);
             } else {

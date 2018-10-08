@@ -99,7 +99,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
         <img src="<%=account['avatar']%>" class="avatar_img_navbar rounded-circle"/>
       </div>
       <div class="col-10">
-        <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small>
+        <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small> <%=(me ? `<a href="#" onclick="delete_comment('${id}')">削除</a>` : "")%>
         <%=content%>
       </div>
     </div>
@@ -193,13 +193,15 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
                   return;
                 }
                 if (config["live_toot"] && (
-                    ws_reshtml['application']['name'] !== "KnzkLive" ||
-                    ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                    ws_reshtml['acct'] !== ws_reshtml['username']
-                  )) {
+                  ws_reshtml['application']['name'] !== "KnzkLive" ||
+                  ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
+                  ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
+                )) {
                   console.log('COMMENT BLOCKED', ws_reshtml);
                   return;
                 }
+                let acct = ws_reshtml['account']['acct'] !== ws_reshtml['account']['username'] ? ws_reshtml['account']['acct'] : ws_reshtml['account']['username'] + "@" + inst;
+                ws_reshtml["me"] = "<?=$my["acct"]?>" === acct;
                 ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
                 elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
               }
@@ -226,10 +228,12 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
             if (config["live_toot"] && (
               json[i]['application']['name'] !== "KnzkLive" ||
               json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-              json[i]['acct'] !== json[i]['username']
+              json[i]['account']['acct'] !== json[i]['account']['username']
             )) {
               console.log('COMMENT BLOCKED', json[i]);
             } else {
+              let acct = json[i]['account']['acct'] !== json[i]['account']['username'] ? json[i]['account']['acct'] : json[i]['account']['username'] + "@" + inst;
+              json[i]["me"] = "<?=$my["acct"]?>" === acct;
               json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
               reshtml += tmpl("comment_tmpl", json[i]);
             }
@@ -273,6 +277,26 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
     });
   }
 
+  function delete_comment(_id) {
+    fetch('https://' + inst + '/api/v1/statuses/' + _id, {
+      headers: api_header,
+      method: 'DELETE'
+    })
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    })
+    .then(function(json) {
+    })
+    .catch(error => {
+      console.log(error);
+      elemId("toot").value += "\n[実行中にエラーが発生しました]";
+    });
+  }
+
   function check_limit() {
     if (!token) return; //未ログイン
     const l = elemId("limit");
@@ -285,6 +309,11 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
     loadComment();
     watch();
     setInterval(watch, 5000);
+    $('#toot').keydown(function (e){
+      if (e.keyCode === 13 && e.ctrlKey) {
+        post_comment()
+      }
+    });
   };
 </script>
 </body>
