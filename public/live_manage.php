@@ -28,8 +28,17 @@ if (isset($_GET["mode"])) {
     setSlot($live["slot_id"], 0);
     setUserLive(0);
 
-    if (setLiveStatus($live["id"], 0)) header("Location: ".u());
-    else echo "ERROR: setLiveStatus";
+    if (setLiveStatus($live["id"], 0)) {
+      $mysqli = db_start();
+      $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP WHERE id = ?;");
+      $stmt->bind_param("s",$id);
+      $stmt->execute();
+      $err = $stmt->error;
+      $stmt->close();
+      $mysqli->close();
+
+      header("Location: ".u());
+    } else echo "ERROR: setLiveStatus";
 
     exit();
   }

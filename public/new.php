@@ -31,7 +31,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     $random = bin2hex(random_bytes(32));
 
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("INSERT INTO `live` (`id`, `name`, `description`, `user_id`, `slot_id`, `created_at`, `is_live`, `ip`, `token`, `privacy_mode`, `viewers_count`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP, '1', ?, ?, ?, '0');");
+    $stmt = $mysqli->prepare("INSERT INTO `live` (`id`, `name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `viewers_count`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, '0');");
     $stmt->bind_param('sssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]));
     $stmt->execute();
     $stmt->close();

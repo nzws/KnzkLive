@@ -33,6 +33,7 @@ create table live
   user_id                int(100)           not null,
   slot_id                int(10)            not null,
   created_at             timestamp default current_timestamp()  not null,
+  ended_at             timestamp default current_timestamp()  not null,
   is_live                int(2)             not null,
   ip                     varchar(100)       not null,
   token                  varchar(255)       not null,

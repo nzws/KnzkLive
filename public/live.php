@@ -54,7 +54,15 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
       <p>
         <button class="btn btn-primary btn-small" onclick="reloadLive()">再読込</button>
         <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info">シェア</a>
-        <span style="float: right"><b id="count"><?=$live["viewers_count"]?></b> / <span id="max"><?=$live["viewers_max"]?></span></span>
+        <span style="float: right">
+          <span id="h"></span><span id="m"></span><span id="s"></span>
+          <span id="count_open">
+            視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+          </span>
+          <span id="count_end" class="invisible">
+            総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 | 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+          </span>
+        </span>
       </p>
       <p>
       <h3 id="live-name"><?=$live["name"]?></h3>
@@ -122,7 +130,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
     "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
   };
 
-  function watch() {
+  function watch(first) {
     fetch('<?=u("api/client/watch")?>?id=<?=s($live["id"])?>', {
       method: 'GET',
       credentials: 'include',
@@ -139,6 +147,8 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
       if (json["live_status"] === 1) err.innerHTML = "配信者からデータが送信されていません。";
       if (json["live_status"] === 0) {
         err.innerHTML = "この配信は終了しました。";
+        elemId("count_open").className = "invisible";
+        elemId("count_end").className = "";
         if (watch_data["live_status"] !== 0) document.getElementById('iframe').src = "<?=u("api/client/live_ended")?>";
       }
       if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
@@ -147,12 +157,35 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
       if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
 
       if (json["viewers_count"] !== watch_data["viewers_count"]) elemId("count").innerHTML = json["viewers_count"];
-      if (json["viewers_max"] !== watch_data["viewers_max"]) elemId("max").innerHTML = json["viewers_max"];
+      if (json["viewers_max"] !== watch_data["viewers_max"]) $(".max").html(json["viewers_max"]);
+      if (json["viewers_max_concurrent"] !== watch_data["viewers_max_concurrent"]) elemId("max_c").innerHTML = json["viewers_max_concurrent"];
       watch_data = json;
+      if (first) setInterval(date_disp, 1000);
     }).catch(function(error) {
       console.error(error);
       elemId("err_live").innerHTML = "データが読み込めません: ネットワークかサーバに問題が発生しています...";
     });
+  }
+
+  function date_disp() {
+    /* thx https://www.tagindex.com/javascript/time/timer2.html */
+    const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
+    const datet = parseInt((now.getTime() - (new Date("<?=$live["created_at"]?>")).getTime()) / 1000);
+
+    var hour = parseInt(datet / 3600);
+    var min = parseInt((datet / 60) % 60);
+    var sec = datet % 60;
+
+    if (hour > 0) {
+      if (hour < 10) hour = "0" + hour;
+      elemId("h").innerHTML = hour + ":";
+    }
+
+    if (min < 10) min = "0" + min;
+    elemId("m").innerHTML = min + ":";
+
+    if (sec < 10) sec = "0" + sec;
+    elemId("s").innerHTML = sec + " | ";
   }
 
   function reloadLive() {
@@ -307,7 +340,7 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
   window.onload = function () {
     check_limit();
     loadComment();
-    watch();
+    watch(true);
     setInterval(watch, 5000);
     $('#toot').keydown(function (e){
       if (e.keyCode === 13 && e.ctrlKey) {
