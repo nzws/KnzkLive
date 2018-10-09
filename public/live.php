@@ -22,6 +22,11 @@ if (!$my && $live["privacy_mode"] == "3") {
 $liveUser = getUser($live["user_id"]);
 
 $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $live["id"];
+
+if (empty($_SESSION["watch_mode"])) {
+  $_SESSION["watch_mode"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "hls" : "http-flv";
+}
+if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] == 0 ? "http-flv" : ($_GET["watch_mode"] == 1 ? "dash" : ($_GET["watch_mode"] == 2 ? "hls" : null));
 ?>
 <!doctype html>
 <html lang="ja">
@@ -48,6 +53,16 @@ $liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-9">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          モード: <span id="live-mode"><?=s($_SESSION["watch_mode"])?></span>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "http-flv" ? " active" : "")?>" href="?watch_mode=0">HTTP-FLV</a>
+          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "dash" ? " active" : "")?>" href="?watch_mode=1">MPEG-DASH</a>
+          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "hls" ? " active" : "")?>" href="?watch_mode=2">HLS</a>
+        </div>
+      </div>
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
       </div>
