@@ -31,7 +31,7 @@ $mode = $_SESSION["watch_mode"];
 
 <body>
     <video id="my-video" class="video-js" controls preload="auto" data-setup="{}" autoplay>
-    <?php if ($mode === "hls") : ?><source src="http://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.m3u8" type='application/x-mpegURL'><?php endif; ?>
+    <?php if ($mode === "hls") : ?><source src="<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.m3u8" type='application/x-mpegURL'><?php endif; ?>
     <?php if ($mode === "rtmp") : ?><source src="rtmp://<?=$_GET["rtmp"]?>/<?=$_GET["id"]?>stream" type='rtmp/mp4'><?php endif; ?>
     <?php if ($mode === "http-flv") : ?><source src="<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream.flv" type='video/x-flv'><?php endif; ?>
     <p class="vjs-no-js">
