@@ -53,3 +53,7 @@ a, a:hover {
 .box {
     margin-top: 20px;
 }
+
+.button-player {
+    border-radius: 0 0 .2rem .2rem;
+}

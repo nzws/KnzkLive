@@ -53,8 +53,11 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-9">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div class="embed-responsive embed-responsive-16by9" id="live">
+        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
+      </div>
+      <div class="dropdown" style="display: inline-block;">
+        <button class="btn btn-secondary dropdown-toggle button-player" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           モード: <span id="live-mode"><?=s($_SESSION["watch_mode"])?></span>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -63,13 +66,9 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
           <a class="dropdown-item<?=($_SESSION["watch_mode"] === "hls" ? " active" : "")?>" href="?watch_mode=2">HLS</a>
         </div>
       </div>
-      <div class="embed-responsive embed-responsive-16by9" id="live">
-        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
-      </div>
-      <p>
-        <button class="btn btn-primary btn-small" onclick="reloadLive()">再読込</button>
-        <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info">シェア</a>
-        <span style="float: right">
+      <button class="btn btn-primary btn-small button-player" onclick="reloadLive()">再読込</button>
+      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info button-player">シェア</a>
+      <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
             視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
@@ -78,11 +77,9 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
             総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 | 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
           </span>
         </span>
-      </p>
-      <p>
+      <p></p>
       <h3 id="live-name"><?=$live["name"]?></h3>
       <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/> <?=$liveUser["name"]?>
-      </p>
       <p id="live-description"><?=nl2br($live["description"])?></p>
       <p id="err_live" class="text-warning"></p>
 
