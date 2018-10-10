@@ -36,7 +36,7 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
-  <title><?=$live["name"]?> - <?=$env["Title"]?></title>
+  <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
   <style>
     #comments {
       overflow-y: scroll;
@@ -165,7 +165,10 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
       }
       if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
 
-      if (json["name"] !== watch_data["name"]) elemId("live-name").innerHTML = json["name"];
+      if (json["name"] !== watch_data["name"]) {
+        elemId("live-name").innerHTML = json["name"];
+        elemId("title-name").innerHTML = json["name"] + ` - <?=$env["Title"]?>`;
+      }
       if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
 
       if (json["viewers_count"] !== watch_data["viewers_count"]) elemId("count").innerHTML = json["viewers_count"];
