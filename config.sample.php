@@ -4,6 +4,8 @@ $env["Title"] = "KnzkLive : 広告なし, 配信時間無制限の生配信コ�
 $env["RootUrl"] = "/";
 $env["domain"] = "live.knzk.me.example";
 
+$env["notification_token"] = "xxxx"; //@KnzkLiveNotificationのトークン
+
 $env["masto_login"]["domain"] = "knzk.me";
 $env["masto_login"]["key"] = "Client key";
 $env["masto_login"]["secret"] = "Client secret";

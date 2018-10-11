@@ -30,7 +30,7 @@ if (isset($_GET["mode"])) {
 
     if (setLiveStatus($live["id"], 0)) {
       $mysqli = db_start();
-      $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP WHERE id = ?;");
+      $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP, created_at = created_at WHERE id = ?;");
       $stmt->bind_param("s",$id);
       $stmt->execute();
       $err = $stmt->error;
@@ -44,17 +44,33 @@ if (isset($_GET["mode"])) {
   }
 }
 
-if (isset($_POST["title"]) && isset($_POST["description"])) {
-  $mysqli = db_start();
-  $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ? WHERE id = ?;");
-  $stmt->bind_param('sss', s($_POST["title"]), s($_POST["description"]), $live["id"]);
-  $stmt->execute();
-  $stmt->close();
-  $mysqli->close();
-  $live = getLive($live["id"]);
+if (isset($_POST["type"])) {
+  if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5) {
+    if ($_POST["start_post"] < 4) {
+      $visibility = $_POST["start_post"] == 1 ? "public" :
+        ($_POST["start_post"] == 2 ? "unlisted" :
+          ($_POST["start_post"] == 3 ? "private" : ""));
+      postLiveStart($live, $_POST["start_push"], $visibility);
+    }
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("UPDATE `live` SET is_started = 1, created_at = CURRENT_TIMESTAMP WHERE id = ?;");
+    $stmt->bind_param('s', $live["id"]);
+    $stmt->execute();
+    $stmt->close();
+    $mysqli->close();
+    $live = getLive($live["id"]);
+  } elseif ($_POST["type"] == "edit") {
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ? WHERE id = ?;");
+    $stmt->bind_param('sss', s($_POST["title"]), s($_POST["description"]), $live["id"]);
+    $stmt->execute();
+    $stmt->close();
+    $mysqli->close();
+    $live = getLive($live["id"]);
+  }
 }
 
-$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $live["id"];
+$liveurl = liveUrl($live["id"]);
 $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
 
 $share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #knzklive_{$live["id"]}";
@@ -69,39 +85,77 @@ $share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
 <body>
 <?php include "../include/navbar.php"; ?>
 
-<div class="container">
-  <div class="box">
-    <b>配信をシェア:</b><br>
-    <div class="btn-group" role="group">
-      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_normal)?>" target="_blank" class="btn btn-primary">標準</a>
-      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_knzk)?>" target="_blank" class="btn btn-primary">神崎</a>
+<?php if ($live["is_started"] == "0") : ?>
+  <div class="container">
+    <div class="box">
+      <div class="alert alert-info" role="alert">
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+          <input type="hidden" name="type" value="start">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="start_post" class="col-sm-7 col-form-label">
+                  配信開始投稿<br>
+                  <small>@KnzkLiveNotificationに投稿します</small>
+                </label>
+                <div class="col-sm-5">
+                  <select class="form-control" id="start_post" name="start_post">
+                    <option value="1">公開</option>
+                    <option value="2">未収載</option>
+                    <option value="3">非公開</option>
+                    <option value="4">なし</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="start_push" name="start_push" value="1" checked>
+                  <label class="custom-control-label" for="start_push">
+                    KnzkAppにプッシュ通知する<br>
+                    <small>(配信開始投稿を有効にしている場合)</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit"
+                  onclick="return confirm('配信を開始します。\nよろしいですか？');"
+                  class="btn btn-info btn-lg btn-block">
+            :: 配信を開始 ::
+          </button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
-<hr>
-
-<div class="container">
-  <form method="post">
-    <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-    <div class="form-group">
-      <label for="title">配信タイトル</label>
-      <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=$live["name"]?>">
-      <small id="title_note" class="form-text text-muted">100文字以下</small>
-    </div>
-
-    <div class="form-group">
-      <label for="description">配信の説明</label>
-      <textarea class="form-control" id="description" name="description" rows="4" required><?=$live["description"]?></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary">更新</button>
-  </form>
-</div>
-
-<hr>
+  <hr>
+<?php endif; ?>
 
 <div class="container">
+  <div class="box">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+      <input type="hidden" name="type" value="edit">
+      <div class="form-group">
+        <label for="title">配信タイトル</label>
+        <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=$live["name"]?>">
+        <small id="title_note" class="form-text text-muted">100文字以下</small>
+      </div>
+
+      <div class="form-group">
+        <label for="description">配信の説明</label>
+        <textarea class="form-control" id="description" name="description" rows="4" required><?=$live["description"]?></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">更新</button>
+    </form>
+  </div>
+  <hr>
+
   <div class="box">
     <div class="row">
       <div class="col-md-6">
@@ -124,10 +178,11 @@ $share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
       </div>
     </div>
   </div>
+  <hr>
 
   <div class="box">
     <b>配信サーバー情報:</b><br>
-    <span class="text-danger">* このURLは漏洩すると第三者に配信を乗っ取られる可能性がありますので十分にご注意ください。</span><br>
+    <span class="text-danger">* この情報は漏洩すると第三者に配信を乗っ取られる可能性がありますので十分にご注意ください。</span><br>
     <div class="row">
       <div class="col-md-6">
         <div class="input-group">
@@ -147,14 +202,26 @@ $share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
       </div>
     </div>
   </div>
+  <hr>
 
   <div class="box">
-    <b>配信を終了:</b><br>
-    <?php if ($live["is_live"] === 2) : ?>
-      <span class="text-danger">* ソフト側(OBSなど)で配信終了するとボタンが使用できます。</span><br>
-    <?php elseif ($live["is_live"] === 1) : ?>
-      <a href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>" onclick="return confirm('配信を終了して、配信枠を返却します。\nよろしいですか？');" class="btn btn-danger btn-lg">配信を終了</a>
-    <?php endif; ?>
+    <div class="row">
+      <div class="col-md-6">
+        <b>配信をシェア(配信者用):</b><br>
+        <div class="btn-group" role="group">
+          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_normal)?>" target="_blank" class="btn btn-primary">標準</a>
+          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_knzk)?>" target="_blank" class="btn btn-primary">神崎</a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <?php if ($live["is_live"] === 2) : ?>
+          <b>配信を終了:</b><br>
+          <span class="text-danger">* ソフト側(OBSなど)で配信終了するとボタンが使用できます。</span><br>
+        <?php elseif ($live["is_live"] === 1) : ?>
+          <a href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>" onclick="return confirm('配信を終了して、配信枠を返却します。\nよろしいですか？');" class="btn btn-danger btn-lg btn-block">配信を終了</a>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 </div>
 

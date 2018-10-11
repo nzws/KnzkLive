@@ -17,11 +17,17 @@ $slot = getSlot($live["slot_id"]);
 $my = getMe();
 if (!$my && $live["privacy_mode"] == "3") {
   http_response_code(403);
-  exit("ERR:この配信は非公開です。");
+  exit("ERR:この配信は非公開です。| " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
 }
+
+if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
+  http_response_code(403);
+  exit("ERR:この配信はまだ開始されていません。 | " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
+}
+
 $liveUser = getUser($live["user_id"]);
 
-$liveurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $live["id"];
+$liveurl = liveUrl($live["id"]);
 
 if (empty($_SESSION["watch_mode"])) {
   $_SESSION["watch_mode"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "hls" : "http-flv";
@@ -53,6 +59,11 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-9">
+      <div id="err_live" class="text-warning"></div>
+      <?php if ($my["id"] === $live["user_id"]) : ?>
+        <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
+        <div class="text-warning">* これは自分の放送です。ミュートしないと音がループする可能性がありますのでご注意ください。</div>
+      <?php endif; ?>
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
       </div>
@@ -81,13 +92,6 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
       <h3 id="live-name"><?=$live["name"]?></h3>
       <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/> <?=$liveUser["name"]?>
       <p id="live-description"><?=nl2br($live["description"])?></p>
-      <p id="err_live" class="text-warning"></p>
-
-      <?php if ($my["id"] === $live["user_id"]) : ?>
-        <p>
-          <span class="text-warning">* これは自分の放送です。ミュートしないと音がループする可能性がありますのでご注意ください。</span>
-        </p>
-      <?php endif; ?>
     </div>
     <div class="col-md-3">
       <div>
@@ -164,6 +168,8 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
         if (watch_data["live_status"] !== 0) document.getElementById('iframe').src = "<?=u("api/client/live_ended")?>";
       }
       if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
+
+      elemId("is_not_started").className = json["is_started"] ? "invisible" : "text-warning";
 
       if (json["name"] !== watch_data["name"]) {
         elemId("live-name").innerHTML = json["name"];

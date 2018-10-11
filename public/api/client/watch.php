@@ -17,5 +17,6 @@ api_json([
   "live_status" => $live["is_live"],
   "viewers_count" => $live["viewers_count"],
   "viewers_max" => $live["viewers_max"],
-  "viewers_max_concurrent" => $live["viewers_max_concurrent"]
+  "viewers_max_concurrent" => $live["viewers_max_concurrent"],
+  "is_started" => $live["is_started"]
 ]);

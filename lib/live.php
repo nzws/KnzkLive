@@ -98,3 +98,35 @@ function setViewersCount($id, $add = false) {
 
   return !$err;
 }
+
+function postLiveStart($live, $is_notification, $visibility) {
+  global $env;
+  $liveUser = getUser($live["user_id"]);
+  $url = liveUrl($live["id"]);
+  $text = <<< EOF
+#KnzkLive 配信開始:
+{$live["name"]} by {$liveUser["name"]}
+{$url}
+コメントタグ: #knzklive_{$live["id"]}
+EOF;
+  if ($is_notification) $text .= "\n!kl_start";
+
+  $data = [
+    "status" => $text,
+    "visibility" => $visibility
+  ];
+
+  $header = [
+    'Authorization: Bearer '.$env["notification_token"],
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
+  $json = json_decode($contents,true);
+}

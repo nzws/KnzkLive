@@ -100,7 +100,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
             <label class="form-check-label" for="term"><a href="<?=u("terms")?>" target="_blank">利用規約・ガイドライン</a>に同意する</label>
         </div>
 
-        <button type="submit" class="btn btn-primary">配信を開始</button>
+        <button type="submit" class="btn btn-primary">配信枠を取得</button>
     </form>
 </div>
 
