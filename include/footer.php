@@ -1,6 +1,9 @@
 <div class="container footer">
     <hr>
-    <a href="https://github.com/yuzulabo/KnzkLive" target="_blank">KnzkLive Project</a> by <a href="https://knzk.me/@Knzk" target="_blank">Knzk</a> & <a href="https://knzk.me/@y" target="_blank">nzws</a>
+    <p>
+      <a href="https://knzk.me/@KnzkLiveNotification" target="_blank">プッシュ通知</a> · <a href="https://nzws.me/donate.html" target="_blank">KnzkLiveを支援</a><br>
+      <a href="https://github.com/yuzulabo/KnzkLive" target="_blank">KnzkLive Project</a> by <a href="https://knzk.me/@Knzk" target="_blank">Knzk</a> & <a href="https://knzk.me/@y" target="_blank">nzws</a>
+    </p>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
