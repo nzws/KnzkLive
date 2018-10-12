@@ -305,11 +305,13 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
   }
 
   function post_comment() {
+    const v = elemId("toot").value;
+    if (!v) return;
     fetch('https://' + inst + '/api/v1/statuses', {
       headers: api_header,
       method: 'POST',
       body: JSON.stringify({
-        status: elemId("toot").value + hashtag,
+        status: v + hashtag,
         visibility: "public"
       })
     })
@@ -323,6 +325,7 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
     .then(function(json) {
       if (json) {
         elemId("toot").value = "";
+        check_limit();
       }
     })
     .catch(error => {
