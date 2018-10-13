@@ -28,11 +28,6 @@ if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
 $liveUser = getUser($live["user_id"]);
 
 $liveurl = liveUrl($live["id"]);
-
-if (empty($_SESSION["watch_mode"])) {
-  $_SESSION["watch_mode"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "hls" : "http-flv";
-}
-if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] == 0 ? "http-flv" : ($_GET["watch_mode"] == 1 ? "dash" : ($_GET["watch_mode"] == 2 ? "hls" : null));
 ?>
 <!doctype html>
 <html lang="ja">
@@ -60,25 +55,14 @@ if (isset($_GET["watch_mode"])) $_SESSION["watch_mode"] = $_GET["watch_mode"] ==
   <div class="row">
     <div class="col-md-9">
       <div id="err_live" class="text-warning"></div>
+      <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
       <?php if ($my["id"] === $live["user_id"]) : ?>
-        <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
-        <div class="text-warning">* これは自分の放送です。ミュートしないと音がループする可能性がありますのでご注意ください。</div>
+        <div class="text-warning">* これは自分の放送です。ハウリング防止の為自動でミュートしています。</div>
       <?php endif; ?>
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
       </div>
-      <div class="dropdown" style="display: inline-block;">
-        <button class="btn btn-secondary dropdown-toggle button-player" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          モード: <span id="live-mode"><?=s($_SESSION["watch_mode"])?></span>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "http-flv" ? " active" : "")?>" href="?watch_mode=0">HTTP-FLV</a>
-          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "dash" ? " active" : "")?>" href="?watch_mode=1">MPEG-DASH</a>
-          <a class="dropdown-item<?=($_SESSION["watch_mode"] === "hls" ? " active" : "")?>" href="?watch_mode=2">HLS</a>
-        </div>
-      </div>
-      <button class="btn btn-primary btn-small button-player" onclick="reloadLive()">再読込</button>
-      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info button-player">シェア</a>
+      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info button-player btn-sm">シェア</a>
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">

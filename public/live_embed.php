@@ -2,80 +2,310 @@
 require_once("../lib/bootloader.php");
 $_GET["id"] = s($_GET["id"]);
 $live = getLive($_GET["id"]);
+$my = getMe();
 if (!$_GET["id"] || !$live) {
-    header("HTTP/1.1 404 Not Found");
-    exit();
+  header("HTTP/1.1 404 Not Found");
+  exit();
 }
-if (!getMe() && $live["privacy_mode"] == "3") {
-    http_response_code(403);
-    exit("ERR:この配信は非公開です。");
+if (!$my && $live["privacy_mode"] == "3") {
+  http_response_code(403);
+  exit("ERR:この配信は非公開です。");
 }
-$mode = $_SESSION["watch_mode"];
+$myLive = $my["id"] == $live["user_id"];
+if (!$myLive && $live["is_started"] == "0") {
+  http_response_code(403);
+  exit("ERR:この配信はまだ開始されていません。");
+}
+if (empty($_SESSION["watch_type"])) {
+  $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
+}
+if (isset($_GET["watch_type"])) $_SESSION["watch_type"] = $_GET["watch_type"] == 0 ? "FLV" : "HLS";
+$mode = $_SESSION["watch_type"];
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="robots" content="noindex">
-    <link href="https://vjs.zencdn.net/7.1.0/video-js.css" rel="stylesheet">
-    <style>
-        html,
-        body,
-        .video-js {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
+  <style>
+    html,
+    body {
+      color: #f3f3f3;
+      background: #212121;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
+      font-size: 14px;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    a,
+    a:hover {
+      color: #f3f3f3;
+      text-decoration: none;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    video {
+      width: 100%;
+    }
+
+    .invisible {
+      display: none;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .footer_content {
+      padding: 10px;
+    }
+
+    .center_v {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    #splash img {
+      width: 300px;
+      max-width: 100%;
+      animation: pulse 4s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .2;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .right {
+      float: right
+    }
+
+    .video_control a {
+      margin-left: 10px;
+    }
+
+    #volume-range {
+      -webkit-appearance: none;
+      background: #fafafa;
+      height: 3px;
+      width: 100px;
+    }
+
+    #volume-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      background: #f3f3f3;
+      height: 15px;
+      width: 15px;
+      border-radius: 100%;
+    }
+
+    #volume-range::-moz-range-track {
+      height: 0;
+    }
+  </style>
 </head>
 
 <body>
-    <video id="my-video" class="video-js" controls preload="auto" data-setup="{}" autoplay>
-    <?php if ($mode === "hls") : ?><source src="<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.m3u8" type='application/x-mpegURL'><?php endif; ?>
-    <?php if ($mode === "rtmp") : ?><source src="rtmp://<?=$_GET["rtmp"]?>/<?=$_GET["id"]?>stream" type='rtmp/mp4'><?php endif; ?>
-    <?php if ($mode === "http-flv") : ?><source src="<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream.flv" type='video/x-flv'><?php endif; ?>
-    <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+<div id="splash">
+  <div class="center_v">
+    <img src="https://github.com/KnzkDev.png"/>
+  </div>
+  <div class="footer">
+    <div class="footer_content">
+      <b>KNZKLIVE</b> PLAYER · <span id="splash_loadtext">配信サーバに接続しています...</span>
+      <span class="right">
+        <span><a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a> · </span>
+        <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div id="video" class="invisible">
+  <video id="knzklive" class="center_v" autoplay preload="auto">
+    <p>
+      KnzkLive Playerからのお知らせ:<br>
+      この環境では視聴する事ができません。OS・ブラウザをアップデートするか、別の環境からお試しください。
     </p>
   </video>
+  <div class="footer" style="background: rgba(0,0,0,.5)">
+    <div class="footer_content">
+      <span id="video_status">LOADING</span>
+      <span> · <a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a></span>
+      <span class="right video_control">
+        <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
 
-    <script src="https://vjs.zencdn.net/7.1.0/video.js"></script>
-<?php if ($mode === "dash") : ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/2.9.0/dash.all.min.js" integrity="sha256-WQRlnkRVJncPG+GSENXHuEb84m29r6Tm81aPxTmtZZ8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-dash/2.10.0/videojs-dash.min.js" integrity="sha256-xhLRr5mlvCCC7DndQjNURZOXGxwYUoB2VoF0mNUiuJc=" crossorigin="anonymous"></script>
-<script>
-var player = videojs('my-video');
+        <a href="javascript:mute()" id="mute" class="invisible"><i class="fas fa-volume-mute fa-fw"></i></a>
+        <a href="javascript:mute(1)" id="volume"><i class="fas fa-volume-up fa-fw"></i></a>
+        <span style="margin-right: 8px"></span>
+        <input type="range" id="volume-range" onchange="volume(this.value)">
 
-player.ready(function() {
-  player.src({
-    src: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=$_GET["rtmp"]?>/live/<?=$_GET["id"]?>stream/index.mpd',
-    type: 'application/dash+xml'
-  });
+        <a href="javascript:full()" id="full-u" class="invisible"><i class="fas fa-compress fa-fw"></i></a>
+        <a href="javascript:full(1)" id="full"><i class="fas fa-expand fa-fw"></i></a>
+      </span>
+    </div>
+  </div>
+</div>
 
-  player.play();
-});
-</script>
-<?php elseif ($mode === "http-flv") : ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-flvjs@0.2.0/dist/videojs-flvjs.min.js" integrity="sha256-9E4vlrJpHeWFm/dzSKOps4Csfx0X1ReuUX43FWEeSJE=" crossorigin="anonymous"></script>
-    <script>
-        const player = videojs('my-video', {
-            techOrder: ['html5', 'flvjs'],
-            flvjs: {
-                mediaDataSource: {
-                    isLive: true,
-                    cors: true,
-                    withCredentials: false,
-                },
-                // config: {},
-            },
-        });
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  const type = '<?=s($mode)?>';
+  const video = document.getElementById("knzklive");
+  // noinspection JSAnnotator
+  const myLive = <?=$myLive ? "true" : "false"?>;
 
-        player.ready(function() {
-            player.play();
-        })
-    </script>
-<?php endif; ?>
+  function startWatching(v) {
+    video.addEventListener("error", function() {
+      showSplash("読み込み中に不明なエラーが発生しました...");
+    }, false);
+
+    video.addEventListener("ended", function() {
+      showSplash("配信者からデータが送信されていません。");
+    }, false);
+
+    video.addEventListener("playing", function() {
+      showSplash();
+      v.play();
+    }, false);
+
+    video.addEventListener("canplay", function() {
+      showSplash();
+      v.play();
+    }, false);
+
+    video.addEventListener("loadedmetadata", function () {
+      showSplash();
+      v.play();
+    }, false);
+
+    volume(70, true);
+    if (localStorage.getItem('kplayer_mute')) mute(localStorage.getItem('kplayer_mute'));
+    if (localStorage.getItem('kplayer_volume')) volume(localStorage.getItem('kplayer_volume'));
+    if (myLive) mute(1, true)
+  }
+
+  function showStatus() {
+    let buffer;
+    try {
+      buffer = (video.buffered).end(0);
+    } catch (e) {}
+    const play = video.currentTime;
+    let text = "";
+    if (buffer > play && play && buffer) { //再生
+      if (type !== "HLS") {
+        text += `<a href="javascript:seekLive()">LIVE</a> · ` + (Math.round(buffer - play)) + "s";
+      } else {
+        text += "LIVE";
+      }
+      showSplash();
+    } else { //バッファ
+      text += "BUFFERING";
+    }
+    document.getElementById("video_status").innerHTML = text;
+  }
+
+  window.onload = function () {
+    if (type !== "HLS" && flvjs.isSupported()) { //ws-flv
+      const flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        isLive: true,
+        url: '<?=(empty($_SERVER["HTTPS"]) ? "ws" : "wss")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv'
+      });
+      flvPlayer.attachMediaElement(video);
+      startWatching(flvPlayer);
+      flvPlayer.load();
+      flvPlayer.play();
+    } else { //hls
+      const hls_url = `<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8`;
+      if(Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(hls_url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+          video.play();
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = hls_url;
+        video.load();
+      }
+      startWatching(video);
+    }
+    setInterval(showStatus, 1000);
+  };
+
+  function showSplash(text = "") {
+    document.getElementById("splash_loadtext").innerHTML = text;
+    document.getElementById("splash").className = text ? "" : "invisible";
+    document.getElementById("video").className = text ? "invisible" : "";
+  }
+
+  function seekLive() {
+    video.currentTime = (video.seekable).end(0) - 1;
+    video.play();
+  }
+
+  function mute(i = 0, no_save) {
+    i = parseInt(i);
+    document.getElementById("mute").className = i ? "" : "invisible";
+    document.getElementById("volume").className = !i ? "" : "invisible";
+    video.muted = i;
+    if (!no_save) localStorage.setItem('kplayer_mute', i);
+  }
+
+  function volume(i, no_save) {
+    document.getElementById("volume-range").value = i;
+    video.volume = i * 0.01;
+    if (!no_save) localStorage.setItem('kplayer_volume', i);
+  }
+
+  function full(i) {
+    const v = document.querySelector("body");
+    if (i) {
+      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen(); //Webkit
+      if (v.mozRequestFullscreen) v.mozRequestFullscreen(); //Firefox
+      else if (v.requestFullscreen) v.requestFullscreen();
+    } else {
+      if (v.webkitRequestFullscreen) document.webkitCancelFullScreen(); //Webkit
+      else if (v.mozRequestFullscreen) document.mozCancelFullscreen(); //Firefox
+      else if (v.requestFullscreen) document.exitFullscreen();
+    }
+  }
+
+  document.onfullscreenchange = fullEvent;
+  document.onmozfullscreenchange = fullEvent;
+  document.onwebkitfullscreenchange = fullEvent;
+
+  function fullEvent() {
+    let i;
+    if (document.webkitCancelFullScreen) i = document.webkitFullscreenElement;
+    if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
+    else if (document.exitFullscreen) i = document.fullscreenElement;
+    document.getElementById("full-u").className = i ? "" : "invisible";
+    document.getElementById("full").className = !i ? "" : "invisible";
+  }
+</script>
 </body>
 </html>
