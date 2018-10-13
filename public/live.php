@@ -47,6 +47,10 @@ $liveurl = liveUrl($live["id"]);
     .hashtag {
       display: none;
     }
+    .avatar_img_navbar {
+      float: left;
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
@@ -69,12 +73,16 @@ $liveurl = liveUrl($live["id"]);
             視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
           <span id="count_end" class="invisible">
-            総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 | 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+            総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
           </span>
         </span>
       <p></p>
       <h3 id="live-name"><?=$live["name"]?></h3>
-      <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/> <?=$liveUser["name"]?>
+      <p>
+        <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
+        <?=$liveUser["name"]?><br>
+        <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small>
+      </p>
       <p id="live-description"><?=nl2br($live["description"])?></p>
     </div>
     <div class="col-md-3">
@@ -206,7 +214,7 @@ $liveurl = liveUrl($live["id"]);
     elemId("m").innerHTML = min + ":";
 
     if (sec < 10) sec = "0" + sec;
-    elemId("s").innerHTML = sec + " | ";
+    elemId("s").innerHTML = sec + " · ";
   }
 
   function reloadLive() {

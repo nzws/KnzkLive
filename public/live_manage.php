@@ -29,6 +29,17 @@ if (isset($_GET["mode"])) {
     setUserLive(0);
 
     if (setLiveStatus($live["id"], 0)) {
+      if ($my["misc"]["viewers_max_concurrent"]) {
+        if ($live["viewers_max_concurrent"] > $my["misc"]["viewers_max_concurrent"]) {
+          $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
+        }
+      } else {
+        $my["misc"]["viewers_max"] = 0;
+        $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
+      }
+      $my["misc"]["viewers_max"] += $live["viewers_max"];
+      setConfig($my["id"], $my["misc"]);
+
       $mysqli = db_start();
       $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP, created_at = created_at WHERE id = ?;");
       $stmt->bind_param("s",$live["id"]);
