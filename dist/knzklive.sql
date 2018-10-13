@@ -70,6 +70,14 @@ create table users
 -- 2018-10-12 added
 ALTER TABLE live ADD is_started int(2) DEFAULT 0 NOT NULL;
 
+-- 2018-10-13 added
+CREATE TABLE users_watching
+(
+    ip varchar(255) NOT NULL primary key,
+    watch_id int(100) NOT NULL,
+    updated_at timestamp DEFAULT current_timestamp() NOT NULL
+);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

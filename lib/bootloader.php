@@ -43,3 +43,4 @@ require_once($libpt."components.php");
 require_once($libpt."db.php");
 require_once($libpt."user.php");
 require_once($libpt."live.php");
+require_once($libpt."check_watching.php");

@@ -172,6 +172,22 @@ $liveurl = liveUrl($live["id"]);
     });
   }
 
+  function update_watch() {
+    fetch('<?=u("api/client/update_watching")?>?id=<?=s($live["id"])?>', {
+      method: 'GET',
+      credentials: 'include',
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+    }).catch(function(error) {
+      console.error(error);
+    });
+  }
+
   function date_disp() {
     /* thx https://www.tagindex.com/javascript/time/timer2.html */
     const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
@@ -350,6 +366,10 @@ $liveurl = liveUrl($live["id"]);
     loadComment();
     watch(true);
     setInterval(watch, 5000);
+<?php if ($live["is_live"] != 0) : ?>
+    update_watch();
+    setInterval(update_watch, 20000);
+<?php endif; ?>
     $('#toot').keydown(function (e){
       if (e.keyCode === 13 && e.ctrlKey) {
         post_comment()
