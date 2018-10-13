@@ -67,6 +67,9 @@ create table users
   misc       text                                    null
 );
 
+-- 2018-10-12 added
+ALTER TABLE live ADD is_started int(2) DEFAULT 0 NOT NULL;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

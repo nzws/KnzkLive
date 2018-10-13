@@ -31,12 +31,10 @@ if (isset($_GET["mode"])) {
     if (setLiveStatus($live["id"], 0)) {
       $mysqli = db_start();
       $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP, created_at = created_at WHERE id = ?;");
-      $stmt->bind_param("s",$id);
+      $stmt->bind_param("s",$live["id"]);
       $stmt->execute();
-      $err = $stmt->error;
       $stmt->close();
       $mysqli->close();
-
       header("Location: ".u());
     } else echo "ERROR: setLiveStatus";
 
