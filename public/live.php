@@ -66,7 +66,7 @@ $liveurl = liveUrl($live["id"]);
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
       </div>
-      <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("【視聴中】\n{$live["name"]} by @{$liveUser["acct"]}\n{$liveurl}\n\n#KnzkLive #knzklive_{$live["id"]}")?>" target="_blank" class="btn btn-info button-player btn-sm">シェア</a>
+      <button class="btn btn-info button-player btn-sm" onclick="share()">シェア</button>
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
@@ -369,15 +369,31 @@ $liveurl = liveUrl($live["id"]);
     l.innerText = 500 - hashtag.length - d.length;
   }
 
+  function share() {
+    const text = `【視聴中】
+${watch_data["name"]} by @<?=$liveUser["acct"]?>
+<?=$liveurl?>
+
+#KnzkLive #knzklive_<?=$live["id"]?>`;
+
+    let url = encodeURIComponent(text);
+    if (navigator.registerProtocolHandler) {
+      url = "web+mastodon://share?text=" + url;
+    } else {
+      url = "https://" + inst + "/share?text=" + url;
+    }
+    window.open(url);
+  }
+
   window.onload = function () {
     check_limit();
     loadComment();
     watch(true);
     setInterval(watch, 5000);
-<?php if ($live["is_live"] != 0) : ?>
+    <?php if ($live["is_live"] != 0) : ?>
     update_watch();
     setInterval(update_watch, 20000);
-<?php endif; ?>
+    <?php endif; ?>
     $('#toot').keydown(function (e){
       if (e.keyCode === 13 && e.ctrlKey) {
         post_comment()
