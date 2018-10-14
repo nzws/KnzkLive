@@ -137,7 +137,7 @@ $liveurl = liveUrl($live["id"]);
         </button>
       </div>
       <div class="modal-body">
-        <div class="row share_buttons">
+        <div class="row justify-content-md-center share_buttons">
           <button class="btn btn-outline-primary col-md-2" onclick="share_modal('__twitter__')">
             <i class="fab fa-twitter fa-fw fa-2x"></i><br>
             Twitter
