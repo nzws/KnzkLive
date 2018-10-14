@@ -51,9 +51,13 @@ function getLive($id) {
     return isset($row[0]["id"]) ? $row[0] : false;
 }
 
-function getAllLive($notId = 0) {
+function getAllLive($notId = 0, $is_history = false) {
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND (is_live = 1 OR is_live = 2) AND id != ? ORDER BY viewers_count desc;");
+    if ($is_history) {
+      $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_started = 1 AND id != ? ORDER BY ended_at desc LIMIT 0, 12;");
+    } else {
+      $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND (is_live = 1 OR is_live = 2) AND is_started = 1 AND id != ? ORDER BY viewers_count desc;");
+    }
     $stmt->bind_param("s", $notId);
     $stmt->execute();
     $row = db_fetch_all($stmt);
