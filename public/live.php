@@ -36,6 +36,7 @@ $liveurl = liveUrl($live["id"]);
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
   <style>
@@ -50,6 +51,20 @@ $liveurl = liveUrl($live["id"]);
     .avatar_img_navbar {
       float: left;
       margin-right: 10px;
+    }
+    .side-buttons, .side-buttons:hover {
+      color: #17a2b8;
+      text-decoration: none;
+    }
+    .modal-title {
+      color: #212529;
+    }
+    .share_buttons button {
+      margin: 0 3px;
+      padding: .375rem .1rem;
+    }
+    #live-name {
+      font-weight: 600;
     }
   </style>
 </head>
@@ -66,7 +81,6 @@ $liveurl = liveUrl($live["id"]);
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
       </div>
-      <button class="btn btn-info button-player btn-sm" onclick="share()">シェア</button>
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
@@ -76,8 +90,12 @@ $liveurl = liveUrl($live["id"]);
             総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
           </span>
         </span>
+      <br>
+      <div style="float: right">
+        <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
+      </div>
       <p></p>
-      <h3 id="live-name"><?=$live["name"]?></h3>
+      <h4 id="live-name"><?=$live["name"]?></h4>
       <p>
         <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
         <?=$liveUser["name"]?><br>
@@ -92,7 +110,7 @@ $liveurl = liveUrl($live["id"]);
             <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)" onkeyup="check_limit()"></textarea>
           </div>
           <div class="input-group">
-            <button class="btn btn-primary" onclick="post_comment()">コメント</button>　<b id="limit"></b>
+            <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>　<b id="limit"></b>
           </div>
         <?php else : ?>
           <p>
@@ -108,6 +126,42 @@ $liveurl = liveUrl($live["id"]);
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">共有</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row share_buttons">
+          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('__twitter__')">
+            <i class="fab fa-twitter fa-fw fa-2x"></i><br>
+            Twitter
+          </button>
+          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('web+mastodon://share?text=')">
+            <i class="fab fa-mastodon fa-fw fa-2x"></i><br>
+            Mastodon
+          </button>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <div class="col-md-12">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="share_url">URL</span>
+              </div>
+              <input type="text" class="form-control" aria-describedby="share_url" readonly value="<?=$liveurl?>" onclick="this.select(0,this.value.length)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script id="comment_tmpl" type="text/html">
   <div id="post_<%=id%>">
     <div class="row">
@@ -370,19 +424,28 @@ $liveurl = liveUrl($live["id"]);
   }
 
   function share() {
-    const text = `【視聴中】
-${watch_data["name"]} by @<?=$liveUser["acct"]?>
+    if (navigator.share) {
+      navigator.share({
+        title: `${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`,
+        url: "<?=$liveurl?>"
+      });
+    } else {
+      $('#shareModal').modal('toggle');
+    }
+  }
+
+  function share_modal(url) {
+    if (url === "__twitter__") {
+      url = `https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
+    } else {
+      const text = `【視聴中】
+${watch_data["name"]} by <?=$liveUser["name"]?>
 
 <?=$liveurl?>
 
 
 #KnzkLive #knzklive_<?=$live["id"]?>`;
-
-    let url = encodeURIComponent(text);
-    if (navigator.registerProtocolHandler) {
-      url = "web+mastodon://share?text=" + url;
-    } else {
-      url = "https://" + inst + "/share?text=" + url;
+      url += encodeURIComponent(text);
     }
     window.open(url);
   }
