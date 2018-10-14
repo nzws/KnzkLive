@@ -372,7 +372,9 @@ $liveurl = liveUrl($live["id"]);
   function share() {
     const text = `【視聴中】
 ${watch_data["name"]} by @<?=$liveUser["acct"]?>
+
 <?=$liveurl?>
+
 
 #KnzkLive #knzklive_<?=$live["id"]?>`;
 
