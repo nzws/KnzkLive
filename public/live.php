@@ -138,13 +138,25 @@ $liveurl = liveUrl($live["id"]);
       </div>
       <div class="modal-body">
         <div class="row justify-content-md-center share_buttons">
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('__twitter__')">
+          <button class="btn btn-outline-info col-md-2" onclick="share_modal('twitter')">
             <i class="fab fa-twitter fa-fw fa-2x"></i><br>
             Twitter
           </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('web+mastodon://share?text=')">
+          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('mastodon')">
             <i class="fab fa-mastodon fa-fw fa-2x"></i><br>
             Mastodon
+          </button>
+          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('weibo')">
+            <i class="fab fa-weibo fa-fw fa-2x"></i><br>
+            Weibo
+          </button>
+          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('facebook')">
+            <i class="fab fa-facebook fa-fw fa-2x"></i><br>
+            Facebook
+          </button>
+          <button class="btn btn-outline-success col-md-2" onclick="share_modal('line')">
+            <i class="fab fa-line fa-fw fa-2x"></i><br>
+            LINE
           </button>
         </div>
         <div class="row" style="margin-top: 10px">
@@ -434,10 +446,11 @@ $liveurl = liveUrl($live["id"]);
     }
   }
 
-  function share_modal(url) {
-    if (url === "__twitter__") {
+  function share_modal(mode) {
+    let url = "";
+    if (mode === "twitter") {
       url = `https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
-    } else {
+    } else if (mode === "mastodon") {
       const text = `【視聴中】
 ${watch_data["name"]} by <?=$liveUser["name"]?>
 
@@ -445,7 +458,13 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
 
 #KnzkLive #knzklive_<?=$live["id"]?>`;
-      url += encodeURIComponent(text);
+      url = "web+mastodon://share?text=" + encodeURIComponent(text);
+    } else if (mode === "facebook") {
+      url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
+    } else if (mode === "line") {
+      url = "http://line.me/R/msg/text/?<?=urlencode($liveurl)?>";
+    } else if (mode === "weibo") {
+      url = `http://service.weibo.com/share/share.php?url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
     }
     window.open(url);
   }
