@@ -132,5 +132,4 @@ EOF;
   ));
   $options = stream_context_create($options);
   $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
-  $json = json_decode($contents,true);
 }

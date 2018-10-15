@@ -60,7 +60,7 @@ $liveurl = liveUrl($live["id"]);
       color: #212529;
     }
     .share_buttons button {
-      margin: 0 3px;
+      margin: 3px;
       padding: .375rem .1rem;
     }
     #live-name {
@@ -92,6 +92,9 @@ $liveurl = liveUrl($live["id"]);
         </span>
       <br>
       <div style="float: right">
+<?php if ($live["is_live"] !== 0) : ?>
+        <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
+<?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
@@ -157,6 +160,14 @@ $liveurl = liveUrl($live["id"]);
           <button class="btn btn-outline-success col-md-2" onclick="share_modal('line')">
             <i class="fab fa-line fa-fw fa-2x"></i><br>
             LINE
+          </button>
+          <button class="btn btn-outline-info col-md-2" onclick="share_modal('skype')">
+            <i class="fab fa-skype fa-fw fa-2x"></i><br>
+            Skype
+          </button>
+          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('flipboard')">
+            <i class="fab fa-flipboard fa-fw fa-2x"></i><br>
+            Flipboard
           </button>
         </div>
         <div class="row" style="margin-top: 10px">
@@ -465,6 +476,10 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       url = "http://line.me/R/msg/text/?<?=urlencode($liveurl)?>";
     } else if (mode === "weibo") {
       url = `http://service.weibo.com/share/share.php?url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
+    } else if (mode === "skype") {
+      url = `https://web.skype.com/share?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
+    } else if (mode === "flipboard") {
+      url = `https://share.flipboard.com/bookmarklet/popout?v=2&url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
     }
     window.open(url);
   }
@@ -485,5 +500,18 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     });
   };
 </script>
+<?php if ($my["id"] === $live["user_id"]) : ?>
+<script>
+  function stop_broadcast() {
+    if (watch_data["live_status"] === 2) {
+      alert('エラー:まだ配信ソフトウェアが切断されていません。\n(または、切断された事がまだクライアントに送信されていない可能性があります。5秒程経ってからもう一度お試しください。)');
+    } else if (watch_data["live_status"] === 1) {
+      if (confirm('配信を終了します。よろしいですか？')) {
+        location.href = `<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>`;
+      }
+    }
+  }
+</script>
+<?php endif; ?>
 </body>
 </html>
