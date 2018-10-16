@@ -105,8 +105,6 @@ function setViewersCount($id, $add = false) {
 
 function postLiveStart($live, $is_notification, $visibility) {
   global $env;
-  if ($live["is_started"]) return;
-
   $liveUser = getUser($live["user_id"]);
   $url = liveUrl($live["id"]);
   $text = <<< EOF

@@ -56,7 +56,7 @@ if (isset($_GET["mode"])) {
 }
 
 if (isset($_POST["type"])) {
-  if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5) {
+  if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5 && $live["is_started"] != 1) {
     if ($_POST["start_post"] < 4) {
       $visibility = $_POST["start_post"] == 1 ? "public" :
         ($_POST["start_post"] == 2 ? "unlisted" :
