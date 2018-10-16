@@ -12,3 +12,12 @@ function escapeHTML(text) {
 
   return text;
 }
+
+function buildQuery(data) {
+  var body = '';
+  for (var key in data) {
+    body += key + '=' + encodeURIComponent(data[key]) + '&';
+  }
+  body += 'd=' + new Date().getTime();
+  return body;
+}

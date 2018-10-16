@@ -133,3 +133,17 @@ EOF;
   $options = stream_context_create($options);
   $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
 }
+
+function live4Pub($live) {
+  return [
+    "name" => $live["name"],
+    "description" => $live["description"],
+    "created_at" => $live["created_at"],
+    "ended_at" => $live["ended_at"],
+    "live_status" => $live["is_live"],
+    "viewers_count" => $live["viewers_count"],
+    "viewers_max" => $live["viewers_max"],
+    "viewers_max_concurrent" => $live["viewers_max_concurrent"],
+    "is_started" => $live["is_started"]
+  ];
+}

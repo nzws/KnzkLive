@@ -93,18 +93,37 @@ $liveurl = liveUrl($live["id"]);
       <br>
       <div style="float: right">
 <?php if ($live["is_live"] !== 0) : ?>
+        <button type="button" class="btn btn-outline-primary live_info" onclick="openEditLive()" style="margin-right:10px"><i class="fas fa-pencil-alt"></i> 編集</button>
+        <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
+        <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
         <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
 <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
-      <h4 id="live-name"><?=$live["name"]?></h4>
+      <h4 id="live-name" class="live_info"><?=$live["name"]?></h4>
+
+      <div class="input-group col-md-6 invisible live_edit" style="margin-bottom:20px">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="edit_title_label">タイトル</span>
+        </div>
+        <input type="text" class="form-control" placeholder="タイトル (100文字以下)" value="<?=$live["name"]?>" id="edit_name">
+      </div>
+
       <p>
         <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
         <?=$liveUser["name"]?><br>
         <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small>
       </p>
-      <p id="live-description"><?=nl2br($live["description"])?></p>
+      <p id="live-description" class="live_info"><?=nl2br($live["description"])?></p>
+
+      <div class="input-group col-md-8 invisible live_edit">
+        <div class="input-group-prepend">
+          <span class="input-group-text">説明</span>
+        </div>
+        <textarea class="form-control" id="edit_desc" rows="4"><?=$live["description"]?></textarea>
+      </div>
+
     </div>
     <div class="col-md-3">
       <div>
@@ -201,7 +220,7 @@ $liveurl = liveUrl($live["id"]);
 </script>
 <?php include "../include/footer.php"; ?>
 <script src="js/tmpl.min.js"></script>
-<script src="js/knzklive.js"></script>
+<script src="js/knzklive.js?2018-10-16"></script>
 <script>
   const hashtag_o = "knzklive_<?=$id?>";
   const hashtag = " #" + hashtag_o;
@@ -510,6 +529,59 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
         location.href = `<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>`;
       }
     }
+  }
+
+  function edit_live() {
+    const name = elemId('edit_name').value;
+    const desc = elemId('edit_desc').value;
+
+    if (!name || !desc) {
+      alert('エラー: タイトルか説明が入力されていません。');
+      return;
+    }
+
+    fetch('<?=u("api/client/edit_live")?>', {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      method: 'POST',
+      credentials: 'include',
+      body: buildQuery({
+        name: name,
+        description: desc,
+        csrf_token: `<?=$_SESSION['csrf_token']?>`
+      })
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+      } else {
+        $('.live_info').removeClass('invisible');
+        $('.live_edit').addClass('invisible');
+        watch();
+      }
+    }).catch(function(error) {
+      console.error(error);
+      alert('送信中にエラーが発生しました。');
+    });
+  }
+
+  function undo_edit_live() {
+    elemId('edit_name').value = watch_data["name"];
+    elemId('edit_desc').value = watch_data["description"].replace(/<br \/>/g, "");
+
+    $('.live_info').removeClass('invisible');
+    $('.live_edit').addClass('invisible');
+  }
+
+  function openEditLive() {
+    $('.live_info').addClass('invisible');
+    $('.live_edit').removeClass('invisible');
   }
 </script>
 <?php endif; ?>

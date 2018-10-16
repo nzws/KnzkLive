@@ -71,9 +71,12 @@ if (isset($_POST["type"])) {
     $mysqli->close();
     $live = getLive($live["id"]);
   } elseif ($_POST["type"] == "edit") {
+    $title = s($_POST["title"]);
+    $desc = s($_POST["description"]);
+
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ? WHERE id = ?;");
-    $stmt->bind_param('sss', s($_POST["title"]), s($_POST["description"]), $live["id"]);
+    $stmt->bind_param('sss', $title, $desc, $live["id"]);
     $stmt->execute();
     $stmt->close();
     $mysqli->close();
