@@ -92,7 +92,7 @@ $liveurl = liveUrl($live["id"]);
         </span>
       <br>
       <div style="float: right">
-<?php if ($live["is_live"] !== 0) : ?>
+<?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
         <button type="button" class="btn btn-outline-primary live_info" onclick="openEditLive()" style="margin-right:10px"><i class="fas fa-pencil-alt"></i> 編集</button>
         <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
         <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
