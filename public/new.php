@@ -48,6 +48,8 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     setSlot($slot, 1);
     header("Location: ".u("live_manage"));
     exit();
+} elseif ($my["misc"]["to_title"]) {
+  $last = getMyLastLive($my["id"]);
 }
 ?>
 <!doctype html>
@@ -63,13 +65,13 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
         <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
         <div class="form-group">
             <label for="title">配信タイトル</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required>
+            <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=$last["name"]?>">
             <small id="title_note" class="form-text text-muted">100文字以下</small>
         </div>
 
         <div class="form-group">
             <label for="description">配信の説明</label>
-            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            <textarea class="form-control" id="description" name="description" rows="4" required><?=$last["description"]?></textarea>
         </div>
 
         <div class="form-check">

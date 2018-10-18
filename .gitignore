@@ -56,12 +56,11 @@ typings/
 
 # dotenv environment variables file
 .env
+config.php
+config.js
 
 # next.js build output
 .next
-
-# misc
-config.php
 
 .idea
 .vscode

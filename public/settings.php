@@ -9,6 +9,7 @@ if (!$my) {
 if ($_POST) {
   if ($_POST["type"] === "live") {
     $my["misc"]["live_toot"] = !!$_POST["live_toot"];
+    $my["misc"]["to_title"] = !!$_POST["to_title"];
   }
   setConfig($my["id"], $my["misc"]);
 }
@@ -38,6 +39,15 @@ if ($_POST) {
             <input type="checkbox" class="custom-control-input" id="conf_toot" name="live_toot" value="1" <?=($my["misc"]["live_toot"] ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_toot">
               KnzkLive外で投稿されたトゥートをある程度ブロックする <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。')">説明</a>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="conf_to_title" name="to_title" value="1" <?=($my["misc"]["to_title"] ? "checked" : "")?>>
+            <label class="custom-control-label" for="conf_to_title">
+              配信枠取得の際に前回のタイトルと説明を予め記入する
             </label>
           </div>
         </div>

@@ -42,3 +42,14 @@ function setConfig($id, $misc) {
   $stmt->close();
   $mysqli->close();
 }
+
+function getMyLastLive($user_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE user_id = ? ORDER BY id desc LIMIT 1;");
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  return isset($row[0]["id"]) ? $row[0] : false;
+}
