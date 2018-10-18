@@ -115,6 +115,7 @@ $liveurl = liveUrl($live["id"]);
         <?=$liveUser["name"]?><br>
         <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small>
       </p>
+      <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
       <p id="live-description" class="live_info"><?=nl2br($live["description"])?></p>
 
       <div class="input-group col-md-8 invisible live_edit">
