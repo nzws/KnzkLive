@@ -13,3 +13,7 @@ function liveUrl($id) {
   global $env;
   return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $id;
 }
+
+function liveTag($live) {
+  return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_".$live["id"];
+}

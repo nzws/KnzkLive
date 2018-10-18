@@ -87,7 +87,7 @@ if (isset($_POST["type"])) {
 $liveurl = liveUrl($live["id"]);
 $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
 
-$share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #knzklive_{$live["id"]}";
+$share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #".liveTag($live);
 $share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
 ?>
 <!doctype html>

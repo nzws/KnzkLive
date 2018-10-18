@@ -38,7 +38,7 @@ if ($_POST) {
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="conf_toot" name="live_toot" value="1" <?=($my["misc"]["live_toot"] ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_toot">
-              KnzkLive外で投稿されたトゥートをある程度ブロックする <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID) タグのトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。')">説明</a>
+              KnzkLive外で投稿されたトゥートをある程度ブロックする <a href="javascript:alert('KnzkLiveではMastodonに投稿した #knzklive_(配信ID)タグ (またはカスタムタグ) のトゥートをコメントとして読み込むため、タグを付けて別クライアントでトゥートしてもコメントとして読み込まれます。')">説明</a>
             </label>
           </div>
         </div>

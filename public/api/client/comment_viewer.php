@@ -70,7 +70,7 @@ $liveUser = getUser($live["user_id"]);
   </div>
 </script>
 <script>
-  const hashtag_o = "knzklive_<?=s($_GET["id"])?>";
+  const hashtag_o = "<?=liveTag($live)?>";
   const inst = "<?=$env["masto_login"]["domain"]?>";
   var api_header = {'content-type': 'application/json'};
 

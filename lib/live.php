@@ -107,11 +107,12 @@ function postLiveStart($live, $is_notification, $visibility) {
   global $env;
   $liveUser = getUser($live["user_id"]);
   $url = liveUrl($live["id"]);
+  $tag = liveTag($live);
   $text = <<< EOF
 #KnzkLive 配信開始:
 {$live["name"]} by {$liveUser["name"]}
 {$url}
-コメントタグ: #knzklive_{$live["id"]}
+コメントタグ: #{$tag}
 EOF;
   if ($is_notification) $text .= "\n!kl_start";
 

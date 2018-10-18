@@ -137,7 +137,7 @@ $liveurl = liveUrl($live["id"]);
           </div>
         <?php else : ?>
           <p>
-            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから#knzklive_{$id}をつけてトゥートしてもコメントする事ができます。" : "")?></span>
+            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
           </p>
         <?php endif; ?>
         <p class="invisible" id="err_comment">
@@ -223,7 +223,7 @@ $liveurl = liveUrl($live["id"]);
 <script src="js/tmpl.min.js"></script>
 <script src="js/knzklive.js?2018-10-16"></script>
 <script>
-  const hashtag_o = "knzklive_<?=$id?>";
+  const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o;
   const inst = "<?=$env["masto_login"]["domain"]?>";
   const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
@@ -488,7 +488,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 <?=$liveurl?>
 
 
-#KnzkLive #knzklive_<?=$live["id"]?>`;
+#KnzkLive #<?=liveTag($live)?>`;
       url = "web+mastodon://share?text=" + encodeURIComponent(text);
     } else if (mode === "facebook") {
       url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
