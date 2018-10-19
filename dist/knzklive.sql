@@ -81,6 +81,17 @@ CREATE TABLE users_watching
 -- 2018-10-18 added
 ALTER TABLE live ADD custom_hashtag varchar(255) NULL;
 
+-- 2018-10-19 added
+CREATE TABLE comment
+(
+    id int(255) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id varchar(255) NOT NULL,
+    content text NOT NULL,
+    created_at timestamp DEFAULT current_timestamp() NOT NULL,
+    live_id int(255) NOT NULL,
+    is_deleted int(3)
+);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

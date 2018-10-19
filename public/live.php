@@ -92,12 +92,12 @@ $liveurl = liveUrl($live["id"]);
         </span>
       <br>
       <div style="float: right">
-<?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
-        <button type="button" class="btn btn-outline-primary live_info" onclick="openEditLive()" style="margin-right:10px"><i class="fas fa-pencil-alt"></i> 編集</button>
-        <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
-        <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
-        <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
-<?php endif; ?>
+        <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
+          <button type="button" class="btn btn-outline-primary live_info" onclick="openEditLive()" style="margin-right:10px"><i class="fas fa-pencil-alt"></i> 編集</button>
+          <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
+          <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
+          <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
+        <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
@@ -130,7 +130,15 @@ $liveurl = liveUrl($live["id"]);
       <div>
         <?php if ($my) : ?>
           <div class="form-group">
-            <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート)" onkeyup="check_limit()"></textarea>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+              <label class="custom-control-label" for="no_toot">
+                Mastodonに投稿しない
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート/コメント)" onkeyup="check_limit()"></textarea>
           </div>
           <div class="input-group">
             <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>　<b id="limit"></b>
@@ -222,6 +230,7 @@ $liveurl = liveUrl($live["id"]);
 <?php include "../include/footer.php"; ?>
 <script src="js/tmpl.min.js"></script>
 <script src="js/knzklive.js?2018-10-16"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script>
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o;
@@ -333,75 +342,71 @@ $liveurl = liveUrl($live["id"]);
       }
     })
     .then(function(json) {
-      if (json) {
-        var reshtml = "";
-        var ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
-        if (token) ws_url += "&access_token=" + token;
+      let reshtml = "";
+      let ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
+      if (token) ws_url += "&access_token=" + token;
 
-        cm_ws = new WebSocket(ws_url);
-        cm_ws.onopen = function() {
-          heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
-          cm_ws.onmessage = function(message) {
-            var ws_resdata = JSON.parse(message.data);
-            var ws_reshtml = JSON.parse(ws_resdata.payload);
+      cm_ws = new WebSocket(ws_url);
+      cm_ws.onopen = function() {
+        heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
+        cm_ws.onmessage = ws_onmessage;
 
-            if (ws_resdata.event === 'update') {
-              if (ws_reshtml['id']) {
-                if (!ws_reshtml['application'] && config["live_toot"]) {
-                  console.log('COMMENT BLOCKED', ws_reshtml);
-                  return;
-                }
-                if (config["live_toot"] && (
-                  ws_reshtml['application']['name'] !== "KnzkLive" ||
-                  ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                  ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
-                )) {
-                  console.log('COMMENT BLOCKED', ws_reshtml);
-                  return;
-                }
-                let acct = ws_reshtml['account']['acct'] !== ws_reshtml['account']['username'] ? ws_reshtml['account']['acct'] : ws_reshtml['account']['username'] + "@" + inst;
-                ws_reshtml["me"] = "<?=$my["acct"]?>" === acct;
-                ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-                elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
-              }
-            } else if (ws_resdata.event === 'delete') {
-              var del_toot = elemId('post_' + ws_resdata.payload);
-              if (del_toot) del_toot.parentNode.removeChild(del_toot);
-            }
-          };
-
-          cm_ws.onclose = function() {
-            clearInterval(heartbeat);
-            loadComment();
-          };
+        cm_ws.onclose = function() {
+          clearInterval(heartbeat);
+          loadComment();
         };
-        cm_ws.onerror = function() {
-          console.warn('err:ws');
-        };
+      };
 
-        var i = 0;
-        while (json[i]) {
-          if (!json[i]['application'] && config["live_toot"]) {
-            console.log('COMMENT BLOCKED', json[i]);
-          } else {
-            if (config["live_toot"] && (
-              json[i]['application']['name'] !== "KnzkLive" ||
-              json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-              json[i]['account']['acct'] !== json[i]['account']['username']
-            )) {
+      const klcom = io(<?=($env["is_testing"] ? "\"http://localhost:3000\"" : "")?>);
+      klcom.on('knzklive_comment_<?=s($live["id"])?>', function(msg) {
+        console.log(msg);
+        ws_onmessage(msg, "update");
+      });
+
+      fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
+        method: 'GET',
+        credentials: 'include'
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(c) {
+        if (c) {
+          json = json.concat(c);
+          json.sort(function(a,b) {
+            return (Date.parse(a["created_at"]) < Date.parse(b["created_at"]) ? 1 : -1);
+          });
+        }
+        if (json) {
+          let i = 0;
+          while (json[i]) {
+            if (!json[i]['application'] && config["live_toot"]) {
               console.log('COMMENT BLOCKED', json[i]);
             } else {
-              let acct = json[i]['account']['acct'] !== json[i]['account']['username'] ? json[i]['account']['acct'] : json[i]['account']['username'] + "@" + inst;
-              json[i]["me"] = "<?=$my["acct"]?>" === acct;
-              json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-              reshtml += tmpl("comment_tmpl", json[i]);
+              if (config["live_toot"] && (
+                json[i]['application']['name'] !== "KnzkLive" ||
+                json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
+                json[i]['account']['acct'] !== json[i]['account']['username']
+              )) {
+                console.log('COMMENT BLOCKED', json[i]);
+              } else {
+                let acct = json[i]['account']['acct'] !== json[i]['account']['username'] ? json[i]['account']['acct'] : json[i]['account']['username'] + "@" + inst;
+                json[i]["me"] = "<?=$my["acct"]?>" === acct;
+                json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
+                reshtml += tmpl("comment_tmpl", json[i]);
+              }
             }
+            i++;
           }
-          i++;
         }
 
         elemId("comments").innerHTML = reshtml;
-      }
+      }).catch(function(error) {
+        console.error(error);
+        elemId("err_comment").className = "text-danger";
+      });
     })
     .catch(error => {
       console.log(error);
@@ -412,14 +417,23 @@ $liveurl = liveUrl($live["id"]);
   function post_comment() {
     const v = elemId("toot").value;
     if (!v) return;
-    fetch('https://' + inst + '/api/v1/statuses', {
-      headers: api_header,
+    const isKnzk = elemId("no_toot").checked;
+
+    const option = isKnzk ? {headers: {'content-type': 'application/x-www-form-urlencoded'},
+      method: 'POST',
+      credentials: 'include',
+      body: buildQuery({
+        live_id: <?=s($live["id"])?>,
+        content: v,
+        csrf_token: `<?=$_SESSION['csrf_token']?>`
+      })} : {headers: api_header,
       method: 'POST',
       body: JSON.stringify({
         status: v + hashtag,
         visibility: "public"
-      })
-    })
+      })};
+
+    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://' + inst + '/api/v1/statuses', option)
     .then(function(response) {
       if (response.ok) {
         return response.json();
@@ -457,6 +471,45 @@ $liveurl = liveUrl($live["id"]);
       console.log(error);
       elemId("toot").value += "\n[実行中にエラーが発生しました]";
     });
+  }
+
+  function ws_onmessage(message, mode = "") {
+    let ws_resdata, ws_reshtml;
+    if (mode) { //KnzkLive Comment
+      ws_resdata = {};
+      ws_resdata.event = mode;
+      ws_reshtml = message;
+    } else { //Mastodon
+      ws_resdata = JSON.parse(message.data);
+      ws_reshtml = JSON.parse(ws_resdata.payload);
+    }
+
+    if (ws_resdata.event === 'update') {
+      if (ws_reshtml['id']) {
+        if (!ws_reshtml['is_knzklive']) {
+          if (!ws_reshtml['application'] && config["live_toot"]) {
+            console.log('COMMENT BLOCKED', ws_reshtml);
+            return;
+          }
+          if (config["live_toot"] && (
+            ws_reshtml['application']['name'] !== "KnzkLive" ||
+            ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
+            ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
+          )) {
+            console.log('COMMENT BLOCKED', ws_reshtml);
+            return;
+          }
+        }
+
+        let acct = ws_reshtml['account']['acct'] !== ws_reshtml['account']['username'] ? ws_reshtml['account']['acct'] : ws_reshtml['account']['username'] + "@" + inst;
+        ws_reshtml["me"] = "<?=$my["acct"]?>" === acct;
+        ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
+        elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
+      }
+    } else if (ws_resdata.event === 'delete') {
+      var del_toot = elemId('post_' + ws_resdata.payload);
+      if (del_toot) del_toot.parentNode.removeChild(del_toot);
+    }
   }
 
   function check_limit() {
@@ -521,70 +574,70 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
   };
 </script>
 <?php if ($my["id"] === $live["user_id"]) : ?>
-<script>
-  function stop_broadcast() {
-    if (watch_data["live_status"] === 2) {
-      alert('エラー:まだ配信ソフトウェアが切断されていません。\n(または、切断された事がまだクライアントに送信されていない可能性があります。5秒程経ってからもう一度お試しください。)');
-    } else if (watch_data["live_status"] === 1) {
-      if (confirm('配信を終了します。よろしいですか？')) {
-        location.href = `<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>`;
+  <script>
+    function stop_broadcast() {
+      if (watch_data["live_status"] === 2) {
+        alert('エラー:まだ配信ソフトウェアが切断されていません。\n(または、切断された事がまだクライアントに送信されていない可能性があります。5秒程経ってからもう一度お試しください。)');
+      } else if (watch_data["live_status"] === 1) {
+        if (confirm('配信を終了します。よろしいですか？')) {
+          location.href = `<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>`;
+        }
       }
     }
-  }
 
-  function edit_live() {
-    const name = elemId('edit_name').value;
-    const desc = elemId('edit_desc').value;
+    function edit_live() {
+      const name = elemId('edit_name').value;
+      const desc = elemId('edit_desc').value;
 
-    if (!name || !desc) {
-      alert('エラー: タイトルか説明が入力されていません。');
-      return;
+      if (!name || !desc) {
+        alert('エラー: タイトルか説明が入力されていません。');
+        return;
+      }
+
+      fetch('<?=u("api/client/edit_live")?>', {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery({
+          name: name,
+          description: desc,
+          csrf_token: `<?=$_SESSION['csrf_token']?>`
+        })
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+        } else {
+          $('.live_info').removeClass('invisible');
+          $('.live_edit').addClass('invisible');
+          watch();
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert('送信中にエラーが発生しました。');
+      });
     }
 
-    fetch('<?=u("api/client/edit_live")?>', {
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery({
-        name: name,
-        description: desc,
-        csrf_token: `<?=$_SESSION['csrf_token']?>`
-      })
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-      } else {
-        $('.live_info').removeClass('invisible');
-        $('.live_edit').addClass('invisible');
-        watch();
-      }
-    }).catch(function(error) {
-      console.error(error);
-      alert('送信中にエラーが発生しました。');
-    });
-  }
+    function undo_edit_live() {
+      elemId('edit_name').value = watch_data["name"];
+      elemId('edit_desc').value = watch_data["description"].replace(/<br \/>/g, "");
 
-  function undo_edit_live() {
-    elemId('edit_name').value = watch_data["name"];
-    elemId('edit_desc').value = watch_data["description"].replace(/<br \/>/g, "");
+      $('.live_info').removeClass('invisible');
+      $('.live_edit').addClass('invisible');
+    }
 
-    $('.live_info').removeClass('invisible');
-    $('.live_edit').addClass('invisible');
-  }
-
-  function openEditLive() {
-    $('.live_info').addClass('invisible');
-    $('.live_edit').removeClass('invisible');
-  }
-</script>
+    function openEditLive() {
+      $('.live_info').addClass('invisible');
+      $('.live_edit').removeClass('invisible');
+    }
+  </script>
 <?php endif; ?>
 </body>
 </html>

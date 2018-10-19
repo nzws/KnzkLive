@@ -1,0 +1,26 @@
+<?php
+require_once("../../../lib/bootloader.php");
+require_once("../../../lib/apiloader.php");
+
+$post = comment_get(s($_GET["id"]));
+
+$i = 0;
+while (isset($post[$i])) {
+  $acct[$i] = getUser($post[$i]["user_id"]);
+  $post[$i] = [
+    "id" => "knzklive_".$post[$i]["id"],
+    "live_id" => $post[$i]["live_id"],
+    "is_knzklive" => true,
+    "account" => [
+      "display_name" => $acct[$i]["name"],
+      "acct" => $acct[$i]["acct"],
+      "username" => $acct[$i]["acct"],
+      "avatar" => $acct[$i]["misc"]["avatar"]
+    ],
+    "content" => $post[$i]["content"],
+    "created_at" => $post[$i]["created_at"]
+  ];
+  $i++;
+}
+
+api_json($post);

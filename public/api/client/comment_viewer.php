@@ -63,6 +63,7 @@ $liveUser = getUser($live["user_id"]);
 <div id="comments"></div>
 <script src="../../js/tmpl.min.js"></script>
 <script src="../../js/knzklive.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script id="comment_tmpl" type="text/html">
   <div id="post_<%=id%>" class="com">
     <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small>
@@ -93,75 +94,109 @@ $liveUser = getUser($live["user_id"]);
       }
     })
     .then(function(json) {
-      if (json) {
-        var reshtml = "";
-        var ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
+      let reshtml = "";
+      let ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
 
-        cm_ws = new WebSocket(ws_url);
-        cm_ws.onopen = function() {
-          heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
-          cm_ws.onmessage = function(message) {
-            var ws_resdata = JSON.parse(message.data);
-            var ws_reshtml = JSON.parse(ws_resdata.payload);
+      cm_ws = new WebSocket(ws_url);
+      cm_ws.onopen = function() {
+        heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
+        cm_ws.onmessage = ws_onmessage;
 
-            if (ws_resdata.event === 'update') {
-              if (ws_reshtml['id']) {
-                if (!ws_reshtml['application'] && config["live_toot"]) {
-                  console.log('COMMENT BLOCKED', ws_reshtml);
-                  return;
-                }
-                if (config["live_toot"] && (
-                  ws_reshtml['application']['name'] !== "KnzkLive" ||
-                  ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                  ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
-                )) {
-                  console.log('COMMENT BLOCKED', ws_reshtml);
-                  return;
-                }
-                ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-                elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
-              }
-            } else if (ws_resdata.event === 'delete') {
-              var del_toot = elemId('post_' + ws_resdata.payload);
-              if (del_toot) del_toot.parentNode.removeChild(del_toot);
-            }
-          };
-
-          cm_ws.onclose = function() {
-            clearInterval(heartbeat);
-            loadComment();
-          };
+        cm_ws.onclose = function() {
+          clearInterval(heartbeat);
+          loadComment();
         };
-        cm_ws.onerror = function() {
-          console.warn('err:ws');
-        };
+      };
 
-        var i = 0;
-        while (json[i]) {
-          if (!json[i]['application'] && config["live_toot"]) {
-            console.log('COMMENT BLOCKED', json[i]);
-          } else {
-            if (config["live_toot"] && (
-              json[i]['application']['name'] !== "KnzkLive" ||
-              json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-              json[i]['account']['acct'] !== json[i]['account']['username']
-            )) {
+      const klcom = io(<?=($env["is_testing"] ? "\"http://localhost:3000\"" : "")?>);
+      klcom.on('knzklive_comment_<?=s($live["id"])?>', function(msg) {
+        console.log(msg);
+        ws_onmessage(msg, "update");
+      });
+
+      fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
+        method: 'GET',
+        credentials: 'include'
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(c) {
+        if (c) {
+          json = json.concat(c);
+          json.sort(function(a,b) {
+            return (Date.parse(a["created_at"]) < Date.parse(b["created_at"]) ? 1 : -1);
+          });
+        }
+        if (json) {
+          let i = 0;
+          while (json[i]) {
+            if (!json[i]['application'] && config["live_toot"]) {
               console.log('COMMENT BLOCKED', json[i]);
             } else {
-              json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-              reshtml += tmpl("comment_tmpl", json[i]);
+              if (config["live_toot"] && (
+                json[i]['application']['name'] !== "KnzkLive" ||
+                json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
+                json[i]['account']['acct'] !== json[i]['account']['username']
+              )) {
+                console.log('COMMENT BLOCKED', json[i]);
+              } else {
+                json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
+                reshtml += tmpl("comment_tmpl", json[i]);
+              }
             }
+            i++;
           }
-          i++;
         }
 
         elemId("comments").innerHTML = reshtml;
-      }
+      }).catch(function(error) {
+        console.error(error);
+        elemId("err_comment").className = "text-danger";
+      });
     })
     .catch(error => {
       console.log(error);
       elemId("err_comment").className = "text-danger";
     });
+  }
+
+  function ws_onmessage(message, mode = "") {
+    let ws_resdata, ws_reshtml;
+    if (mode) { //KnzkLive Comment
+      ws_resdata = {};
+      ws_resdata.event = mode;
+      ws_reshtml = message;
+    } else { //Mastodon
+      ws_resdata = JSON.parse(message.data);
+      ws_reshtml = JSON.parse(ws_resdata.payload);
+    }
+
+    if (ws_resdata.event === 'update') {
+      if (ws_reshtml['id']) {
+        if (!ws_reshtml['is_knzklive']) {
+          if (!ws_reshtml['application'] && config["live_toot"]) {
+            console.log('COMMENT BLOCKED', ws_reshtml);
+            return;
+          }
+          if (config["live_toot"] && (
+            ws_reshtml['application']['name'] !== "KnzkLive" ||
+            ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
+            ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
+          )) {
+            console.log('COMMENT BLOCKED', ws_reshtml);
+            return;
+          }
+        }
+        ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
+        elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
+      }
+    } else if (ws_resdata.event === 'delete') {
+      var del_toot = elemId('post_' + ws_resdata.payload);
+      if (del_toot) del_toot.parentNode.removeChild(del_toot);
+    }
   }
 
   window.onload = function () {

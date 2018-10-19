@@ -24,6 +24,8 @@ $env["is_testing"] = false;
 // メンテナンスモード: 全てのAPIとWeb UIをロックし503にします(キャッシュ分は表示されるかも)
 $env["is_maintenance"] = false;
 
+$env["websocket_url"] = "http://localhost:3000";
+
 // 定数: いじらないでね
 define('PATH', dirname(__FILE__) . '/');
 define('CONF_VERSION', 1); //Devtip: CONF_VERSIONを変えたらlib/bootloader.phpの$ConfigVersionの数字を変える
