@@ -1,0 +1,15 @@
+[Unit]
+Description=KnzkLive
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/yarn run ws:start
+WorkingDirectory=/path/to/knzklive
+KillMode=process
+Restart=always
+User=knzklive
+Group=knzklive
+
+[Install]
+WantedBy=multi-user.target
