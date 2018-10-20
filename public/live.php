@@ -331,7 +331,7 @@ $liveurl = liveUrl($live["id"]);
     elemId("err_comment").className = "invisible";
 
     fetch('https://' + inst + '/api/v1/timelines/tag/' + hashtag_o, {
-      headers: api_header,
+      headers: {'content-type': 'application/json'},
       method: 'GET'
     })
     .then(function(response) {
@@ -344,7 +344,6 @@ $liveurl = liveUrl($live["id"]);
     .then(function(json) {
       let reshtml = "";
       let ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
-      if (token) ws_url += "&access_token=" + token;
 
       cm_ws = new WebSocket(ws_url);
       cm_ws.onopen = function() {
@@ -433,7 +432,7 @@ $liveurl = liveUrl($live["id"]);
         visibility: "public"
       })};
 
-    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://' + inst + '/api/v1/statuses', option)
+    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://<?=s($_SESSION["login_domain"])?>/api/v1/statuses', option)
     .then(function(response) {
       if (response.ok) {
         return response.json();

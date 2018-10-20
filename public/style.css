@@ -51,3 +51,7 @@ a, a:hover {
 .button-player {
     border-radius: 0 0 .2rem .2rem;
 }
+
+.modal {
+    color: #212529;
+}

@@ -13,8 +13,8 @@ while (isset($post[$i])) {
     "is_knzklive" => true,
     "account" => [
       "display_name" => $acct[$i]["name"],
-      "acct" => $acct[$i]["acct"],
-      "username" => $acct[$i]["acct"],
+      "acct" => $acct[$i]["acct"]." (local)",
+      "username" => $acct[$i]["acct"]." (local)",
       "avatar" => $acct[$i]["misc"]["avatar"]
     ],
     "content" => $post[$i]["content"],

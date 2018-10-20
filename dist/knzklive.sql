@@ -92,6 +92,14 @@ CREATE TABLE comment
     is_deleted int(3)
 );
 
+-- 2018-10-20 added
+CREATE TABLE mastodon_auth
+(
+    domain varchar(255) PRIMARY KEY NOT NULL,
+    client_id varchar(255) NOT NULL,
+    client_secret varchar(255) NOT NULL
+);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

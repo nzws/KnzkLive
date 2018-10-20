@@ -74,7 +74,8 @@ if ($_POST) {
       <div class="box">
         <h3>配信を始める</h3>
         サイト管理者より、配信権限を付与してもらう必要があります。<br>
-        ご興味のある方は<a href="https://knzk.me/@y" target="_blank">nzws</a>までご連絡ください。(現状、知り合いの方に限らせて頂いています。)
+        ご興味のある方は<a href="https://knzk.me/@y" target="_blank">nzws</a>までご連絡ください。(現状、知り合いの方に限らせて頂いています。)<br>
+        なお、配信者は<?=$env["masto_login"]["domain"]?>のアカウントが必要です。
       </div>
     <?php endif; ?>
     <button type="submit" class="btn btn-primary">更新</button>

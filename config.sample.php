@@ -6,9 +6,7 @@ $env["domain"] = "live.knzk.me.example";
 
 $env["notification_token"] = "xxxx"; //@KnzkLiveNotificationのトークン
 
-$env["masto_login"]["domain"] = "knzk.me";
-$env["masto_login"]["key"] = "Client key";
-$env["masto_login"]["secret"] = "Client secret";
+$env["masto_login"]["domain"] = "knzk.me"; //本拠地にするインスタンス
 $env["masto_login"]["redirect_uri"] = "https://live.knzk.me/login";
 
 $env["database"]["host"] = "localhost";

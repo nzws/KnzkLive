@@ -7,15 +7,15 @@
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
-<div class="container">
-    <h3>KnzkLive 利用規約・ガイドライン</h3>
-    <hr>
-    <h4>1. 禁止行為</h4>
-    <ul>
-        <li>法律に反する内容
-        <li>フリー音源以外の音楽の使用
-        <li>配信の放置 (長時間、配信をしていないにも関わらず配信枠を返却しない、放送中でも意味を成さないもの)
-    </ul>
+<div class="container" id="live">
+  <h4>利用規約・ガイドライン</h4>
+  <ol style="list-style-type: decimal">
+    <li>日本法、およびユーザーの居住する場所における法律、条例に抵触する行為を禁止します。
+    <li>配信枠の長時間の放置を禁止します。
+    <li>未成年が視聴するのに適しない配信を禁止します。
+    <li>配信のストリームキーを第三者に開示、提供する事を禁止します。
+    <li>🤝Be nice🤝🙌🙌
+  </ol>
 </div>
 
 <?php include "../include/footer.php"; ?>

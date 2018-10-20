@@ -7,7 +7,7 @@ if (!$my) {
   api_json(["error" => "エラー: ログインしてください。"]);
 }
 
-$content = "<p>" . s($_POST["content"]) . "</p>";
+$content = "<p>" . nl2br(s($_POST["content"])) . "</p>";
 
 $err = comment_post($content, $my["id"], $_POST["live_id"]);
 
@@ -21,8 +21,8 @@ $data = [
   "is_knzklive" => true,
   "account" => [
     "display_name" => $my["name"],
-    "acct" => $my["acct"],
-    "username" => $my["acct"],
+    "acct" => $my["acct"]." (local)",
+    "username" => $my["acct"]." (local)",
     "avatar" => $my["misc"]["avatar"]
   ],
   "content" => $content,

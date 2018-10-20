@@ -30,10 +30,36 @@
           </li>
         <?php else : ?>
             <form class="form-inline">
-              <a class="btn btn-outline-warning" href="<?=u("login")?>"><b><?=$env["masto_login"]["domain"]?>でログイン</b></a>
+              <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#loginModal"><b>Login with Mastodon</b></button>
             </form>
         <?php endif; ?>
         </ul>
     </div>
   </nav>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ログイン</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Mastodon</span>
+          </div>
+          <input type="text" class="form-control" placeholder="ex) <?=$env["masto_login"]["domain"]?>" value="<?=$env["masto_login"]["domain"]?>" id="login_domain">
+        </div>
+        <small><?=$env["masto_login"]["domain"]?>以外のアカウントでログインすると一部のアカウントではコメントが表示できない可能性があります。<a href="<?=u("help")?>#help1" target="_blank">理由</a></small><br>
+        <small>KnzkLiveではアクセストークンをデータベースに保管しません。また、認証とコメント以外に使用する事はありません。</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="location.href=`<?=u('login')?>?domain=` + document.getElementById('login_domain').value">ログイン</button>
+      </div>
+    </div>
+  </div>
 </div>

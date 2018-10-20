@@ -47,3 +47,4 @@ require_once($libpt."user.php");
 require_once($libpt."live.php");
 require_once($libpt."check_watching.php");
 require_once($libpt."comment.php");
+require_once($libpt."mastodon_auth.php");
