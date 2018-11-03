@@ -35,6 +35,8 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     if (!preg_match('/(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)/', $tag)) {
       exit("ERR:このハッシュタグは使用できません。<a href=''>やり直す</a>");
     }
+
+    $tag = str_replace("#", "", $tag);
   }
 
   $random = bin2hex(random_bytes(32));
