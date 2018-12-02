@@ -11,8 +11,8 @@
     "fmt": "prettier --write '**/*.js'"
   },
   "dependencies": {
-    "express": "^4.16.4",
-    "socket.io": "^2.1.1"
+    "express": "4.16.4",
+    "socket.io": "2.1.1"
   },
   "devDependencies": {
     "prettier": "1.15.2"
