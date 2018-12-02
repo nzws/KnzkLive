@@ -12,7 +12,6 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -27,7 +26,7 @@ USE `knzklive`;
 create table live
 (
   id                     int(100) auto_increment
-    primary key,
+  primary key,
   name                   varchar(100)       not null,
   description            text               null,
   user_id                int(100)           not null,
@@ -46,7 +45,7 @@ create table live
 create table live_slot
 (
   id         int(100) auto_increment
-    primary key,
+  primary key,
   used       int(10)      not null,
   max        int(10)      not null,
   server     varchar(50)  not null,
@@ -57,7 +56,7 @@ create table live_slot
 create table users
 (
   id         int(10) auto_increment
-    primary key,
+  primary key,
   name       varchar(100)                            not null,
   acct       varchar(100)                            not null,
   created_at timestamp default current_timestamp() not null,
@@ -73,9 +72,9 @@ ALTER TABLE live ADD is_started int(2) DEFAULT 0 NOT NULL;
 -- 2018-10-13 added
 CREATE TABLE users_watching
 (
-    ip varchar(255) NOT NULL primary key,
-    watch_id int(100) NOT NULL,
-    updated_at timestamp DEFAULT current_timestamp() NOT NULL
+  ip varchar(255) NOT NULL primary key,
+  watch_id int(100) NOT NULL,
+  updated_at timestamp DEFAULT current_timestamp() NOT NULL
 );
 
 -- 2018-10-18 added
@@ -84,20 +83,20 @@ ALTER TABLE live ADD custom_hashtag varchar(255) NULL;
 -- 2018-10-19 added
 CREATE TABLE comment
 (
-    id int(255) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    user_id varchar(255) NOT NULL,
-    content text NOT NULL,
-    created_at timestamp DEFAULT current_timestamp() NOT NULL,
-    live_id int(255) NOT NULL,
-    is_deleted int(3)
+  id int(255) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  user_id varchar(255) NOT NULL,
+  content text NOT NULL,
+  created_at timestamp DEFAULT current_timestamp() NOT NULL,
+  live_id int(255) NOT NULL,
+  is_deleted int(3)
 );
 
 -- 2018-10-20 added
 CREATE TABLE mastodon_auth
 (
-    domain varchar(255) PRIMARY KEY NOT NULL,
-    client_id varchar(255) NOT NULL,
-    client_secret varchar(255) NOT NULL
+  domain varchar(255) PRIMARY KEY NOT NULL,
+  client_id varchar(255) NOT NULL,
+  client_secret varchar(255) NOT NULL
 );
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
