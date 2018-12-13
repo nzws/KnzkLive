@@ -134,9 +134,11 @@ $mode = $_SESSION["watch_type"];
   </div>
   <div class="footer">
     <div class="footer_content">
-      <b>KNZKLIVE</b> PLAYER · <span id="splash_loadtext">配信サーバに接続しています...</span>
+      <b>KNZKLIVE</b><br>
+      PLAYER
       <span class="right">
-        <span><a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a> · </span>
+        <span id="splash_loadtext">配信サーバに接続しています...</span>
+        <span> · <a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a> · </span>
         <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
       </span>
     </div>
@@ -162,8 +164,8 @@ $mode = $_SESSION["watch_type"];
         <span style="margin-right: 8px"></span>
         <input type="range" id="volume-range" onchange="volume(this.value)">
 
-        <a href="javascript:full()" id="full-u" class="invisible"><i class="fas fa-compress fa-fw"></i></a>
-        <a href="javascript:full(1)" id="full"><i class="fas fa-expand fa-fw"></i></a>
+        <a href="javascript:parent.toggle_widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
+        <a href="javascript:full()"><i class="fas fa-expand fa-fw"></i></a>
       </span>
     </div>
   </div>
@@ -174,8 +176,7 @@ $mode = $_SESSION["watch_type"];
 <script>
   const type = '<?=s($mode)?>';
   const video = document.getElementById("knzklive");
-  // noinspection JSAnnotator
-  const myLive = <?=$myLive ? "true" : "false"?>;
+  let myLive = <?=$myLive ? "true" : "false"?>;
 
   function startWatching(v) {
     video.addEventListener("error", function() {
@@ -281,30 +282,22 @@ $mode = $_SESSION["watch_type"];
     if (!no_save) localStorage.setItem('kplayer_volume', i);
   }
 
-  function full(i) {
+  function full() {
     const v = document.querySelector("body");
-    if (i) {
-      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen(); //Webkit
-      if (v.mozRequestFullscreen) v.mozRequestFullscreen(); //Firefox
-      else if (v.requestFullscreen) v.requestFullscreen();
-    } else {
-      if (v.webkitRequestFullscreen) document.webkitCancelFullScreen(); //Webkit
-      else if (v.mozRequestFullscreen) document.mozCancelFullscreen(); //Firefox
-      else if (v.requestFullscreen) document.exitFullscreen();
-    }
-  }
-
-  document.onfullscreenchange = fullEvent;
-  document.onmozfullscreenchange = fullEvent;
-  document.onwebkitfullscreenchange = fullEvent;
-
-  function fullEvent() {
     let i;
     if (document.webkitCancelFullScreen) i = document.webkitFullscreenElement;
     if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
     else if (document.exitFullscreen) i = document.fullscreenElement;
-    document.getElementById("full-u").className = i ? "" : "invisible";
-    document.getElementById("full").className = !i ? "" : "invisible";
+
+    if (i) {
+      if (v.webkitRequestFullscreen) document.webkitCancelFullScreen(); //Webkit
+      else if (v.mozRequestFullscreen) document.mozCancelFullscreen(); //Firefox
+      else if (v.requestFullscreen) document.exitFullscreen();
+    } else {
+      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen(); //Webkit
+      if (v.mozRequestFullscreen) v.mozRequestFullscreen(); //Firefox
+      else if (v.requestFullscreen) v.requestFullscreen();
+    }
   }
 </script>
 </body>

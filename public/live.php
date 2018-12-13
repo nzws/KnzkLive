@@ -66,6 +66,30 @@ $liveurl = liveUrl($live["id"]);
     #live-name {
       font-weight: 600;
     }
+
+    .is_wide {
+      overflow: hidden;
+    }
+
+    .is_wide .nav-container {
+      display: none;
+    }
+
+    .is_wide #iframe {
+      width: 100%;
+      position: fixed;
+    }
+
+    .is_wide #comment {
+      position: fixed;
+      right: 0;
+      height: calc(100% - 35px);
+      background: rgba(0,0,0,.3);
+    }
+
+    .is_wide #comments {
+      height: calc(100% - 250px);
+    }
   </style>
 </head>
 <body>
@@ -126,10 +150,10 @@ $liveurl = liveUrl($live["id"]);
       </div>
 
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" id="comment">
       <div>
         <?php if ($my) : ?>
-          <div class="form-group">
+          <div class="form-group mt-3">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
               <label class="custom-control-label" for="no_toot">
@@ -517,6 +541,11 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       url = `https://share.flipboard.com/bookmarklet/popout?v=2&url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
     }
     window.open(url);
+  }
+
+  function toggle_widemode() {
+    const body = document.querySelector("body");
+    body.className = (body.className === "is_wide") ? "" : "is_wide";
   }
 
   window.onload = function () {
