@@ -1,26 +1,20 @@
 {
   "name": "knzklive",
   "version": "1.0.0",
-  "description": "KnzkLive",
   "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "ws:start": "node ws/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KnzkDev/KnzkLive.git"
-  },
+  "repository": "https://github.com/KnzkDev/KnzkLive.git",
   "author": "nzws <git@nzws.me>",
   "license": "MPL-2.0",
-  "bugs": {
-    "url": "https://github.com/KnzkDev/KnzkLive/issues"
+  "private": true,
+  "scripts": {
+    "ws:start": "node ws/index.js",
+    "fmt": "prettier --write '**/*.js'"
   },
-  "homepage": "https://github.com/KnzkDev/KnzkLive#readme",
   "dependencies": {
-    "express": "^4.16.4",
-    "socket.io": "^2.1.1"
+    "express": "4.16.4",
+    "socket.io": "2.1.1"
+  },
+  "devDependencies": {
+    "prettier": "1.15.3"
   }
 }
