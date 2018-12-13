@@ -229,7 +229,7 @@ $liveurl = liveUrl($live["id"]);
 </script>
 <?php include "../include/footer.php"; ?>
 <script src="js/tmpl.min.js"></script>
-<script src="js/knzklive.js?2018-10-16"></script>
+<script src="js/knzklive.js?2018-12-13"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script>
   const hashtag_o = "<?=liveTag($live)?>";
@@ -239,10 +239,6 @@ $liveurl = liveUrl($live["id"]);
   var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
-
-  const config = {
-    "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
-  };
 
   function watch(first) {
     fetch('<?=u("api/client/watch")?>?id=<?=s($live["id"])?>', {
@@ -381,22 +377,7 @@ $liveurl = liveUrl($live["id"]);
         if (json) {
           let i = 0;
           while (json[i]) {
-            if (!json[i]['application'] && config["live_toot"]) {
-              console.log('COMMENT BLOCKED', json[i]);
-            } else {
-              if (config["live_toot"] && (
-                json[i]['application']['name'] !== "KnzkLive" ||
-                json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                json[i]['account']['acct'] !== json[i]['account']['username']
-              )) {
-                console.log('COMMENT BLOCKED', json[i]);
-              } else {
-                let acct = json[i]['account']['acct'] !== json[i]['account']['username'] ? json[i]['account']['acct'] : json[i]['account']['username'] + "@" + inst;
-                json[i]["me"] = "<?=$my["acct"]?>" === acct;
-                json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-                reshtml += tmpl("comment_tmpl", json[i]);
-              }
-            }
+            reshtml += tmpl("comment_tmpl", buildCommentData(json[i], "<?=$my["acct"]?>", inst));
             i++;
           }
         }
@@ -485,25 +466,7 @@ $liveurl = liveUrl($live["id"]);
 
     if (ws_resdata.event === 'update') {
       if (ws_reshtml['id']) {
-        if (!ws_reshtml['is_knzklive']) {
-          if (!ws_reshtml['application'] && config["live_toot"]) {
-            console.log('COMMENT BLOCKED', ws_reshtml);
-            return;
-          }
-          if (config["live_toot"] && (
-            ws_reshtml['application']['name'] !== "KnzkLive" ||
-            ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-            ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
-          )) {
-            console.log('COMMENT BLOCKED', ws_reshtml);
-            return;
-          }
-        }
-
-        let acct = ws_reshtml['account']['acct'] !== ws_reshtml['account']['username'] ? ws_reshtml['account']['acct'] : ws_reshtml['account']['username'] + "@" + inst;
-        ws_reshtml["me"] = "<?=$my["acct"]?>" === acct;
-        ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-        elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = tmpl("comment_tmpl", buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);

@@ -64,7 +64,9 @@
 </div>
 <div class="footer">
   <div class="footer_content">
-    <b>KNZKLIVE</b> PLAYER · <span id="splash_loadtext">配信は終了しました。</span>
+    <b>KNZKLIVE</b><br>
+    PLAYER
+    <span id="splash_loadtext" style="float: right">配信は終了しました。</span>
   </div>
 </div>
 </body>

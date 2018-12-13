@@ -2,7 +2,6 @@ const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const bodyParser = require('body-parser');
-let Socket;
 
 app.get('/', function(req, res) {
   res.send('ok');

@@ -133,20 +133,8 @@ $liveUser = getUser($live["user_id"]);
         if (json) {
           let i = 0;
           while (json[i]) {
-            if (!json[i]['application'] && config["live_toot"]) {
-              console.log('COMMENT BLOCKED', json[i]);
-            } else {
-              if (config["live_toot"] && (
-                json[i]['application']['name'] !== "KnzkLive" ||
-                json[i]['application']['website'] !== "https://<?=$env["domain"]?>" ||
-                json[i]['account']['acct'] !== json[i]['account']['username']
-              )) {
-                console.log('COMMENT BLOCKED', json[i]);
-              } else {
-                json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-                reshtml += tmpl("comment_tmpl", json[i]);
-              }
-            }
+            json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
+            reshtml += tmpl("comment_tmpl", json[i]);
             i++;
           }
         }
@@ -176,20 +164,6 @@ $liveUser = getUser($live["user_id"]);
 
     if (ws_resdata.event === 'update') {
       if (ws_reshtml['id']) {
-        if (!ws_reshtml['is_knzklive']) {
-          if (!ws_reshtml['application'] && config["live_toot"]) {
-            console.log('COMMENT BLOCKED', ws_reshtml);
-            return;
-          }
-          if (config["live_toot"] && (
-            ws_reshtml['application']['name'] !== "KnzkLive" ||
-            ws_reshtml['application']['website'] !== "https://<?=$env["domain"]?>" ||
-            ws_reshtml['account']['acct'] !== ws_reshtml['account']['username']
-          )) {
-            console.log('COMMENT BLOCKED', ws_reshtml);
-            return;
-          }
-        }
         ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
         elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
       }
