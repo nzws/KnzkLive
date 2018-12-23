@@ -18,6 +18,13 @@
   なお、<?=$env["masto_login"]["domain"]?>に自動フォロバ機能付きのボットがありますのでお困りの際はご利用ください。<a href="https://knzk.me/@EffectBot" target="_blank">@EffectBot</a>
 </div>
 <hr>
+<div class="container" id="help2">
+  <h4>iOSから見ると他に比べて遅延する・iOSで一部機能が正常に動作しない</h4>
+  <i>iOSの仕様だ、許せ</i><br>
+  iOSではAndroid, PCで視聴する際に使用する低遅延のFLVモード(遅延: 2秒程度)が使用できない為、強制的にHLSモード(遅延: 20秒程度)に切り替えられます。<br>
+  また、iOSの<i>糞</i>レンダリングエンジンのおかげで一部機能もぶっ壊れています。ただ開発者はiOSの民では無いので修正する気は強要されない限りはしません...
+</div>
+<hr>
 <div class="container" id="contact">
   <h3>お問い合わせ</h3>
   KnzkLiveに関するお問い合わせは下記までお願いします。
