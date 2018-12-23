@@ -64,12 +64,13 @@ $lives_history = getAllLive(0, true);
       $i = 0;
       while (isset($lives_history[$i])) {
         $url = liveUrl($lives_history[$i]["id"]);
+        $image = getUser($lives_history[$i]["user_id"])["misc"]["avatar"];
         echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
 <div class="card">
   <div class="card-img-div">
-    <img class="card-img-top" src="https://github.com/KnzkDev.png">
+    <img class="card-img-top" src="{$image}">
   </div>
   <div class="card-body">
     <h5 class="card-title">{$lives_history[$i]["name"]}</h5>
