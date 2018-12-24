@@ -528,7 +528,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
 
 #KnzkLive #<?=liveTag($live)?>`;
-      url = "web+mastodon://share?text=" + encodeURIComponent(text);
+      url = "https://" + inst + "/share?text=" + encodeURIComponent(text);
     } else if (mode === "facebook") {
       url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
     } else if (mode === "line") {
