@@ -260,7 +260,7 @@ $liveurl = liveUrl($live["id"]);
   const hashtag = " #" + hashtag_o;
   const inst = "<?=$env["masto_login"]["domain"]?>";
   let login_inst = "<?=s($_SESSION["login_domain"])?>";
-  if (login_inst) login_inst = inst;
+  if (!login_inst) login_inst = inst;
   const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
   var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
