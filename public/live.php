@@ -259,6 +259,8 @@ $liveurl = liveUrl($live["id"]);
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o;
   const inst = "<?=$env["masto_login"]["domain"]?>";
+  let login_inst = "<?=s($_SESSION["login_domain"])?>";
+  if (login_inst) login_inst = inst;
   const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
   var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
@@ -437,7 +439,7 @@ $liveurl = liveUrl($live["id"]);
         visibility: "public"
       })};
 
-    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://<?=s($_SESSION["login_domain"])?>/api/v1/statuses', option)
+    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://' + login_inst + '/api/v1/statuses', option)
     .then(function(response) {
       if (response.ok) {
         return response.json();
@@ -458,7 +460,7 @@ $liveurl = liveUrl($live["id"]);
   }
 
   function delete_comment(_id) {
-    fetch('https://' + inst + '/api/v1/statuses/' + _id, {
+    fetch('https://' + login_inst + '/api/v1/statuses/' + _id, {
       headers: api_header,
       method: 'DELETE'
     })
@@ -528,7 +530,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
 
 #KnzkLive #<?=liveTag($live)?>`;
-      url = "https://" + inst + "/share?text=" + encodeURIComponent(text);
+      url = "https://" + login_inst + "/share?text=" + encodeURIComponent(text);
     } else if (mode === "facebook") {
       url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
     } else if (mode === "line") {
