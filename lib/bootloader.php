@@ -48,3 +48,4 @@ require_once($libpt."live.php");
 require_once($libpt."check_watching.php");
 require_once($libpt."comment.php");
 require_once($libpt."mastodon_auth.php");
+require_once($libpt."prop.vote.php");

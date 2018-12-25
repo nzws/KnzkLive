@@ -28,14 +28,15 @@ if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
 $liveUser = getUser($live["user_id"]);
 
 $liveurl = liveUrl($live["id"]);
+
+$vote = loadVote($live["id"]);
 ?>
 <!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
@@ -153,7 +154,17 @@ $liveurl = liveUrl($live["id"]);
     <div class="col-md-3" id="comment">
       <div>
         <?php if ($my) : ?>
-          <div class="form-group mt-3">
+        <div class="<?=(empty($vote) ? "invisible" : "")?>" id="prop_vote">
+          <div class="alert alert-info mt-3">
+            <h5><i class="fas fa-poll-h"></i> <b id="vote_title"><?=(empty($vote) ? "タイトル" : $vote["title"])?></b></h5>
+            <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote1" onclick="vote(1)"><?=(empty($vote) ? "投票1" : $vote["v1"])?></button>
+            <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote2" onclick="vote(2)"><?=(empty($vote) ? "投票2" : $vote["v2"])?></button>
+            <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v3"]) ? "invisible" : "")?>" id="vote3" onclick="vote(3)"><?=(empty($vote) ? "投票3" : $vote["v3"])?></button>
+            <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v4"]) ? "invisible" : "")?>" id="vote4" onclick="vote(4)"><?=(empty($vote) ? "投票4" : $vote["v4"])?></button>
+          </div>
+          <hr>
+        </div>
+          <div class="form-group">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
               <label class="custom-control-label" for="no_toot">
@@ -349,6 +360,25 @@ $liveurl = liveUrl($live["id"]);
     document.getElementById('iframe').src = document.getElementById('iframe').src;
   }
 
+  function vote(id) {
+    elemId("prop_vote").className = "invisible";
+    fetch('<?=u("api/client/vote/add")?>?id=<?=s($live["id"])?>&type=' + id, {
+      method: 'GET',
+      credentials: 'include'
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(c) {
+
+    }).catch(function(error) {
+      console.error(error);
+      elemId("prop_vote").className = "";
+    });
+  }
+
   function loadComment() {
     elemId("err_comment").className = "invisible";
 
@@ -384,6 +414,36 @@ $liveurl = liveUrl($live["id"]);
         ws_onmessage(msg, "update");
       });
 
+      klcom.on('knzklive_prop_<?=s($live["id"])?>', function(msg) {
+        console.log(msg);
+        if (msg.type === "vote_start") {
+          elemId("vote_title").textContent = msg.title;
+          elemId("vote1").textContent = msg.vote[0];
+          elemId("vote2").textContent = msg.vote[1];
+          if (msg.vote[2]) {
+            elemId("vote3").textContent = msg.vote[2];
+            $("#vote3").removeClass("invisible");
+          } else {
+            $("#vote3").addClass("invisible");
+          }
+
+          if (msg.vote[3]) {
+            elemId("vote4").textContent = msg.vote[3];
+            $("#vote4").removeClass("invisible");
+          } else {
+            $("#vote4").addClass("invisible");
+          }
+
+          elemId("prop_vote").className = "";
+        } else if (msg.type === "vote_end") {
+          elemId("prop_vote").className = "invisible";
+          fetch('<?=u("api/client/vote/reset")?>?id=<?=s($live["id"])?>', {
+            method: 'GET',
+            credentials: 'include'
+          });
+        }
+      });
+
       fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
         method: 'GET',
         credentials: 'include'
@@ -403,6 +463,7 @@ $liveurl = liveUrl($live["id"]);
         if (json) {
           let i = 0;
           while (json[i]) {
+            json[i]["me"] = login_inst === inst ? undefined : false;
             reshtml += tmpl("comment_tmpl", buildCommentData(json[i], "<?=$my["acct"]?>", inst));
             i++;
           }
@@ -492,6 +553,7 @@ $liveurl = liveUrl($live["id"]);
 
     if (ws_resdata.event === 'update') {
       if (ws_reshtml['id']) {
+        ws_reshtml["me"] = login_inst === inst ? undefined : false;
         elemId("comments").innerHTML = tmpl("comment_tmpl", buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {

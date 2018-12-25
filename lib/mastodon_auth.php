@@ -24,3 +24,25 @@ function setMastodonAuth($domain, $id, $key) {
   $stmt->close();
   $mysqli->close();
 }
+
+function toot($text, $visibility = "public") {
+  global $env;
+
+  $data = [
+    "status" => $text,
+    "visibility" => $visibility
+  ];
+
+  $header = [
+    'Authorization: Bearer '.$_SESSION["token"],
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
+}

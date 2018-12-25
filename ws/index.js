@@ -18,6 +18,12 @@ app.post('/send_comment', function(req, res) {
   res.end();
 });
 
+app.post('/send_prop', function(req, res) {
+  console.log('[KnzkLive WebSocket] Send prop', req.body);
+  io.emit('knzklive_prop_' + req.body.live_id, req.body);
+  res.end();
+});
+
 io.on('connection', function(socket) {
   console.log('[KnzkLive WebSocket] connected');
 });
