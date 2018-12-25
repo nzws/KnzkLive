@@ -1,10 +1,13 @@
 <?php
 function comment_post($content, $user_id, $live_id) {
+  global $env;
+  $content = "<p>" . nl2br(s($content)) . "</p>";
   $user_id = s($user_id);
   $live_id = s($live_id);
+  $my = getUser($user_id);
 
   if (!$content || !$user_id || !$live_id) return "値が不足しています。";
-  if (mb_strlen($content) > 500) return "制限に達しています。";
+  if (mb_strlen($content) < 7 || mb_strlen($content) > 500) return "制限に達しています。";
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `comment` (`id`, `user_id`, `content`, `created_at`, `live_id`, `is_deleted`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, 0);");
@@ -14,7 +17,33 @@ function comment_post($content, $user_id, $live_id) {
   $id = $mysqli->insert_id;
   $stmt->close();
   $mysqli->close();
-  return $err ? "データベースエラー" : $id;
+
+  if ($err) return "データベースエラー";
+    $data = [
+      "id" => "knzklive_".$id,
+      "live_id" => $live_id,
+      "is_knzklive" => true,
+      "account" => [
+        "display_name" => $my["name"],
+        "acct" => $my["acct"]." (local)",
+        "username" => $my["acct"]." (local)",
+        "avatar" => $my["misc"]["avatar"]
+      ],
+      "content" => $content,
+    ];
+    
+    $header = [
+      'Content-Type: application/json'
+    ];
+    
+    $options = array('http' => array(
+      'method' => 'POST',
+      'content' => json_encode($data),
+      'header' => implode(PHP_EOL,$header)
+    ));
+    $options = stream_context_create($options);
+    $contents = file_get_contents($env["websocket_url"]."/send_comment", false, $options);
+  return $id;
 }
 
 function comment_get($live_id) {

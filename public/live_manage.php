@@ -83,6 +83,7 @@ if (isset($_POST["type"])) {
     $live = getLive($live["id"]);
   } elseif ($_POST["type"] == "prop_vote_start") {
     if (empty(loadVote($live["id"]))) {
+      $_SESSION["prop_vote_is_post"] = !isset($_POST["vote_ispost"]);
       createVote($live["id"], s($_POST["vote_title"]), [
         s($_POST["vote1"]), s($_POST["vote2"]), s($_POST["vote3"]), s($_POST["vote4"])
       ], liveTag($live));
@@ -180,6 +181,16 @@ $vote = loadVote($live["id"]);
                   <input type="text" class="form-control" name="vote<?=$i?>" placeholder="内容<?=$i?>">
                 </div>
               <?php endfor; ?>
+
+              <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="vote_ispost" name="vote_ispost" value="1"  <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+                  <label class="custom-control-label" for="vote_ispost">
+                    Mastodonに投票内容を投稿しない
+                  </label>
+                </div>
+              </div>
+
               <small class="form-text text-muted">3と4はオプション</small>
 
               <button type="submit"
@@ -197,7 +208,6 @@ $vote = loadVote($live["id"]);
                 </button>
               <small>* 自動で閉じるのを実装するのが面倒だったから自分で閉じてね.</small><br>
               <?php endif; ?>
-              <b>* あなたのMastodonアカウントで投票内容が投稿されます。</b>
             </form>
           </div>
         </div>

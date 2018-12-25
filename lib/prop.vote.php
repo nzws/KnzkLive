@@ -38,7 +38,8 @@ function createVote($live_id, $title, $data, $hashtag) {
 投票: https://live.knzk.me/watch{$live_id}
 EOF;
 
-    toot($text);
+    if ($_SESSION["prop_vote_is_post"]) toot($text);
+    else comment_post($text, $my["id"], $live_id);
 
   return empty($err);
 }
@@ -67,7 +68,8 @@ function endVote($live_id, $hashtag) {
 EOF;
   if (!empty($v["v3"])) $res .= "\n{$v["v3"]}: {$v["v3_count"]}票";
   if (!empty($v["v4"])) $res .= "\n{$v["v4"]}: {$v["v4_count"]}票";
-  toot($res);
+  if ($_SESSION["prop_vote_is_post"]) toot($res);
+  else comment_post($res, $my["id"], $live_id);
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `prop_vote` SET `is_ended` = 1 WHERE `live_id` = ? AND `is_ended` = 0;");
