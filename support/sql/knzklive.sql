@@ -99,6 +99,32 @@ CREATE TABLE mastodon_auth
   client_secret varchar(255) NOT NULL
 );
 
+-- 2018-12-25 added
+-- auto-generated definition
+create table prop_vote
+(
+  id       int auto_increment,
+  live_id  int                not null,
+  title    varchar(255)       not null,
+  v1       varchar(255)       not null,
+  v2       varchar(255)       not null,
+  v3       varchar(255)       null,
+  v4       varchar(255)       null,
+  v1_count int(255) default 0 not null,
+  v2_count int(255) default 0 not null,
+  v3_count int(255) default 0 not null,
+  v4_count int(255) default 0 not null,
+  is_ended int(5) default 0   not null,
+  constraint prop_vote_id_uindex
+  unique (id)
+);
+
+create index prop_vote_live_id_index
+  on prop_vote (live_id);
+
+alter table prop_vote
+  add primary key (id);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
