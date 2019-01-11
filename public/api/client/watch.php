@@ -9,5 +9,5 @@ if (!$live) {
   api_json(["error" => "放送が見つかりません"]);
 }
 
-$live["description"] = nl2br($live["description"]);
+$live["description"] = HTMLHelper($live["description"]);
 api_json(live4Pub($live));
