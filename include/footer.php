@@ -2,8 +2,8 @@
     <hr>
     <p>
       <small>最新のGoogle Chrome / Windows環境で動作確認済みです。</small><br>
-      <a href="<?=u("help")?>" target="_blank">ヘルプ</a> · <a href="https://knzk.me/@KnzkLiveNotification" target="_blank">プッシュ通知</a> · <a href="https://nzws.me/donate.html" target="_blank">KnzkLiveを支援</a><br>
-      <a href="https://github.com/yuzulabo/KnzkLive" target="_blank">KnzkLive Project</a> by <a href="https://knzk.me/@Knzk" target="_blank">Knzk</a> & <a href="https://knzk.me/@y" target="_blank">nzws</a>
+      <a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> · <a href="<?=u("help")?>" target="_blank">ヘルプ</a> · <a href="https://knzk.me/@KnzkLiveNotification" target="_blank">プッシュ通知</a> · <a href="https://nzws.me/donate.html" target="_blank">KnzkLiveを支援</a><br>
+      <a href="https://github.com/yuzulabo/KnzkLive" target="_blank">KnzkLive Project</a> by <a href="https://github.com/KnzkDev" target="_blank">KnzkDev Team</a>
     </p>
 </div>
 <!-- Optional JavaScript -->

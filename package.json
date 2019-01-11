@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/KnzkDev/KnzkLive.git",
-  "author": "nzws <git@nzws.me>",
+  "author": "KnzkDev Team <contact-knzklive@nzws.me>",
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
