@@ -164,7 +164,7 @@ $mode = $_SESSION["watch_type"];
         <span style="margin-right: 8px"></span>
         <input type="range" id="volume-range" onchange="volume(this.value)">
 
-        <a href="javascript:parent.toggle_widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
+        <a href="javascript:parent.widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
         <a href="javascript:full()"><i class="fas fa-expand fa-fw"></i></a>
       </span>
     </div>
@@ -261,6 +261,7 @@ $mode = $_SESSION["watch_type"];
     document.getElementById("splash_loadtext").innerHTML = text;
     document.getElementById("splash").className = text ? "" : "invisible";
     document.getElementById("video").className = text ? "invisible" : "";
+    if (text) parent.widemode("hide");
   }
 
   function seekLive() {

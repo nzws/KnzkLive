@@ -294,6 +294,7 @@ $vote = loadVote($live["id"]);
       if (json["live_status"] === 1) err.innerHTML = "配信者からデータが送信されていません。";
       if (json["live_status"] === 0) {
         err.innerHTML = "この配信は終了しました。";
+        widemode("hide");
         elemId("count_open").className = "invisible";
         elemId("count_end").className = "";
         if (watch_data["live_status"] !== 0) document.getElementById('iframe').src = "<?=u("api/client/live_ended")?>";
@@ -607,9 +608,9 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     window.open(url);
   }
 
-  function toggle_widemode() {
+  function widemode(mode) {
     const body = document.querySelector("body");
-    body.className = (body.className === "is_wide") ? "" : "is_wide";
+    body.className = ((body.className === "is_wide" && !mode) || mode === "hide") ? "" : "is_wide";
   }
 
   window.onload = function () {
