@@ -96,9 +96,6 @@ if (isset($_POST["type"])) {
 $liveurl = liveUrl($live["id"]);
 $comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
 
-$share_normal = "#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #".liveTag($live);
-$share_knzk = "{$liveurl}\n{$liveurl}\n{$liveurl}";
-
 $vote = loadVote($live["id"]);
 ?>
 <!doctype html>
@@ -291,14 +288,17 @@ $vote = loadVote($live["id"]);
       <div class="col-md-6">
         <b>配信をシェア(配信者用):</b><br>
         <div class="btn-group" role="group">
-          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_normal)?>" target="_blank" class="btn btn-primary">標準</a>
-          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode($share_knzk)?>" target="_blank" class="btn btn-primary">神崎</a>
+          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #".liveTag($live))?>" target="_blank" class="btn btn-primary">標準</a>
+          <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("{$liveurl}\n{$liveurl}\n{$liveurl}")?>" target="_blank" class="btn btn-primary">神崎</a>
         </div>
       </div>
       <div class="col-md-6">
         <?php if ($live["is_live"] === 2) : ?>
           <b>配信を終了:</b><br>
-          <span class="text-danger">* ソフト側(OBSなど)で配信終了するとボタンが使用できます。</span><br>
+          <span class="text-danger">
+            * ソフト側(OBSなど)で配信終了すると終了できます。<br>
+            もしも終了しているのにもかかわらずこの表示のまま進まない場合は管理者にお問い合わせください。
+          </span><br>
         <?php elseif ($live["is_live"] === 1) : ?>
           <a href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>" onclick="return confirm('配信を終了して、配信枠を返却します。\nよろしいですか？');" class="btn btn-danger btn-lg btn-block">配信を終了</a>
         <?php endif; ?>
