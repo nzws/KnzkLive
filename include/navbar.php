@@ -12,9 +12,9 @@
         <?php
         if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
         if (isset($my["id"])) : ?>
-            <?php if ($my["isLive"]) : ?>
+            <?php if ($my["is_broadcaster"]) : ?>
                 <form class="form-inline">
-                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["liveNow"] ? "管理" : "始める"?></b></a>
+                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
                 </form>
             <?php endif; ?>
           <li class="nav-item dropdown active mr-sm-1">
@@ -22,16 +22,21 @@
               <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#" disabled><b><?=$my["name"]?></b></a>
+              <a class="dropdown-item" href="#">
+                <b><?=$my["name"]?></b><br>
+                <small class="text-secondary"><?=$my["acct"]?></small>
+              </a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
               <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
             </div>
           </li>
         <?php else : ?>
-            <form class="form-inline">
-              <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#loginModal"><b>Login with Mastodon</b></button>
-            </form>
+          <form class="form-inline">
+            Login:
+            <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
+            <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
+          </form>
         <?php endif; ?>
         </ul>
     </div>

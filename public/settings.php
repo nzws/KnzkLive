@@ -34,12 +34,12 @@ if ($_POST) {
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
           <label class="custom-control-label" for="no_toot">
-            「Mastodonに投稿しない」をデフォルトにする
+            「<?=s($_SESSION["account_provider"])?>に投稿しない」をデフォルトにする
           </label>
         </div>
       </div>
     </div>
-    <?php if ($my["isLive"]) : ?>
+    <?php if ($my["is_broadcaster"]) : ?>
       <div class="box">
         <h4>配信者設定</h4>
         <p>* この設定は過去、未来全ての配信に適用されます。</p>

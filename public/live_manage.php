@@ -7,11 +7,11 @@ if (!isset($my)) {
   exit("ERR:ログインしてください。");
 }
 
-if (!$my["liveNow"]) {
+if (!$my["live_current_id"]) {
   header("Location: ".u("new"));
   exit();
 }
-$live = getLive($my["liveNow"]);
+$live = getLive($my["live_current_id"]);
 if (!isset($live)) {
   http_response_code(500);
   exit("ERR:問題が発生しました。管理者にお問い合わせください。");

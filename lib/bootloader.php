@@ -41,6 +41,7 @@ if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSIO
 }
 $libpt = dirname(__FILE__)."/";
 
+require_once($libpt."../vendor/autoload.php");
 require_once($libpt."components.php");
 require_once($libpt."db.php");
 require_once($libpt."user.php");

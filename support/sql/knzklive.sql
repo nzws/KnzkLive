@@ -125,6 +125,11 @@ create index prop_vote_live_id_index
 alter table prop_vote
   add primary key (id);
 
+-- 2019-01-12 added
+ALTER TABLE users ADD twitter_id varchar(100) NULL;
+ALTER TABLE users CHANGE isLive is_broadcaster int(2) NOT NULL DEFAULT 0;
+ALTER TABLE users CHANGE liveNow live_current_id int(100) NOT NULL DEFAULT 0;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

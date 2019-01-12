@@ -7,12 +7,12 @@ if (!$my) {
   exit("ERR:ログインしてください。");
 }
 
-if (!$my["isLive"]) {
+if (!$my["is_broadcaster"]) {
   http_response_code(403);
   exit("ERR:あなたには配信権限がありません。");
 }
 
-if ($my["liveNow"]) {
+if ($my["live_current_id"]) {
   header("Location: ".u("live_manage"));
   exit();
 }

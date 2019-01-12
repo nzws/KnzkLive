@@ -4,11 +4,11 @@ require_once("../../../lib/apiloader.php");
 
 $my = getMe();
 
-if ($my["liveNow"] == 0) {
+if ($my["live_current_id"] == 0) {
   api_json(["error" => "エラー: あなたは現在配信していないか、配信権限がありません。"]);
 }
 
-$live_id = s($my["liveNow"]);
+$live_id = s($my["live_current_id"]);
 $title = s($_POST["name"]);
 $desc = s($_POST["description"]);
 

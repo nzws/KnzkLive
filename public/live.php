@@ -168,7 +168,7 @@ $vote = loadVote($live["id"]);
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
               <label class="custom-control-label" for="no_toot">
-                Mastodonに投稿しない
+                <?=s($_SESSION["account_provider"])?>に投稿しない
               </label>
             </div>
           </div>
@@ -267,12 +267,12 @@ $vote = loadVote($live["id"]);
 <script src="js/knzklive.js?2018-12-13"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script>
-  const hashtag_o = "<?=liveTag($live)?>";
-  const hashtag = " #" + hashtag_o;
   const inst = "<?=$env["masto_login"]["domain"]?>";
   let login_inst = "<?=s($_SESSION["login_domain"])?>";
   if (!login_inst) login_inst = inst;
-  const token = "<?=$my ? s($_SESSION["token"]) : ""?>";
+  const hashtag_o = "<?=liveTag($live)?>";
+  const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
+  const token = "<?=$my && $_SESSION["token"] ? s($_SESSION["token"]) : ""?>";
   var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
@@ -487,13 +487,15 @@ $vote = loadVote($live["id"]);
     if (!v) return;
     const isKnzk = elemId("no_toot").checked;
 
-    const option = isKnzk ? {headers: {'content-type': 'application/x-www-form-urlencoded'},
+    const option = (isKnzk || login_inst === "twitter.com") ? {headers: {'content-type': 'application/x-www-form-urlencoded'},
       method: 'POST',
       credentials: 'include',
       body: buildQuery({
         live_id: <?=s($live["id"])?>,
         content: v,
-        csrf_token: `<?=$_SESSION['csrf_token']?>`
+        csrf_token: `<?=$_SESSION['csrf_token']?>`,
+        is_local: isKnzk ? 1 : 0,
+        content_tw: v + hashtag
       })} : {headers: api_header,
       method: 'POST',
       body: JSON.stringify({
@@ -501,7 +503,8 @@ $vote = loadVote($live["id"]);
         visibility: "public"
       })};
 
-    fetch(isKnzk ? '<?=u("api/client/comment_post")?>' : 'https://' + login_inst + '/api/v1/statuses', option)
+
+    fetch((isKnzk || login_inst === "twitter.com") ? '<?=u("api/client/comment_post")?>' : 'https://' + login_inst + '/api/v1/statuses', option)
     .then(function(response) {
       if (response.ok) {
         return response.json();
@@ -517,7 +520,7 @@ $vote = loadVote($live["id"]);
     })
     .catch(error => {
       console.log(error);
-      elemId("toot").value += "\n[投稿中にエラーが発生しました]";
+      alert("投稿中にエラーが発生しました。通信状況やインスタンスの状況をご確認ください。");
     });
   }
 
@@ -537,7 +540,7 @@ $vote = loadVote($live["id"]);
     })
     .catch(error => {
       console.log(error);
-      elemId("toot").value += "\n[実行中にエラーが発生しました]";
+      alert("投稿中にエラーが発生しました。通信状況やインスタンスの状況をご確認ください。");
     });
   }
 
@@ -567,7 +570,7 @@ $vote = loadVote($live["id"]);
     if (!token) return; //未ログイン
     const l = elemId("limit");
     const d = elemId("toot").value;
-    l.innerText = 500 - hashtag.length - d.length;
+    l.innerText = (login_inst === "twitter.com" ? 140 : 500) - hashtag.length - d.length;
   }
 
   function share() {
@@ -683,7 +686,10 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
     function undo_edit_live() {
       elemId('edit_name').value = watch_data["name"];
-      elemId('edit_desc').value = watch_data["description"].replace(/<br \/>/g, "");
+
+      const parser = document.createElement('div');
+      parser.innerHTML = watch_data["description"];
+      elemId('edit_desc').value = parser.textContent;
 
       $('.live_info').removeClass('invisible');
       $('.live_edit').addClass('invisible');

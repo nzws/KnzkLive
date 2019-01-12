@@ -9,6 +9,10 @@ $env["notification_token"] = "xxxx"; //@KnzkLiveNotificationのトークン
 $env["masto_login"]["domain"] = "knzk.me"; //本拠地にするインスタンス
 $env["masto_login"]["redirect_uri"] = "https://live.knzk.me/login";
 
+$env["tw_login"]["key"] = "";
+$env["tw_login"]["secret"] = "";
+$env["tw_login"]["redirect_uri"] = "https://live.knzk.me/auth/twitter";
+
 $env["database"]["host"] = "localhost";
 $env["database"]["port"] = 3306;
 $env["database"]["db"] = "dbname";

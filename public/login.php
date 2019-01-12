@@ -72,7 +72,7 @@ if (!$code) {
         $misc["avatar"] = $json_acct["avatar_static"];
         $misc["header"] = $json_acct["header_static"];
         $misc = json_encode($misc);
-        $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `isLive`, `liveNow`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, '0', '0', ?);");
+        $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, ?);");
         $stmt->bind_param('ssss', s($json_acct["display_name"]), $acct, $_SERVER["REMOTE_ADDR"], $misc);
       }
       $stmt->execute();
@@ -80,6 +80,8 @@ if (!$code) {
       $mysqli->close();
       $_SESSION["token"] = $json["access_token"];
       $_SESSION["acct"] = $acct;
+      $_SESSION["account_provider"] = "mastodon";
+
       header("Location: ".$env["RootUrl"]);
     } else {
       err(2, $contents);
