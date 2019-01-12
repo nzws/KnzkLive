@@ -58,3 +58,16 @@ function getMyLastLive($user_id) {
   $mysqli->close();
   return isset($row[0]["id"]) ? $row[0] : false;
 }
+
+function user4Pub($u) {
+  return [
+    "id" => $u["id"],
+    "name" => $u["name"],
+    "acct" => $u["acct"],
+    "created_at" => $u["created_at"],
+    "is_broadcaster" => !!$u["is_broadcaster"],
+    "live_current_id" => $u["live_current_id"],
+    "avatar_url" => $u["misc"]["avatar"],
+    "header_url" => $u["misc"]["header"]
+  ];
+}

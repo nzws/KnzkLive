@@ -135,6 +135,26 @@ EOF;
   $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
 }
 
+function postWebHook($live) {
+  $liveUser = getUser($live["user_id"]);
+  if (empty($liveUser["misc"]["webhook_url"])) return false;
+
+  $data = live4Pub($live);
+  $data["account"] = user4Pub($liveUser);
+
+  $header = [
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  return file_get_contents($liveUser["misc"]["webhook_url"], false, $options);
+}
+
 function live4Pub($live) {
   return [
     "name" => $live["name"],

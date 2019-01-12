@@ -10,6 +10,7 @@ if ($_POST) {
   $my["misc"]["live_toot"] = !!$_POST["live_toot"];
   $my["misc"]["to_title"] = !!$_POST["to_title"];
   $my["misc"]["no_toot_default"] = !!$_POST["no_toot_default"];
+  $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   setConfig($my["id"], $my["misc"]);
 }
 ?>
@@ -52,13 +53,21 @@ if ($_POST) {
             </label>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="form-group">
+            <label for="conf_webhook_url">WebHook URL</label>
+            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api" value="<?=$my["misc"]["webhook_url"]?>">
+            <small id="conf_webhook_url_note" class="form-text text-muted">配信開始時に呼び出されます。</small>
+          </div>
+        </div>
       </div>
     <?php else : ?>
       <div class="box">
         <h3>配信を始める</h3>
-        サイト管理者より、配信権限を付与してもらう必要があります。<br>
-        ご興味のある方は<a href="https://knzk.me/@y" target="_blank">nzws</a>までご連絡ください。(現状、知り合いの方に限らせて頂いています。)<br>
-        なお、配信者は<?=$env["masto_login"]["domain"]?>のアカウントが必要です。
+        <div class="alert alert-warning" role="alert">
+          配信権限が必要です。
+        </div>
       </div>
     <?php endif; ?>
     <button type="submit" class="btn btn-primary">更新</button>

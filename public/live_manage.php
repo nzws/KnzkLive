@@ -57,12 +57,6 @@ if (isset($_GET["mode"])) {
 
 if (isset($_POST["type"])) {
   if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5 && $live["is_started"] != 1) {
-    if ($_POST["start_post"] < 4) {
-      $visibility = $_POST["start_post"] == 1 ? "public" :
-        ($_POST["start_post"] == 2 ? "unlisted" :
-          ($_POST["start_post"] == 3 ? "private" : ""));
-      postLiveStart($live, $_POST["start_push"], $visibility);
-    }
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET is_started = 1, created_at = CURRENT_TIMESTAMP WHERE id = ?;");
     $stmt->bind_param('s', $live["id"]);
@@ -70,6 +64,16 @@ if (isset($_POST["type"])) {
     $stmt->close();
     $mysqli->close();
     $live = getLive($live["id"]);
+
+    if ($_POST["start_post"] < 4) {
+      $visibility = $_POST["start_post"] == 1 ? "public" :
+        ($_POST["start_post"] == 2 ? "unlisted" :
+          ($_POST["start_post"] == 3 ? "private" : ""));
+      postLiveStart($live, $_POST["start_push"], $visibility);
+    }
+    if (!empty($my["misc"]["webhook_url"]) && isset($_POST["start_push"])) {
+      postWebHook($live);
+    }
   } elseif ($_POST["type"] == "edit") {
     $title = s($_POST["title"]);
     $desc = s($_POST["description"]);
@@ -145,6 +149,16 @@ $vote = loadVote($live["id"]);
                   </label>
                 </div>
               </div>
+              <?php if (!empty($my["misc"]["webhook_url"])) : ?>
+              <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="start_webhook" name="start_webhook" value="1" checked>
+                  <label class="custom-control-label" for="start_webhook">
+                    WebHookに送信する
+                  </label>
+                </div>
+              </div>
+              <?php endif; ?>
             </div>
           </div>
           <button type="submit"
