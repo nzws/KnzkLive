@@ -90,10 +90,10 @@ if (isset($_POST["type"])) {
       $_SESSION["prop_vote_is_post"] = !isset($_POST["vote_ispost"]);
       createVote($live["id"], s($_POST["vote_title"]), [
         s($_POST["vote1"]), s($_POST["vote2"]), s($_POST["vote3"]), s($_POST["vote4"])
-      ], liveTag($live));
+      ], liveTag($live), $my["id"]);
     }
   } elseif ($_POST["type"] == "prop_vote_end") {
-    endVote($live["id"], liveTag($live));
+    endVote($live["id"], liveTag($live), $my["id"]);
   }
 }
 

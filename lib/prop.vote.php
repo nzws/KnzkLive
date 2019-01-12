@@ -1,5 +1,5 @@
 <?php
-function createVote($live_id, $title, $data, $hashtag) {
+function createVote($live_id, $title, $data, $hashtag, $user_id) {
   global $env;
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `prop_vote` (`live_id`, `title`, `v1`, `v2`, `v3`, `v4`) VALUES (?, ?, ?, ?, ?, ?);");
@@ -39,7 +39,7 @@ function createVote($live_id, $title, $data, $hashtag) {
 EOF;
 
     if ($_SESSION["prop_vote_is_post"]) toot($text);
-    else comment_post($text, $my["id"], $live_id);
+    else comment_post($text, $user_id, $live_id);
 
   return empty($err);
 }
@@ -55,7 +55,7 @@ function loadVote($live_id) {
   return isset($row[0]["id"]) ? $row[0] : null;
 }
 
-function endVote($live_id, $hashtag) {
+function endVote($live_id, $hashtag, $user_id) {
   global $env;
 
   $v = loadVote($live_id);
@@ -69,7 +69,7 @@ EOF;
   if (!empty($v["v3"])) $res .= "\n{$v["v3"]}: {$v["v3_count"]}票";
   if (!empty($v["v4"])) $res .= "\n{$v["v4"]}: {$v["v4_count"]}票";
   if ($_SESSION["prop_vote_is_post"]) toot($res);
-  else comment_post($res, $my["id"], $live_id);
+  else comment_post($res, $user_id, $live_id);
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `prop_vote` SET `is_ended` = 1 WHERE `live_id` = ? AND `is_ended` = 0;");
