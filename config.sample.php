@@ -13,6 +13,7 @@ $env["tw_login"]["key"] = "";
 $env["tw_login"]["secret"] = "";
 $env["tw_login"]["redirect_uri"] = "https://live.knzk.me/auth/twitter";
 
+// config.js と同じものを使用してください。
 $env["database"]["host"] = "localhost";
 $env["database"]["port"] = 3306;
 $env["database"]["db"] = "dbname";

@@ -57,7 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 config.php
-config.js
+config.json
 
 # next.js build output
 .next

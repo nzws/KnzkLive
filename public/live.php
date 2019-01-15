@@ -112,7 +112,7 @@ $vote = loadVote($live["id"]);
             視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
           <span id="count_end" class="invisible">
-            総視聴者数(仮): <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+            総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
           </span>
         </span>
       <br>
@@ -138,7 +138,8 @@ $vote = loadVote($live["id"]);
       <p>
         <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
         <?=$liveUser["name"]?><br>
-        <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small>
+        <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small><br>
+        <small>総コメント数: <?=$liveUser["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$liveUser["misc"]["comment_count_max"]?>コメ</small>
       </p>
       <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
@@ -153,31 +154,37 @@ $vote = loadVote($live["id"]);
     </div>
     <div class="col-md-3" id="comment">
       <div>
-        <?php if ($my) : ?>
-        <div class="<?=(empty($vote) || !empty($_SESSION["prop_vote_" . $live["id"]]) ? "invisible" : "")?>" id="prop_vote">
-          <div class="alert alert-info mt-3">
-            <h5><i class="fas fa-poll-h"></i> <b id="vote_title"><?=(empty($vote) ? "タイトル" : $vote["title"])?></b></h5>
-            <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote1" onclick="vote(1)"><?=(empty($vote) ? "投票1" : $vote["v1"])?></button>
-            <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote2" onclick="vote(2)"><?=(empty($vote) ? "投票2" : $vote["v2"])?></button>
-            <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v3"]) ? "invisible" : "")?>" id="vote3" onclick="vote(3)"><?=(empty($vote) ? "投票3" : $vote["v3"])?></button>
-            <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v4"]) ? "invisible" : "")?>" id="vote4" onclick="vote(4)"><?=(empty($vote) ? "投票4" : $vote["v4"])?></button>
-          </div>
-          <hr>
-        </div>
-          <div class="form-group">
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
-              <label class="custom-control-label" for="no_toot">
-                <?=s($_SESSION["account_provider"])?>に投稿しない
-              </label>
+        <?php if (!empty($my)) : ?>
+          <div class="<?=(empty($vote) || !empty($_SESSION["prop_vote_" . $live["id"]]) ? "invisible" : "")?>" id="prop_vote">
+            <div class="alert alert-info mt-3">
+              <h5><i class="fas fa-poll-h"></i> <b id="vote_title"><?=(empty($vote) ? "タイトル" : $vote["title"])?></b></h5>
+              <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote1" onclick="vote(1)"><?=(empty($vote) ? "投票1" : $vote["v1"])?></button>
+              <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote2" onclick="vote(2)"><?=(empty($vote) ? "投票2" : $vote["v2"])?></button>
+              <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v3"]) ? "invisible" : "")?>" id="vote3" onclick="vote(3)"><?=(empty($vote) ? "投票3" : $vote["v3"])?></button>
+              <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v4"]) ? "invisible" : "")?>" id="vote4" onclick="vote(4)"><?=(empty($vote) ? "投票4" : $vote["v4"])?></button>
             </div>
+            <hr>
           </div>
+        <?php endif; ?>
+        <div class="mt-2 mb-2">
+          #<?=liveTag($live)?>: <b id="comment_count"><?=s($live["comment_count"])?></b>コメ
+        </div>
+        <?php if ($my) : ?>
           <div class="form-group">
             <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート/コメント)" onkeyup="check_limit()"></textarea>
           </div>
-          <div class="input-group">
-            <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>　<b id="limit"></b>
+
+
+          <div class="custom-control custom-checkbox float-left">
+            <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+            <label class="custom-control-label" for="no_toot">
+              ローカル投稿
+            </label>
           </div>
+          <div style="text-align: right">
+            <b id="limit"></b>  <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
+          </div>
+
         <?php else : ?>
           <p>
             <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
@@ -558,6 +565,7 @@ $vote = loadVote($live["id"]);
     if (ws_resdata.event === 'update') {
       if (ws_reshtml['id']) {
         ws_reshtml["me"] = login_inst === inst ? undefined : false;
+        elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
         elemId("comments").innerHTML = tmpl("comment_tmpl", buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {

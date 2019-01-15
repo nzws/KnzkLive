@@ -19,30 +19,33 @@ function comment_post($content, $user_id, $live_id) {
   $mysqli->close();
 
   if ($err) return "データベースエラー";
-    $data = [
-      "id" => "knzklive_".$id,
-      "live_id" => $live_id,
-      "is_knzklive" => true,
-      "account" => [
-        "display_name" => $my["name"],
-        "acct" => $my["acct"]." (local)",
-        "username" => $my["acct"]." (local)",
-        "avatar" => $my["misc"]["avatar"]
-      ],
-      "content" => $content,
-    ];
-    
-    $header = [
-      'Content-Type: application/json'
-    ];
-    
-    $options = array('http' => array(
-      'method' => 'POST',
-      'content' => json_encode($data),
-      'header' => implode(PHP_EOL,$header)
-    ));
-    $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_comment", false, $options);
+
+  comment_count_add($live_id);
+
+  $data = [
+    "id" => "knzklive_".$id,
+    "live_id" => $live_id,
+    "is_knzklive" => true,
+    "account" => [
+      "display_name" => $my["name"],
+      "acct" => $my["acct"]." (local)",
+      "username" => $my["acct"]." (local)",
+      "avatar" => $my["misc"]["avatar"]
+    ],
+    "content" => $content,
+  ];
+
+  $header = [
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents($env["websocket_url"]."/send_comment", false, $options);
   return $id;
 }
 
@@ -55,4 +58,13 @@ function comment_get($live_id) {
   $stmt->close();
   $mysqli->close();
   return isset($row[0]["id"]) ? $row : false;
+}
+
+function comment_count_add($live_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `live` SET `comment_count` = `comment_count` + 1 WHERE id = ?;");
+  $stmt->bind_param("s", $live_id);
+  $stmt->execute();
+  $stmt->close();
+  $mysqli->close();
 }

@@ -38,7 +38,19 @@ if (isset($_GET["mode"])) {
           $my["misc"]["viewers_max"] = 0;
           $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
         }
+
+        if (isset($my["misc"]["comment_count_max"])) {
+          if ($live["comment_count"] > $my["misc"]["comment_count_max"]) {
+            $my["misc"]["comment_count_max"] = $live["comment_count"];
+          }
+        } else {
+          $my["misc"]["comment_count_all"] = 0;
+          $my["misc"]["comment_count_max"] = $live["comment_count"];
+        }
+
         $my["misc"]["viewers_max"] += $live["viewers_max"];
+        $my["misc"]["comment_count_all"] += $live["comment_count"];
+
         setConfig($my["id"], $my["misc"]);
 
         $mysqli = db_start();

@@ -1,0 +1,11 @@
+{
+  "README": "config.php と同じものを使用してください。",
+  "domain": "knzk.me",
+  "db": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "username",
+    "pass": "password",
+    "name": "database_name"
+  }
+}
