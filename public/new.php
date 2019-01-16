@@ -42,7 +42,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
   $random = bin2hex(random_bytes(32));
 
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("INSERT INTO `live` (`id`, `name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `viewers_count`, `custom_hashtag`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, '0', ?);");
+  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `viewers_count`, `custom_hashtag`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, '0', ?);");
   $stmt->bind_param('ssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag);
   $stmt->execute();
   $stmt->close();
@@ -57,6 +57,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
   $mysqli->close();
   setUserLive($row[0]["id"]);
   setSlot($slot, 1);
+  node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"]);
   header("Location: ".u("live_manage"));
   exit();
 } elseif ($my["misc"]["to_title"]) {

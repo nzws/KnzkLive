@@ -24,6 +24,33 @@ app.post('/send_prop', function(req, res) {
   res.end();
 });
 
+app.post('/update_conf', function(req, res) {
+  console.log('[KnzkLive WebSocket] Update conf', req.body);
+  const b = req.body;
+  if (b.mode === "add") { //add
+    if (b.type === "hashtag") { //hashtag
+      if (b.value) {
+        conf.hashtag.push(b.value);
+      } else {
+        conf.hashtag.push("knzklive_" + b.live_id);
+        conf.hashtag_id["knzklive_" + b.live_id] = b.live_id;
+      }
+    } else { //user
+      conf.acct.push(b.value);
+    }
+    conf.hashtag = Array.from(new Set(conf.hashtag));
+    conf.acct = Array.from(new Set(conf.acct));
+  } else { //del
+    if (b.type === "hashtag") {
+      const index = conf.hashtag.indexOf(b.value);
+      if (index !== -1) {
+        conf.hashtag.splice(index, 1);
+      }
+    }
+  }
+  res.end();
+});
+
 io.on('connection', function(socket) {
   console.log('[KnzkLive WebSocket] connected');
 });

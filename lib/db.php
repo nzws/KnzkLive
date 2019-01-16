@@ -28,3 +28,25 @@ function db_fetch_all(& $stmt) {
     }
     return $hits;
 }
+
+function node_update_conf($mode, $type, $value, $live_id) {
+  global $env;
+  $data = [
+    "mode" => $mode,
+    "type" => $type,
+    "value" => $value,
+    "live_id" => $live_id
+  ];
+
+  $header = [
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents($env["websocket_url"]."/update_conf", false, $options);
+}

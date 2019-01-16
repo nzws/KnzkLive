@@ -57,6 +57,7 @@ if (!$code) {
     $options = stream_context_create($options);
     $contents = file_get_contents("https://".$domain."/api/v1/accounts/verify_credentials", false, $options);
     $json_acct = json_decode($contents,true);
+    $name = s($json_acct["display_name"]);
     if ($json_acct["id"]) {
       $mysqli = db_start();
       $acct = s($json_acct["acct"]."@".$domain);
@@ -67,13 +68,14 @@ if (!$code) {
         $misc = json_encode($misc);
 
         $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `ip` = ?, `misc` = ?  WHERE `acct` = ?;");
-        $stmt->bind_param('ssss', s($json_acct["display_name"]), $_SERVER["REMOTE_ADDR"], $misc, $acct);
+        $stmt->bind_param('ssss', $name, $_SERVER["REMOTE_ADDR"], $misc, $acct);
       } else { //新規
         $misc["avatar"] = $json_acct["avatar_static"];
         $misc["header"] = $json_acct["header_static"];
         $misc = json_encode($misc);
         $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, ?);");
-        $stmt->bind_param('ssss', s($json_acct["display_name"]), $acct, $_SERVER["REMOTE_ADDR"], $misc);
+        $stmt->bind_param('ssss', $name, $acct, $_SERVER["REMOTE_ADDR"], $misc);
+        node_update_conf("add", "user", $acct, "none");
       }
       $stmt->execute();
       $stmt->close();

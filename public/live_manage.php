@@ -59,6 +59,8 @@ if (isset($_GET["mode"])) {
         $stmt->execute();
         $stmt->close();
         $mysqli->close();
+        node_update_conf("del", "hashtag", liveTag($live), $live["id"]);
+
         header("Location: ".u());
     }
     } else echo "ERROR: setLiveStatus";
