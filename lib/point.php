@@ -21,6 +21,49 @@ function add_point($user_id, $point, $type, $data) {
   return !$err;
 }
 
+function create_ticket($user_id, $point, $comment) {
+  $hash = bin2hex(openssl_random_pseudo_bytes(32));
+  $hash = mb_substr($hash, 0, 10);
+  $point = intval($point);
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("INSERT INTO `point_ticket` (`id`, `point`, `user_id`, `comment`) VALUES (?, ?, ?, ?);");
+  $stmt->bind_param('ssss', $hash, $point, $user_id, $comment);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+
+  return !$err ? $hash : false;
+}
+
+function get_ticket($id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `point_ticket` WHERE `id` = ? AND `used_by` IS NULL;");
+  $stmt->bind_param("s", $id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+
+  return isset($row[0]) ? $row[0] : false;
+}
+
+function use_ticket($user_id, $ticket_id) {
+  $t = get_ticket($ticket_id);
+  if ($t["id"] !== $ticket_id) return false;
+  $n = add_point($user_id, $t["point"], "user", "チケット使用 コメント: " . s($t["comment"]));
+  if (!$n) return false;
+
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `point_ticket` SET used_by = ? WHERE `id` = ?");
+  $stmt->bind_param("ss", $user_id, $ticket_id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+  return !$err;
+}
+
 function get_point_log($user_id) {
   global $point_log_cache;
   if (!empty($point_log_cache[$user_id])) return $point_log_cache[$user_id];

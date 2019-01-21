@@ -76,7 +76,7 @@ if ($_POST) {
     <div class="box">
       <h4>KnzkPoint</h4>
       神崎ポイントを貯めると、配信のアイテムと交換したり、ユーザー間でプレゼントしたりできます。<br>
-      <!--<a href="<?=u("knzkpoint/new")?>" class="badge badge-info">チケットを発行</a> · --><a href="<?=u("knzkpoint/present")?>" class="badge badge-info">KPをプレゼント</a><br><br>
+      <a href="<?=u("knzkpoint/new")?>" class="badge badge-info">チケットを発行</a> · <a href="<?=u("ticket")?>" class="badge badge-info">チケットを使用</a> · <a href="<?=u("knzkpoint/present")?>" class="badge badge-info">KPをプレゼント</a><br><br>
       <p>
         <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
       </p>
