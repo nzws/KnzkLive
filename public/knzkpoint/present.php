@@ -8,7 +8,7 @@ if (!$my) {
 
 if ($_POST) {
   if (mb_strlen($_POST["comment"]) > 500) exit("ERR:文字数制限オーバー");
-  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"]) exit("ERR:ポイントが不正です。");
+  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 0 || !is_numeric($_POST["point"])) exit("ERR:ポイントが不正です。");
   $u = getUser($_POST["user"], "acct");
   if ($u["id"] === $my["id"]) exit("ERR:自分自身には送信できません");
   if ($u) {
