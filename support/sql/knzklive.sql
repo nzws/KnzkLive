@@ -138,6 +138,52 @@ ALTER TABLE live
 -- 2019-01-16
 ALTER TABLE users MODIFY name varchar(255) NOT NULL;
 
+-- 2019/01/19
+alter table users
+	add point_count int(255) default 0 not null;
+
+create table point_log
+(
+  id bigint auto_increment primary key,
+  created_at timestamp default current_timestamp not null,
+  user_id int(255) not null,
+  type varchar(100) not null,
+  data text null,
+  point int(255) default 0 not null
+);
+
+create unique index point_log_id_uindex
+  on point_log (id);
+
+create index point_log_user_id_index
+  on point_log (user_id);
+
+alter table users
+	add point_count_today_toot int(255) default 0 not null;
+
+create table point_ticket
+(
+  id varchar(100) not null,
+  point int(255) not null,
+  user_id int(255) not null,
+  created_at timestamp default current_timestamp not null,
+  comment text null,
+  used_by int(255) null
+);
+
+create unique index point_ticket_id_uindex
+  on point_ticket (id);
+
+alter table point_ticket
+  add constraint point_ticket_pk
+    primary key (id);
+
+create unique index users_id_uindex
+  on users (id);
+
+create index users_point_count_today_toot_index
+  on users (point_count_today_toot);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

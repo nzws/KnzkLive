@@ -61,6 +61,9 @@ http.listen(3000, function() {
 
 const WebSocketClient = require('websocket').client;
 const mysql = require('mysql');
+const striptags = require('striptags');
+const exec = require('child_process').exec;
+const fetch = require('node-fetch');
 const config = require('../config');
 let conf = {
   "hashtag": [],
@@ -108,10 +111,11 @@ db.query('SELECT * FROM `users` WHERE twitter_id IS NULL', function (error, resu
   console.log("[Worker Users]", conf.acct);
 });
 
-function reConnect() {
-  console.log('サーバとの接続が切れました。30秒後にリトライします...');
+function reConnect($type = "worker") {
+  console.log('サーバとの接続が切れました。30秒後にリトライします...', $type);
   setTimeout(function () {
-    StartWorker();
+    if ($type === "worker") StartWorker();
+    else StartTIPKnzk();
   }, 30000);
 }
 
@@ -146,7 +150,10 @@ function StartWorker() {
             if (json["account"]["username"] === json["account"]["acct"]) json["account"]["acct"] = json["account"]["acct"] + "@" + config.domain;
 
             if (conf.acct.indexOf(json["account"]["acct"]) !== -1) {
-              console.log("[Detect User]", json["account"]["acct"]);
+              db.query('UPDATE `users` SET `point_count_today_toot` = `point_count_today_toot` + 2 WHERE acct = ?', json["account"]["acct"], function (error, results, fields) {
+                if (error) throw error;
+                console.log("[Detect User]", json["account"]["acct"]);
+              });
             }
 
             if (json["tags"] && json["tags"][0]) {
@@ -172,4 +179,102 @@ function StartWorker() {
   client.connect("wss://" + config.domain + "/api/v1/streaming/?stream=public");
 }
 
+function StartTIPKnzk() {
+  const client = new WebSocketClient();
+
+  client.on('connectFailed', function (error) {
+    console.log('Connect Error: ' + error.toString());
+    reConnect("TIPKnzk");
+  });
+
+  client.on('connect', function (connection) {
+    console.log('WebSocket Client Connected');
+
+    connection.on('error', function (error) {
+      console.log("Connection Error: " + error.toString());
+      reConnect("TIPKnzk");
+    });
+
+    connection.on('close', function () {
+      reConnect("TIPKnzk");
+    });
+
+    connection.on('message', function (message) {
+      try {
+        if (message.type === 'utf8') {
+          const ord = JSON.parse(message.utf8Data);
+          let json = JSON.parse(ord.payload);
+          if (ord.event !== "notification" || json["type"] !== "mention") return;
+          json = json["status"];
+          let to_acct;
+          for (let i of json["mentions"]) {
+            if (i["acct"].toLowerCase() !== config.tipknzk_acct.toLowerCase()) {
+              to_acct = i["acct"];
+              if (i["acct"] === i["username"]) to_acct = to_acct + "@" + config.domain;
+              break;
+            }
+          }
+          if (!to_acct) return;
+          if (json["account"]["username"] === json["account"]["acct"]) json["account"]["acct"] = json["account"]["acct"] + "@" + config.domain;
+
+          const data = striptags(json["content"]).split(' ');
+          if (data[1] === "tip") {
+            exec(`php ${__dirname}/../knzkctl tipknzk ${parseInt(data[3])} ${json["account"]["acct"]} ${to_acct}`, (err, stdout, stderr) => {
+              if (err) { console.log(err); }
+              post("@" + json["account"]["acct"] + " " + stdout, {
+                in_reply_to_id: json["id"]
+              }, json["visibility"]);
+            });
+          }
+        }
+      } catch (e) {
+        console.log("[TIPKnzk Error]", e);
+      }
+    });
+  });
+
+  client.connect("wss://" + config.domain + "/api/v1/streaming/?stream=user&access_token=" + config.tipknzk_token);
+}
+
 StartWorker();
+StartTIPKnzk();
+
+function post(value, option = {}, visibility = "public") {
+  var optiondata = {
+    status: value,
+    visibility: visibility
+  };
+
+  if (option.cw) {
+    optiondata.spoiler_text = option.cw;
+  }
+  if (option.in_reply_to_id) {
+    optiondata.in_reply_to_id = option.in_reply_to_id;
+  }
+  if (option.media_ids) {
+    optiondata.media_ids = option.media_ids;
+  }
+  if (option.sensitive) {
+    optiondata.sensitive = option.sensitive;
+  }
+  fetch("https://" + config.domain + "/api/v1/statuses", {
+    headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + config.tipknzk_token },
+    method: 'POST',
+    body: JSON.stringify(optiondata)
+  }).then(function (response) {
+    if (response.ok) {
+      return response.json();
+    } else {
+      console.warn("NG:POST:SERVER");
+      return null;
+    }
+  }).then(function (json) {
+    if (json) {
+      if (json["id"]) {
+        console.log("OK:POST");
+      } else {
+        console.warn("NG:POST:" + json);
+      }
+    }
+  });
+}

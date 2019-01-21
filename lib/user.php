@@ -5,7 +5,7 @@ function getUser($id, $mode = "id") {
   if (!$id) return false;
   $mysqli = db_start();
   if ($mode === "acct") {
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE acct = ?;");
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?);");
   } elseif($mode === "twitter_id") {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE twitter_id = ?;");
   } else {

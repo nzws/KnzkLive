@@ -7,5 +7,7 @@
     "user": "username",
     "pass": "password",
     "name": "database_name"
-  }
+  },
+  "tipknzk_token": "xxxxx",
+  "tipknzk_acct": "tipknzk"
 }

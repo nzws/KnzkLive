@@ -4,8 +4,8 @@ function db_start() {
     $mysqli = new mysqli($env["database"]["host"], $env["database"]["user"], $env["database"]["pass"], $env["database"]["db"], $env["database"]["port"]);
     if ($mysqli->connect_errno) {
         http_response_code(500);
-        echo('[DBERR]');
-        exit();
+        if ($env["is_testing"]) var_dump($mysqli);
+        exit('Database Error');
     }
     $mysqli->set_charset("utf8mb4");
     return $mysqli;

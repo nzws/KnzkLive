@@ -5,6 +5,7 @@ if (!$my) {
   http_response_code(403);
   exit("ERR:ログインしてください。");
 }
+$plog = get_point_log($my["id"]);
 
 if ($_POST) {
   $my["misc"]["live_toot"] = !!$_POST["live_toot"];
@@ -35,7 +36,7 @@ if ($_POST) {
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
           <label class="custom-control-label" for="no_toot">
-            「<?=s($_SESSION["account_provider"])?>に投稿しない」をデフォルトにする
+            ローカル投稿をデフォルトにする
           </label>
         </div>
       </div>
@@ -71,6 +72,72 @@ if ($_POST) {
       </div>
     <?php endif; ?>
     <button type="submit" class="btn btn-primary">更新</button>
+    <hr>
+    <div class="box">
+      <h4>KnzkPoint</h4>
+      神崎ポイントを貯めると、配信のアイテムと交換したり、ユーザー間でプレゼントしたりできます。<br>
+      <!--<a href="<?=u("knzkpoint/new")?>" class="badge badge-info">チケットを発行</a> · --><a href="<?=u("knzkpoint/present")?>" class="badge badge-info">KPをプレゼント</a><br><br>
+      <p>
+        <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
+      </p>
+      <h5>あなたの獲得した統計</h5>
+      <table class="table">
+        <thead>
+        <tr>
+          <th></th>
+          <th>今日</th>
+          <th>昨日</th>
+          <th>今月</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><a href="#" onclick="alert('公開トゥート/配信でコメントすると、1投稿あたり2KPゲットできます。（1日500KPまで）\n獲得したポイントは次の日から使用できます。\nトゥートは「公開」に設定されていて、なおかつリプライでないものが対象です。ワーカーの状態によって取りこぼす場合があります。');return false">トゥート/コメント</a></td>
+          <td><?=($my["point_count_today_toot"] > 500 ? 500 : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
+          <td><?=get_point_log_stat($my["id"], "toot", "today")?></td>
+          <td><?=get_point_log_stat($my["id"], "toot", "month")?></td>
+        </tr>
+        <tr>
+          <td><a href="#" onclick="alert('他のユーザーによって作成されたチケットを残高に追加したり、プレゼントしてもらう事ができます。');return false">チケット/プレゼント</a></td>
+          <td><?=get_point_log_stat($my["id"], "user", "today")?></td>
+          <td><?=get_point_log_stat($my["id"], "user", "yesterday")?></td>
+          <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
+        </tr>
+        <tr>
+          <td>その他</td>
+          <td><?=get_point_log_stat($my["id"], "other", "today")?></td>
+          <td><?=get_point_log_stat($my["id"], "other", "yesterday")?></td>
+          <td><?=get_point_log_stat($my["id"], "other", "month")?></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h5>獲得・使用履歴</h5>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>日時</th>
+          <th>増減</th>
+          <th>タイプ</th>
+          <th>詳細</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($plog as $item) :
+          if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
+          elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
+          else $item["type"] = "その他";
+          ?>
+        <tr>
+          <td><?=s($item["created_at"])?></td>
+          <td><?=s($item["point"])?></td>
+          <td><?=s($item["type"])?></td>
+          <td><?=s($item["data"])?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </div>
 </form>
 
