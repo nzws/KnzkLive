@@ -38,7 +38,7 @@ if ($_POST) {
       <p>
         <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
       </p>
-      <form method="post">
+      <form method="post" id="knzkpoint">
         <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
         <div class="form-group">
           <label for="point">プレゼントするポイント数</label>
@@ -95,7 +95,7 @@ if ($_POST) {
         return false;
       }
       if (confirm(`「${json["name"]}」(${json["acct"]})に送信してもよろしいですか？`)) {
-        document.querySelector("form").submit();
+        document.getElementById("knzkpoint").submit();
       } else {
         bt.disabled = false;
         bt.textContent = "送信";
