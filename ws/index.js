@@ -33,7 +33,7 @@ app.post('/update_conf', function(req, res) {
     //add
     if (b.type === 'hashtag') {
       //hashtag
-      if (b.value) {
+      if (b.value !== "default") {
         conf.hashtag.push(b.value)
       } else {
         conf.hashtag.push('knzklive_' + b.live_id)

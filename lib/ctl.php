@@ -18,9 +18,11 @@ function load($argv) {
     } else {
       exit("[Error] 相手のKnzkPointアカウントが存在しません！　https://live.knzk.me/ にログインする必要があります！");
     }
+  } else {
+    disp_log("command {$argv[1]} is not found", 2);
   }
 
-  exit("\n✨ Done!");
+  exit("\n✨ Done!\n\n");
 }
 
 function disp_log($name, $type) {
