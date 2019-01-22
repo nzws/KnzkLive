@@ -19,6 +19,6 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "prettier": "1.16.0"
+    "prettier": "1.16.1"
   }
 }
