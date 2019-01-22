@@ -61,6 +61,13 @@ $vote = loadVote($live["id"]);
       overflow-x: hidden;
       height: 600px;
     }
+    #comments::-webkit-scrollbar {
+      width: 10px;
+    }
+    #comments::-webkit-scrollbar-thumb {
+      background-color: #343a40;
+      border-radius: 5px;
+    }
     .hashtag {
       display: none;
     }
