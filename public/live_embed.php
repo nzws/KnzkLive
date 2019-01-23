@@ -28,6 +28,7 @@ $mode = $_SESSION["watch_type"];
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
+  <link rel="stylesheet" href="<?=$env["RootUrl"]?>knzkitem.css">
   <style>
     html,
     body {
@@ -170,13 +171,22 @@ $mode = $_SESSION["watch_type"];
     </div>
   </div>
 </div>
+<div id="item_layer"></div>
 
+<script id="item_emoji_tmpl" type="text/x-handlebars-template">
+  <div class="item_emoji {{class}}" style="{{style}}" id="{{random_id}}">
+    {{repeat_helper}}
+  </div>
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
   const type = '<?=s($mode)?>';
   const video = document.getElementById("knzklive");
   let myLive = <?=$myLive ? "true" : "false"?>;
+  let delay_sec = 3;
 
   function startWatching(v) {
     video.addEventListener("error", function() {
@@ -216,8 +226,9 @@ $mode = $_SESSION["watch_type"];
     const play = video.currentTime;
     let text = "";
     if (buffer > play && play && buffer) { //再生
+      delay_sec = Math.round(buffer - play);
       if (type !== "HLS") {
-        text += `<a href="javascript:seekLive()">LIVE</a> · ` + (Math.round(buffer - play)) + "s";
+        text += `<a href="javascript:seekLive()">LIVE</a> · ` + delay_sec + "s";
       } else {
         text += "LIVE";
       }
@@ -299,6 +310,28 @@ $mode = $_SESSION["watch_type"];
       if (v.mozRequestFullscreen) v.mozRequestFullscreen(); //Firefox
       else if (v.requestFullscreen) v.requestFullscreen();
     }
+  }
+
+  Handlebars.registerHelper('repeat_helper', function() {
+    let html = "";
+    for (let i = 0; i < this.repeat_num; i++) {
+      html += this.repeat_html;
+    }
+    return new Handlebars.SafeString(html);
+  });
+
+  function run_item(type, value, clear_sec = 0) {
+    value["random_id"] = "item_" + (Math.random().toString(36).slice(-8));
+
+    const tmpl = Handlebars.compile(document.getElementById("item_" + type + "_tmpl").innerHTML);
+
+    setTimeout(function () {
+      $("#item_layer").append(tmpl(value));
+      setTimeout(function () {
+        const del = document.getElementById(value["random_id"]);
+        if (del) del.parentNode.removeChild(del);
+      }, clear_sec * 1000);
+    }, delay_sec);
   }
 </script>
 </body>

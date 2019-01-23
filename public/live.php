@@ -145,6 +145,7 @@ $vote = loadVote($live["id"]);
           <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
           <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
         <?php endif; ?>
+        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
@@ -272,6 +273,61 @@ $vote = loadVote($live["id"]);
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-hat-wizard"></i> アイテム</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>絵文字</h5>
+        <div class="row">
+          <div class="col-sm-4">
+            絵文字:
+            <select class="form-control" id="item_emoji_emoji">
+              <option>👍</option>
+              <option>❤️</option>
+              <option>👏️</option>
+              <option>🎉️</option>
+              <option value="liver">配信者のアイコン</option>
+              <option value="me">あなたのアイコン</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            方向:
+            <select class="form-control" id="item_emoji_dir">
+              <option value="left-to-right">左から右</option>
+              <option value="right-to-left">右から左</option>
+              <option value="top-to-bottom">上から下</option>
+              <option value="bottom-to-top">下から上</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            個数 <small>(1~100, <b>n*5</b>KP)</small>:
+            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="update_money_disp('emoji')" onchange="update_money_disp('emoji')">
+          </div>
+        </div>
+        <div class="mt-2">
+          <div class="custom-control custom-checkbox float-left">
+            <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
+            <label class="custom-control-label" for="item_emoji_spin">
+              回転あり (+<b>50</b>KP)<br>
+              <small>一部端末で表示されない可能性があります</small>
+            </label>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-success" onclick="item_buy('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
+          </div>
+        </div>
+        <hr>
       </div>
     </div>
   </div>
@@ -471,6 +527,8 @@ $vote = loadVote($live["id"]);
             method: 'GET',
             credentials: 'include'
           });
+        } else if (msg.type === "item") {
+          document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
         }
       });
 
@@ -728,6 +786,61 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     function openEditLive() {
       $('.live_info').addClass('invisible');
       $('.live_edit').removeClass('invisible');
+    }
+
+    function update_money_disp(item) {
+      let point = 0;
+      if (item === "emoji") {
+        point += parseInt(elemId("item_emoji_count").value) * 5;
+        point += elemId("item_emoji_spin").checked ? 50 : 0;
+      }
+      elemId("item_" + item + "_point").textContent = point;
+    }
+
+    function item_buy(type, is_confirmed = false) {
+      const body = {
+        live_id: <?=s($live["id"])?>,
+        csrf_token: `<?=$_SESSION['csrf_token']?>`,
+        type: type,
+        confirm: is_confirmed ? 1 : 0
+      };
+      if (type === "emoji") {
+        body["count"] = parseInt(elemId("item_emoji_count").value);
+        body["dir"] = elemId("item_emoji_dir").value;
+        body["emoji"] = elemId("item_emoji_emoji").value;
+        body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
+      } else {
+        return null;
+      }
+      console.log(body);
+      fetch('<?=u("api/client/item_buy")?>', {
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery(body)
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+          return null;
+        }
+        if (json["confirm"]) {
+          if (confirm(json["point"] + "KP消費します。よろしいですか？")) {
+            item_buy(type, true);
+          }
+        }
+        if (json["success"]) {
+          $('#itemModal').modal('hide');
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert("内部エラーが発生しました");
+      });
     }
   </script>
 <?php endif; ?>

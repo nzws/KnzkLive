@@ -8,7 +8,7 @@ if (!$my) {
 
 if ($_POST) {
   if (mb_strlen($_POST["comment"]) > 500) exit("ERR:文字数制限オーバー");
-  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 0 || !is_numeric($_POST["point"])) exit("ERR:ポイントが足りないか不正です。");
+  if (!check_point_true($my["point_count"], $_POST["point"])) exit("ERR:ポイントが足りないか不正です。");
 
   $hash = create_ticket($my["id"], $_POST["point"], $_POST["comment"]);
   if (!$hash) exit("作成エラー");

@@ -96,3 +96,7 @@ function get_point_log_stat($user_id, $type, $day_type) {
   }
   return $point;
 }
+
+function check_point_true($now_have_point, $use_point) {
+  return !(intval($use_point) > $now_have_point || !$use_point || intval($use_point) <= 0 || !is_numeric($use_point));
+}
