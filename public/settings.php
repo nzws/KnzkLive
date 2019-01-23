@@ -105,7 +105,7 @@ if ($_POST) {
             <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
           </tr>
           <tr>
-            <td>配信</td>
+            <td><a href="#" onclick="alert('配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
             <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
