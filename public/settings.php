@@ -105,6 +105,12 @@ if ($_POST) {
             <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
           </tr>
           <tr>
+            <td>配信</td>
+            <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
+            <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
+            <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
+          </tr>
+          <tr>
             <td>その他</td>
             <td><?=get_point_log_stat($my["id"], "other", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "other", "yesterday")?></td>
