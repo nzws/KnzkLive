@@ -131,10 +131,10 @@ $vote = loadVote($live["id"]);
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
-            視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
           <span id="count_end" class="invisible">
-            総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
           </span>
         </span>
       <br>
@@ -145,7 +145,7 @@ $vote = loadVote($live["id"]);
           <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
           <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
         <?php endif; ?>
-        <?php if (!empty($my)) : ?>
+        <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
@@ -164,7 +164,8 @@ $vote = loadVote($live["id"]);
         <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
         <?=$liveUser["name"]?><br>
         <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small><br>
-        <small>総コメント数: <?=$liveUser["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$liveUser["misc"]["comment_count_max"]?>コメ</small>
+        <small>総コメント数: <?=$liveUser["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$liveUser["misc"]["comment_count_max"]?>コメ</small><br>
+        <small>総ポイント取得数: <?=$liveUser["misc"]["point_count_all"]?>KP · 最高ポイント取得数: <?=$liveUser["misc"]["point_count_max"]?>KP</small>
       </p>
       <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
@@ -397,6 +398,7 @@ $vote = loadVote($live["id"]);
       if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
 
       if (json["viewers_count"] !== watch_data["viewers_count"]) elemId("count").innerHTML = json["viewers_count"];
+      if (json["point_count"] !== watch_data["point_count"]) $(".point_count").html(json["point_count"]);
       if (json["viewers_max"] !== watch_data["viewers_max"]) $(".max").html(json["viewers_max"]);
       if (json["viewers_max_concurrent"] !== watch_data["viewers_max_concurrent"]) elemId("max_c").innerHTML = json["viewers_max_concurrent"];
       watch_data = json;
@@ -749,6 +751,8 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       }
       if (json["confirm"]) {
         if (confirm(json["point"] + "KP消費します。よろしいですか？")) {
+          const p = $(".now_user_point");
+          p.html(parseInt(p.html()) - json["point"]);
           item_buy(type, true);
         }
       }

@@ -184,6 +184,10 @@ create unique index users_id_uindex
 create index users_point_count_today_toot_index
   on users (point_count_today_toot);
 
+-- 2019/01/23
+alter table live
+  add point_count int(255) default 0 not null after comment_count;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -165,6 +165,7 @@ function live4Pub($live) {
     "viewers_count" => $live["viewers_count"],
     "viewers_max" => $live["viewers_max"],
     "viewers_max_concurrent" => $live["viewers_max_concurrent"],
-    "is_started" => $live["is_started"]
+    "is_started" => $live["is_started"],
+    "point_count" => $live["point_count"]
   ];
 }

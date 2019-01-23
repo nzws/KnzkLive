@@ -50,6 +50,7 @@ if ($_POST["type"] === "emoji") {
   }
 }
 $n = add_point($my["id"], $point * -1, "item", $_POST["type"]);
+point_count_add($live["id"], $point);
 comment_post("<div class=\"alert alert-primary\">{$desc} を投下しました！</div>", $my["id"], $live["id"], true);
 api_json(["success" => $n]);
 

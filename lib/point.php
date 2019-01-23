@@ -100,3 +100,12 @@ function get_point_log_stat($user_id, $type, $day_type) {
 function check_point_true($now_have_point, $use_point) {
   return !(intval($use_point) > $now_have_point || !$use_point || intval($use_point) <= 0 || !is_numeric($use_point));
 }
+
+function point_count_add($live_id, $point) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `live` SET `point_count` = `point_count` + ? WHERE id = ?;");
+  $stmt->bind_param("ss", $point, $live_id);
+  $stmt->execute();
+  $stmt->close();
+  $mysqli->close();
+}

@@ -12,6 +12,9 @@
         <?php
         if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
         if (isset($my["id"])) : ?>
+          <form class="form-inline mr-2">
+            <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
+          </form>
             <?php if ($my["is_broadcaster"]) : ?>
                 <form class="form-inline">
                   <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
