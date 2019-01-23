@@ -145,7 +145,9 @@ $vote = loadVote($live["id"]);
           <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
           <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
         <?php endif; ?>
-        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
+        <?php if (!empty($my)) : ?>
+          <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
+        <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
@@ -704,6 +706,61 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     body.className = ((body.className === "is_wide" && !mode) || mode === "hide") ? "" : "is_wide";
   }
 
+  function update_money_disp(item) {
+    let point = 0;
+    if (item === "emoji") {
+      point += parseInt(elemId("item_emoji_count").value) * 5;
+      point += elemId("item_emoji_spin").checked ? 50 : 0;
+    }
+    elemId("item_" + item + "_point").textContent = point;
+  }
+
+  function item_buy(type, is_confirmed = false) {
+    const body = {
+      live_id: <?=s($live["id"])?>,
+      csrf_token: `<?=$_SESSION['csrf_token']?>`,
+      type: type,
+      confirm: is_confirmed ? 1 : 0
+    };
+    if (type === "emoji") {
+      body["count"] = parseInt(elemId("item_emoji_count").value);
+      body["dir"] = elemId("item_emoji_dir").value;
+      body["emoji"] = elemId("item_emoji_emoji").value;
+      body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
+    } else {
+      return null;
+    }
+
+    fetch('<?=u("api/client/item_buy")?>', {
+      headers: {'content-type': 'application/x-www-form-urlencoded'},
+      method: 'POST',
+      credentials: 'include',
+      body: buildQuery(body)
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+        return null;
+      }
+      if (json["confirm"]) {
+        if (confirm(json["point"] + "KP消費します。よろしいですか？")) {
+          item_buy(type, true);
+        }
+      }
+      if (json["success"]) {
+        $('#itemModal').modal('hide');
+      }
+    }).catch(function(error) {
+      console.error(error);
+      alert("内部エラーが発生しました");
+    });
+  }
+
   window.onload = function () {
     check_limit();
     loadComment();
@@ -786,61 +843,6 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     function openEditLive() {
       $('.live_info').addClass('invisible');
       $('.live_edit').removeClass('invisible');
-    }
-
-    function update_money_disp(item) {
-      let point = 0;
-      if (item === "emoji") {
-        point += parseInt(elemId("item_emoji_count").value) * 5;
-        point += elemId("item_emoji_spin").checked ? 50 : 0;
-      }
-      elemId("item_" + item + "_point").textContent = point;
-    }
-
-    function item_buy(type, is_confirmed = false) {
-      const body = {
-        live_id: <?=s($live["id"])?>,
-        csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        type: type,
-        confirm: is_confirmed ? 1 : 0
-      };
-      if (type === "emoji") {
-        body["count"] = parseInt(elemId("item_emoji_count").value);
-        body["dir"] = elemId("item_emoji_dir").value;
-        body["emoji"] = elemId("item_emoji_emoji").value;
-        body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
-      } else {
-        return null;
-      }
-      console.log(body);
-      fetch('<?=u("api/client/item_buy")?>', {
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery(body)
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-          return null;
-        }
-        if (json["confirm"]) {
-          if (confirm(json["point"] + "KP消費します。よろしいですか？")) {
-            item_buy(type, true);
-          }
-        }
-        if (json["success"]) {
-          $('#itemModal').modal('hide');
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert("内部エラーが発生しました");
-      });
     }
   </script>
 <?php endif; ?>
