@@ -68,7 +68,7 @@ $mode = $_SESSION["watch_type"];
     }
 
     .watermark {
-      opacity: .1;
+      opacity: .3;
       position: absolute;
       top: 18px;
       right: 20px;
