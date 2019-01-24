@@ -67,6 +67,14 @@ $mode = $_SESSION["watch_type"];
       width: 100%;
     }
 
+    .watermark {
+      opacity: .1;
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      height: 18px;
+    }
+
     .footer_content {
       padding: 10px;
     }
@@ -79,7 +87,7 @@ $mode = $_SESSION["watch_type"];
       text-align: center;
     }
 
-    #splash img {
+    .waiting_logo {
       width: 300px;
       max-width: 100%;
       animation: pulse 4s infinite;
@@ -91,7 +99,7 @@ $mode = $_SESSION["watch_type"];
       }
 
       50% {
-        opacity: .2;
+        opacity: .1;
       }
 
       100% {
@@ -131,7 +139,7 @@ $mode = $_SESSION["watch_type"];
 <body>
 <div id="splash">
   <div class="center_v">
-    <img src="https://github.com/KnzkDev.png"/>
+    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
   </div>
   <div class="footer">
     <div class="footer_content">
@@ -153,6 +161,7 @@ $mode = $_SESSION["watch_type"];
       この環境では視聴する事ができません。OS・ブラウザをアップデートするか、別の環境からお試しください。
     </p>
   </video>
+  <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="watermark" />
   <div class="footer" style="background: rgba(0,0,0,.5)">
     <div class="footer_content">
       <span id="video_status">LOADING</span>

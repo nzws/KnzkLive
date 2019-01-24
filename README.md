@@ -12,3 +12,6 @@
 ### See also
 
 https://github.com/yuzulabo/KnzkLive-Publish-Server
+
+### Special Thanks ✨
+KnzkLive logo: [Xiltvs](https://pawoo.net/@Xiltvs)
