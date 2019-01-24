@@ -11,7 +11,7 @@ if ($_GET["mode"] === "pre_publish") { //配信開始
     setLiveStatus($live["id"], 2);
 } elseif ($_GET["mode"] === "done_publish") { //配信終了
     $liveUser = getUser($live["user_id"]);
-    if ($liveUser["misc"]["auto_close"])
+    if ($liveUser["misc"]["auto_close"] && $live["is_started"] == 1)
       end_live($live["id"]);
     else
       setLiveStatus($live["id"], 1);
