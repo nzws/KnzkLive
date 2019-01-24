@@ -29,10 +29,10 @@ function getMe() {
   return isset($_SESSION["acct"]) ? getUser($_SESSION["acct"], "acct") : false;
 }
 
-function setUserLive($id) {
+function setUserLive($id, $user_id) {
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("UPDATE `users` SET live_current_id = ? WHERE acct = ?;");
-  $stmt->bind_param("ss", $id, $_SESSION["acct"]);
+  $stmt = $mysqli->prepare("UPDATE `users` SET live_current_id = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $id, $user_id);
   $stmt->execute();
   $stmt->close();
   $mysqli->close();

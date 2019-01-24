@@ -161,7 +161,7 @@ function end_live($live_id) {
 
   if (setLiveStatus($live["id"], 0)) {
     setSlot($live["slot_id"], 0);
-    setUserLive(0);
+    setUserLive(0, $my["id"]);
 
     if ($my["misc"]["viewers_max_concurrent"]) {
       if ($live["viewers_max_concurrent"] > $my["misc"]["viewers_max_concurrent"])
