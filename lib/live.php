@@ -200,7 +200,8 @@ function end_live($live_id) {
     $stmt->close();
     $mysqli->close();
     node_update_conf("del", "hashtag", liveTag($live), $live["id"]);
-    add_point($my["id"], intval($live["point_count"] * 0.7), "live", "配信ID:" . $live["id"] . " のポイント還元 (70%)");
+    $get_point = intval($live["point_count"] * 0.7);
+    if ($get_point > 0) add_point($my["id"], $get_point, "live", "配信ID:" . $live["id"] . " のポイント還元 (70%)");
     return true;
   }
   return false;

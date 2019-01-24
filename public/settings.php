@@ -143,6 +143,7 @@ if ($_POST) {
           <?php foreach ($plog as $item) :
             if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
             elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
+            elseif ($item["type"] === "live") $item["type"] = "配信";
             else $item["type"] = "その他";
             ?>
             <tr>
