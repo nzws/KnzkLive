@@ -342,6 +342,10 @@ $mode = $_SESSION["watch_type"];
       }, clear_sec * 1000);
     }, delay_sec);
   }
+
+  function end() {
+    $(".right").html("配信は終了しました。");
+  }
 </script>
 </body>
 </html>

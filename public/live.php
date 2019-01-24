@@ -385,7 +385,8 @@ $vote = loadVote($live["id"]);
         widemode("hide");
         elemId("count_open").className = "invisible";
         elemId("count_end").className = "";
-        if (watch_data["live_status"] !== 0) document.getElementById('iframe').src = "<?=u("api/client/live_ended")?>";
+        if (watch_data["live_status"] !== 0)
+          document.getElementById('iframe').contentWindow.end();
       }
       if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
 
