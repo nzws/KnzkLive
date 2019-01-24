@@ -26,51 +26,8 @@ if (isset($_GET["mode"])) {
 
   if ($_GET["mode"] == "shutdown") {
     if ($live["is_live"] == 1) {
-      setSlot($live["slot_id"], 0);
-      setUserLive(0);
-
-      if (setLiveStatus($live["id"], 0)) {
-        if ($my["misc"]["viewers_max_concurrent"]) {
-          if ($live["viewers_max_concurrent"] > $my["misc"]["viewers_max_concurrent"])
-          $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
-        } else {
-          $my["misc"]["viewers_max"] = 0;
-          $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
-        }
-
-        if (isset($my["misc"]["comment_count_max"])) {
-          if ($live["comment_count"] > $my["misc"]["comment_count_max"])
-            $my["misc"]["comment_count_max"] = $live["comment_count"];
-        } else {
-          $my["misc"]["comment_count_all"] = 0;
-          $my["misc"]["comment_count_max"] = $live["comment_count"];
-        }
-
-        if (isset($my["misc"]["point_count_max"])) {
-          if ($live["point_count"] > $my["misc"]["point_count_max"])
-            $my["misc"]["point_count_max"] = $live["point_count"];
-        } else {
-          $my["misc"]["point_count_all"] = 0;
-          $my["misc"]["point_count_max"] = $live["point_count"];
-        }
-
-        $my["misc"]["viewers_max"] += $live["viewers_max"];
-        $my["misc"]["comment_count_all"] += $live["comment_count"];
-        $my["misc"]["point_count_all"] += $live["point_count"];
-
-        setConfig($my["id"], $my["misc"]);
-
-        $mysqli = db_start();
-        $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP, created_at = created_at WHERE id = ?;");
-        $stmt->bind_param("s",$live["id"]);
-        $stmt->execute();
-        $stmt->close();
-        $mysqli->close();
-        node_update_conf("del", "hashtag", liveTag($live), $live["id"]);
-        add_point($my["id"], intval($live["point_count"] * 0.7), "live", "配信ID:" . $live["id"] . " のポイント還元 (70%)");
-
-        header("Location: ".u());
-    }
+      end_live($live["id"]);
+      header("Location: ".u());
     } else echo "ERROR: setLiveStatus";
 
     exit();

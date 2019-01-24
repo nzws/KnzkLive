@@ -11,6 +11,7 @@ if ($_POST) {
   $my["misc"]["live_toot"] = !!$_POST["live_toot"];
   $my["misc"]["to_title"] = !!$_POST["to_title"];
   $my["misc"]["no_toot_default"] = !!$_POST["no_toot_default"];
+  $my["misc"]["auto_close"] = !!$_POST["auto_close"];
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   setConfig($my["id"], $my["misc"]);
 }
@@ -56,6 +57,15 @@ if ($_POST) {
         </div>
 
         <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="conf_auto_close" name="auto_close" value="1" <?=($my["misc"]["auto_close"] ? "checked" : "")?>>
+            <label class="custom-control-label" for="conf_auto_close">
+              配信クライアント(OBS等)の配信終了を検知したら自動で枠を閉じる
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
           <div class="form-group">
             <label for="conf_webhook_url">WebHook URL</label>
             <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api" value="<?=$my["misc"]["webhook_url"]?>">
@@ -71,7 +81,7 @@ if ($_POST) {
         </div>
       </div>
     <?php endif; ?>
-    <button type="submit" class="btn btn-primary">更新</button>
+    <button type="submit" class="btn btn-primary btn-lg">更新</button>
     <hr>
     <div class="box">
       <h4>KnzkPoint</h4>
