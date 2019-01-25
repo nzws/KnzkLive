@@ -37,7 +37,7 @@ if ($_POST) {
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
           <label class="custom-control-label" for="no_toot">
-            ローカル投稿をデフォルトにする
+            「コメントのみ投稿」をデフォルトにする
           </label>
         </div>
       </div>
