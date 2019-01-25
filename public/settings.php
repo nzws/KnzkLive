@@ -73,6 +73,20 @@ if ($_POST) {
           </div>
         </div>
       </div>
+
+    <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
+    <div class="box" id="opener-token">
+      <h4>Openerトークン</h4>
+      <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
+      <div class="col-md-5 mt-2 mb-2">
+        <div class="input-group">
+          <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">
+          <div class="input-group-append">
+            <button class="btn btn-outline-danger" type="button" id="openertoken-bt" onclick="location.href = '?openertoken=regen'">再生成</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <?php else : ?>
       <div class="box">
         <h3>配信を始める</h3>
