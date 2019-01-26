@@ -2,9 +2,18 @@ const app = require('express')()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const bodyParser = require('body-parser')
+const lastUpdate = {
+  "detect": null,
+  "tipknzk": null,
+  "streaming": null
+}
 
 app.get('/', function(req, res) {
   res.send('ok')
+})
+
+app.get('/health', function(req, res) {
+  res.send(JSON.stringify(lastUpdate))
 })
 
 app.use(
@@ -58,6 +67,7 @@ app.post('/update_conf', function(req, res) {
 })
 
 io.on('connection', function(socket) {
+  lastUpdate["detect"] = Date.now()
   console.log('[KnzkLive WebSocket] connected')
 })
 
@@ -156,6 +166,7 @@ function StartWorker() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
+          lastUpdate["detect"] = Date.now()
           const ord = JSON.parse(message.utf8Data)
           const json = JSON.parse(ord.payload)
           if (ord.event === 'update') {
@@ -232,6 +243,7 @@ function StartTIPKnzk() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
+          lastUpdate["tipknzk"] = Date.now()
           const ord = JSON.parse(message.utf8Data)
           let json = JSON.parse(ord.payload)
           if (ord.event !== 'notification' || json['type'] !== 'mention') return
