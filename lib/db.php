@@ -1,8 +1,8 @@
 <?php
-function db_start() {
+function db_start($ignore_error = false) {
     global $env;
     $mysqli = new mysqli($env["database"]["host"], $env["database"]["user"], $env["database"]["pass"], $env["database"]["db"], $env["database"]["port"]);
-    if ($mysqli->connect_errno) {
+    if ($mysqli->connect_errno && !$ignore_error) {
         http_response_code(500);
         if ($env["is_testing"]) var_dump($mysqli);
         exit('Database Error');

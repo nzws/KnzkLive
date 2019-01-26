@@ -68,7 +68,7 @@ $mode = $_SESSION["watch_type"];
     }
 
     .watermark {
-      opacity: .3;
+      opacity: .6;
       position: absolute;
       top: 18px;
       right: 20px;
@@ -141,6 +141,7 @@ $mode = $_SESSION["watch_type"];
   <div class="center_v">
     <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
   </div>
+  <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="watermark" />
   <div class="footer">
     <div class="footer_content">
       <b>KNZKLIVE</b><br>
