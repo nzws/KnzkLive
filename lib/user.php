@@ -8,6 +8,8 @@ function getUser($id, $mode = "id") {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?);");
   } elseif($mode === "twitter_id") {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE twitter_id = ?;");
+  } elseif($mode === "opener_token") {
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE opener_token = ?;");
   } else {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE id = ?;");
   }
@@ -46,6 +48,18 @@ function setConfig($id, $misc) {
   $stmt->execute();
   $stmt->close();
   $mysqli->close();
+}
+
+function generateOpenerToken($id) {
+  $hash = bin2hex(random_bytes(32));
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `users` SET opener_token = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $hash, $id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+  return $err ? false : $hash;
 }
 
 function getMyLastLive($user_id) {

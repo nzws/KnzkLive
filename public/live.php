@@ -204,7 +204,7 @@ $vote = loadVote($live["id"]);
           <div class="custom-control custom-checkbox float-left">
             <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
             <label class="custom-control-label" for="no_toot">
-              ローカル投稿
+              コメントのみ投稿
             </label>
           </div>
           <div style="text-align: right">

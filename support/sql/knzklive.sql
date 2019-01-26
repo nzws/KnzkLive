@@ -188,6 +188,10 @@ create index users_point_count_today_toot_index
 alter table live
   add point_count int(255) default 0 not null after comment_count;
 
+-- 2019/01/25
+ALTER TABLE users ADD opener_token varchar(255) NULL;
+CREATE UNIQUE INDEX users_opener_token_uindex ON users (opener_token);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
