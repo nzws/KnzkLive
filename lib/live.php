@@ -207,6 +207,26 @@ function end_live($live_id) {
   return false;
 }
 
+function update_sensitive($live_id) {
+  global $env;
+  $d = [
+    "type" => "mark_sensitive",
+    "live_id" => $live_id,
+  ];
+
+  $header = [
+    'Content-Type: application/json'
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($d),
+    'header' => implode(PHP_EOL,$header)
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+}
+
 function live4Pub($live) {
   return [
     "name" => $live["name"],

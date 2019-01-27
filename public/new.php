@@ -91,7 +91,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
       <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1">
       <label class="form-check-label" for="sensitive">
         センシティブな配信としてマークする<br>
-        <small>ユーザーが配信画面を開く際に警告が表示されます</small>
+        <small>ユーザーが配信画面を開く際に警告が表示されます / 後から変更できます</small>
       </label>
     </div>
 

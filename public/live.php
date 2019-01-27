@@ -352,6 +352,23 @@ $vote = loadVote($live["id"]);
   </div>
 </div>
 
+<div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">警告！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script id="comment_tmpl" type="text/html">
   <div id="post_<%=id%>">
     <div class="row">
@@ -380,6 +397,7 @@ $vote = loadVote($live["id"]);
   var heartbeat, cm_ws, watch_data = {};
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
+  var frame_url = "";
 
   function watch(first) {
     fetch('<?=u("api/client/watch")?>?id=<?=s($live["id"])?>', {
@@ -550,6 +568,11 @@ $vote = loadVote($live["id"]);
           });
         } else if (msg.type === "item") {
           document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
+        } else if (msg.type === "mark_sensitive") {
+          const frame = document.getElementById('iframe');
+          frame_url = frame.src;
+          frame.src = "";
+          $('#sensitiveModal').modal('show');
         }
       });
 

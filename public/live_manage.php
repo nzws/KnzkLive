@@ -56,13 +56,15 @@ if (isset($_POST["type"])) {
   } elseif ($_POST["type"] == "edit") {
     $title = s($_POST["title"]);
     $desc = s($_POST["description"]);
+    $is_sensitive = isset($_POST["sensitive"]) ? 1 : 0;
 
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ? WHERE id = ?;");
-    $stmt->bind_param('sss', $title, $desc, $live["id"]);
+    $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ?, is_sensitive = ? WHERE id = ?;");
+    $stmt->bind_param('ssss', $title, $desc, $is_sensitive, $live["id"]);
     $stmt->execute();
     $stmt->close();
     $mysqli->close();
+    if ($live["is_sensitive"] == 0 && $is_sensitive === 1) update_sensitive($live["id"]);
     $live = getLive($live["id"]);
   } elseif ($_POST["type"] == "prop_vote_start") {
     if (empty(loadVote($live["id"]))) {
@@ -221,6 +223,14 @@ $vote = loadVote($live["id"]);
       <div class="form-group">
         <label for="description">配信の説明</label>
         <textarea class="form-control" id="description" name="description" rows="4" required><?=$live["description"]?></textarea>
+      </div>
+
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1" <?=($live["is_sensitive"] == 1 ? "checked" : "")?>>
+        <label class="form-check-label" for="sensitive">
+          センシティブな配信としてマークする<br>
+          <small>ユーザーが配信画面を開く際に警告が表示されます</small>
+        </label>
       </div>
 
       <button type="submit" class="btn btn-primary">更新</button>
