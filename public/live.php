@@ -25,6 +25,8 @@ if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
   exit("ERR:この配信はまだ開始されていません。 | " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
 }
 
+if (isset($_POST["sensitive"])) $_SESSION["sensitive_allow"] = true;
+
 $liveUser = getUser($live["user_id"]);
 
 $liveurl = liveUrl($live["id"]);
@@ -117,6 +119,20 @@ $vote = loadVote($live["id"]);
 </head>
 <body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
+<?php if ($live["is_sensitive"] == 1 && !isset($_SESSION["sensitive_allow"])) : ?>
+<div class="container">
+  <h1>警告！</h1>
+  この配信はセンシティブな内容を含む配信の可能性があります。本当に視聴しますか？
+  <p>
+    「<b><?=$live["name"]?></b>」 by <?=$liveUser["name"]?>
+  </p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+    <input type="hidden" name="sensitive" value="1">
+    <button type="submit" class="btn btn-danger btn-lg btn-block">:: 視聴する ::</button>
+  </form>
+</div>
+<?php else : ?>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-9">
@@ -225,7 +241,7 @@ $vote = loadVote($live["id"]);
     </div>
   </div>
 </div>
-
+<?php endif; ?>
 <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

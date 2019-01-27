@@ -192,6 +192,10 @@ alter table live
 ALTER TABLE users ADD opener_token varchar(255) NULL;
 CREATE UNIQUE INDEX users_opener_token_uindex ON users (opener_token);
 
+-- 2019/01/27
+alter table live
+  add is_sensitive int(5) default 0 not null;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

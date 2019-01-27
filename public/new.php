@@ -40,10 +40,11 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
   }
 
   $random = bin2hex(random_bytes(32));
+  $is_sensitive = isset($_POST["sensitive"]) ? 1 : 0;
 
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `viewers_count`, `custom_hashtag`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, '0', ?);");
-  $stmt->bind_param('ssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag);
+  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `is_sensitive`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, ?, ?);");
+  $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $is_sensitive);
   $stmt->execute();
   $stmt->close();
   $mysqli->close();
@@ -84,6 +85,14 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     <div class="form-group">
       <label for="description">配信の説明</label>
       <textarea class="form-control" id="description" name="description" rows="4" required><?=$last["description"]?></textarea>
+    </div>
+
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1">
+      <label class="form-check-label" for="sensitive">
+        センシティブな配信としてマークする<br>
+        <small>ユーザーが配信画面を開く際に警告が表示されます</small>
+      </label>
     </div>
 
     <div class="form-check">
