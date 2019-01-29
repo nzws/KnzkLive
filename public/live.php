@@ -813,7 +813,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     setInterval(update_watch, 20000);
     <?php endif; ?>
     $('#toot').keydown(function (e){
-      if (e.keyCode === 13 && e.ctrlKey) {
+      if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
         post_comment()
       }
     });
