@@ -254,7 +254,7 @@ $vote = loadVote($live["id"]);
         <div class="input-group">
           <input class="form-control" type="text" value="<?=$comurl?>" readonly>
           <div class="input-group-append">
-            <a class="btn btn-secondary" href="<?=$comurl?>" target="_blank">Open</a>
+            <button class="btn btn-secondary copy" type="button" data-clipboard-text="<?=$comurl?>">コピー</button>
           </div>
         </div>
       </div>
@@ -264,6 +264,7 @@ $vote = loadVote($live["id"]);
 
   <div class="box">
     <b>配信サーバー情報:</b><br>
+    <small>Windows・OBS環境の方は<a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpener</a>で自動設定ができます。</small><br>
     <span class="text-danger">* この情報は漏洩すると第三者に配信を乗っ取られる可能性がありますので十分にご注意ください。</span><br>
     <div class="row">
       <div class="col-md-6">
@@ -272,6 +273,9 @@ $vote = loadVote($live["id"]);
             <span class="input-group-text" id="url">URL</span>
           </div>
           <input type="text" class="form-control" aria-describedby="url" readonly value="rtmp://<?=$slot["server_ip"]?>/live">
+          <div class="input-group-append">
+            <button class="btn btn-secondary copy" type="button" data-clipboard-text="rtmp://<?=$slot["server_ip"]?>/live">コピー</button>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
@@ -280,6 +284,9 @@ $vote = loadVote($live["id"]);
             <span class="input-group-text" id="key">ストリームキー</span>
           </div>
           <input type="text" class="form-control" aria-describedby="key" readonly placeholder="クリックで表示" onclick="window.prompt('ストリームキー', '<?=$live["id"]?>stream?token=<?=$live["token"]?>')">
+          <div class="input-group-append">
+            <button class="btn btn-secondary copy" type="button" data-clipboard-text="<?=$live["id"]?>stream?token=<?=$live["token"]?>">コピー</button>
+          </div>
         </div>
       </div>
     </div>
@@ -312,5 +319,11 @@ $vote = loadVote($live["id"]);
 
 <?php include "../include/footer.php"; ?>
   <script src="js/knzklive.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+<script>
+  window.onload = function () {
+    const clipboard = new ClipboardJS('.copy');
+  }
+</script>
 </body>
 </html>
