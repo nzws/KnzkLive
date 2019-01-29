@@ -245,6 +245,7 @@ $vote = loadVote($live["id"]);
         <div class="input-group">
           <input class="form-control" type="text" value="<?=$liveurl?>" readonly>
           <div class="input-group-append">
+            <button class="btn btn-secondary copy" type="button" data-clipboard-text="<?=$liveurl?>">コピー</button>
             <a class="btn btn-primary" href="<?=$liveurl?>" target="_blank">Open</a>
           </div>
         </div>
