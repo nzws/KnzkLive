@@ -92,7 +92,7 @@ $vote = loadVote($live["id"]);
 <body>
 <?php include "../include/navbar.php"; ?>
 <div class="container">
-  <a href="" class="btn btn-info btn-sm">再読込</a>
+  <a href="?" class="btn btn-info btn-sm">再読込</a>
 </div>
 <?php if ($live["is_started"] == "0") : ?>
   <div class="container">
@@ -322,6 +322,9 @@ $vote = loadVote($live["id"]);
   <script src="js/knzklive.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
 <script>
+  <?php if (isset($_GET["new"]) && $my["misc"]["auto_open_start"]) : ?>
+  window.open('<?=$liveurl?>');
+  <?php endif; ?>
   window.onload = function () {
     const clipboard = new ClipboardJS('.copy');
   }

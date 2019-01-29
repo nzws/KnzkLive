@@ -12,6 +12,7 @@ if ($_POST) {
   $my["misc"]["to_title"] = !!$_POST["to_title"];
   $my["misc"]["no_toot_default"] = !!$_POST["no_toot_default"];
   $my["misc"]["auto_close"] = !!$_POST["auto_close"];
+  $my["misc"]["auto_open_start"] = !!$_POST["auto_open_start"];
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   setConfig($my["id"], $my["misc"]);
 }
@@ -61,6 +62,15 @@ if ($_POST) {
             <input type="checkbox" class="custom-control-input" id="conf_auto_close" name="auto_close" value="1" <?=($my["misc"]["auto_close"] ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_auto_close">
               配信クライアント(OBS等)の配信終了を検知したら自動で枠を閉じる
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="conf_auto_open_start" name="auto_open_start" value="1" <?=($my["misc"]["auto_open_start"] ? "checked" : "")?>>
+            <label class="custom-control-label" for="conf_auto_open_start">
+              配信開始時に自動で配信画面を新規タブで開く
             </label>
           </div>
         </div>
