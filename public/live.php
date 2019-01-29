@@ -41,6 +41,7 @@ $vote = loadVote($live["id"]);
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" type="image/x-icon" href="<?=$env["RootUrl"]?>favicon.ico">
   <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
 
   <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
@@ -178,10 +179,7 @@ $vote = loadVote($live["id"]);
 
       <p>
         <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
-        <?=$liveUser["name"]?><br>
-        <small>総視聴者数: <?=$liveUser["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$liveUser["misc"]["viewers_max_concurrent"]?>人</small><br>
-        <small>総コメント数: <?=$liveUser["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$liveUser["misc"]["comment_count_max"]?>コメ</small><br>
-        <small>総ポイント取得数: <?=$liveUser["misc"]["point_count_all"]?>KP · 最高ポイント取得数: <?=$liveUser["misc"]["point_count_max"]?>KP</small>
+        <b><?=$liveUser["name"]?></b>
       </p>
       <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>

@@ -73,20 +73,6 @@ if ($_POST) {
           </div>
         </div>
       </div>
-
-    <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
-    <div class="box" id="opener-token">
-      <h4>Openerトークン</h4>
-      <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
-      <div class="col-md-5 mt-2 mb-2">
-        <div class="input-group">
-          <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">
-          <div class="input-group-append">
-            <button class="btn btn-outline-danger" type="button" id="openertoken-bt" onclick="location.href = '?openertoken=regen'">再生成</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <?php else : ?>
       <div class="box">
         <h3>配信を始める</h3>
@@ -97,6 +83,29 @@ if ($_POST) {
     <?php endif; ?>
     <button type="submit" class="btn btn-primary btn-lg">更新</button>
     <hr>
+
+    <?php if ($my["is_broadcaster"]) : ?>
+      <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
+      <div class="box" id="opener-token">
+        <h4>Openerトークン</h4>
+        <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
+        <div class="col-md-5 mt-2 mb-2">
+          <div class="input-group">
+            <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">
+            <div class="input-group-append">
+              <button class="btn btn-outline-danger" type="button" id="openertoken-bt" onclick="location.href = '?openertoken=regen'">再生成</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <b>あなたの配信者ステータス</b>:<br>
+      <small>配信終了時に更新されます</small><br>
+      総視聴者数: <?=$my["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$my["misc"]["viewers_max_concurrent"]?>人<br>
+      総コメント数: <?=$my["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$my["misc"]["comment_count_max"]?>コメ<br>
+      総ポイント取得数: <?=$my["misc"]["point_count_all"]?>KP · 最高ポイント取得数: <?=$my["misc"]["point_count_max"]?>KP
+      <hr>
+    <?php endif; ?>
     <div class="box">
       <h4>KnzkPoint</h4>
       神崎ポイントを貯めると、配信のアイテムと交換したり、ユーザー間でプレゼントしたりできます。<br>
