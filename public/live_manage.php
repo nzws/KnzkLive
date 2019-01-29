@@ -229,7 +229,7 @@ $vote = loadVote($live["id"]);
         <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1" <?=($live["is_sensitive"] == 1 ? "checked" : "")?>>
         <label class="form-check-label" for="sensitive">
           センシティブな配信としてマークする<br>
-          <small>ユーザーが配信画面を開く際に警告が表示されます</small>
+          <small>途中から有効にすると一度視聴者全員のプレイヤーが停止し警告がポップアップで表示されます</small>
         </label>
       </div>
 
