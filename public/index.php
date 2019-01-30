@@ -56,6 +56,37 @@ $lives_history = getAllLive(0, true);
     <div class="no">
       <h4>現在、生放送中の配信はありません</h4>
     </div>
+  <?php else : ?>
+    <div class="container">
+      <h3>KnzkLive: 只今配信中！</h3>
+      <div class="row">
+        <?php
+        if ($lives) {
+          $i = 0;
+          while (isset($lives[$i])) {
+            $url = liveUrl($lives[$i]["id"]);
+            $image = getUser($lives[$i]["user_id"])["misc"]["avatar"];
+            echo <<< EOF
+<div class="col-md-3 card-base">
+<a href="{$url}">
+<div class="card">
+  <div class="card-img-div">
+    <img class="card-img-top" src="{$image}">
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{$lives[$i]["name"]}</h5>
+    <p class="card-text">{$lives[$i]["description"]}</p>
+  </div>
+</div>
+</a>
+</div>
+EOF;
+            $i++;
+          }
+        }
+        ?>
+      </div>
+    </div>
   <?php endif; ?>
 </div>
 <div class="container" style="margin-top:10px">
