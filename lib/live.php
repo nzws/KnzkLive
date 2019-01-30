@@ -229,6 +229,7 @@ function update_sensitive($live_id) {
 
 function live4Pub($live) {
   return [
+    "id" => $live["id"],
     "name" => $live["name"],
     "description" => $live["description"],
     "created_at" => $live["created_at"],
@@ -238,6 +239,7 @@ function live4Pub($live) {
     "viewers_max" => $live["viewers_max"],
     "viewers_max_concurrent" => $live["viewers_max_concurrent"],
     "is_started" => $live["is_started"],
-    "point_count" => $live["point_count"]
+    "point_count" => $live["point_count"],
+    "hashtag" => liveTag($live)
   ];
 }
