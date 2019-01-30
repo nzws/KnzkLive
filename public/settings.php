@@ -109,7 +109,7 @@ if ($_POST) {
         </div>
       </div>
 
-      <b>あなたの配信者ステータス</b>:<br>
+      <h4 class="mt-4">あなたの配信者ステータス</h4>
       <small>配信終了時に更新されます</small><br>
       総視聴者数: <?=$my["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$my["misc"]["viewers_max_concurrent"]?>人<br>
       総コメント数: <?=$my["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$my["misc"]["comment_count_max"]?>コメ<br>
