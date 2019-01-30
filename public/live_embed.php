@@ -258,7 +258,6 @@ $mode = $_SESSION["watch_type"];
       flvPlayer.attachMediaElement(video);
       startWatching(flvPlayer);
       flvPlayer.load();
-      flvPlayer.play();
     } else { //hls
       const hls_url = `<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8`;
       if(Hls.isSupported()) {

@@ -143,7 +143,7 @@ $vote = loadVote($live["id"]);
         <div class="text-warning">* これは自分の放送です。ハウリング防止の為自動でミュートしています。</div>
       <?php endif; ?>
       <div class="embed-responsive embed-responsive-16by9" id="live">
-        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe"></iframe>
+        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
