@@ -14,9 +14,8 @@
     "express": "4.16.4",
     "mysql": "2.16.0",
     "node-fetch": "2.3.0",
-    "socket.io": "2.2.0",
     "striptags": "3.1.1",
-    "websocket": "1.0.28"
+    "websocket": "^1.0.28"
   },
   "devDependencies": {
     "prettier": "1.16.3"
