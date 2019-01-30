@@ -29,7 +29,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     exit();
   }
 
-  $tag = $_POST["tag_mode"] == "2" && isset($_POST["tag_custom"]) ? s($_POST["tag_custom"]) : "";
+  $tag = !empty($_POST["tag_custom"]) ? s($_POST["tag_custom"]) : "";
   if ($tag) {
     // thx https://qiita.com/ma7ma7pipipi/items/f4759231390921fbacdd
     if (!preg_match('/(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)/', $tag)) {
@@ -119,22 +119,10 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     </div>
 
     <hr>
-    <b>ハッシュタグ設定:</b><br>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="tag_mode" id="tag_mode1" value="1" checked>
-      <label class="form-check-label" for="tag_mode1">
-        連番を使用<br>
-        <small>#knzklive_(連番) を使用します</small>
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="tag_mode" id="tag_mode2" value="2">
-      <label class="form-check-label" for="tag_mode2">
-        カスタム<br>
-        <small>他のユーザーが既に使用していないか確認した上で設定してください</small>
-        <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)">
-      </label>
-    </div>
+    <b>コメントハッシュタグ設定:</b><br>
+    <small>他のユーザーが既に使用していないか確認した上で設定してください。</small><br>
+    空欄にすると #knzklive_(連番) が使用されます。<br>
+    <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)" value="<?=$last["custom_hashtag"]?>">
     <hr>
     <div class="form-group form-check">
       <input type="checkbox" class="form-check-input" id="term" required>

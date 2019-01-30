@@ -52,7 +52,7 @@ if ($_POST) {
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="conf_to_title" name="to_title" value="1" <?=($my["misc"]["to_title"] ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_to_title">
-              配信枠取得の際に前回のタイトルと説明を予め記入する
+              配信枠取得の際に前回のタイトルと説明、ハッシュタグを予め記入する
             </label>
           </div>
         </div>
@@ -197,5 +197,11 @@ if ($_POST) {
 </form>
 
 <?php include "../include/footer.php"; ?>
+<script id="item_emoji_tmpl" type="text/x-handlebars-template">
+  <div class="item_emoji {{class}}" style="{{style}}" id="{{random_id}}">
+    {{repeat_helper}}
+  </div>
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 </body>
 </html>
