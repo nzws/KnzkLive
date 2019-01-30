@@ -1,12 +1,13 @@
 const app = require('express')()
 const http = require('http').Server(app)
-const io = require('socket.io')(http)
+const WebSocketServer = require('websocket').server
 const bodyParser = require('body-parser')
 const lastUpdate = {
   "detect": null,
   "tipknzk": null,
   "streaming": null
 }
+let connection
 
 app.get('/', function(req, res) {
   res.send('ok')
@@ -25,13 +26,21 @@ app.use(bodyParser.json())
 
 app.post('/send_comment', function(req, res) {
   console.log('[KnzkLive WebSocket] Send Comment', req.body)
-  io.emit('knzklive_comment_' + req.body.live_id, req.body)
+  connection.sendUTF(JSON.stringify({
+    event: 'knzklive_comment_' + req.body.live_id,
+    payload: JSON.stringify(req.body),
+    is_knzklive: true
+  }));
   res.end()
 })
 
 app.post('/send_prop', function(req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body)
-  io.emit('knzklive_prop_' + req.body.live_id, req.body)
+  connection.sendUTF(JSON.stringify({
+    event: 'knzklive_prop_' + req.body.live_id,
+    payload: JSON.stringify(req.body),
+    is_knzklive: true
+  }));
   res.end()
 })
 
@@ -66,10 +75,26 @@ app.post('/update_conf', function(req, res) {
   res.end()
 })
 
-io.on('connection', function(socket) {
+const ws = new WebSocketServer({
+  httpServer: http,
+  autoAcceptConnections: false
+});
+
+ws.on('request', function(request) {
   lastUpdate["detect"] = Date.now()
-  console.log('[KnzkLive WebSocket] connected')
-})
+  connection = request.accept();
+  console.log((new Date()) + ' Connection accepted.');
+  connection.on('message', function(message) {
+    if (message.type === 'utf8') {
+      console.log(message);
+      connection.sendUTF(JSON.stringify({"event": "pong"}))
+    }
+  });
+
+  connection.on('close', function(reasonCode, description) {
+    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+  });
+});
 
 http.listen(3000, function() {
   console.log('[KnzkLive WebSocket] listening on *:3000')

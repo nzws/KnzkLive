@@ -351,6 +351,47 @@ $vote = loadVote($live["id"]);
   </div>
 </div>
 
+<div class="modal fade" id="enqueteModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">アンケートを新規作成</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="text" class="form-control" id="open_vote_title" placeholder="投票タイトル">
+        </div>
+        <hr>
+        <?php for ($i = 1; $i < 5; $i++) : ?>
+          <div class="form-group">
+            <input type="text" class="form-control" id="open_vote<?=$i?>" placeholder="内容<?=$i?>">
+          </div>
+        <?php endfor; ?>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="vote_ispost" value="1"  <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+            <label class="custom-control-label" for="vote_ispost">
+              Mastodonに投票内容を投稿しない
+            </label>
+          </div>
+        </div>
+
+        <small class="form-text text-muted">3と4はオプション</small>
+
+        <button type="submit"
+                onclick="open_enquete()"
+                class="btn btn-success btn-block">
+          :: 投票を作成 ::
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -393,7 +434,7 @@ $vote = loadVote($live["id"]);
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
   const token = "<?=$my && $_SESSION["token"] ? s($_SESSION["token"]) : ""?>";
-  var heartbeat, cm_ws, watch_data = {};
+  var heartbeat, cm_ws, watch_data = {}, io, w_heartbeat;
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
   var frame_url = "";
@@ -532,48 +573,63 @@ $vote = loadVote($live["id"]);
         };
       };
 
-      const klcom = io(<?=($env["is_testing"] ? "\"http://localhost:3000\"" : "")?>);
-      klcom.on('knzklive_comment_<?=s($live["id"])?>', function(msg) {
-        console.log(msg);
-        ws_onmessage(msg, "update");
-      });
+      io = new WebSocket(<?=($env["is_testing"] ? "\"ws://localhost:3000\"" : $env["RootUrl"] . "api/streaming")?>);
+      io.onopen = function() {
+        w_heartbeat = setInterval(function () {
+          if (io.readyState !== 0 && io.readyState !== 1) io.close();
+          io.send("ping");
+        }, 5000);
+      };
 
-      klcom.on('knzklive_prop_<?=s($live["id"])?>', function(msg) {
-        console.log(msg);
-        if (msg.type === "vote_start") {
-          elemId("vote_title").textContent = msg.title;
-          elemId("vote1").textContent = msg.vote[0];
-          elemId("vote2").textContent = msg.vote[1];
-          if (msg.vote[2]) {
-            elemId("vote3").textContent = msg.vote[2];
-            $("#vote3").removeClass("invisible");
-          } else {
-            $("#vote3").addClass("invisible");
+      io.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.type === "pong" || !data.payload) return;
+        const msg = JSON.parse(data.payload);
+        if (data.event === "knzklive_prop_<?=s($live["id"])?>") {
+          if (msg.type === "vote_start") {
+            elemId("vote_title").textContent = msg.title;
+            elemId("vote1").textContent = msg.vote[0];
+            elemId("vote2").textContent = msg.vote[1];
+            if (msg.vote[2]) {
+              elemId("vote3").textContent = msg.vote[2];
+              $("#vote3").removeClass("invisible");
+            } else {
+              $("#vote3").addClass("invisible");
+            }
+
+            if (msg.vote[3]) {
+              elemId("vote4").textContent = msg.vote[3];
+              $("#vote4").removeClass("invisible");
+            } else {
+              $("#vote4").addClass("invisible");
+            }
+
+            elemId("prop_vote").className = "";
+          } else if (msg.type === "vote_end") {
+            elemId("prop_vote").className = "invisible";
+            fetch('<?=u("api/client/vote/reset")?>?id=<?=s($live["id"])?>', {
+              method: 'GET',
+              credentials: 'include'
+            });
+          } else if (msg.type === "item") {
+            document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
+          } else if (msg.type === "mark_sensitive") {
+            const frame = document.getElementById('iframe');
+            frame_url = frame.src;
+            frame.src = "";
+            $('#sensitiveModal').modal('show');
           }
-
-          if (msg.vote[3]) {
-            elemId("vote4").textContent = msg.vote[3];
-            $("#vote4").removeClass("invisible");
-          } else {
-            $("#vote4").addClass("invisible");
-          }
-
-          elemId("prop_vote").className = "";
-        } else if (msg.type === "vote_end") {
-          elemId("prop_vote").className = "invisible";
-          fetch('<?=u("api/client/vote/reset")?>?id=<?=s($live["id"])?>', {
-            method: 'GET',
-            credentials: 'include'
-          });
-        } else if (msg.type === "item") {
-          document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
-        } else if (msg.type === "mark_sensitive") {
-          const frame = document.getElementById('iframe');
-          frame_url = frame.src;
-          frame.src = "";
-          $('#sensitiveModal').modal('show');
+        } else if (data.event === "knzklive_comment_<?=s($live["id"])?>") {
+          ws_onmessage(msg, "update");
         }
-      });
+      };
+
+      io.onclose = function() {
+        io = null;
+        clearInterval(w_heartbeat);
+        w_heartbeat = null;
+        loadComment();
+      };
 
       fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
         method: 'GET',

@@ -74,6 +74,7 @@ $liveUser = getUser($live["user_id"]);
   const hashtag_o = "<?=liveTag($live)?>";
   const inst = "<?=$env["masto_login"]["domain"]?>";
   var api_header = {'content-type': 'application/json'};
+  let io, w_heartbeat;
 
   const config = {
     "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
@@ -108,11 +109,29 @@ $liveUser = getUser($live["user_id"]);
         };
       };
 
-      const klcom = io(<?=($env["is_testing"] ? "\"http://localhost:3000\"" : "")?>);
-      klcom.on('knzklive_comment_<?=s($live["id"])?>', function(msg) {
-        console.log(msg);
-        ws_onmessage(msg, "update");
-      });
+      io = new WebSocket(<?=($env["is_testing"] ? "\"ws://localhost:3000\"" : $env["RootUrl"] . "api/streaming")?>);
+      io.onopen = function() {
+        w_heartbeat = setInterval(function () {
+          if (io.readyState !== 0 && io.readyState !== 1) io.close();
+          io.send("ping");
+        }, 5000);
+      };
+
+      io.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.type === "pong" || !data.payload) return;
+        const msg = JSON.parse(data.payload);
+        if (data.event === "knzklive_comment_<?=s($live["id"])?>") {
+          ws_onmessage(msg, "update");
+        }
+      };
+
+      io.onclose = function() {
+        io = null;
+        clearInterval(w_heartbeat);
+        w_heartbeat = null;
+        loadComment();
+      };
 
       fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
         method: 'GET',
