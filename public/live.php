@@ -218,7 +218,7 @@ $vote = loadVote($live["id"]);
           <div class="custom-control custom-checkbox float-left">
             <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
             <label class="custom-control-label" for="no_toot">
-              コメントのみ投稿
+              <small>コメントのみ投稿 <a href="#" onclick="alert('有効にした状態で投稿すると、KnzkLiveにコメントしますが<?=$_SESSION["account_provider"]?>には投稿されません。');return false">？</a></small>
             </label>
           </div>
           <div style="text-align: right">
