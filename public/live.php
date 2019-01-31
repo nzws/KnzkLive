@@ -113,6 +113,10 @@ $vote = loadVote($live["id"]);
       background: rgba(0,0,0,.3);
     }
 
+    .is_wide footer {
+      display: none;
+    }
+
     .is_wide #comments {
       height: calc(100% - 250px);
     }
@@ -203,10 +207,23 @@ $vote = loadVote($live["id"]);
           <h5>基本設定</h5>
           <button type="button" class="btn btn-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
           <button type="button" class="btn btn-primary" onclick="openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
+
+          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-eye-slash"></i> センシティブにする</button>
+          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-hat-wizard"></i> アイテムを無効化</button>
+          <hr>
+          <h5>コメント管理</h5>
+          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> コメントを無効化</button>
+          <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> NGワード管理</button>
+          <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-slash"></i> ブロックユーザ管理</button>
+          <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-shield"></i> モデレータ管理</button>
           <hr>
           <h5>ツール</h5>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
+          <hr>
+          <h5>ログ</h5>
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modlogModal"><i class="fas fa-gavel"></i> モデレーションログ</button>
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#usersModal"><i class="fas fa-users"></i> リスナー一覧</button>
         </div>
       </div>
       <?php endif; ?>
@@ -412,6 +429,23 @@ $vote = loadVote($live["id"]);
 </div>
 
 <div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">警告！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

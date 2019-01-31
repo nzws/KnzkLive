@@ -241,6 +241,7 @@ $mode = $_SESSION["watch_type"];
       } else {
         text += "LIVE";
       }
+      if (video.paused) video.play();
       showSplash();
     } else { //バッファ
       text += "BUFFERING";
