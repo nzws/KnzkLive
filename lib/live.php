@@ -67,39 +67,13 @@ function getAllLive($notId = 0, $is_history = false) {
 }
 
 function setLiveStatus($id, $mode) {
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");
-    $stmt->bind_param("ss", $mode, $id);
-    $stmt->execute();
-    $err = $stmt->error;
-    $stmt->close();
-    $mysqli->close();
-    return !$err;
-}
-
-function setViewersCount($id, $add = false) {
   $mysqli = db_start();
-  if ($add) {
-    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count + 1 WHERE id = ? AND is_live != 0;");
-  } else {
-    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count - 1 WHERE id = ?;");
-  }
-  $stmt->bind_param("s", $id);
+  $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $mode, $id);
   $stmt->execute();
   $err = $stmt->error;
   $stmt->close();
   $mysqli->close();
-
-  if ($add) {
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET viewers_max = viewers_max + 1 WHERE id = ? AND is_live != 0;");
-    $stmt->bind_param("s", $id);
-    $stmt->execute();
-    $err = $stmt->error;
-    $stmt->close();
-    $mysqli->close();
-  }
-
   return !$err;
 }
 
@@ -192,6 +166,7 @@ function end_live($live_id) {
     $my["misc"]["point_count_all"] += $live["point_count"];
 
     setConfig($my["id"], $my["misc"]);
+    deleteAllWatcher($live["id"]);
 
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET ended_at = CURRENT_TIMESTAMP, created_at = created_at WHERE id = ?;");

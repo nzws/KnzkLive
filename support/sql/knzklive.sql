@@ -196,6 +196,11 @@ CREATE UNIQUE INDEX users_opener_token_uindex ON users (opener_token);
 alter table live
   add is_sensitive int(5) default 0 not null;
 
+-- 2019-01-31
+ALTER TABLE users_watching ADD watching_now int(5) DEFAULT 1 NOT NULL;
+CREATE UNIQUE INDEX users_watching_ip_watch_id_uindex ON users_watching (ip, watch_id);
+ALTER TABLE users_watching DROP PRIMARY KEY;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
