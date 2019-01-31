@@ -572,7 +572,7 @@ $vote = loadVote($live["id"]);
         };
       };
 
-      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000" : $env["RootUrl"] . "api/streaming")?>");
+      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>");
       io.onopen = function() {
         w_heartbeat = setInterval(function () {
           if (io.readyState !== 0 && io.readyState !== 1) io.close();
