@@ -108,7 +108,7 @@ $liveUser = getUser($live["user_id"]);
         };
       };
 
-      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>");
+      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>");
       io.onopen = function() {
         w_heartbeat = setInterval(function () {
           if (io.readyState !== 0 && io.readyState !== 1) io.close();
@@ -120,7 +120,7 @@ $liveUser = getUser($live["user_id"]);
         const data = JSON.parse(e.data);
         if (data.type === "pong" || !data.payload) return;
         const msg = JSON.parse(data.payload);
-        if (data.event === "knzklive_comment_<?=s($live["id"])?>") {
+        if (data.event === "update") {
           ws_onmessage(msg, "update");
         }
       };
