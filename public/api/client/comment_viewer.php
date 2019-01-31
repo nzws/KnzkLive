@@ -63,7 +63,6 @@ $liveUser = getUser($live["user_id"]);
 <div id="comments"></div>
 <script src="../../js/tmpl.min.js"></script>
 <script src="../../js/knzklive.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script id="comment_tmpl" type="text/html">
   <div id="post_<%=id%>" class="com">
     <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small>
@@ -109,7 +108,7 @@ $liveUser = getUser($live["user_id"]);
         };
       };
 
-      io = new WebSocket(<?=($env["is_testing"] ? "\"ws://localhost:3000\"" : $env["RootUrl"] . "api/streaming")?>);
+      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000" : $env["RootUrl"] . "api/streaming")?>");
       io.onopen = function() {
         w_heartbeat = setInterval(function () {
           if (io.readyState !== 0 && io.readyState !== 1) io.close();

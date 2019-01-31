@@ -426,7 +426,6 @@ $vote = loadVote($live["id"]);
 <?php include "../include/footer.php"; ?>
 <script src="js/tmpl.min.js"></script>
 <script src="js/knzklive.js?2018-12-13"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 <script>
   const inst = "<?=$env["masto_login"]["domain"]?>";
   let login_inst = "<?=s($_SESSION["login_domain"])?>";
@@ -573,7 +572,7 @@ $vote = loadVote($live["id"]);
         };
       };
 
-      io = new WebSocket(<?=($env["is_testing"] ? "\"ws://localhost:3000\"" : $env["RootUrl"] . "api/streaming")?>);
+      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000" : $env["RootUrl"] . "api/streaming")?>");
       io.onopen = function() {
         w_heartbeat = setInterval(function () {
           if (io.readyState !== 0 && io.readyState !== 1) io.close();
