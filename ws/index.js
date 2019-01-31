@@ -26,8 +26,9 @@ app.use(bodyParser.json())
 app.post('/send_comment', function(req, res) {
   console.log('[KnzkLive WebSocket] Send Comment', req.body)
   send(
+    req.body.live_id,
     JSON.stringify({
-      event: 'knzklive_comment_' + req.body.live_id,
+      event: 'update',
       payload: JSON.stringify(req.body),
       is_knzklive: true
     })
@@ -38,8 +39,9 @@ app.post('/send_comment', function(req, res) {
 app.post('/send_prop', function(req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body)
   send(
+    req.body.live_id,
     JSON.stringify({
-      event: 'knzklive_prop_' + req.body.live_id,
+      event: 'prop',
       payload: JSON.stringify(req.body),
       is_knzklive: true
     })
@@ -80,18 +82,23 @@ app.post('/update_conf', function(req, res) {
 
 const ws = new WebSocket.Server({ server: http })
 
-ws.on('connection', function(c) {
+ws.on('connection', function(c, req) {
   console.log(new Date() + ' Connected.')
+  c.url = req.url
   c.on('message', function(message) {
     c.send(JSON.stringify({ event: 'pong' }))
   })
 })
 
-function send(message) {
+const streamingApiRegEx = /^\/api\/v1\/streaming\/live\/(\d+)$/.compile()
+
+function send(liveId, message) {
   ws.clients.forEach(function(c) {
-    if (c.readyState === WebSocket.OPEN) {
-      c.send(message)
-    }
+    if (c.readyState !== WebSocket.OPEN) return
+    const matchResult = streamingApiRegEx.exec(c.url)
+    if (matchResult == null) return
+    if (matchResult[1] != liveId) return
+    c.send(message)
   })
 }
 
