@@ -193,8 +193,8 @@ $vote = loadVote($live["id"]);
         <textarea class="form-control" id="edit_desc" rows="4"><?=$live["description"]?></textarea>
       </div>
 
+      <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
       <hr>
-
       <div class="card live_tools">
         <div class="card-header">
           配信管理
@@ -209,6 +209,7 @@ $vote = loadVote($live["id"]);
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
         </div>
       </div>
+      <?php endif; ?>
     </div>
     <div class="col-md-3" id="comment">
       <div>
