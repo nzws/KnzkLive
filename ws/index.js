@@ -90,14 +90,11 @@ ws.on('connection', function(c, req) {
   })
 })
 
-const streamingApiRegEx = /^\/api\/v1\/streaming\/live\/(\d+)$/.compile()
 
 function send(liveId, message) {
   ws.clients.forEach(function(c) {
     if (c.readyState !== WebSocket.OPEN) return
-    const matchResult = streamingApiRegEx.exec(c.url)
-    if (matchResult == null) return
-    if (matchResult[1] != liveId) return
+    if (c.url !== '/api/streaming/live/' + liveId) return
     c.send(message)
   })
 }
