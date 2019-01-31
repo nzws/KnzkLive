@@ -13,6 +13,7 @@ if ($_POST) {
   $my["misc"]["no_toot_default"] = !!$_POST["no_toot_default"];
   $my["misc"]["auto_close"] = !!$_POST["auto_close"];
   $my["misc"]["auto_open_start"] = !!$_POST["auto_open_start"];
+  $my["misc"]["hide_watching_list"] = !!$_POST["hide_watching_list"];
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   setConfig($my["id"], $my["misc"]);
 }
@@ -33,12 +34,22 @@ if ($_POST) {
       Mastodonで変更した後、KnzkLiveでログアウト→ログインすると更新されます。
     </div>
     <div class="box">
-      <h4>コメント設定</h4>
+      <h4>視聴設定</h4>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
           <label class="custom-control-label" for="no_toot">
             「コメントのみ投稿」をデフォルトにする
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="hide_watching_list" name="hide_watching_list" value="1" <?=($my["misc"]["hide_watching_list"] ? "checked" : "")?>>
+          <label class="custom-control-label" for="hide_watching_list">
+            こっそり視聴モードを有効にする<br>
+            <small>通常、配信者はログイン中の視聴ユーザー一覧を閲覧できますが、これを有効にするとあなたは表示されなくなります。</small>
           </label>
         </div>
       </div>

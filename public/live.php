@@ -447,7 +447,7 @@ $vote = loadVote($live["id"]);
 <script src="js/knzklive.js?2018-12-13"></script>
 <script>
   const inst = "<?=$env["masto_login"]["domain"]?>";
-  let login_inst = "<?=s($_SESSION["login_domain"])?>";
+  let login_inst = "<?=isset($_SESSION["login_domain"]) ? s($_SESSION["login_domain"]) : ""?>";
   if (!login_inst) login_inst = inst;
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
@@ -506,15 +506,6 @@ $vote = loadVote($live["id"]);
     fetch('<?=u("api/client/update_watching")?>?id=<?=s($live["id"])?>', {
       method: 'GET',
       credentials: 'include',
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-    }).catch(function(error) {
-      console.error(error);
     });
   }
 

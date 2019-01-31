@@ -1,5 +1,5 @@
 <?php
-function updateWatcher($ip, $watch_id) {
+function updateWatcher($ip, $watch_id, $user_id = null) {
   $live = getLive($watch_id);
   if ($live["is_live"] != 0) {
     $mysqli = db_start();
@@ -12,8 +12,8 @@ function updateWatcher($ip, $watch_id) {
 
     if (isset($row[0]["ip"])) { //update
       $mysqli = db_start();
-      $stmt = $mysqli->prepare("UPDATE `users_watching` SET `updated_at` = CURRENT_TIMESTAMP, `watching_now` = 1 WHERE `ip` = ? AND `watch_id` = ?;");
-      $stmt->bind_param('ss', $ip, $live["id"]);
+      $stmt = $mysqli->prepare("UPDATE `users_watching` SET `updated_at` = CURRENT_TIMESTAMP, `watching_now` = 1, `user_id` = ? WHERE `ip` = ? AND `watch_id` = ?;");
+      $stmt->bind_param('sss', $user_id, $ip, $live["id"]);
       $stmt->execute();
       $stmt->close();
       $mysqli->close();
@@ -21,8 +21,8 @@ function updateWatcher($ip, $watch_id) {
         setViewersCount($live["id"], true, false);
     } else { //join
       $mysqli = db_start();
-      $stmt = $mysqli->prepare("INSERT INTO `users_watching` (ip, watch_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP);");
-      $stmt->bind_param('ss', $ip, $live["id"]);
+      $stmt = $mysqli->prepare("INSERT INTO `users_watching` (ip, watch_id, updated_at, user_id) VALUES (?, ?, CURRENT_TIMESTAMP, ?);");
+      $stmt->bind_param('sss', $ip, $live["id"], $user_id);
       $stmt->execute();
       $stmt->close();
       $mysqli->close();
