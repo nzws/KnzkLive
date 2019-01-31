@@ -3,9 +3,9 @@ const http = require('http').Server(app)
 const WebSocket = require('ws')
 const bodyParser = require('body-parser')
 const lastUpdate = {
-  "detect": null,
-  "tipknzk": null,
-  "streaming": null
+  detect: null,
+  tipknzk: null,
+  streaming: null
 }
 
 app.get('/', function(req, res) {
@@ -25,21 +25,25 @@ app.use(bodyParser.json())
 
 app.post('/send_comment', function(req, res) {
   console.log('[KnzkLive WebSocket] Send Comment', req.body)
-  send(JSON.stringify({
-    event: 'knzklive_comment_' + req.body.live_id,
-    payload: JSON.stringify(req.body),
-    is_knzklive: true
-  }));
+  send(
+    JSON.stringify({
+      event: 'knzklive_comment_' + req.body.live_id,
+      payload: JSON.stringify(req.body),
+      is_knzklive: true
+    })
+  )
   res.end()
 })
 
 app.post('/send_prop', function(req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body)
-  send(JSON.stringify({
-    event: 'knzklive_prop_' + req.body.live_id,
-    payload: JSON.stringify(req.body),
-    is_knzklive: true
-  }));
+  send(
+    JSON.stringify({
+      event: 'knzklive_prop_' + req.body.live_id,
+      payload: JSON.stringify(req.body),
+      is_knzklive: true
+    })
+  )
   res.end()
 })
 
@@ -50,7 +54,7 @@ app.post('/update_conf', function(req, res) {
     //add
     if (b.type === 'hashtag') {
       //hashtag
-      if (b.value !== "default") {
+      if (b.value !== 'default') {
         conf.hashtag.push(b.value)
       } else {
         conf.hashtag.push('knzklive_' + b.live_id)
@@ -74,21 +78,21 @@ app.post('/update_conf', function(req, res) {
   res.end()
 })
 
-const ws = new WebSocket.Server({ server: http });
+const ws = new WebSocket.Server({ server: http })
 
-ws.on('connection', function (c) {
-  console.log((new Date()) + ' Connected.');
-  c.on('message', function (message) {
-    c.send(JSON.stringify({"event": "pong"}));
+ws.on('connection', function(c) {
+  console.log(new Date() + ' Connected.')
+  c.on('message', function(message) {
+    c.send(JSON.stringify({ event: 'pong' }))
   })
-});
+})
 
 function send(message) {
-  ws.clients.forEach(function (c) {
+  ws.clients.forEach(function(c) {
     if (c.readyState === WebSocket.OPEN) {
-      c.send(message);
+      c.send(message)
     }
-  });
+  })
 }
 
 http.listen(3000, function() {
@@ -186,7 +190,7 @@ function StartWorker() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
-          lastUpdate["detect"] = Date.now()
+          lastUpdate['detect'] = Date.now()
           const ord = JSON.parse(message.utf8Data)
           const json = JSON.parse(ord.payload)
           if (ord.event === 'update') {
@@ -263,7 +267,7 @@ function StartTIPKnzk() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
-          lastUpdate["tipknzk"] = Date.now()
+          lastUpdate['tipknzk'] = Date.now()
           const ord = JSON.parse(message.utf8Data)
           let json = JSON.parse(ord.payload)
           if (ord.event !== 'notification' || json['type'] !== 'mention') return

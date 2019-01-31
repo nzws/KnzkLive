@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "ws:start": "node ws/index.js",
-    "fmt": "prettier --write '**/*.js'"
+    "fmt": "prettier --write \"**/*.js\""
   },
   "dependencies": {
     "express": "4.16.4",
