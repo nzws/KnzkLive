@@ -1,13 +1,12 @@
 const app = require('express')()
 const http = require('http').Server(app)
-const WebSocketServer = require('websocket').server
+const WebSocket = require('ws')
 const bodyParser = require('body-parser')
 const lastUpdate = {
   "detect": null,
   "tipknzk": null,
   "streaming": null
 }
-let connection
 
 app.get('/', function(req, res) {
   res.send('ok')
@@ -26,7 +25,7 @@ app.use(bodyParser.json())
 
 app.post('/send_comment', function(req, res) {
   console.log('[KnzkLive WebSocket] Send Comment', req.body)
-  connection.sendUTF(JSON.stringify({
+  send(JSON.stringify({
     event: 'knzklive_comment_' + req.body.live_id,
     payload: JSON.stringify(req.body),
     is_knzklive: true
@@ -36,7 +35,7 @@ app.post('/send_comment', function(req, res) {
 
 app.post('/send_prop', function(req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body)
-  connection.sendUTF(JSON.stringify({
+  send(JSON.stringify({
     event: 'knzklive_prop_' + req.body.live_id,
     payload: JSON.stringify(req.body),
     is_knzklive: true
@@ -75,26 +74,22 @@ app.post('/update_conf', function(req, res) {
   res.end()
 })
 
-const ws = new WebSocketServer({
-  httpServer: http,
-  autoAcceptConnections: false
+const ws = new WebSocket.Server({ server: http });
+
+ws.on('connection', function (c) {
+  console.log((new Date()) + ' Connected.');
+  c.on('message', function (message) {
+    c.send(JSON.stringify({"event": "pong"}));
+  })
 });
 
-ws.on('request', function(request) {
-  lastUpdate["detect"] = Date.now()
-  connection = request.accept();
-  console.log((new Date()) + ' Connection accepted.');
-  connection.on('message', function(message) {
-    if (message.type === 'utf8') {
-      console.log(message);
-      connection.sendUTF(JSON.stringify({"event": "pong"}))
+function send(message) {
+  ws.clients.forEach(function (c) {
+    if (c.readyState === WebSocket.OPEN) {
+      c.send(message);
     }
   });
-
-  connection.on('close', function(reasonCode, description) {
-    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-  });
-});
+}
 
 http.listen(3000, function() {
   console.log('[KnzkLive WebSocket] listening on *:3000')
