@@ -116,6 +116,10 @@ $vote = loadVote($live["id"]);
     .is_wide #comments {
       height: calc(100% - 250px);
     }
+
+    .live_tools {
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -157,10 +161,8 @@ $vote = loadVote($live["id"]);
       <br>
       <div style="float: right">
         <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
-          <button type="button" class="btn btn-outline-primary live_info" onclick="openEditLive()" style="margin-right:10px"><i class="fas fa-pencil-alt"></i> 編集</button>
           <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
           <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
-          <button type="button" class="btn btn-outline-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
         <?php endif; ?>
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
@@ -191,6 +193,22 @@ $vote = loadVote($live["id"]);
         <textarea class="form-control" id="edit_desc" rows="4"><?=$live["description"]?></textarea>
       </div>
 
+      <hr>
+
+      <div class="card live_tools">
+        <div class="card-header">
+          配信管理
+        </div>
+        <div class="card-body">
+          <h5>基本設定</h5>
+          <button type="button" class="btn btn-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
+          <button type="button" class="btn btn-primary" onclick="openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
+          <hr>
+          <h5>ツール</h5>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
+          <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
+        </div>
+      </div>
     </div>
     <div class="col-md-3" id="comment">
       <div>
@@ -877,6 +895,93 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 </script>
 <?php if ($my["id"] === $live["user_id"]) : ?>
   <script>
+    function open_enquete() {
+      const vote = [
+        elemId("open_vote1"),
+        elemId("open_vote2"),
+        elemId("open_vote3"),
+        elemId("open_vote4")
+      ];
+      const title = elemId("open_vote_title");
+
+      if (confirm('投票を開始します。\nよろしいですか？')) {
+        fetch('<?=u("api/client/live/vote")?>', {
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
+          credentials: 'include',
+          body: buildQuery({
+            csrf_token: `<?=$_SESSION['csrf_token']?>`,
+            title: title.value,
+            vote1: vote[0].value,
+            vote2: vote[1].value,
+            vote3: vote[2].value,
+            vote4: vote[3].value,
+            is_post: elemId("vote_ispost").checked ? 1 : 0
+          })
+        }).then(function(response) {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }).then(function(json) {
+          if (json["error"]) {
+            alert(json["error"]);
+            return null;
+          }
+          if (json["success"]) {
+            $('#enqueteModal').modal('hide');
+            $('#open_enquete_btn').hide();
+            $('#close_enquete_btn').show();
+            title.value = "";
+            vote[0].value = "";
+            vote[1].value = "";
+            vote[2].value = "";
+            vote[3].value = "";
+          } else {
+            alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
+          }
+        }).catch(function(error) {
+          console.error(error);
+          alert("内部エラーが発生しました");
+        });
+      }
+    }
+
+    function closeEnquete() {
+      if (confirm('投票を終了します。\nよろしいですか？')) {
+        fetch('<?=u("api/client/live/vote")?>', {
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
+          credentials: 'include',
+          body: buildQuery({
+            csrf_token: `<?=$_SESSION['csrf_token']?>`,
+            end: true
+          })
+        }).then(function(response) {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }).then(function(json) {
+          if (json["error"]) {
+            alert(json["error"]);
+            return null;
+          }
+          if (json["success"]) {
+            $('#open_enquete_btn').show();
+            $('#close_enquete_btn').hide();
+          } else {
+            alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
+          }
+        }).catch(function(error) {
+          console.error(error);
+          alert("内部エラーが発生しました");
+        });
+      }
+    }
+
     function stop_broadcast() {
       if (watch_data["live_status"] === 2) {
         alert('エラー:まだ配信ソフトウェアが切断されていません。\n(または、切断された事がまだクライアントに送信されていない可能性があります。5秒程経ってからもう一度お試しください。)');

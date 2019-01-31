@@ -66,15 +66,6 @@ if (isset($_POST["type"])) {
     $mysqli->close();
     if ($live["is_sensitive"] == 0 && $is_sensitive === 1) update_sensitive($live["id"]);
     $live = getLive($live["id"]);
-  } elseif ($_POST["type"] == "prop_vote_start") {
-    if (empty(loadVote($live["id"]))) {
-      $_SESSION["prop_vote_is_post"] = !isset($_POST["vote_ispost"]);
-      createVote($live["id"], s($_POST["vote_title"]), [
-        s($_POST["vote1"]), s($_POST["vote2"]), s($_POST["vote3"]), s($_POST["vote4"])
-      ], liveTag($live), $my["id"]);
-    }
-  } elseif ($_POST["type"] == "prop_vote_end") {
-    endVote($live["id"], liveTag($live), $my["id"]);
   }
 }
 
@@ -153,60 +144,6 @@ $vote = loadVote($live["id"]);
   </div>
   <hr>
 <?php else : ?>
-  <div class="container">
-    <div class="box">
-      <b>神崎と愉快な小道具たち</b>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="alert alert-secondary" role="alert">
-            <form method="post">
-              <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-              <b>投票</b>
-              <?php if (empty($vote)) : ?>
-                <input type="hidden" name="type" value="prop_vote_start">
-              <div class="form-group">
-                <input type="text" class="form-control" name="vote_title" placeholder="投票タイトル">
-              </div>
-              <hr>
-              <?php for ($i = 1; $i < 5; $i++) : ?>
-                <div class="form-group">
-                  <input type="text" class="form-control" name="vote<?=$i?>" placeholder="内容<?=$i?>">
-                </div>
-              <?php endfor; ?>
-
-              <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="vote_ispost" name="vote_ispost" value="1"  <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
-                  <label class="custom-control-label" for="vote_ispost">
-                    Mastodonに投票内容を投稿しない
-                  </label>
-                </div>
-              </div>
-
-              <small class="form-text text-muted">3と4はオプション</small>
-
-              <button type="submit"
-                      onclick="return confirm('投票を開始します。\nよろしいですか？');"
-                      class="btn btn-success btn-sm btn-block">
-                :: 投票を作成 ::
-              </button>
-              <?php else : ?>
-                <input type="hidden" name="type" value="prop_vote_end">
-              現在、<b><?=($vote["v1_count"] + $vote["v2_count"] + $vote["v3_count"] + $vote["v4_count"])?></b>人が投票しています
-                <button type="submit"
-                        onclick="return confirm('投票を終了します。\nよろしいですか？');"
-                        class="btn btn-warning btn-sm btn-block">
-                  :: 投票を終了 ::
-                </button>
-              <small>* 自動で閉じるのを実装するのが面倒だったから自分で閉じてね.</small><br>
-              <?php endif; ?>
-            </form>
-          </div>
-        </div>
-      </div>
-      </div>
-  </div>
-  <hr>
 <?php endif; ?>
 
 <div class="container">

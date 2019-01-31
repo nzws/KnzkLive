@@ -1,6 +1,8 @@
 <?php
 function createVote($live_id, $title, $data, $hashtag, $user_id) {
   global $env;
+  if (empty($title) || empty($data[0]) || empty($data[1])) return false;
+
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `prop_vote` (`live_id`, `title`, `v1`, `v2`, `v3`, `v4`) VALUES (?, ?, ?, ?, ?, ?);");
   $stmt->bind_param('ssssss', $live_id, $title, $data[0], $data[1], $data[2], $data[3]);
