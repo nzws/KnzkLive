@@ -211,18 +211,22 @@ $vote = loadVote($live["id"]);
           <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-eye-slash"></i> センシティブにする</button>
           <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-hat-wizard"></i> アイテムを無効化</button>
           <hr>
+          <!--
           <h5>コメント管理</h5>
           <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> コメントを無効化</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> NGワード管理</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-slash"></i> ブロックユーザ管理</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-shield"></i> モデレータ管理</button>
           <hr>
+          -->
           <h5>ツール</h5>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
           <hr>
           <h5>ログ</h5>
+          <!--
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modlogModal"><i class="fas fa-gavel"></i> モデレーションログ</button>
+          -->
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#usersModal"><i class="fas fa-users"></i> リスナー一覧</button>
         </div>
       </div>
@@ -462,22 +466,35 @@ $vote = loadVote($live["id"]);
   </div>
 </div>
 
-<script id="comment_tmpl" type="text/html">
-  <div id="post_<%=id%>">
-    <div class="row">
-      <div class="col-2">
-        <img src="<%=account['avatar']%>" class="avatar_img_navbar rounded-circle"/>
-      </div>
-      <div class="col-10">
-        <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small> <%=(me ? `<a href="#" onclick="delete_comment('${id}')">削除</a>` : "")%>
-        <%=content%>
-      </div>
+<style>
+  .comment {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .comment .avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+  }
+
+  .comment .content {
+    padding-left: 5px;
+  }
+</style>
+<script id="com_tmpl" type="text/x-handlebars-template">
+  <div id="post_{{id}}" class="comment">
+    <div>
+      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50"/>
     </div>
-    <hr>
+    <div class="content">
+      <b>{{account.display_name}}</b> <small>@{{account.acct}}</small>
+      {{{content}}}
+    </div>
   </div>
 </script>
 <?php include "../include/footer.php"; ?>
-<script src="js/tmpl.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 <script src="js/knzklive.js?2018-12-13"></script>
 <script>
   const inst = "<?=$env["masto_login"]["domain"]?>";
@@ -692,9 +709,10 @@ $vote = loadVote($live["id"]);
         }
         if (json) {
           let i = 0;
+          const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
             json[i]["me"] = login_inst === inst ? undefined : false;
-            reshtml += tmpl("comment_tmpl", buildCommentData(json[i], "<?=$my["acct"]?>", inst));
+            reshtml += tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst));
             i++;
           }
         }
@@ -788,7 +806,8 @@ $vote = loadVote($live["id"]);
       if (ws_reshtml['id']) {
         ws_reshtml["me"] = login_inst === inst ? undefined : false;
         elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
-        elemId("comments").innerHTML = tmpl("comment_tmpl", buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
+        const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
+        elemId("comments").innerHTML = tmpl(buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);

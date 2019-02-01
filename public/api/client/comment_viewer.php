@@ -61,12 +61,12 @@ $liveUser = getUser($live["user_id"]);
   * コメントの読み込み中にエラーが発生しました。
 </p>
 <div id="comments"></div>
-<script src="../../js/tmpl.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 <script src="../../js/knzklive.js"></script>
-<script id="comment_tmpl" type="text/html">
-  <div id="post_<%=id%>" class="com">
-    <b><%=account['display_name']%></b> <small>@<%=account['acct']%></small>
-    <%=content%>
+<script id="com_tmpl" type="text/x-handlebars-template">
+  <div id="post_{{id}}" class="com">
+    <b>{{account.display_name}}</b> <small>@{{account.acct}}</small>
+    {{{content}}}
   </div>
 </script>
 <script>
@@ -150,9 +150,10 @@ $liveUser = getUser($live["user_id"]);
         }
         if (json) {
           let i = 0;
+          const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
             json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-            reshtml += tmpl("comment_tmpl", json[i]);
+            reshtml += tmpl(json[i]);
             i++;
           }
         }
@@ -181,9 +182,10 @@ $liveUser = getUser($live["user_id"]);
     }
 
     if (ws_resdata.event === 'update') {
+      const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
       if (ws_reshtml['id']) {
         ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-        elemId("comments").innerHTML = tmpl("comment_tmpl", ws_reshtml) + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = tmpl(ws_reshtml) + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
