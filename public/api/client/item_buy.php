@@ -27,6 +27,10 @@ if ($_POST["type"] === "emoji") {
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
   $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 50 : 0);
+} else if ($_POST["type"] === "knzk_kongyo") {
+  $point = 1000;
+  if ($live["user_id"] !== 2 && !$env["is_testing"])
+    api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 } else {
   api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 }
@@ -48,7 +52,11 @@ if ($_POST["type"] === "emoji") {
     $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";
     send_item($data, $live["id"], "emoji");
   }
+} else if ($_POST["type"] === "knzk_kongyo") {
+  $desc = "神　崎　コ　ン　ギ　ョ";
+  send_item([], $live["id"], "knzk_kongyo");
 }
+
 $n = add_point($my["id"], $point * -1, "item", $desc);
 if ($my["id"] !== $live["user_id"]) point_count_add($live["id"], $point);
 comment_post("<div class=\"alert alert-primary\">{$desc} を投下しました！</div>", $my["id"], $live["id"], true);

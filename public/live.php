@@ -410,6 +410,13 @@ $vote = loadVote($live["id"]);
           </div>
         </div>
         <hr>
+        <?php if ($liveUser["id"] === 2 || $env["is_testing"]) : ?>
+        <h5>神崎コンギョ (音)</h5>
+        コ　ン　ギ　ョ
+        <div class="text-right">
+          <button class="btn btn-success" onclick="item_buy('knzk_kongyo')">1000KPで投下</button>
+        </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -685,6 +692,16 @@ $vote = loadVote($live["id"]);
               credentials: 'include'
             });
           } else if (msg.type === "item") {
+            if (msg.item_type === "knzk_kongyo") {
+              const volume = localStorage.getItem('kplayer_volume');
+              const audio = new Audio('http://nzws.me/files/nzws/knzk_kongyo.mp3');
+              if (volume) audio.volume = volume > 20 ? 0.2 : volume * 0.01;
+              else audio.volume = 0.2;
+
+              audio.play();
+
+              return;
+            }
             document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
           } else if (msg.type === "mark_sensitive") {
             const frame = document.getElementById('iframe');
@@ -899,6 +916,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       body["dir"] = elemId("item_emoji_dir").value;
       body["emoji"] = elemId("item_emoji_emoji").value;
       body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
+    } else if (type === "knzk_kongyo") {
     } else {
       return null;
     }
