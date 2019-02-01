@@ -259,258 +259,20 @@ $vote = loadVote($live["id"]);
       <?php endif; ?>
     </div>
     <div class="col-md-3" id="comment">
-      <div>
-        <?php if (!empty($my)) : ?>
-          <div class="<?=(empty($vote) || !empty($_SESSION["prop_vote_" . $live["id"]]) ? "invisible" : "")?>" id="prop_vote">
-            <div class="alert alert-info mt-3">
-              <h5><i class="fas fa-poll-h"></i> <b id="vote_title"><?=(empty($vote) ? "タイトル" : $vote["title"])?></b></h5>
-              <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote1" onclick="vote(1)"><?=(empty($vote) ? "投票1" : $vote["v1"])?></button>
-              <button type="button" class="btn btn-info btn-block btn-sm mt-1" id="vote2" onclick="vote(2)"><?=(empty($vote) ? "投票2" : $vote["v2"])?></button>
-              <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v3"]) ? "invisible" : "")?>" id="vote3" onclick="vote(3)"><?=(empty($vote) ? "投票3" : $vote["v3"])?></button>
-              <button type="button" class="btn btn-info btn-block btn-sm mt-1 <?=(empty($vote) || empty($vote["v4"]) ? "invisible" : "")?>" id="vote4" onclick="vote(4)"><?=(empty($vote) ? "投票4" : $vote["v4"])?></button>
-            </div>
-            <hr>
-          </div>
-        <?php endif; ?>
-        <div class="mt-2 mb-2">
-          #<?=liveTag($live)?>: <b id="comment_count"><?=s($live["comment_count"])?></b>コメ
-        </div>
-        <?php if ($my) : ?>
-          <div class="form-group">
-            <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート/コメント)" onkeyup="check_limit()"></textarea>
-          </div>
-
-
-          <div class="custom-control custom-checkbox float-left">
-            <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
-            <label class="custom-control-label" for="no_toot">
-              <small>コメントのみ投稿 <a href="#" onclick="alert('有効にした状態で投稿すると、KnzkLiveにコメントしますが<?=$_SESSION["account_provider"]?>には投稿されません。');return false">？</a></small>
-            </label>
-          </div>
-          <div style="text-align: right">
-            <b id="limit"></b>  <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
-          </div>
-
-        <?php else : ?>
-          <p>
-            <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
-          </p>
-        <?php endif; ?>
-        <p class="invisible" id="err_comment">
-          * コメントの読み込み中にエラーが発生しました。 <a href="javascript:loadComment()">再読込</a>
-        </p>
-        <hr>
-      </div>
-      <div id="comments"></div>
+      <?php include "../include/live/comment.php"; ?>
     </div>
   </div>
 </div>
 <?php endif; ?>
-<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">共有</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row justify-content-md-center share_buttons">
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('twitter')">
-            <i class="fab fa-twitter fa-fw fa-2x"></i><br>
-            Twitter
-          </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('mastodon')">
-            <i class="fab fa-mastodon fa-fw fa-2x"></i><br>
-            Mastodon
-          </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('weibo')">
-            <i class="fab fa-weibo fa-fw fa-2x"></i><br>
-            Weibo
-          </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('facebook')">
-            <i class="fab fa-facebook fa-fw fa-2x"></i><br>
-            Facebook
-          </button>
-          <button class="btn btn-outline-success col-md-2" onclick="share_modal('line')">
-            <i class="fab fa-line fa-fw fa-2x"></i><br>
-            LINE
-          </button>
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('skype')">
-            <i class="fab fa-skype fa-fw fa-2x"></i><br>
-            Skype
-          </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('flipboard')">
-            <i class="fab fa-flipboard fa-fw fa-2x"></i><br>
-            Flipboard
-          </button>
-        </div>
-        <div class="row" style="margin-top: 10px">
-          <div class="col-md-12">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="share_url">URL</span>
-              </div>
-              <input type="text" class="form-control" aria-describedby="share_url" readonly value="<?=$liveurl?>" onclick="this.select(0,this.value.length)">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="fas fa-hat-wizard"></i> アイテム <span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></h5>
-
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h5>絵文字</h5>
-        <div class="row">
-          <div class="col-sm-4">
-            絵文字:
-            <select class="form-control" id="item_emoji_emoji">
-              <option>👍</option>
-              <option>❤️</option>
-              <option>👏️</option>
-              <option>🎉️</option>
-              <option value="liver">配信者のアイコン</option>
-              <option value="me">あなたのアイコン</option>
-            </select>
-          </div>
-          <div class="col-sm-4">
-            方向:
-            <select class="form-control" id="item_emoji_dir">
-              <option value="left-to-right">左から右</option>
-              <option value="right-to-left">右から左</option>
-              <option value="top-to-bottom">上から下</option>
-              <option value="bottom-to-top">下から上</option>
-            </select>
-          </div>
-          <div class="col-sm-4">
-            個数 <small>(1~100, <b>n*5</b>KP)</small>:
-            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="update_money_disp('emoji')" onchange="update_money_disp('emoji')">
-          </div>
-        </div>
-        <div class="mt-2">
-          <div class="custom-control custom-checkbox float-left">
-            <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
-            <label class="custom-control-label" for="item_emoji_spin">
-              回転あり (+<b>50</b>KP)<br>
-              <small>一部端末で表示されない可能性があります</small>
-            </label>
-          </div>
-          <div class="text-right">
-            <button class="btn btn-success" onclick="item_buy('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
-          </div>
-        </div>
-        <hr>
-        <?php if ($liveUser["id"] === 2 || $env["is_testing"]) : ?>
-        <h5>神崎コンギョ (音)</h5>
-        コ　ン　ギ　ョ
-        <div class="text-right">
-          <button class="btn btn-success" onclick="item_buy('knzk_kongyo')">1000KPで投下</button>
-        </div>
-        <?php endif; ?>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="enqueteModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">アンケートを新規作成</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <input type="text" class="form-control" id="open_vote_title" placeholder="投票タイトル">
-        </div>
-        <hr>
-        <?php for ($i = 1; $i < 5; $i++) : ?>
-          <div class="form-group">
-            <input type="text" class="form-control" id="open_vote<?=$i?>" placeholder="内容<?=$i?>">
-          </div>
-        <?php endfor; ?>
-
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="vote_ispost" value="1"  <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
-            <label class="custom-control-label" for="vote_ispost">
-              Mastodonに投票内容を投稿しない
-            </label>
-          </div>
-        </div>
-
-        <small class="form-text text-muted">3と4はオプション</small>
-
-        <button type="submit"
-                onclick="open_enquete()"
-                class="btn btn-success btn-block">
-          :: 投票を作成 ::
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">警告！</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">あああ</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
+<?php include "../include/live/modals.php"; ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment">
     <div>
-      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown('{{account.acct}}', '{{account.url}}')"/>
+      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown(this, '{{account.acct}}', '{{account.url}}')"/>
     </div>
     <div class="content">
-      <span onclick="userDropdown('{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
+      <span onclick="userDropdown(this, '{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
       {{{content}}}
     </div>
   </div>
@@ -743,7 +505,6 @@ $vote = loadVote($live["id"]);
           let i = 0;
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
-            json[i]["me"] = login_inst === inst ? undefined : false;
             reshtml += tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst));
             i++;
           }
@@ -836,7 +597,6 @@ $vote = loadVote($live["id"]);
 
     if (ws_resdata.event === 'update') {
       if (ws_reshtml['id']) {
-        ws_reshtml["me"] = login_inst === inst ? undefined : false;
         elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
         const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
         elemId("comments").innerHTML = tmpl(buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
@@ -955,13 +715,41 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     });
   }
 
-  function userDropdown(acct, url) {
+  function userDropdown(obj, acct, url) {
     let is_local = false;
     if (acct.match(/\(local\)/i)) {
       is_local = true;
       acct = acct.replace(" (local)", "");
     }
-    alert("Work in Progress")
+
+    $(".user-dropdown").remove();
+    let html = "";
+    if (url) html += `<a class="dropdown-item" href="${url}" target="_blank">ウェブページに移動</a>`;
+
+    <?php if ($my["id"] === $live["user_id"]) : ?>
+    html += `
+<div class="dropdown-divider"></div>
+<a class="dropdown-item text-danger" href="#">ユーザーブロック</a>
+`;
+    <?php endif; ?>
+
+    $(obj).popover({
+      title: '',
+      content: 'aaaa',
+      placement: 'bottom',
+      trigger: 'focus',
+      template: `
+<div class="dropdown-menu user-dropdown" tabindex="0" onclick="$('.user-dropdown').popover('dispose')">
+   <button type="button" class="close" style="padding-right: 20px">
+     <span aria-hidden="true">&times;</span>
+   </button>
+  <h6 class="dropdown-header">@${acct}</h6>
+  ${html}
+</div>
+`,
+      html: true
+    });
+    $(obj).popover('show');
   }
 
   window.onload = function () {

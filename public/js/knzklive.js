@@ -23,11 +23,6 @@ function buildQuery(data) {
 }
 
 function buildCommentData(data, myacct, inst) {
-  let acct =
-    data['account']['acct'] !== data['account']['username']
-      ? data['account']['acct']
-      : data['account']['username'] + '@' + inst
-  data['me'] = data['me'] === undefined ? myacct === acct : data['me']
   data['account']['display_name'] = escapeHTML(data['account']['display_name'])
   return data
 }

@@ -26,6 +26,7 @@ if (empty($_GET["oauth_verifier"])) {
     $misc = $user["misc"];
     $misc["avatar"] = $content["profile_image_url_https"];
     $misc["header"] = $content["profile_banner_url"];
+    $misc["user_url"] = "https://twitter.com/" . s($content["screen_name"]);
     $misc = json_encode($misc);
 
     $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `acct` = ?, `ip` = ?, `misc` = ?  WHERE `twitter_id` = ?;");
@@ -33,6 +34,7 @@ if (empty($_GET["oauth_verifier"])) {
   } else { //新規
     $misc["avatar"] = $content["profile_image_url_https"];
     $misc["header"] = $content["profile_banner_url"];
+    $misc["user_url"] = "https://twitter.com/" . s($content["screen_name"]);
     $misc = json_encode($misc);
 
     $stmt = $mysqli->prepare("INSERT INTO `users` (`name`, `acct`, `created_at`, `ip`, `misc`, `twitter_id`) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?);");
