@@ -15,6 +15,7 @@ if ($_POST) {
   $my["misc"]["auto_open_start"] = !!$_POST["auto_open_start"];
   $my["misc"]["hide_watching_list"] = !!$_POST["hide_watching_list"];
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
+  $my["misc"]["donate_url"] = $_POST["donate_url"];
   setConfig($my["id"], $my["misc"]);
 }
 ?>
@@ -89,8 +90,16 @@ if ($_POST) {
         <div class="form-group">
           <div class="form-group">
             <label for="conf_webhook_url">WebHook URL</label>
-            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api" value="<?=$my["misc"]["webhook_url"]?>">
+            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api" value="<?=s($my["misc"]["webhook_url"])?>">
             <small id="conf_webhook_url_note" class="form-text text-muted">配信開始時に呼び出されます。</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-group">
+            <label for="conf_webhook_url">支援リンク</label>
+            <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge" value="<?=s($my["misc"]["donate_url"])?>">
+            <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
           </div>
         </div>
       </div>

@@ -124,6 +124,26 @@ $vote = loadVote($live["id"]);
     .live_tools {
       color: #000;
     }
+
+    .comment {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .comment .avatar {
+      width: 50px;
+      height: 50px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .comment .content {
+      padding-left: 5px;
+    }
+
+    .comment .name {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -171,6 +191,9 @@ $vote = loadVote($live["id"]);
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <?php endif; ?>
+        <?php if (!empty($liveUser["misc"]["donate_url"])) : ?>
+          <a class="btn btn-outline-warning" href="<?=s($liveUser["misc"]["donate_url"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
+        <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
@@ -207,9 +230,10 @@ $vote = loadVote($live["id"]);
           <h5>基本設定</h5>
           <button type="button" class="btn btn-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
           <button type="button" class="btn btn-primary" onclick="openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
-
-          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-eye-slash"></i> センシティブにする</button>
-          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-hat-wizard"></i> アイテムを無効化</button>
+          <!--
+          <button type="button" class="btn btn-warning" onclick="liveSetting()"><i class="fas fa-eye-slash"></i> センシティブを有効化</button>
+          <button type="button" class="btn btn-warning" onclick="liveSetting()"><i class="fas fa-hat-wizard"></i> アイテムを無効化</button>
+          -->
           <hr>
           <!--
           <h5>コメント管理</h5>
@@ -222,12 +246,12 @@ $vote = loadVote($live["id"]);
           <h5>ツール</h5>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
+          <!--
           <hr>
           <h5>ログ</h5>
-          <!--
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modlogModal"><i class="fas fa-gavel"></i> モデレーションログ</button>
-          -->
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#usersModal"><i class="fas fa-users"></i> リスナー一覧</button>
+          -->
         </div>
       </div>
       <?php endif; ?>
@@ -453,42 +477,31 @@ $vote = loadVote($live["id"]);
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">警告！</h5>
+        <h5 class="modal-title">あああ</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+        <ul class="list-group">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
 
-<style>
-  .comment {
-    display: flex;
-    margin-bottom: 10px;
-  }
-
-  .comment .avatar {
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-  }
-
-  .comment .content {
-    padding-left: 5px;
-  }
-</style>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment">
     <div>
-      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50"/>
+      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown('{{account.acct}}', '{{account.url}}')"/>
     </div>
     <div class="content">
-      <b>{{account.display_name}}</b> <small>@{{account.acct}}</small>
+      <span onclick="userDropdown('{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
       {{{content}}}
     </div>
   </div>
@@ -920,6 +933,15 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       console.error(error);
       alert("内部エラーが発生しました");
     });
+  }
+
+  function userDropdown(acct, url) {
+    let is_local = false;
+    if (acct.match(/\(local\)/i)) {
+      is_local = true;
+      acct = acct.replace(" (local)", "");
+    }
+    alert("Work in Progress")
   }
 
   window.onload = function () {
