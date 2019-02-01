@@ -60,14 +60,31 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Mastodon</span>
           </div>
-          <input type="text" class="form-control" placeholder="ex) <?=$env["masto_login"]["domain"]?>" value="<?=$env["masto_login"]["domain"]?>" id="login_domain">
+          <input type="text" class="form-control" placeholder="ex) <?=$env["masto_login"]["domain"]?>" id="login_domain" list="domain_list">
         </div>
         <small><?=$env["masto_login"]["domain"]?>以外のアカウントでログインすると一部のアカウントではコメントが表示できない可能性があります。<a href="<?=u("help")?>#help1" target="_blank">理由</a></small><br>
         <small>KnzkLiveではアクセストークンをデータベースに保管しません。また、認証とコメント以外に使用する事はありません。</small>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="location.href=`<?=u('login')?>?domain=` + document.getElementById('login_domain').value">ログイン</button>
+        <button type="button" class="btn btn-primary" onclick="login()">ログイン</button>
       </div>
     </div>
   </div>
 </div>
+<datalist id="domain_list">
+  <option value="knzk.me"></option>
+  <option value="mastodon.social"></option>
+  <option value="mstdn.jp"></option>
+  <option value="friends.nico"></option>
+  <option value="pawoo.net"></option>
+</datalist>
+<script>
+  const domain = localStorage.getItem("knzklive_domain_last");
+  if (domain) document.getElementById("login_domain").value = domain;
+
+  function login() {
+    const login_domain = document.getElementById('login_domain').value;
+    localStorage.setItem("knzklive_domain_last", login_domain);
+    location.href=`<?=u('login')?>?domain=` + login_domain;
+  }
+</script>
