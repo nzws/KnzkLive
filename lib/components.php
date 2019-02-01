@@ -21,6 +21,6 @@ function liveTag($live) {
 function HTMLHelper($text) {
   $text = s($text);
   $text = nl2br($text);
-  $text = preg_replace("/(https?:\/\/[a-zA-Z0-9\.\/:%,!#~*@&_-]+)/", "<a href='\\1' rel='nofollow' target='_blank'>\\1</a>", $text);
+  $text = preg_replace("/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/", "<a href='\\1' rel='nofollow' target='_blank'>\\1</a>", $text);
   return $text;
 }
