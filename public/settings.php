@@ -8,12 +8,12 @@ if (!$my) {
 $plog = get_point_log($my["id"]);
 
 if ($_POST) {
-  $my["misc"]["live_toot"] = !!$_POST["live_toot"];
-  $my["misc"]["to_title"] = !!$_POST["to_title"];
-  $my["misc"]["no_toot_default"] = !!$_POST["no_toot_default"];
-  $my["misc"]["auto_close"] = !!$_POST["auto_close"];
-  $my["misc"]["auto_open_start"] = !!$_POST["auto_open_start"];
-  $my["misc"]["hide_watching_list"] = !!$_POST["hide_watching_list"];
+  $my["misc"]["live_toot"] = isset($_POST["live_toot"]);
+  $my["misc"]["to_title"] = isset($_POST["to_title"]);
+  $my["misc"]["no_toot_default"] = isset($_POST["no_toot_default"]);
+  $my["misc"]["auto_close"] = isset($_POST["auto_close"]);
+  $my["misc"]["auto_open_start"] = isset($_POST["auto_open_start"]);
+  $my["misc"]["hide_watching_list"] = isset($_POST["hide_watching_list"]);
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   $my["misc"]["donate_url"] = $_POST["donate_url"];
   setConfig($my["id"], $my["misc"]);
@@ -38,7 +38,7 @@ if ($_POST) {
       <h4>視聴設定</h4>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+          <input type="checkbox" class="custom-control-input" id="no_toot" name="no_toot_default" value="1" <?=(!empty($my["misc"]["no_toot_default"]) ? "checked" : "")?>>
           <label class="custom-control-label" for="no_toot">
             「コメントのみ投稿」をデフォルトにする
           </label>
@@ -47,7 +47,7 @@ if ($_POST) {
 
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="hide_watching_list" name="hide_watching_list" value="1" <?=($my["misc"]["hide_watching_list"] ? "checked" : "")?>>
+          <input type="checkbox" class="custom-control-input" id="hide_watching_list" name="hide_watching_list" value="1" <?=(!empty($my["misc"]["hide_watching_list"]) ? "checked" : "")?>>
           <label class="custom-control-label" for="hide_watching_list">
             こっそり視聴モードを有効にする<br>
             <small>通常、配信者はログイン中の視聴ユーザー一覧を閲覧できますが、これを有効にするとあなたは表示されなくなります。</small>
@@ -62,7 +62,7 @@ if ($_POST) {
 
         <div class="form-group">
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="conf_to_title" name="to_title" value="1" <?=($my["misc"]["to_title"] ? "checked" : "")?>>
+            <input type="checkbox" class="custom-control-input" id="conf_to_title" name="to_title" value="1" <?=(!empty($my["misc"]["to_title"]) ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_to_title">
               配信枠取得の際に前回のタイトルと説明、ハッシュタグを予め記入する
             </label>
@@ -71,7 +71,7 @@ if ($_POST) {
 
         <div class="form-group">
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="conf_auto_close" name="auto_close" value="1" <?=($my["misc"]["auto_close"] ? "checked" : "")?>>
+            <input type="checkbox" class="custom-control-input" id="conf_auto_close" name="auto_close" value="1" <?=(!empty($my["misc"]["auto_close"]) ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_auto_close">
               配信クライアント(OBS等)の配信終了を検知したら自動で枠を閉じる
             </label>
@@ -80,7 +80,7 @@ if ($_POST) {
 
         <div class="form-group">
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="conf_auto_open_start" name="auto_open_start" value="1" <?=($my["misc"]["auto_open_start"] ? "checked" : "")?>>
+            <input type="checkbox" class="custom-control-input" id="conf_auto_open_start" name="auto_open_start" value="1" <?=(!empty($my["misc"]["auto_open_start"]) ? "checked" : "")?>>
             <label class="custom-control-label" for="conf_auto_open_start">
               配信開始時に自動で配信画面を新規タブで開く
             </label>
@@ -90,7 +90,8 @@ if ($_POST) {
         <div class="form-group">
           <div class="form-group">
             <label for="conf_webhook_url">WebHook URL</label>
-            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api" value="<?=s($my["misc"]["webhook_url"])?>">
+            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api"
+                   value="<?=isset($my["misc"]["webhook_url"]) ? s($my["misc"]["webhook_url"]) : ""?>">
             <small id="conf_webhook_url_note" class="form-text text-muted">配信開始時に呼び出されます。</small>
           </div>
         </div>
@@ -98,7 +99,8 @@ if ($_POST) {
         <div class="form-group">
           <div class="form-group">
             <label for="conf_webhook_url">支援リンク</label>
-            <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge" value="<?=s($my["misc"]["donate_url"])?>">
+            <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
+                   value="<?=isset($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
             <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
           </div>
         </div>
