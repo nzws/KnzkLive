@@ -1,16 +1,11 @@
 <?php
-$ConfigVersion = 1;
-$confpath = dirname(__FILE__)."/../config.php";
+$confpath = __DIR__ . "/../config.php";
 date_default_timezone_set('Asia/Tokyo');
 header('server: KnzkLive');
 header('X-Powered-By: KnzkDev <3');
 
 if (file_exists($confpath)) {
     require_once($confpath);
-    if (CONF_VERSION < $ConfigVersion) {
-      http_response_code(500);
-      exit("SERVER ERROR: Config file is older");
-    }
 } else {
     http_response_code(500);
     exit("SERVER ERROR: Config file is not found");
@@ -39,7 +34,7 @@ if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSIO
   http_response_code(403);
   exit("ERROR: CSRF Challenge is failed");
 }
-$libpt = dirname(__FILE__)."/";
+$libpt = __DIR__ . "/";
 
 if (!file_exists($libpt."../vendor/autoload.php")) {
   http_response_code(500);
