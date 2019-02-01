@@ -1,7 +1,7 @@
 <?php
 function comment_post($content, $user_id, $live_id, $is_html = false) {
   global $env;
-  $content = $is_html ? $content : "<p>" . nl2br(s($content)) . "</p>";
+  $content = $is_html ? $content : "<p>" . HTMLHelper($content) . "</p>";
   $user_id = s($user_id);
   $live_id = s($live_id);
   $my = getUser($user_id);

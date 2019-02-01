@@ -128,6 +128,8 @@ $vote = loadVote($live["id"]);
     .comment {
       display: flex;
       margin-bottom: 10px;
+      word-wrap: break-word;
+      word-break: break-all;
     }
 
     .comment .avatar {
