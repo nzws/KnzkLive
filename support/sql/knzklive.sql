@@ -208,6 +208,7 @@ ALTER TABLE users_watching ADD user_id int(255) NULL;
 ALTER TABLE live ADD misc text DEFAULT '{}' NULL;
 ALTER TABLE live DROP is_sensitive;
 ALTER TABLE live ALTER COLUMN is_live SET DEFAULT 1;
+UPDATE `live` SET misc = '{"is_sensitive":false,"able_item":true,"able_comment":true}' WHERE misc = '{}';
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
