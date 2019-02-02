@@ -469,7 +469,7 @@ $vote = loadVote($live["id"]);
             }
             document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
           } else if (msg.type === "change_config") {
-            if (msg.mode === "sensitive") {
+            if (msg.mode === "sensitive" && msg.result) {
               const frame = document.getElementById('iframe');
               frame_url = frame.src;
               frame.src = "";
