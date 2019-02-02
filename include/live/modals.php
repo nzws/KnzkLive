@@ -116,6 +116,24 @@
   </div>
 </div>
 
+<div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">警告！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php if ($my["id"] === $live["user_id"]) : ?>
 <div class="modal fade" id="enqueteModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -157,41 +175,28 @@
   </div>
 </div>
 
-<div class="modal fade" id="sensitiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="listenerModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">警告！</h5>
+        <h5 class="modal-title">リスナー一覧 <span class="badge badge-info"><b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+        <p>
+          <small>未ログインユーザー、こっそり視聴中ユーザーは表示されません。</small>
+        </p>
+        <div class="table-responsive">
+          <table class="table">
+            <tbody id="listener_list">
+            <tr><td>読み込み中...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">あああ</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+<?php endif; ?>

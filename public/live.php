@@ -183,7 +183,7 @@ $vote = loadVote($live["id"]);
       <span style="float: right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
-            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 視聴者数: <b id="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 視聴者数: <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
           <span id="count_end" class="invisible">
             アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
@@ -251,12 +251,10 @@ $vote = loadVote($live["id"]);
           <h5>ツール</h5>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
-          <!--
           <hr>
           <h5>ログ</h5>
-          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modlogModal"><i class="fas fa-gavel"></i> モデレーションログ</button>
-          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#usersModal"><i class="fas fa-users"></i> リスナー一覧</button>
-          -->
+          <!--<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modlogModal"><i class="fas fa-gavel"></i> モデレーションログ</button>-->
+          <button type="button" class="btn btn-secondary" onclick="open_listener_modal()"><i class="fas fa-users"></i> リスナー一覧</button>
         </div>
       </div>
       <?php endif; ?>
@@ -330,7 +328,7 @@ $vote = loadVote($live["id"]);
       }
       if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
 
-      if (json["viewers_count"] !== watch_data["viewers_count"]) elemId("count").innerHTML = json["viewers_count"];
+      if (json["viewers_count"] !== watch_data["viewers_count"]) $(".count").innerHTML = json["viewers_count"];
       if (json["point_count"] !== watch_data["point_count"]) $(".point_count").html(json["point_count"]);
       if (json["viewers_max"] !== watch_data["viewers_max"]) $(".max").html(json["viewers_max"]);
       if (json["viewers_max_concurrent"] !== watch_data["viewers_max_concurrent"]) elemId("max_c").innerHTML = json["viewers_max_concurrent"];
@@ -856,6 +854,37 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       if (json["u"]) {
         config.nu = JSON.parse(atob(json["u"]));
         if (config.nu.indexOf("#ME#") !== -1) location.reload();
+      }
+    }).catch(function(error) {
+      console.error(error);
+      alert("内部エラーが発生しました");
+    });
+  }
+
+  function open_listener_modal() {
+    $("#listenerModal").modal("show");
+    fetch('<?=u("api/client/live/listener")?>', {
+      headers: {'content-type': 'application/x-www-form-urlencoded'},
+      method: 'GET',
+      credentials: 'include',
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+        return null;
+      }
+      if (json) {
+        let html = "";
+        for (let item of json) {
+          item.name = escapeHTML(item.name);
+          html += `<tr><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${item.name}</b> <small>@${item.acct}</small></td></tr>`;
+        }
+        elemId("listener_list").innerHTML = html;
       }
     }).catch(function(error) {
       console.error(error);

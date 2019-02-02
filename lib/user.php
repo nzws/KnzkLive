@@ -97,6 +97,7 @@ function user4Pub($u) {
     "is_broadcaster" => !!$u["is_broadcaster"],
     "live_current_id" => $u["live_current_id"],
     "avatar_url" => $u["misc"]["avatar"],
-    "header_url" => $u["misc"]["header"]
+    "header_url" => $u["misc"]["header"],
+    "url" => !empty($u["misc"]["url"]) ? $u["misc"]["url"] : ""
   ];
 }
