@@ -41,14 +41,29 @@ function getSlot($id) {
 }
 
 function getLive($id) {
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE id = ?;");
-    $stmt->bind_param("s", $id);
-    $stmt->execute();
-    $row = db_fetch_all($stmt);
-    $stmt->close();
-    $mysqli->close();
-    return isset($row[0]["id"]) ? $row[0] : false;
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE id = ?;");
+  $stmt->bind_param("s", $id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  if (isset($row[0]["id"]))
+    $row[0]["misc"] = json_decode($row[0]["misc"], true);
+
+  return isset($row[0]["id"]) ? $row[0] : false;
+}
+
+function setLiveConfig($live_id, $misc) {
+  $misc = json_encode($misc, true);
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `live` SET misc = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $misc, $live_id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+  return !$err;
 }
 
 function getAllLive($notId = 0, $is_history = false) {
@@ -182,10 +197,12 @@ function end_live($live_id) {
   return false;
 }
 
-function update_sensitive($live_id) {
+function update_realtime_config($mode, $result, $live_id) {
   global $env;
   $d = [
-    "type" => "mark_sensitive",
+    "type" => "change_config",
+    "mode" => $mode,
+    "result" => $result,
     "live_id" => $live_id,
   ];
 

@@ -1,11 +1,13 @@
 <?php
 require_once("../../../lib/bootloader.php");
 require_once("../../../lib/apiloader.php");
-$my = getMe();
 
-if (!$my) {
-  api_json(["error" => "エラー: ログインしてください。"]);
-}
+$my = getMe();
+if (!$my) api_json(["error" => "エラー: ログインしてください。"]);
+
+$live = getLive($_POST["live_id"]);
+if (!$live) api_json(["error" => "エラー: 配信が見つかりません"]);
+if (!$live["misc"]["able_comment"]) api_json(["error" => "エラー: コメントは現在使用できません。"]);
 
 $err = comment_post($_POST["content"], $my["id"], $_POST["live_id"]);
 

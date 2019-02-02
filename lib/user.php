@@ -19,9 +19,9 @@ function getUser($id, $mode = "id") {
   $stmt->close();
   $mysqli->close();
 
-  if (isset($row[0]["id"])) {
+  if (isset($row[0]["id"]))
     $row[0]["misc"] = json_decode($row[0]["misc"], true);
-  }
+
   if (!isset($userCache[$mode])) $userCache[$mode] = [];
   $userCache[$mode][$id] = isset($row[0]["id"]) ? $row[0] : false;
   return $userCache[$mode][$id];

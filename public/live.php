@@ -121,7 +121,7 @@ $vote = loadVote($live["id"]);
       height: calc(100% - 250px);
     }
 
-    .live_tools {
+    .admin_panel {
       color: #000;
     }
 
@@ -146,11 +146,15 @@ $vote = loadVote($live["id"]);
     .comment .name {
       cursor: pointer;
     }
+
+    .admin-toggle.on > span.off, .admin-toggle.off > span.on {
+      display: none;
+    }
   </style>
 </head>
 <body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
-<?php if ($live["is_sensitive"] == 1 && !isset($_SESSION["sensitive_allow"])) : ?>
+<?php if ($live["misc"]["is_sensitive"] && !isset($_SESSION["sensitive_allow"])) : ?>
 <div class="container">
   <h1>警告！</h1>
   この配信はセンシティブな内容を含む配信の可能性があります。本当に視聴しますか？
@@ -224,7 +228,7 @@ $vote = loadVote($live["id"]);
 
       <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
       <hr>
-      <div class="card live_tools">
+      <div class="card admin_panel">
         <div class="card-header">
           配信管理
         </div>
@@ -232,19 +236,17 @@ $vote = loadVote($live["id"]);
           <h5>基本設定</h5>
           <button type="button" class="btn btn-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
           <button type="button" class="btn btn-primary" onclick="openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
-          <!--
-          <button type="button" class="btn btn-warning" onclick="liveSetting()"><i class="fas fa-eye-slash"></i> センシティブを有効化</button>
-          <button type="button" class="btn btn-warning" onclick="liveSetting()"><i class="fas fa-hat-wizard"></i> アイテムを無効化</button>
-          -->
+          <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["is_sensitive"] ? "info on" : "warning off")?>" onclick="liveSetting('sensitive')" id="admin_panel_sensitive_display"><i class="fas fa-eye-slash"></i> センシティブを<span class="on">無効化</span><span class="off">有効化</span></button>
+          <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_item"] ? "warning on" : "info off")?>" onclick="liveSetting('item')" id="admin_panel_item_display"><i class="fas fa-hat-wizard"></i> アイテムを<span class="on">無効化</span><span class="off">有効化</span></button>
           <hr>
-          <!--
           <h5>コメント管理</h5>
-          <button type="button" class="btn btn-warning" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> コメントを無効化</button>
+          <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_comment"] ? "warning on" : "info off")?>" onclick="liveSetting('comment')" id="admin_panel_comment_display"><i class="fas fa-comment-slash"></i> コメントを<span class="on">無効化</span><span class="off">有効化</span></button>
+          <!--
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> NGワード管理</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-slash"></i> ブロックユーザ管理</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-shield"></i> モデレータ管理</button>
-          <hr>
           -->
+          <hr>
           <h5>ツール</h5>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
           <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
@@ -463,15 +465,22 @@ $vote = loadVote($live["id"]);
               else audio.volume = 0.2;
 
               audio.play();
-
               return;
             }
             document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
-          } else if (msg.type === "mark_sensitive") {
-            const frame = document.getElementById('iframe');
-            frame_url = frame.src;
-            frame.src = "";
-            $('#sensitiveModal').modal('show');
+          } else if (msg.type === "change_config") {
+            if (msg.mode === "sensitive") {
+              const frame = document.getElementById('iframe');
+              frame_url = frame.src;
+              frame.src = "";
+              $('#sensitiveModal').modal('show');
+            } else if (msg.mode === "comment") {
+              if (msg.result) {
+                $(".comment_block").show();
+              } else {
+                $(".comment_block").hide();
+              }
+            }
           }
         } else if (data.event === "update") {
           ws_onmessage(msg, "update");
@@ -553,6 +562,10 @@ $vote = loadVote($live["id"]);
       }
     })
     .then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+        return;
+      }
       if (json) {
         elemId("toot").value = "";
         check_limit();
@@ -752,7 +765,51 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     $(obj).popover('show');
   }
 
+  function liveSetting(mode) {
+    // admin_panel_comment_display
+    if (confirm('よろしいですか？')) {
+      fetch('<?=u("api/client/live/setting")?>', {
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery({
+          type: mode,
+          csrf_token: `<?=$_SESSION['csrf_token']?>`,
+        })
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+          return null;
+        }
+        if (json["success"]) {
+          const elem = "#admin_panel_" + mode + "_display";
+          $(elem).removeClass("off on");
+          $(elem).addClass(json["result"] ? "on" : "off");
+          if ($(elem).hasClass("btn-warning")) {
+            $(elem).addClass("btn-info");
+            $(elem).removeClass("btn-warning");
+          } else {
+            $(elem).addClass("btn-warning");
+            $(elem).removeClass("btn-info");
+          }
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert("内部エラーが発生しました");
+      });
+    }
+  }
+
   window.onload = function () {
+    <?php if (!$live["misc"]["able_comment"]) : ?>
+    $(".comment_block").hide();
+    <?php endif; ?>
     check_limit();
     loadComment();
     watch(true);

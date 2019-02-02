@@ -11,14 +11,14 @@
       <hr>
     </div>
   <?php endif; ?>
-  <div class="mt-2 mb-2">
+  <div class="mt-2 mb-2 comment_block">
     #<?=liveTag($live)?>: <b id="comment_count"><?=s($live["comment_count"])?></b>コメ
   </div>
   <?php if ($my) : ?>
+  <div class="comment_block">
     <div class="form-group">
       <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート/コメント)" onkeyup="check_limit()"></textarea>
     </div>
-
 
     <div class="custom-control custom-checkbox float-left">
       <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
@@ -29,7 +29,7 @@
     <div style="text-align: right">
       <b id="limit"></b>  <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
     </div>
-
+  </div>
   <?php else : ?>
     <p>
       <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
@@ -40,4 +40,4 @@
   </p>
   <hr>
 </div>
-<div id="comments"></div>
+<div id="comments" class="comment_block"></div>

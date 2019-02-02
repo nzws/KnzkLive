@@ -40,11 +40,15 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
   }
 
   $random = bin2hex(random_bytes(32));
-  $is_sensitive = isset($_POST["sensitive"]) ? 1 : 0;
+
+  $misc["is_sensitive"] = isset($_POST["sensitive"]);
+  $misc["able_item"] = true;
+  $misc["able_comment"] = true;
+  $misc = json_encode($misc);
 
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `is_live`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `is_sensitive`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', ?, ?, ?, ?, ?);");
-  $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $is_sensitive);
+  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `misc`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);");
+  $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $misc);
   $stmt->execute();
   $stmt->close();
   $mysqli->close();
