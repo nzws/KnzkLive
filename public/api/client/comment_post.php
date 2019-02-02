@@ -7,7 +7,7 @@ if (!$my) api_json(["error" => "エラー: ログインしてください。"]);
 
 $live = getLive($_POST["live_id"]);
 if (!$live) api_json(["error" => "エラー: 配信が見つかりません"]);
-if (!$live["misc"]["able_comment"]) api_json(["error" => "エラー: コメントは現在使用できません。"]);
+if (!$live["misc"]["able_comment"] || blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my["id"])) api_json(["error" => "エラー: コメントは現在使用できません。"]);
 
 $err = comment_post($_POST["content"], $my["id"], $_POST["live_id"]);
 

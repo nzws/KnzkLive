@@ -210,6 +210,21 @@ ALTER TABLE live DROP is_sensitive;
 ALTER TABLE live ALTER COLUMN is_live SET DEFAULT 1;
 UPDATE `live` SET misc = '{"is_sensitive":false,"able_item":true,"able_comment":true}' WHERE misc = '{}';
 
+-- 2019-02-02
+ALTER TABLE users ADD ngwords longtext DEFAULT '[]' NOT NULL;
+CREATE TABLE users_blocking
+(
+  live_user_id int(255) NOT NULL,
+  target_user_id int(255) NOT NULL,
+  created_by int(255) NOT NULL,
+  misc text,
+  created_at timestamp DEFAULT current_timestamp() NOT NULL,
+  is_permanent int(5) DEFAULT 0 NOT NULL,
+  is_blocking_watch int(5) DEFAULT 0 NOT NULL
+);
+CREATE UNIQUE INDEX users_blocking_live_user_id_target_user_id_uindex ON users_blocking (live_user_id, target_user_id);
+CREATE INDEX users_blocking_live_user_id_index ON users_blocking (live_user_id);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

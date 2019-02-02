@@ -19,8 +19,10 @@ function getUser($id, $mode = "id") {
   $stmt->close();
   $mysqli->close();
 
-  if (isset($row[0]["id"]))
+  if (isset($row[0]["id"])) {
     $row[0]["misc"] = json_decode($row[0]["misc"], true);
+    $row[0]["ngwords"] = json_decode($row[0]["ngwords"], true);
+  }
 
   if (!isset($userCache[$mode])) $userCache[$mode] = [];
   $userCache[$mode][$id] = isset($row[0]["id"]) ? $row[0] : false;
@@ -71,6 +73,19 @@ function getMyLastLive($user_id) {
   $stmt->close();
   $mysqli->close();
   return isset($row[0]["id"]) ? $row[0] : false;
+}
+
+function setNgWords($words, $user_id) {
+  $words = json_encode($words, true);
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `users` SET ngwords = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $words, $user_id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+
+  return !$err;
 }
 
 function user4Pub($u) {

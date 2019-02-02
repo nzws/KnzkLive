@@ -7,7 +7,7 @@ if (!$my) {
 }
 $live = getLive($_POST["live_id"]);
 if (!$live) api_json(["error" => "エラー: 配信が見つかりません"]);
-if (!$live["misc"]["able_item"]) api_json(["error" => "エラー: アイテムは現在使用できません。"]);
+if (!$live["misc"]["able_item"] || blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my["id"])) api_json(["error" => "エラー: アイテムは現在使用できません。"]);
 
 if ($_POST["type"] === "emoji") {
   $liveUser = getUser($live["user_id"]);

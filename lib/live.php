@@ -189,6 +189,14 @@ function end_live($live_id) {
     $stmt->execute();
     $stmt->close();
     $mysqli->close();
+
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("DELETE FROM `users_blocking` WHERE `live_user_id` = ? AND `is_permanent` = 0;");
+    $stmt->bind_param("s", $my["id"]);
+    $stmt->execute();
+    $stmt->close();
+    $mysqli->close();
+
     node_update_conf("del", "hashtag", liveTag($live), $live["id"]);
     $get_point = intval($live["point_count"] * 0.7);
     if ($get_point > 0) add_point($my["id"], $get_point, "live", "配信ID:" . $live["id"] . " のポイント還元 (70%)");
@@ -217,6 +225,28 @@ function update_realtime_config($mode, $result, $live_id) {
   ));
   $options = stream_context_create($options);
   $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+}
+
+function blocking_user($live_user_id, $ip = null, $user_id = null) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ? AND (target_user_id = ? OR target_user_id IN (select id from `users` WHERE ip = ?));");
+  $stmt->bind_param("sss", $live_user_id, $user_id, $ip);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  return isset($row[0]) ? $row[0] : null;
+}
+
+function get_all_blocking_user($live_user_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT users_blocking.*, users.acct FROM `users_blocking` INNER JOIN `users` ON users.id = users_blocking.target_user_id WHERE live_user_id = ?;");
+  $stmt->bind_param("s", $live_user_id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  return isset($row[0]) ? $row : null;
 }
 
 function live4Pub($live) {

@@ -76,7 +76,9 @@ $liveUser = getUser($live["user_id"]);
   let io, w_heartbeat;
 
   const config = {
-    "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>
+    "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>,
+    nw: [],
+    nu: []
   };
 
   function loadComment() {
@@ -122,6 +124,11 @@ $liveUser = getUser($live["user_id"]);
         const msg = JSON.parse(data.payload);
         if (data.event === "update") {
           ws_onmessage(msg, "update");
+        } else if (data.event === "prop") {
+          if (msg.type === "change_config") {
+            if (msg.mode === "ngs" || (msg.mode === "comment" && msg.result)) location.reload();
+            if (msg.mode === "comment" && !msg.result) elemId("comments").style.display = "none";
+          }
         }
       };
 
@@ -153,7 +160,7 @@ $liveUser = getUser($live["user_id"]);
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
             json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-            reshtml += tmpl(json[i]);
+            reshtml += check_data(json[i]) ? tmpl(json[i]) : "";
             i++;
           }
         }
@@ -168,6 +175,24 @@ $liveUser = getUser($live["user_id"]);
       console.log(error);
       elemId("err_comment").className = "text-danger";
     });
+  }
+
+  function check_data(data) {
+    let result = true;
+    for (let item of config.nw) {
+      if (data["content"].indexOf(item) !== -1 || data["account"]["display_name"].indexOf(item) !== -1) {
+        result = false;
+        break;
+      }
+    }
+    let acct =
+      data['account']['acct'] !== data['account']['username']
+        ? data['account']['acct']
+        : data['account']['username'] + '@' + inst;
+    if (config.nu.indexOf(acct) !== -1) {
+      result = false;
+    }
+    return result;
   }
 
   function ws_onmessage(message, mode = "") {
@@ -185,7 +210,7 @@ $liveUser = getUser($live["user_id"]);
       const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
       if (ws_reshtml['id']) {
         ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-        elemId("comments").innerHTML = tmpl(ws_reshtml) + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(ws_reshtml) : "") + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
@@ -194,7 +219,37 @@ $liveUser = getUser($live["user_id"]);
   }
 
   window.onload = function () {
-    loadComment();
+    fetch('<?=u("api/client/ngs/get")?>', {
+      headers: {'content-type': 'application/x-www-form-urlencoded'},
+      method: 'POST',
+      credentials: 'include',
+      body: buildQuery({
+        csrf_token: `<?=$_SESSION['csrf_token']?>`,
+        live_id: <?=$live["id"]?>
+      })
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+        return null;
+      }
+      if (json["w"]) {
+        config.nw = JSON.parse(atob(json["w"]));
+      }
+      if (json["u"]) {
+        config.nu = JSON.parse(atob(json["u"]));
+      }
+
+      loadComment();
+    }).catch(function(error) {
+      console.error(error);
+      alert("内部エラーが発生しました");
+    });
   };
 </script>
 </body>

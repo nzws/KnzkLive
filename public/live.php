@@ -15,7 +15,8 @@ if (!$live) {
 
 $slot = getSlot($live["slot_id"]);
 $my = getMe();
-if (!$my && $live["privacy_mode"] == "3") {
+$blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["id"] : null);
+if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
   http_response_code(403);
   exit("ERR:この配信は非公開です。| " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
 }
@@ -241,9 +242,9 @@ $vote = loadVote($live["id"]);
           <hr>
           <h5>コメント管理</h5>
           <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_comment"] ? "warning on" : "info off")?>" onclick="liveSetting('comment')" id="admin_panel_comment_display"><i class="fas fa-comment-slash"></i> コメントを<span class="on">無効化</span><span class="off">有効化</span></button>
+          <a class="btn btn-primary" href="<?=u("live_manage_ngword")?>" target="_blank"><i class="fas fa-comment-slash"></i> NGワード管理</a>
+          <a class="btn btn-primary" href="<?=u("live_manage_blocking")?>" target="_blank"><i class="fas fa-user-slash"></i> ブロックユーザ管理</a>
           <!--
-          <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-comment-slash"></i> NGワード管理</button>
-          <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-slash"></i> ブロックユーザ管理</button>
           <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-shield"></i> モデレータ管理</button>
           -->
           <hr>
@@ -268,6 +269,7 @@ $vote = loadVote($live["id"]);
 <?php endif; ?>
 
 <?php include "../include/live/modals.php"; ?>
+<?php if ($my["id"] === $live["user_id"]) include "../include/live/add_blocking.php"; ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment">
     <div>
@@ -281,7 +283,6 @@ $vote = loadVote($live["id"]);
 </script>
 <?php include "../include/footer.php"; ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script src="js/knzklive.js?2018-12-13"></script>
 <script>
   const inst = "<?=$env["masto_login"]["domain"]?>";
   let login_inst = "<?=isset($_SESSION["login_domain"]) ? s($_SESSION["login_domain"]) : ""?>";
@@ -289,6 +290,8 @@ $vote = loadVote($live["id"]);
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
   const token = "<?=$my && $_SESSION["token"] ? s($_SESSION["token"]) : ""?>";
+  const config = {nw: [], nu: []};
+  const acct = "<?=$my ? $my["acct"] : ""?>";
   var heartbeat, cm_ws, watch_data = {}, io, w_heartbeat;
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
@@ -480,6 +483,8 @@ $vote = loadVote($live["id"]);
               } else {
                 $(".comment_block").hide();
               }
+            } else if (msg.mode === "ngs") {
+              getNgs();
             }
           }
         } else if (data.event === "update") {
@@ -514,7 +519,7 @@ $vote = loadVote($live["id"]);
           let i = 0;
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
-            reshtml += tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst));
+            reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst)) : "";
             i++;
           }
         }
@@ -612,7 +617,7 @@ $vote = loadVote($live["id"]);
       if (ws_reshtml['id']) {
         elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
         const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
-        elemId("comments").innerHTML = tmpl(buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) : "") + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
@@ -742,7 +747,8 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     <?php if ($my["id"] === $live["user_id"]) : ?>
     html += `
 <div class="dropdown-divider"></div>
-<a class="dropdown-item text-danger" href="#">ユーザーブロック</a>
+<a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
+<!--<a class="dropdown-item text-danger" href="#">投稿を非表示</a>-->
 `;
     <?php endif; ?>
 
@@ -806,10 +812,62 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     }
   }
 
+  function check_data(data) {
+    let result = true;
+    for (let item of config.nw) {
+      if (data["content"].indexOf(item) !== -1 || data["account"]["display_name"].indexOf(item) !== -1) {
+        result = false;
+        break;
+      }
+    }
+    let acct =
+      data['account']['acct'] !== data['account']['username']
+        ? data['account']['acct']
+        : data['account']['username'] + '@' + inst;
+    if (config.nu.indexOf(acct) !== -1) {
+      result = false;
+    }
+    return result;
+  }
+
+  function getNgs() {
+    fetch('<?=u("api/client/ngs/get")?>', {
+      headers: {'content-type': 'application/x-www-form-urlencoded'},
+      method: 'POST',
+      credentials: 'include',
+      body: buildQuery({
+        csrf_token: `<?=$_SESSION['csrf_token']?>`,
+        live_id: <?=$live["id"]?>
+      })
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function(json) {
+      if (json["error"]) {
+        alert(json["error"]);
+        return null;
+      }
+      if (json["w"]) {
+        config.nw = JSON.parse(atob(json["w"]));
+      }
+      if (json["u"]) {
+        config.nu = JSON.parse(atob(json["u"]));
+        if (config.nu.indexOf("#ME#") !== -1) location.reload();
+      }
+    }).catch(function(error) {
+      console.error(error);
+      alert("内部エラーが発生しました");
+    });
+  }
+
   window.onload = function () {
     <?php if (!$live["misc"]["able_comment"]) : ?>
     $(".comment_block").hide();
     <?php endif; ?>
+    getNgs();
     check_limit();
     loadComment();
     watch(true);

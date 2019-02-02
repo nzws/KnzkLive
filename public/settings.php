@@ -60,6 +60,11 @@ if ($_POST) {
         <h4>配信者設定</h4>
         <p>* この設定は過去、未来全ての配信に適用されます。</p>
 
+        <ul>
+          <li><a href="<?=u("live_manage_ngword")?>">NGワード設定</a></li>
+          <li><a href="<?=u("live_manage_blocking")?>">ユーザーブロック設定</a></li>
+        </ul>
+
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="conf_to_title" name="to_title" value="1" <?=(!empty($my["misc"]["to_title"]) ? "checked" : "")?>>

@@ -54,7 +54,7 @@ if (isset($_POST["type"])) {
       postWebHook($live);
     }
   } elseif ($_POST["type"] == "edit") {
-    if (!$live["misc"]["is_sensitive"] && isset($_POST["sensitive"])) update_realtime_config("sensitive", $live["id"]);
+    if (!$live["misc"]["is_sensitive"] && isset($_POST["sensitive"])) update_realtime_config("sensitive", true, $live["id"]);
     $title = s($_POST["title"]);
     $desc = s($_POST["description"]);
     $live["misc"]["is_sensitive"] = isset($_POST["sensitive"]);
@@ -257,7 +257,6 @@ $vote = loadVote($live["id"]);
 </div>
 
 <?php include "../include/footer.php"; ?>
-  <script src="js/knzklive.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
 <script>
   <?php if (isset($_GET["new"]) && $my["misc"]["auto_open_start"]) : ?>
