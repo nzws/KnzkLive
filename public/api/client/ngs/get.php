@@ -3,7 +3,7 @@ require_once("../../../../lib/bootloader.php");
 require_once("../../../../lib/apiloader.php");
 
 $live = getLive($_POST["live_id"]);
-if (!$live || $live["is_live"] === 0) api_json(["error" => "エラー: 配信が見つかりません。"]);
+if (!$live) api_json(["error" => "エラー: 配信が見つかりません。"]);
 $liveUser = getUser($live["user_id"]);
 if (!$liveUser) api_json(["error" => "エラー: ユーザが見つかりません。"]);
 
