@@ -93,12 +93,19 @@
           </div>
         </div>
         <div class="mt-2">
-          <div class="custom-control custom-checkbox float-left">
-            <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
-            <label class="custom-control-label" for="item_emoji_spin">
-              回転あり (+<b>50</b>KP)<br>
-              <small>一部端末で表示されない可能性があります</small>
-            </label>
+          <div class="float-left">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
+              <label class="custom-control-label" for="item_emoji_spin">
+                回転あり (+<b>30</b>KP)<br>
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="update_money_disp('emoji')">
+              <label class="custom-control-label" for="item_emoji_big">
+                大きさ二倍盛り (+<b>30</b>KP)<br>
+              </label>
+            </div>
           </div>
           <div class="text-right">
             <button class="btn btn-success" onclick="item_buy('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>

@@ -13,6 +13,10 @@
   width: 50px;
 }
 
+.item_emoji.big img {
+  width: 100px;
+}
+
 .spin img {
   animation: spin 1s linear infinite;
 }

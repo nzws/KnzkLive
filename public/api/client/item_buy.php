@@ -27,7 +27,7 @@ if ($_POST["type"] === "emoji") {
   if (array_search($_POST["emoji"], ["👍", "❤️", "👏️", "🎉️", "🍮", "liver", "me"]) === false)
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
-  $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 50 : 0);
+  $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 30 : 0) + ($_POST["big"] == 1 ? 30 : 0);
 } else if ($_POST["type"] === "knzk_kongyo") {
   $point = 1000;
   if ($live["user_id"] !== 2 && !$env["is_testing"])
@@ -47,7 +47,7 @@ if ($_POST["type"] === "emoji") {
   $data = [
     "repeat_html" => "<img src='{$emojis[$_POST["emoji"]]}'/>",
     "repeat_num" => ($_POST["count"] < 6 ? $_POST["count"] : 6),
-    "class" => ($_POST["spin"] == 1 ? "spin " : "") . $_POST["dir"],
+    "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
   ];
   for ($i = 0; $i < intval(ceil($_POST["count"] / 6)); $i++) {
     $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";

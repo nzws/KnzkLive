@@ -677,7 +677,8 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     let point = 0;
     if (item === "emoji") {
       point += parseInt(elemId("item_emoji_count").value) * 5;
-      point += elemId("item_emoji_spin").checked ? 50 : 0;
+      point += elemId("item_emoji_spin").checked ? 30 : 0;
+      point += elemId("item_emoji_big").checked ? 30 : 0;
     }
     elemId("item_" + item + "_point").textContent = point;
   }
@@ -694,6 +695,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       body["dir"] = elemId("item_emoji_dir").value;
       body["emoji"] = elemId("item_emoji_emoji").value;
       body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
+      body["big"] = elemId("item_emoji_big").checked ? 1 : 0;
     } else if (type === "knzk_kongyo") {
     } else {
       return null;
