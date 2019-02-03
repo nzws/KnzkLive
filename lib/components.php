@@ -24,3 +24,7 @@ function HTMLHelper($text) {
   $text = preg_replace("/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/", "<a href='\\1' rel='nofollow' target='_blank'>\\1</a>", $text);
   return $text;
 }
+
+function dateHelper($date) {
+  return str_replace("-", "/", $date);
+}

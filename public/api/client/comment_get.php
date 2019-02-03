@@ -19,7 +19,7 @@ while (isset($post[$i])) {
       "url" => $acct[$i]["misc"]["user_url"]
     ],
     "content" => $post[$i]["content"],
-    "created_at" => $post[$i]["created_at"]
+    "created_at" => dateHelper($post[$i]["created_at"])
   ];
   $i++;
 }

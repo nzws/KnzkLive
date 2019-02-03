@@ -350,7 +350,7 @@ $vote = loadVote($live["id"]);
   function date_disp() {
     /* thx https://www.tagindex.com/javascript/time/timer2.html */
     const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
-    const datet = parseInt((now.getTime() - (new Date("<?=$live["created_at"]?>")).getTime()) / 1000);
+    const datet = parseInt((now.getTime() - (new Date("<?=dateHelper($live["created_at"])?>")).getTime()) / 1000);
 
     var hour = parseInt(datet / 3600);
     var min = parseInt((datet / 60) % 60);
