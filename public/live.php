@@ -328,7 +328,7 @@ $vote = loadVote($live["id"]);
       }
       if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
 
-      if (json["viewers_count"] !== watch_data["viewers_count"]) $(".count").innerHTML = json["viewers_count"];
+      if (json["viewers_count"] !== watch_data["viewers_count"]) $(".count").html(json["viewers_count"]);
       if (json["point_count"] !== watch_data["point_count"]) $(".point_count").html(json["point_count"]);
       if (json["viewers_max"] !== watch_data["viewers_max"]) $(".max").html(json["viewers_max"]);
       if (json["viewers_max_concurrent"] !== watch_data["viewers_max_concurrent"]) elemId("max_c").innerHTML = json["viewers_max_concurrent"];
