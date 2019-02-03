@@ -11,7 +11,7 @@ if (empty($live))
   api_json(["error" => "エラー: 配信が見つかりません。"]);
 
 $mysqli = db_start();
-$stmt = $mysqli->prepare("SELECT users.* FROM `users_watching` INNER JOIN `users` ON users.id = users_watching.user_id WHERE watch_id = ?;");
+$stmt = $mysqli->prepare("SELECT users.* FROM `users_watching` INNER JOIN `users` ON users.id = users_watching.user_id WHERE watch_id = ? AND watching_now = 1;");
 $stmt->bind_param("s", $live["id"]);
 $stmt->execute();
 $row = db_fetch_all($stmt);
