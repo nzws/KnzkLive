@@ -16,7 +16,7 @@ if ($_POST["type"] === "emoji") {
     "❤️" => "https://twemoji.maxcdn.com/2/svg/2764.svg",
     "👏️" => "https://twemoji.maxcdn.com/2/svg/1f44f.svg",
     "🎉️" => "https://twemoji.maxcdn.com/2/svg/1f389.svg",
-    "🍮" => "http://twemoji.maxcdn.com/2/svg/1f36e.svg",
+    "🍮" => "https://twemoji.maxcdn.com/2/svg/1f36e.svg",
     "liver" => $liveUser["misc"]["avatar"],
     "me" => $my["misc"]["avatar"]
   ];
