@@ -461,10 +461,10 @@ $vote = loadVote($live["id"]);
           } else if (msg.type === "item") {
             if (msg.item_type === "knzk_kongyo") {
               const volume = localStorage.getItem('kplayer_volume');
+              const mute = localStorage.getItem('kplayer_mute');
               const audio = new Audio('https://static.knzk.me/knzklive/kongyo.mp3');
-              if (volume) audio.volume = volume > 20 ? 0.2 : volume * 0.01;
-              else audio.volume = 0.2;
-
+              audio.volume = volume ? volume * 0.01 : 0.8;
+              audio.muted = parseInt(mute === null ? 0 : mute);
               audio.play();
               return;
             }
