@@ -73,6 +73,7 @@
               <option>❤️</option>
               <option>👏️</option>
               <option>🎉️</option>
+              <option>🍮</option>
               <option value="liver">配信者のアイコン</option>
               <option value="me">あなたのアイコン</option>
             </select>

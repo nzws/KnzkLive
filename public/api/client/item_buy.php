@@ -16,6 +16,7 @@ if ($_POST["type"] === "emoji") {
     "❤️" => "https://twemoji.maxcdn.com/2/svg/2764.svg",
     "👏️" => "https://twemoji.maxcdn.com/2/svg/1f44f.svg",
     "🎉️" => "https://twemoji.maxcdn.com/2/svg/1f389.svg",
+    "🍮" => "http://twemoji.maxcdn.com/2/svg/1f36e.svg",
     "liver" => $liveUser["misc"]["avatar"],
     "me" => $my["misc"]["avatar"]
   ];
@@ -23,7 +24,7 @@ if ($_POST["type"] === "emoji") {
     api_json(["error" => "エラー: 個数が不正です。"]);
   if (array_search($_POST["dir"], ["left-to-right", "right-to-left", "top-to-bottom", "bottom-to-top"]) === false)
     api_json(["error" => "エラー: 方向が不正です。"]);
-  if (array_search($_POST["emoji"], ["👍", "❤️", "👏️", "🎉️", "liver", "me"]) === false)
+  if (array_search($_POST["emoji"], ["👍", "❤️", "👏️", "🎉️", "🍮", "liver", "me"]) === false)
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
   $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 50 : 0);
