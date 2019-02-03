@@ -24,7 +24,7 @@ if ($_POST["type"] === "emoji") {
     api_json(["error" => "エラー: 個数が不正です。"]);
   if (array_search($_POST["dir"], ["left-to-right", "right-to-left", "top-to-bottom", "bottom-to-top"]) === false)
     api_json(["error" => "エラー: 方向が不正です。"]);
-  if (array_search($_POST["emoji"], ["👍", "❤️", "👏️", "🎉️", "🍮", "liver", "me"]) === false)
+  if (!isset($emojis[$_POST["emoji"]]))
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
   $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 30 : 0) + ($_POST["big"] == 1 ? 30 : 0);
