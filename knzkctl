@@ -1,5 +1,5 @@
 #!/usr/bin/env php
 <?php
 require_once __DIR__ . "/lib/bootloader.php";
-require_once __DIR__ . "/lib/ctl.php";
+require_once __DIR__ . "/lib/ctl/ctl.php";
 load($argv);

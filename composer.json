@@ -10,6 +10,7 @@
       }
     ],
     "require": {
-        "abraham/twitteroauth": "1.0.1"
+        "abraham/twitteroauth": "1.0.1",
+        "robmorgan/phinx": "^0.10.6"
     }
 }

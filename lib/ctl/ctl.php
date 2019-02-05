@@ -1,6 +1,10 @@
 <?php
 function load($argv) {
+  $dir = __DIR__ . "/";
+  if (!isset($argv[1])) $argv[1] = null;
+
   if ($argv[1] === "daily") {
+    require_once $dir . "daily.php";
     merge_toot_point();
   } elseif ($argv[1] === "tipknzk") {
     $my = getUser($argv[3], "acct");
@@ -12,14 +16,17 @@ function load($argv) {
       $n = add_point($my["id"], $argv[2] * -1, "user", $u["acct"] . "にプレゼント");
       if ($n) {
         $o = add_point($u["id"], $argv[2], "user", $my["acct"] . "からのプレゼント (TIPKnzk)");
-        if ($o) echo "@{$u["acct"]} に {$argv[2]}KP 送りました！ you sent {$argv[2]}KP to @{$u["acct"]}!";
+        if ($o) exit("@{$u["acct"]} に {$argv[2]}KP 送りました！ you sent {$argv[2]}KP to @{$u["acct"]}!");
         else exit("[Error] 例外エラー");
       }
     } else {
       exit("[Error] 相手のKnzkPointアカウントが存在しません！　https://live.knzk.me/ にログインする必要があります！");
     }
+  } elseif ($argv[1] === "setup") {
+    require_once $dir . "setup.php";
+    run_setup();
   } else {
-    disp_log("command {$argv[1]} is not found", 2);
+    disp_log("command '{$argv[1]}' is not found", 2);
   }
 
   exit("\n✨ Done!\n\n");
@@ -33,21 +40,4 @@ function disp_log($name, $type) {
   } elseif ($type === 2) {
     exit("⁉️ Error occurred: " . $name . "\n");
   }
-}
-
-function merge_toot_point() {
-  $name = "merge-toot-point";
-  disp_log($name, 0);
-
-  $sql = "start transaction;";
-  $sql .= "INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) SELECT id, 'toot', '', CASE WHEN point_count_today_toot > 500 THEN 500 ELSE point_count_today_toot END FROM `users` WHERE point_count_today_toot > 0;";
-  $sql .= "UPDATE `users` SET `point_count` = `point_count` + CASE WHEN point_count_today_toot > 500 THEN 500 ELSE point_count_today_toot END, `point_count_today_toot` = 0 WHERE point_count_today_toot > 0;";
-  $sql .= "commit;";
-
-  $mysqli = db_start();
-  $mysqli->multi_query($sql);
-  $err = $mysqli->error;
-  $mysqli->close();
-  if ($err) disp_log($name, 2);
-  else disp_log($name, 1);
 }

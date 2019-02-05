@@ -62,6 +62,9 @@ config.json
 # next.js build output
 .next
 
+# IDE config directory
 .idea
 .vscode
+
+# Composer directory
 /vendor/
