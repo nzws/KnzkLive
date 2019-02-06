@@ -28,3 +28,16 @@ function HTMLHelper($text) {
 function dateHelper($date) {
   return str_replace("-", "/", $date);
 }
+
+function dispSecDate($sec) {
+  $text = "";
+  $h = intval($sec / 3600);
+  $m = intval(($sec / 60) % 60);
+  $s = intval($sec % 60);
+
+  if ($h > 0) $text .= ($h < 10 ? "0" : "") . $h . "時間";
+  if ($m > 0) $text .= ($m < 10 ? "0" : "") . $m . "分";
+  $text .= ($s < 10 ? "0" : "") . $s . "秒";
+
+  return $text;
+}

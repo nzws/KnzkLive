@@ -7,6 +7,10 @@ if (!$my) {
 }
 $plog = get_point_log($my["id"]);
 
+if ($my["is_broadcaster"]) {
+  $live_stat_times = getAllLiveTime($my["id"]);
+}
+
 if ($_POST) {
   $my["misc"]["live_toot"] = isset($_POST["live_toot"]);
   $my["misc"]["to_title"] = isset($_POST["to_title"]);
@@ -138,6 +142,7 @@ if ($_POST) {
 
       <h4 class="mt-4">あなたの配信者ステータス</h4>
       <small>配信終了時に更新されます</small><br>
+      累積配信時間: <?=dispSecDate(array_sum($live_stat_times))?> · 最高配信時間: <?=dispSecDate($live_stat_times[0])?> · 平均配信時間: <?=dispSecDate(array_sum($live_stat_times) / count($live_stat_times))?><br>
       累積視聴者数: <?=$my["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$my["misc"]["viewers_max_concurrent"]?>人<br>
       累積コメント数: <?=$my["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$my["misc"]["comment_count_max"]?>コメ<br>
       累積ポイント取得数: <?=$my["misc"]["point_count_all"]?>KP · 最高ポイント取得数: <?=$my["misc"]["point_count_max"]?>KP

@@ -88,6 +88,25 @@ function setNgWords($words, $user_id) {
   return !$err;
 }
 
+function getAllLiveTime($user_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE user_id = ? AND is_live = 0 AND is_started = 1;");
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  if (!isset($row[0]["id"])) return [0];
+
+  $times = [];
+  foreach ($row as $item) {
+    $times[] = strtotime($item["ended_at"]) - strtotime($item["created_at"]);
+  }
+
+  array_multisort($times, SORT_DESC, SORT_NUMERIC);
+  return $times;
+}
+
 function user4Pub($u) {
   return [
     "id" => $u["id"],
