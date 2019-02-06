@@ -151,6 +151,11 @@ $vote = loadVote($live["id"]);
     .admin-toggle.on > span.off, .admin-toggle.off > span.on {
       display: none;
     }
+
+    a.broadcaster_link {
+      color: #fff;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -214,8 +219,10 @@ $vote = loadVote($live["id"]);
       </div>
 
       <p>
-        <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
-        <b><?=$liveUser["name"]?></b>
+        <a href="<?=$liveUser["misc"]["user_url"]?>" target="_blank" class="broadcaster_link">
+          <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
+          <b><?=$liveUser["name"]?></b>
+        </a>
       </p>
       <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
