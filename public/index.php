@@ -16,12 +16,12 @@ $lives_history = getAllLive(0, true);
   <?php include "../include/header.php"; ?>
   <title>トップ - <?=$env["Title"]?></title>
   <style>
-    .nav-container {
-      margin: 10px auto 0;
+    .top_lists {
+      width: 100%;
+      padding: 10px 0;
+      background: #333;
     }
-    .navbar {
-      border-radius: 5px 5px 0 0;
-    }
+
     .top_lists .no {
       text-align: center;
       color: #606984;
@@ -51,22 +51,23 @@ $lives_history = getAllLive(0, true);
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
-<div class="top_lists">
-  <?php if (!$lives[0]) : ?>
-    <div class="no">
-      <h4>現在、生放送中の配信はありません</h4>
-    </div>
-  <?php else : ?>
-    <div class="container">
-      <h3>KnzkLive: 只今配信中！</h3>
-      <div class="row">
-        <?php
-        if ($lives) {
-          $i = 0;
-          while (isset($lives[$i])) {
-            $url = liveUrl($lives[$i]["id"]);
-            $image = getUser($lives[$i]["user_id"])["misc"]["avatar"];
-            echo <<< EOF
+<div class="container">
+  <div class="top_lists">
+    <?php if (!$lives[0]) : ?>
+      <div class="no">
+        <h4>現在、生放送中の配信はありません</h4>
+      </div>
+    <?php else : ?>
+      <div class="container">
+        <h3>KnzkLive: 只今配信中！</h3>
+        <div class="row">
+          <?php
+          if ($lives) {
+            $i = 0;
+            while (isset($lives[$i])) {
+              $url = liveUrl($lives[$i]["id"]);
+              $image = getUser($lives[$i]["user_id"])["misc"]["avatar"];
+              echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
 <div class="card">
@@ -81,13 +82,15 @@ $lives_history = getAllLive(0, true);
 </a>
 </div>
 EOF;
-            $i++;
+              $i++;
+            }
           }
-        }
-        ?>
+          ?>
+        </div>
       </div>
-    </div>
-  <?php endif; ?>
+    <?php endif; ?>
+  </div>
+  <hr>
 </div>
 <div class="container" style="margin-top:10px">
   <h3>配信履歴</h3>
