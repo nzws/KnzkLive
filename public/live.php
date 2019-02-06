@@ -756,6 +756,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
         body: buildQuery({
           csrf_token: `<?=$_SESSION['csrf_token']?>`,
           delete_id: id.replace("knzklive_", ""),
+          live_id: <?=$live["id"]?>,
           is_knzklive: id.indexOf("knzklive_") !== -1 ? 1 : 0
         })
       }).then(function(response) {
