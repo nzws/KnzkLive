@@ -278,10 +278,10 @@ $vote = loadVote($live["id"]);
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment">
     <div>
-      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown(this, '{{account.acct}}', '{{account.url}}')"/>
+      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
     </div>
     <div class="content">
-      <span onclick="userDropdown(this, '{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
+      <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
       {{{content}}}
     </div>
   </div>
@@ -438,6 +438,11 @@ $vote = loadVote($live["id"]);
       io.onmessage = function (e) {
         const data = JSON.parse(e.data);
         if (data.type === "pong" || !data.payload) return;
+        if (data.event === "delete") {
+          const del_toot = elemId('post_' + data.payload);
+          if (del_toot) del_toot.parentNode.removeChild(del_toot);
+          return;
+        }
         const msg = JSON.parse(data.payload);
         if (data.event === "prop") {
           if (msg.type === "vote_start") {
@@ -524,7 +529,9 @@ $vote = loadVote($live["id"]);
           let i = 0;
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
-            reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst)) : "";
+            if (config.np.indexOf(json[i]["id"]) === -1) {
+              reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst)) : "";
+            }
             i++;
           }
         }
@@ -740,7 +747,39 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     });
   }
 
-  function userDropdown(obj, acct, url) {
+  function comment_delete(id, acct) {
+    if (confirm(acct + 'の投稿を非表示にします。\nよろしいですか？\n* KnzkLive上でのみ非表示になります。')) {
+      fetch('<?=u("api/client/live/comment_delete")?>', {
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery({
+          csrf_token: `<?=$_SESSION['csrf_token']?>`,
+          delete_id: id.replace("knzklive_", ""),
+          is_knzklive: id.indexOf("knzklive_") !== -1 ? 1 : 0
+        })
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+          return null;
+        }
+        if (!json["success"]) {
+          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert("内部エラーが発生しました");
+      });
+    }
+  }
+
+  function userDropdown(obj, id, acct, url) {
     let is_local = false;
     if (acct.match(/\(local\)/i)) {
       is_local = true;
@@ -755,7 +794,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     html += `
 <div class="dropdown-divider"></div>
 <a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
-<!--<a class="dropdown-item text-danger" href="#">投稿を非表示</a>-->
+<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を非表示</a>
 `;
     <?php endif; ?>
 
@@ -863,6 +902,9 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       if (json["u"]) {
         config.nu = JSON.parse(atob(json["u"]));
         if (config.nu.indexOf("#ME#") !== -1) location.reload();
+      }
+      if (json["p"]) {
+        config.np = JSON.parse(atob(json["p"]));
       }
     }).catch(function(error) {
       console.error(error);

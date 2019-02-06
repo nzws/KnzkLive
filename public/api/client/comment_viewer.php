@@ -121,6 +121,11 @@ $liveUser = getUser($live["user_id"]);
       io.onmessage = function (e) {
         const data = JSON.parse(e.data);
         if (data.type === "pong" || !data.payload) return;
+        if (data.event === "delete") {
+          const del_toot = elemId('post_' + data.payload);
+          if (del_toot) del_toot.parentNode.removeChild(del_toot);
+          return;
+        }
         const msg = JSON.parse(data.payload);
         if (data.event === "update") {
           ws_onmessage(msg, "update");
@@ -159,8 +164,10 @@ $liveUser = getUser($live["user_id"]);
           let i = 0;
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
-            json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-            reshtml += check_data(json[i]) ? tmpl(json[i]) : "";
+            if (config.np.indexOf(json[i]["id"]) === -1) {
+              json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
+              reshtml += check_data(json[i]) ? tmpl(json[i]) : "";
+            }
             i++;
           }
         }
@@ -243,6 +250,9 @@ $liveUser = getUser($live["user_id"]);
       }
       if (json["u"]) {
         config.nu = JSON.parse(atob(json["u"]));
+      }
+      if (json["p"]) {
+        config.np = JSON.parse(atob(json["p"]));
       }
 
       loadComment();

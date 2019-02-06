@@ -52,7 +52,7 @@ function comment_post($content, $user_id, $live_id, $is_html = false) {
 
 function comment_get($live_id) {
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("SELECT * FROM `comment` WHERE live_id = ? ORDER BY id desc LIMIT 30;");
+  $stmt = $mysqli->prepare("SELECT * FROM `comment` WHERE live_id = ? AND is_deleted = 0 ORDER BY id desc LIMIT 30;");
   $stmt->bind_param("s", $live_id);
   $stmt->execute();
   $row = db_fetch_all($stmt);
@@ -68,4 +68,56 @@ function comment_count_add($live_id) {
   $stmt->execute();
   $stmt->close();
   $mysqli->close();
+}
+
+function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false) {
+  global $env;
+
+  $mysqli = db_start();
+  if ($is_knzklive) {
+    $stmt = $mysqli->prepare("UPDATE `comment` SET is_deleted = 1 WHERE id = ?;");
+    $stmt->bind_param('s', $comment_id);
+  } else {
+    $stmt = $mysqli->prepare("INSERT INTO `comment_delete` (`id`, `live_id`, `created_by`) VALUES (?, ?, ?);");
+    $stmt->bind_param('sss', $comment_id, $live_id, $user_id);
+  }
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+
+  if ($err) return "データベースエラー";
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode([
+      "live_id" => $live_id,
+      "delete_id" => ($is_knzklive ? "knzklive_" : "") . $comment_id
+    ]),
+    'header' => implode(PHP_EOL, [
+      'Content-Type: application/json'
+    ])
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents($env["websocket_url"]."/delete_comment", false, $options);
+  return true;
+}
+
+function get_comment_deleted_list($live_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `comment_delete` WHERE live_id = ?;");
+  $stmt->bind_param("s", $live_id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+
+  $ids = [];
+  if ($row) {
+    foreach ($row as $item) {
+      $ids[] = $item["id"];
+    }
+  }
+
+  return $ids;
 }

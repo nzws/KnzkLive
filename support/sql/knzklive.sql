@@ -225,6 +225,25 @@ CREATE TABLE users_blocking
 CREATE UNIQUE INDEX users_blocking_live_user_id_target_user_id_uindex ON users_blocking (live_user_id, target_user_id);
 CREATE INDEX users_blocking_live_user_id_index ON users_blocking (live_user_id);
 
+-- 2019-02-06
+create table comment_delete
+(
+  id varchar(255) not null,
+  live_id int(255) not null,
+  created_at timestamp default current_timestamp() not null,
+  created_by int(255) not null
+);
+
+create unique index comment_delete_id_uindex
+  on comment_delete (id);
+
+create index comment_delete_live_id_index
+  on comment_delete (live_id);
+
+alter table comment_delete
+  add constraint comment_delete_pk
+    primary key (id);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

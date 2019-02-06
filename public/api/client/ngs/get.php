@@ -19,4 +19,8 @@ if ($blocking) {
   }
 }
 
-api_json(["w" => base64_encode(json_encode($liveUser["ngwords"])), "u" => $blocking ? base64_encode(json_encode($blocking_users)) : null]);
+api_json([
+  "w" => base64_encode(json_encode($liveUser["ngwords"])),
+  "u" => $blocking ? base64_encode(json_encode($blocking_users)) : null,
+  "p" => base64_encode(json_encode(get_comment_deleted_list($live["id"])))
+  ]);

@@ -36,6 +36,19 @@ app.post('/send_comment', function(req, res) {
   res.end()
 })
 
+app.post('/delete_comment', function(req, res) {
+  console.log('[KnzkLive WebSocket] Delete Comment', req.body)
+  send(
+    req.body.live_id,
+    JSON.stringify({
+      event: 'delete',
+      payload: req.body.delete_id,
+      is_knzklive: true
+    })
+  )
+  res.end()
+})
+
 app.post('/send_prop', function(req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body)
   send(
