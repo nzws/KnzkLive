@@ -660,14 +660,17 @@ $vote = loadVote($live["id"]);
     if (mode === "twitter") {
       url = `https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
     } else if (mode === "mastodon") {
-      const text = `【視聴中】
+      const instance = prompt('Mastodonのドメインを入力してください', login_inst);
+      if (instance) {
+        const text = `【視聴中】
 ${watch_data["name"]} by <?=$liveUser["name"]?>
 
 <?=$liveurl?>
 
 
 #KnzkLive #<?=liveTag($live)?>`;
-      url = "https://" + login_inst + "/share?text=" + encodeURIComponent(text);
+        url = "https://" + instance + "/share?text=" + encodeURIComponent(text);
+      }
     } else if (mode === "facebook") {
       url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
     } else if (mode === "line") {
