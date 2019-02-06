@@ -8,6 +8,7 @@
           <li><a href="<?=u("help")?>">ヘルプ</a></li>
           <li><a href="<?=u("terms")?>">利用規約とガイドライン</a></li>
           <li><a href="https://knzk.me/@KnzkLiveNotification" target="_blank">プッシュ通知を有効化</a></li>
+          <li><a href="https://knzk.me/@TIPKnzk" target="_blank">@TIPKnzk</a></li>
           <li><a href="https://nzws.me/donate.html" target="_blank">KnzkLiveを支援</a></li>
           <?php if (empty($my)) : ?>
             <li><a href="#" data-toggle="modal" data-target="#loginModal">Mastodonでログイン</a></li>
