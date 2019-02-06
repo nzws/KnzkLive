@@ -90,7 +90,7 @@ $vote = loadVote($live["id"]);
   <div class="container">
     <div class="box">
       <div class="alert alert-info" role="alert">
-        <form method="post">
+        <form method="post" action="?">
           <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
           <input type="hidden" name="type" value="start">
 
