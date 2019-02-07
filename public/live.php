@@ -30,6 +30,9 @@ if (isset($_POST["sensitive"])) $_SESSION["sensitive_allow"] = true;
 
 $liveUser = getUser($live["user_id"]);
 
+$new_live = ($liveUser["live_current_id"] !== 0 && $liveUser["live_current_id"] !== $live["id"]) ? getLive($liveUser["live_current_id"]) : null;
+if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) $new_live = null;
+
 $liveurl = liveUrl($live["id"]);
 
 $vote = loadVote($live["id"]);
@@ -160,6 +163,14 @@ $vote = loadVote($live["id"]);
 </head>
 <body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
+<?php if (!empty($new_live)) : ?>
+  <div class="container">
+    <div class="alert alert-info" role="alert">
+      <h4>この配信者は現在配信中です！</h4>
+      <a href="<?=liveUrl($new_live["id"])?>"><b><?=$new_live["name"]?></b></a>
+    </div>
+  </div>
+<?php endif; ?>
 <?php if ($live["misc"]["is_sensitive"] && !isset($_SESSION["sensitive_allow"])) : ?>
 <div class="container">
   <h1>警告！</h1>
