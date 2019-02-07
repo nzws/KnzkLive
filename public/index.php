@@ -23,11 +23,20 @@ $lives = getAllLive();
       color: #212529;
       margin-top: 5px;
     }
+    .history .card-base .name {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+    }
     .card-base a {
       text-decoration: none;
     }
     .history .card-base a {
       color: #fff;
+    }
+    .history .card-base {
+      margin-bottom: 10px;
     }
     .card-img-top {
       width: 150px;
@@ -36,10 +45,10 @@ $lives = getAllLive();
       text-align: center;
       background: #212121;
     }
-    .card-title {
+    .card-body {
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 110%;
+      max-width: 100%;
       overflow: hidden;
     }
   </style>
@@ -99,7 +108,7 @@ EOF;
 <a href="{$url}">
 <div class="text-center">
   <img class="card-img-top rounded" src="{$liveUser["misc"]["avatar"]}"/>
-  <h4>{$liveUser["name"]}</h4>
+  <h4 class="name">{$liveUser["name"]}</h4>
 </div>
 <small>最後の配信:</small> {$item["name"]}
 </a>
