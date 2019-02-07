@@ -1,5 +1,5 @@
 function elemId(_id) {
-  return document.getElementById(_id)
+  return document.getElementById(_id);
 }
 
 function escapeHTML(text) {
@@ -8,21 +8,21 @@ function escapeHTML(text) {
     .replace(/'/g, "'")
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+    .replace(/>/g, '&gt;');
 
-  return text
+  return text;
 }
 
 function buildQuery(data) {
-  var body = ''
+  var body = '';
   for (var key in data) {
-    body += key + '=' + encodeURIComponent(data[key]) + '&'
+    body += key + '=' + encodeURIComponent(data[key]) + '&';
   }
-  body += 'd=' + new Date().getTime()
-  return body
+  body += 'd=' + new Date().getTime();
+  return body;
 }
 
 function buildCommentData(data, myacct, inst) {
-  data['account']['display_name'] = escapeHTML(data['account']['display_name'])
-  return data
+  data['account']['display_name'] = escapeHTML(data['account']['display_name']);
+  return data;
 }
