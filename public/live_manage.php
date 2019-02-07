@@ -25,10 +25,11 @@ if (isset($_GET["mode"])) {
   }
 
   if ($_GET["mode"] == "shutdown") {
-    if ($live["is_live"] == 1) {
-      end_live($live["id"]);
-      header("Location: ".u());
-    } else echo "ERROR: setLiveStatus";
+    if ($live["is_live"] === 2) {
+      disconnectClient($live);
+    }
+    end_live($live["id"]);
+    header("Location: ".u());
 
     exit();
   }
@@ -242,15 +243,7 @@ $vote = loadVote($live["id"]);
         </div>
       </div>
       <div class="col-md-6">
-        <?php if ($live["is_live"] === 2) : ?>
-          <b>配信を終了:</b><br>
-          <span class="text-danger">
-            * ソフト側(OBSなど)で配信終了すると終了できます。<br>
-            もしも終了しているのにもかかわらずこの表示のまま進まない場合は管理者にお問い合わせください。
-          </span><br>
-        <?php elseif ($live["is_live"] === 1) : ?>
-          <a href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>" onclick="return confirm('配信を終了して、配信枠を返却します。\nよろしいですか？');" class="btn btn-danger btn-lg btn-block">配信を終了</a>
-        <?php endif; ?>
+        <a href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>" onclick="return confirm('配信を終了して、配信枠を返却します。\nよろしいですか？');" class="btn btn-danger btn-lg btn-block">配信を終了</a>
       </div>
     </div>
   </div>

@@ -249,6 +249,24 @@ function get_all_blocking_user($live_user_id) {
   return isset($row[0]) ? $row : null;
 }
 
+function disconnectClient($live) {
+  global $env;
+  $slot = getSlot($live["slot_id"]);
+
+  $d = [
+    "authorization" => $env["publish_auth"],
+    "live_id" => $live["id"],
+  ];
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($d),
+    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+  ));
+  $options = stream_context_create($options);
+  $contents = file_get_contents("http://" . $slot["server_ip"] . "/api/knzk/stop", false, $options);
+}
+
 function live4Pub($live) {
   return [
     "id" => $live["id"],

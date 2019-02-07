@@ -242,7 +242,7 @@ $vote = loadVote($live["id"]);
         </div>
         <div class="card-body">
           <h5>基本設定</h5>
-          <button type="button" class="btn btn-danger" onclick="stop_broadcast()"><i class="far fa-stop-circle"></i> 配信終了</button>
+          <a class="btn btn-danger" onclick="return confirm('配信を終了します。よろしいですか？')" href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>"><i class="far fa-stop-circle"></i> 配信終了</a>
           <button type="button" class="btn btn-primary" onclick="openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
           <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["is_sensitive"] ? "info on" : "warning off")?>" onclick="liveSetting('sensitive')" id="admin_panel_sensitive_display"><i class="fas fa-eye-slash"></i> センシティブを<span class="on">無効化</span><span class="off">有効化</span></button>
           <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_item"] ? "warning on" : "info off")?>" onclick="liveSetting('item')" id="admin_panel_item_display"><i class="fas fa-hat-wizard"></i> アイテムを<span class="on">無効化</span><span class="off">有効化</span></button>
@@ -1053,16 +1053,6 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
           console.error(error);
           alert("内部エラーが発生しました");
         });
-      }
-    }
-
-    function stop_broadcast() {
-      if (watch_data["live_status"] === 2) {
-        alert('エラー:まだ配信ソフトウェアが切断されていません。\n(または、切断された事がまだクライアントに送信されていない可能性があります。5秒程経ってからもう一度お試しください。)');
-      } else if (watch_data["live_status"] === 1) {
-        if (confirm('配信を終了します。よろしいですか？')) {
-          location.href = `<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>`;
-        }
       }
     }
 
