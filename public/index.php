@@ -1,8 +1,6 @@
 <?php
 require_once("../lib/bootloader.php");
 $lives = getAllLive();
-
-$lives_history = getAllLive(0, true);
 ?>
 <!doctype html>
 <html lang="ja">
@@ -27,6 +25,9 @@ $lives_history = getAllLive(0, true);
     }
     .card-base a {
       text-decoration: none;
+    }
+    .history .card-base a {
+      color: #fff;
     }
     .card-img-top {
       width: 150px;
@@ -60,17 +61,17 @@ $lives_history = getAllLive(0, true);
             $i = 0;
             while (isset($lives[$i])) {
               $url = liveUrl($lives[$i]["id"]);
-              $image = getUser($lives[$i]["user_id"])["misc"]["avatar"];
+              $liveUser = getUser($lives[$i]["user_id"]);
               echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
 <div class="card">
   <div class="card-img-div">
-    <img class="card-img-top" src="{$image}">
+    <img class="card-img-top" src="{$liveUser["misc"]["avatar"]}">
   </div>
   <div class="card-body">
     <h5 class="card-title">{$lives[$i]["name"]}</h5>
-    <p class="card-text">{$lives[$i]["description"]}</p>
+    <p class="card-text">by {$liveUser["name"]}</p>
   </div>
 </div>
 </a>
@@ -86,32 +87,24 @@ EOF;
   </div>
   <hr>
 </div>
-<div class="container" style="margin-top:10px">
-  <h3>配信履歴</h3>
+<div class="container history" style="margin-top:10px">
+  <h3>配信者一覧</h3>
   <div class="row">
     <?php
-    if ($lives_history) {
-      $i = 0;
-      while (isset($lives_history[$i])) {
-        $url = liveUrl($lives_history[$i]["id"]);
-        $image = getUser($lives_history[$i]["user_id"])["misc"]["avatar"];
-        echo <<< EOF
+    foreach (getLastLives() as $item) {
+      $url = liveUrl($item["id"]);
+      $liveUser = getUser($item["user_id"]);
+      echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
-<div class="card">
-  <div class="card-img-div">
-    <img class="card-img-top" src="{$image}">
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">{$lives_history[$i]["name"]}</h5>
-    <p class="card-text">{$lives_history[$i]["description"]}</p>
-  </div>
+<div class="text-center">
+  <img class="card-img-top rounded" src="{$liveUser["misc"]["avatar"]}"/>
+  <h4>{$liveUser["name"]}</h4>
 </div>
+<small>最後の配信:</small> {$item["name"]}
 </a>
 </div>
 EOF;
-        $i++;
-      }
     }
     ?>
   </div>

@@ -81,6 +81,16 @@ function getAllLive($notId = 0, $is_history = false) {
     return isset($row[0]["id"]) ? $row : false;
 }
 
+function getLastLives() {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 GROUP BY user_id ORDER BY id);");
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  return isset($row[0]["id"]) ? $row : false;
+}
+
 function setLiveStatus($id, $mode) {
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");
