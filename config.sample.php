@@ -3,15 +3,18 @@ $env["Title"] = "KnzkLive : 広告なし, 配信時間無制限の生配信コ�
 
 $env["RootUrl"] = "/";
 $env["domain"] = "live.knzk.me.example";
+$env["is_testing"] = false;
 
 $env["notification_token"] = "xxxx"; //@KnzkLiveNotificationのトークン
 
 $env["masto_login"]["domain"] = "knzk.me"; //本拠地にするインスタンス
-$env["masto_login"]["redirect_uri"] = "https://live.knzk.me/login";
+// $env["masto_login"]["redirect_uri"] = "https://live.knzk.me/login";
+$env["masto_login"]["redirect_uri"] = "http" . (empty($env["is_testing"]) ? "s" : "") . "://" . $env["domain"] . $env["RootUrl"] . "login" . (empty($env["is_testing"]) ? "" : ".php");
 
 $env["tw_login"]["key"] = "";
 $env["tw_login"]["secret"] = "";
-$env["tw_login"]["redirect_uri"] = "https://live.knzk.me/auth/twitter";
+// $env["tw_login"]["redirect_uri"] = "https://live.knzk.me/auth/twitter";
+$env["tw_login"]["redirect_uri"] = "http" . (empty($env["is_testing"]) ? "s" : "") . "://" . $env["domain"] . $env["RootUrl"] . "auth/twitter" . (empty($env["is_testing"]) ? "" : ".php");
 
 // config.js と同じものを使用してください。
 $env["database"]["host"] = "localhost";
@@ -21,8 +24,6 @@ $env["database"]["user"] = "Username";
 $env["database"]["pass"] = "Password";
 
 $env["publish_auth"] = "xxxxx";
-
-$env["is_testing"] = false;
 
 // メンテナンスモード: 全てのAPIとWeb UIをロックし503にします(キャッシュ分は表示されるかも)
 $env["is_maintenance"] = false;
