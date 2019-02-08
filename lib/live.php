@@ -91,6 +91,17 @@ function getLastLives() {
   return isset($row[0]["id"]) ? $row : false;
 }
 
+function getUserLives($user_id) {
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_started = 1 AND user_id = ? ORDER BY ended_at desc LIMIT 0, 30;");
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  return isset($row[0]["id"]) ? $row : false;
+}
+
 function setLiveStatus($id, $mode) {
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");

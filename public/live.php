@@ -167,7 +167,7 @@ $vote = loadVote($live["id"]);
   <div class="container">
     <div class="alert alert-info" role="alert">
       <h4>この配信者は現在配信中です！</h4>
-      <a href="<?=liveUrl($new_live["id"])?>"><b><?=$new_live["name"]?></b></a>
+      <a href="<?=liveUrl($new_live["id"])?>"><b><?=$new_live["name"]?></b></a> <small>(<?=date("Y/m/d H:i", strtotime($new_live["created_at"]))?> に開始)</small>
     </div>
   </div>
 <?php endif; ?>
@@ -235,7 +235,13 @@ $vote = loadVote($live["id"]);
           <b><?=$liveUser["name"]?></b>
         </a>
       </p>
-      <span class="text-secondary"><?=date("Y/m/d", strtotime($live["created_at"]))?>に開始</span>
+      <span class="text-secondary">
+        <?php if ($live["is_live"] !== 0) : ?>
+          <?=date("Y/m/d H:i", strtotime($live["created_at"]))?> に開始
+        <?php else : ?>
+          <?=date("Y/m/d H:i", strtotime($live["created_at"]))?> - <?=date("Y/m/d H:i", strtotime($live["ended_at"]))?>
+        <?php endif; ?>
+      </span>
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
 
       <div class="input-group col-md-8 invisible live_edit">

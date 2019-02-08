@@ -101,8 +101,8 @@ EOF;
   <div class="row">
     <?php
     foreach (getLastLives() as $item) {
-      $url = liveUrl($item["id"]);
       $liveUser = getUser($item["user_id"]);
+      $url = userUrl($liveUser["broadcaster_id"]);
       echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">

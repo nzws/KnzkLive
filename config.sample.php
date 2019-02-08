@@ -28,3 +28,6 @@ $env["is_testing"] = false;
 $env["is_maintenance"] = false;
 
 $env["websocket_url"] = "http://localhost:3000";
+
+// 管理者のID
+$env["admin_id"] = 1;

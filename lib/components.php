@@ -14,6 +14,11 @@ function liveUrl($id) {
   return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $id;
 }
 
+function userUrl($id) {
+  global $env;
+  return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("user") . "?id=" : $env["RootUrl"] . "user/") . $id;
+}
+
 function liveTag($live) {
   return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_".$live["id"];
 }
