@@ -10,6 +10,8 @@ function getUser($id, $mode = "id") {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE twitter_id = ?;");
   } elseif($mode === "opener_token") {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE opener_token = ?;");
+  } elseif($mode === "broadcaster_id") {
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE broadcaster_id = ?;");
   } else {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE id = ?;");
   }
@@ -113,7 +115,7 @@ function user4Pub($u) {
     "name" => $u["name"],
     "acct" => $u["acct"],
     "created_at" => $u["created_at"],
-    "is_broadcaster" => !!$u["is_broadcaster"],
+    "broadcaster_id" => !!$u["broadcaster_id"],
     "live_current_id" => $u["live_current_id"],
     "avatar_url" => $u["misc"]["avatar"],
     "header_url" => $u["misc"]["header"],

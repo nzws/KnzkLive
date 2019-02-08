@@ -7,7 +7,7 @@ if (!$my) {
   exit("ERR:ログインしてください。");
 }
 
-if (!$my["is_broadcaster"]) {
+if (!$my["broadcaster_id"]) {
   http_response_code(403);
   exit("ERR:あなたには配信権限がありません。");
 }

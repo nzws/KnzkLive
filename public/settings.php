@@ -7,7 +7,7 @@ if (!$my) {
 }
 $plog = get_point_log($my["id"]);
 
-if ($my["is_broadcaster"]) {
+if ($my["broadcaster_id"]) {
   $live_stat_times = getAllLiveTime($my["id"]);
 }
 
@@ -59,7 +59,7 @@ if ($_POST) {
         </div>
       </div>
     </div>
-    <?php if ($my["is_broadcaster"]) : ?>
+    <?php if ($my["broadcaster_id"]) : ?>
       <div class="box">
         <h4>配信者設定</h4>
         <p>* この設定は過去、未来全ての配信に適用されます。</p>
@@ -125,7 +125,7 @@ if ($_POST) {
     <button type="submit" class="btn btn-primary btn-lg">更新</button>
     <hr>
 
-    <?php if ($my["is_broadcaster"]) : ?>
+    <?php if ($my["broadcaster_id"]) : ?>
       <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
       <div class="box" id="opener-token">
         <h4>Openerトークン</h4>

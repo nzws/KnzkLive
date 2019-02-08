@@ -244,6 +244,13 @@ alter table comment_delete
   add constraint comment_delete_pk
     primary key (id);
 
+-- 2019-02-08
+alter table users change is_broadcaster broadcaster_id varchar(255) null;
+
+create unique index users_broadcaster_id_uindex
+  on users (broadcaster_id);
+UPDATE `users` SET broadcaster_id = null WHERE broadcaster_id = 0;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

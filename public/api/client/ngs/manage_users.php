@@ -3,7 +3,7 @@ require_once("../../../../lib/bootloader.php");
 require_once("../../../../lib/apiloader.php");
 
 $my = getMe();
-if (!$my || !$my["is_broadcaster"])
+if (!$my || !$my["broadcaster_id"])
   api_json(["error" => "エラー: あなたは配信者ではないか、未ログインです。"]);
 
 if ($_POST["type"] === "remove") {
