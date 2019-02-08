@@ -13,7 +13,17 @@ if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_start
 <html lang="ja">
 <head>
   <?php include "../include/header.php"; ?>
-  <title><?=$user["name"]?>のユーザーページ - <?=$env["Title"]?></title>
+  <title><?=$user["name"]?> のユーザーページ - <?=$env["Title"]?></title>
+
+  <meta property="og:title" content="<?=$user["name"]?> のユーザーページ"/>
+  <meta property="og:type" content="website"/>
+  <meta content="summary" property="twitter:card" />
+  <meta property="og:url" content="<?=userUrl($user["broadcaster_id"])?>"/>
+  <meta property="og:image" content="<?=$user["misc"]["avatar"]?>"/>
+  <meta property="og:site_name" content="<?=$env["Title"]?>"/>
+  <meta property="og:description" content="<?=$user["name"]?> (<?=$user["acct"]?>) のユーザーページ"/>
+  <meta name="description" content="<?=$user["name"]?> (<?=$user["acct"]?>) のユーザーページ">
+
   <style>
     .jumbotron {
       background: no-repeat center center #0a0a0a;

@@ -4,3 +4,7 @@
       crossorigin="anonymous">
 <link rel="stylesheet" href="<?=$env["RootUrl"]?>style.css?2019-01-18">
 <link rel="shortcut icon" type="image/x-icon" href="<?=$env["RootUrl"]?>favicon.ico">
+
+<meta name="application-name" content="<?=$env["Title"]?>">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="theme-color" content="#000000">

@@ -40,15 +40,9 @@ $vote = loadVote($live["id"]);
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <?php include "../include/header.php"; ?>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
-  <link rel="shortcut icon" type="image/x-icon" href="<?=$env["RootUrl"]?>favicon.ico">
   <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
-
-  <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
 
   <meta property="og:title" content="<?=$live["name"]?>"/>
   <meta property="og:type" content="website"/>
@@ -57,10 +51,7 @@ $vote = loadVote($live["id"]);
   <meta property="og:image" content="<?=$liveUser["misc"]["avatar"]?>"/>
   <meta property="og:site_name" content="<?=$env["Title"]?>"/>
   <meta property="og:description" content="<?=s($live["description"])?>"/>
-
-  <meta name="application-name" content="<?=$env["Title"]?>">
-  <meta name="msapplication-TileColor" content="#000000">
-  <meta name="theme-color" content="#000000">
+  <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
 
   <style>
     #comments {
