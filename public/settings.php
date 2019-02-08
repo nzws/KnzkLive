@@ -21,6 +21,12 @@ if ($_POST) {
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
   $my["misc"]["donate_url"] = $_POST["donate_url"];
   setConfig($my["id"], $my["misc"]);
+
+  if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
+    if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"])) exit("ERR: この配信者IDは使用できません。");
+    $userCache = null;
+    $my = getMe();
+  }
 }
 ?>
 <!doctype html>
@@ -111,6 +117,17 @@ if ($_POST) {
             <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
                    value="<?=isset($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
             <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-group">
+            <label for="conf_webhook_url">配信者ID</label>
+            <input type="text" class="form-control" name="broadcaster_id" value="<?=isset($my["broadcaster_id"]) ? s($my["broadcaster_id"]) : ""?>" required>
+            <small class="form-text text-muted">
+              <a href="<?=userUrl($my["broadcaster_id"])?>" target="_blank">ユーザーページ</a>のURLのID(/user/~~)を変更できます。英数字、アットマーク、ピリオドが使用できます。<br>
+              <span class="text-danger">変更すると以前のURLは使用できなくなりますのでご注意ください。</span>
+            </small>
           </div>
         </div>
       </div>

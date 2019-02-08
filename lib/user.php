@@ -90,6 +90,21 @@ function setNgWords($words, $user_id) {
   return !$err;
 }
 
+function updateBroadcasterId($user_id, $new) {
+  $new = s($new);
+  $exist_bid = getUser($new, "broadcaster_id");
+  if (preg_match('/([^A-Za-z0-9@\.]+)/', $new) || !empty($exist_bid)) return false;
+
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("UPDATE `users` SET broadcaster_id = ? WHERE id = ?;");
+  $stmt->bind_param("ss", $new, $user_id);
+  $stmt->execute();
+  $err = $stmt->error;
+  $stmt->close();
+  $mysqli->close();
+  return !$err;
+}
+
 function getAllLiveTime($user_id) {
   $mysqli = db_start();
   $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE user_id = ? AND is_live = 0 AND is_started = 1;");
