@@ -25,7 +25,7 @@
               <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="<?=(empty($my["broadcaster_id"]) ? "#" : userUrl($my["broadcaster_id"]))?>">
                 <b><?=$my["name"]?></b><br>
                 <small class="text-secondary"><?=$my["acct"]?></small>
               </a>
