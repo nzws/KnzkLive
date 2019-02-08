@@ -247,9 +247,10 @@ alter table comment_delete
 -- 2019-02-08
 alter table users change is_broadcaster broadcaster_id varchar(255) null;
 
+UPDATE `users` SET broadcaster_id = acct WHERE broadcaster_id = '1';
+UPDATE `users` SET broadcaster_id = null WHERE broadcaster_id = '0';
 create unique index users_broadcaster_id_uindex
   on users (broadcaster_id);
-UPDATE `users` SET broadcaster_id = null WHERE broadcaster_id = 0;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
