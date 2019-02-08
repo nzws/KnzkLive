@@ -230,7 +230,7 @@ $vote = loadVote($live["id"]);
       </div>
 
       <p>
-        <a href="<?=$liveUser["misc"]["user_url"]?>" target="_blank" class="broadcaster_link">
+        <a href="<?=userUrl($liveUser["broadcaster_id"])?>" target="_blank" class="broadcaster_link">
           <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
           <b><?=$liveUser["name"]?></b>
         </a>
