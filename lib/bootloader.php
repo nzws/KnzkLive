@@ -51,3 +51,5 @@ require_once($libpt."comment.php");
 require_once($libpt."mastodon_auth.php");
 require_once($libpt."prop.vote.php");
 require_once($libpt."point.php");
+
+$toot_get_limit = 200;

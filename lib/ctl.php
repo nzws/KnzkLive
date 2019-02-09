@@ -36,12 +36,14 @@ function disp_log($name, $type) {
 }
 
 function merge_toot_point() {
+  global $toot_get_limit;
   $name = "merge-toot-point";
   disp_log($name, 0);
 
+  $limit = $toot_get_limit;
   $sql = "start transaction;";
-  $sql .= "INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) SELECT id, 'toot', '', CASE WHEN point_count_today_toot > 500 THEN 500 ELSE point_count_today_toot END FROM `users` WHERE point_count_today_toot > 0;";
-  $sql .= "UPDATE `users` SET `point_count` = `point_count` + CASE WHEN point_count_today_toot > 500 THEN 500 ELSE point_count_today_toot END, `point_count_today_toot` = 0 WHERE point_count_today_toot > 0;";
+  $sql .= "INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) SELECT id, 'toot', '', CASE WHEN point_count_today_toot > {$limit} THEN {$limit} ELSE point_count_today_toot END FROM `users` WHERE point_count_today_toot > 0;";
+  $sql .= "UPDATE `users` SET `point_count` = `point_count` + CASE WHEN point_count_today_toot > {$limit} THEN {$limit} ELSE point_count_today_toot END, `point_count_today_toot` = 0 WHERE point_count_today_toot > 0;";
   $sql .= "commit;";
 
   $mysqli = db_start();

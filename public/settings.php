@@ -103,32 +103,26 @@ if ($_POST) {
         </div>
 
         <div class="form-group">
-          <div class="form-group">
-            <label for="conf_webhook_url">WebHook URL</label>
-            <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api"
-                   value="<?=isset($my["misc"]["webhook_url"]) ? s($my["misc"]["webhook_url"]) : ""?>">
-            <small id="conf_webhook_url_note" class="form-text text-muted">配信開始時に呼び出されます。</small>
-          </div>
+          <label for="conf_webhook_url">WebHook URL</label>
+          <input type="url" class="form-control" id="conf_webhook_url" name="webhook_url" aria-describedby="conf_webhook_url_note" placeholder="https://hogehoge.example/api"
+                 value="<?=isset($my["misc"]["webhook_url"]) ? s($my["misc"]["webhook_url"]) : ""?>">
+          <small id="conf_webhook_url_note" class="form-text text-muted">配信開始時に呼び出されます。</small>
         </div>
 
         <div class="form-group">
-          <div class="form-group">
-            <label for="conf_webhook_url">支援リンク</label>
-            <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
-                   value="<?=isset($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
-            <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
-          </div>
+          <label for="conf_webhook_url">支援リンク</label>
+          <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
+                 value="<?=isset($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
+          <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
         </div>
 
         <div class="form-group">
-          <div class="form-group">
-            <label for="conf_webhook_url">配信者ID</label>
-            <input type="text" class="form-control" name="broadcaster_id" value="<?=isset($my["broadcaster_id"]) ? s($my["broadcaster_id"]) : ""?>" required>
-            <small class="form-text text-muted">
-              <a href="<?=userUrl($my["broadcaster_id"])?>" target="_blank">ユーザーページ</a>のURLのID(/user/~~)を変更できます。英数字、アットマーク、ピリオドが使用できます。<br>
-              <span class="text-danger">変更すると以前のURLは使用できなくなりますのでご注意ください。</span>
-            </small>
-          </div>
+          <label for="conf_webhook_url">配信者ID</label>
+          <input type="text" class="form-control" name="broadcaster_id" value="<?=isset($my["broadcaster_id"]) ? s($my["broadcaster_id"]) : ""?>" required>
+          <small class="form-text text-muted">
+            <a href="<?=userUrl($my["broadcaster_id"])?>" target="_blank">ユーザーページ</a>のURLのID(/user/~~)を変更できます。英数字、アットマーク、ピリオドが使用できます。<br>
+            <span class="text-danger">変更すると以前のURLは使用できなくなりますのでご注意ください。</span>
+          </small>
         </div>
       </div>
     <?php else : ?>
@@ -188,8 +182,8 @@ if ($_POST) {
           </thead>
           <tbody>
           <tr>
-            <td><a href="#" onclick="alert('公開トゥート/配信でコメントすると、1投稿あたり2KPゲットできます。（1日500KPまで）\n獲得したポイントは次の日から使用できます。\nトゥートは「公開」に設定されていて、なおかつリプライでないものが対象です。ワーカーの状態によって取りこぼす場合があります。');return false">トゥート/コメント</a></td>
-            <td><?=($my["point_count_today_toot"] > 500 ? 500 : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
+            <td><a href="#" onclick="alert('公開トゥート/配信でコメントすると、1投稿あたり2KPゲットできます。（1日<?=$toot_get_limit?>KPまで）\n獲得したポイントは次の日から使用できます。\nトゥートは「公開」に設定されていて、なおかつリプライでないものが対象です。ワーカーの状態によって取りこぼす場合があります。');return false">トゥート/コメント</a></td>
+            <td><?=($my["point_count_today_toot"] > $toot_get_limit ? $toot_get_limit : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
             <td><?=get_point_log_stat($my["id"], "toot", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "toot", "month")?></td>
           </tr>
