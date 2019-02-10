@@ -65,3 +65,5 @@ config.json
 .idea
 .vscode
 /vendor/
+
+.DS_Store
