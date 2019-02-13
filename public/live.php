@@ -759,7 +759,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
   }
 
   function comment_delete(id, acct) {
-    if (confirm(acct + 'の投稿を非表示にします。\nよろしいですか？\n* KnzkLive上でのみ非表示になります。')) {
+    if (confirm(acct + 'の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。')) {
       fetch('<?=u("api/client/live/comment_delete")?>', {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         method: 'POST',
@@ -806,7 +806,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     html += `
 <div class="dropdown-divider"></div>
 <a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
-<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を非表示</a>
+<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を削除</a>
 `;
     <?php endif; ?>
 
