@@ -301,6 +301,7 @@ function live4Pub($live) {
     "viewers_max_concurrent" => $live["viewers_max_concurrent"],
     "is_started" => $live["is_started"],
     "point_count" => $live["point_count"],
-    "hashtag" => liveTag($live)
+    "hashtag" => liveTag($live),
+    "is_knzklive" => true
   ];
 }
