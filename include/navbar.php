@@ -1,3 +1,6 @@
+<?php if ($env["is_testing"]) : ?>
+<div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
+<?php endif; ?>
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;">
     <a class="navbar-brand" href="<?=u("")?>">
