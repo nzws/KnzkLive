@@ -150,6 +150,12 @@ $vote = loadVote($live["id"]);
       color: #fff;
       text-decoration: none;
     }
+
+    #donators {
+      overflow-x: scroll;
+      white-space: nowrap;
+      height: 55px;
+    }
   </style>
 </head>
 <body>
@@ -205,8 +211,11 @@ $vote = loadVote($live["id"]);
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <?php endif; ?>
-        <?php if (!empty($liveUser["misc"]["donate_url"])) : ?>
-          <a class="btn btn-outline-warning" href="<?=s($liveUser["misc"]["donate_url"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
+        <?php if (!empty($liveUser["misc"]["donate_url"]) || (!$my && !empty($liveUser["misc"]["donation_alerts_token"]))) : ?>
+          <a class="btn btn-outline-warning"
+             href="<?=s(!empty($liveUser["misc"]["donation_alerts_token"]) ? "https://www.donationalerts.com/r/" . $liveUser["misc"]["donation_alerts_name"] : $liveUser["misc"]["donate_url"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
+        <?php elseif (!empty($liveUser["misc"]["donation_alerts_token"])) : ?>
+          <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal"><i class="fas fa-donate"></i> 支援 (CH)</button>
         <?php endif; ?>
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
@@ -289,7 +298,16 @@ $vote = loadVote($live["id"]);
       <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
     </div>
     <div class="content">
-      <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name"><b>{{account.display_name}}</b> <small>@{{account.acct}}</small></span>
+      <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name">
+        {{#if donator_color}}
+        <span class="badge badge-pill" style="background:{{donator_color}}">
+        {{/if}}
+        <b>{{account.display_name}}</b>
+        {{#if donator_color}}
+        </span>
+        {{/if}}
+          <small>@{{account.acct}}</small>
+      </span>
       {{{content}}}
     </div>
   </div>
@@ -303,7 +321,7 @@ $vote = loadVote($live["id"]);
   const hashtag_o = "<?=liveTag($live)?>";
   const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
   const token = "<?=$my && $_SESSION["token"] ? s($_SESSION["token"]) : ""?>";
-  const config = {nw: [], nu: []};
+  const config = {nw: [], nu: [], dn: {}};
   const acct = "<?=$my ? $my["acct"] : ""?>";
   var heartbeat, cm_ws, watch_data = {}, io, w_heartbeat;
   var api_header = {'content-type': 'application/json'};
@@ -504,6 +522,8 @@ $vote = loadVote($live["id"]);
             } else if (msg.mode === "ngs") {
               getNgs();
             }
+          } else if (msg.type === "donate") {
+            add_donator(msg);
           }
         } else if (data.event === "update") {
           ws_onmessage(msg, "update");
@@ -538,7 +558,7 @@ $vote = loadVote($live["id"]);
           const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
           while (json[i]) {
             if (config.np.indexOf(json[i]["id"]) === -1) {
-              reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], "<?=$my["acct"]?>", inst)) : "";
+              reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], inst)) : "";
             }
             i++;
           }
@@ -637,7 +657,7 @@ $vote = loadVote($live["id"]);
       if (ws_reshtml['id']) {
         elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
         const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
-        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(buildCommentData(ws_reshtml, "<?=$my["acct"]?>", inst)) : "") + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(buildCommentData(ws_reshtml, inst)) : "") + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
@@ -870,24 +890,6 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     }
   }
 
-  function check_data(data) {
-    let result = true;
-    for (let item of config.nw) {
-      if (data["content"].indexOf(item) !== -1 || data["account"]["display_name"].indexOf(item) !== -1) {
-        result = false;
-        break;
-      }
-    }
-    let acct =
-      data['account']['acct'] !== data['account']['username']
-        ? data['account']['acct']
-        : data['account']['username'] + '@' + inst;
-    if (config.nu.indexOf(acct) !== -1) {
-      result = false;
-    }
-    return result;
-  }
-
   function getNgs() {
     fetch('<?=u("api/client/ngs/get")?>', {
       headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -918,10 +920,28 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       if (json["p"]) {
         config.np = JSON.parse(atob(json["p"]));
       }
+      if (json["donator"]) {
+        for (let item of json["donator"]) {
+          add_donator(item);
+        }
+      }
+      loadComment();
     }).catch(function(error) {
       console.error(error);
       alert("内部エラーが発生しました");
     });
+  }
+
+  function add_donator(data) {
+    $("#donators").show();
+    $("#donators").prepend(`<span class="badge badge-pill" id="donate_${data["id"]}" style="background:${data["color"]}"><img src="${data["account"]["avatar_url"]}" height="30" width="30" class="rounded-circle avatar"/> ${data["account"]["name"]}</span>`);
+    config.dn[data["id"]] = data;
+
+    const datet = parseInt((new Date(data["ended_at"])).getTime() - (new Date()).getTime());
+    setTimeout(function () {
+      $("#donate_" + data["id"]).remove();
+      config.dn[data["id"]] = null;
+    }, datet);
   }
 
   function open_listener_modal() {
@@ -961,7 +981,6 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     <?php endif; ?>
     getNgs();
     check_limit();
-    loadComment();
     watch(true);
     setInterval(watch, 5000);
     <?php if ($live["is_live"] != 0) : ?>

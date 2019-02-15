@@ -75,6 +75,8 @@ app.post('/update_conf', function(req, res) {
         conf.hashtag.push('knzklive_' + b.live_id);
         conf.hashtag_id['knzklive_' + b.live_id] = b.live_id;
       }
+
+      if (b.da_token) startDAConnect(b.da_token, b.live_id);
     } else {
       //user
       conf.acct.push(b.value);
@@ -88,6 +90,8 @@ app.post('/update_conf', function(req, res) {
       if (index !== -1) {
         conf.hashtag.splice(index, 1);
       }
+
+      if (b.da_token) closeDAConnect(b.da_token);
     }
   }
   res.end();
@@ -114,6 +118,63 @@ function send(liveId, message) {
 http.listen(3000, function() {
   console.log('[KnzkLive WebSocket] listening on *:3000');
 });
+
+const daData = {};
+const socketio = require('socket.io-client');
+function startDAConnect(token, live_id) {
+  if (daData[token]) {
+    console.log('[Worker Donate] already connected');
+    return false;
+  }
+
+  daData[token] = socketio('wss://socket.donationalerts.ru:443', {
+    reconnection: true,
+    reconnectionDelayMax: 5000,
+    reconnectionDelay: 1000
+  });
+
+  daData[token].on('connect', function() {
+    daData[token].emit('add-user', { token: token, type: 'minor' });
+  });
+
+  daData[token].on('donation', function(msg) {
+    const data = JSON.parse(msg);
+    if (data['_is_test_alert']) {
+      exec(
+        `php ${__dirname}/../knzkctl donate ${live_id} testing`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+    } else {
+      db.query(
+        'SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?)',
+        data['username'],
+        function(error, results, fields) {
+          if (error) throw error;
+          const user_id = results[0] ? results[0]['id'] : 0;
+          exec(
+            `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
+              data['amount']
+            )} ${data['currency']}`,
+            (err, stdout, stderr) => {
+              if (err) {
+                console.log(err);
+              }
+            }
+          );
+        }
+      );
+    }
+  });
+}
+
+function closeDAConnect(token) {
+  daData[token].close();
+  daData[token] = null;
+}
 
 const WebSocketClient = require('websocket').client;
 const mysql = require('mysql');
@@ -173,6 +234,20 @@ db.query('SELECT * FROM `users` WHERE twitter_id IS NULL', function(
     conf.acct.push(item['acct']);
   }
   console.log('[Worker Users]', conf.acct);
+});
+
+db.query('SELECT * FROM `users` WHERE live_current_id != 0', function(
+  error,
+  results,
+  fields
+) {
+  if (error) throw error;
+  for (let item of results) {
+    const misc = JSON.parse(item['misc']);
+    if (misc['donation_alerts_token'])
+      startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
+  }
+  console.log('[Worker Donate]');
 });
 
 function reConnect($type = 'worker') {

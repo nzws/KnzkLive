@@ -62,7 +62,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
   $mysqli->close();
   setUserLive($row[0]["id"], $my["id"]);
   setSlot($slot, 1);
-  node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"]);
+  node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"], $my["id"]);
   header("Location: ".u("live_manage") . "?new=open");
   exit();
 } elseif ($my["misc"]["to_title"]) {

@@ -252,6 +252,23 @@ UPDATE `users` SET broadcaster_id = null WHERE broadcaster_id = '0';
 create unique index users_broadcaster_id_uindex
   on users (broadcaster_id);
 
+-- 2019/02/15
+create table donate
+(
+  id bigint auto_increment,
+  live_id int(255) not null,
+  user_id int(255) not null,
+  amount int(255) not null,
+  currency varchar(10) not null,
+  created_at timestamp default current_timestamp() not null,
+  ended_at timestamp not null,
+  color varchar(100) not null,
+  primary key (id)
+);
+
+create unique index donate_id_uindex
+  on donate (id);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

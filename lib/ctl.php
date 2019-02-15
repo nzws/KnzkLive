@@ -18,6 +18,12 @@ function load($argv) {
     } else {
       exit("[Error] 相手のKnzkPointアカウントが存在しません！　https://live.knzk.me/ にログインする必要があります！");
     }
+  } elseif ($argv[1] === "donate") {
+    if ($argv[3] === "testing") {
+      comment_post("<div class=\"alert alert-warning\">DonationAlerts: テストOK</div>", getLive($argv[2])["user_id"], s($argv[2]), true);
+    } else {
+      add_donate(s($argv[2]), s($argv[3]), $argv[4], $argv[5]);
+    }
   } else {
     disp_log("command {$argv[1]} is not found", 2);
   }

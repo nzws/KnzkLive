@@ -141,6 +141,43 @@
   </div>
 </div>
 
+<div class="modal fade" id="chModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-donate"></i> 支援 (コメントハイライト)</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          この配信者は<a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank"><b>コメントハイライト</b></a>機能を有効にしているため、下記の手順で支援すると、あなたがコメント欄で目立つように表示させる事が出来ます。<br>
+          <small>Powered by donationalerts.com</small>
+        </p>
+        <p>
+          1. 支援ページを開いてください。
+          <a href="https://www.donationalerts.com/r/<?=s($liveUser["misc"]["donation_alerts_name"])?>" target="_blank" class="btn btn-primary btn-block">支援ページを開く</a>
+        </p>
+
+        <p>
+          2. <b>(重要)</b> フォームの「Your name」欄に下記のIDをコピペしてください。KnzkLiveで個人を識別するために必要です。
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">ID</span>
+          </div>
+          <input type="text" class="form-control" readonly value="<?=$my["acct"]?>" onclick="this.select(0,this.value.length)">
+        </div>
+        </p>
+        <p>
+          3. その他項目も設定し、「Donate」ボタンを押して決済すると支援完了です。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php if ($my["id"] === $live["user_id"]) : ?>
 <div class="modal fade" id="enqueteModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">

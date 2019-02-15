@@ -19,7 +19,14 @@ if ($_POST) {
   $my["misc"]["auto_open_start"] = isset($_POST["auto_open_start"]);
   $my["misc"]["hide_watching_list"] = isset($_POST["hide_watching_list"]);
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
-  $my["misc"]["donate_url"] = $_POST["donate_url"];
+
+  if (!isset($_POST["donate_link"])) $_POST["donate_link"] = 1;
+  $my["misc"]["donate_url"] = $_POST["donate_link"] == 2 ? $_POST["donate_url"] : null;
+  $my["misc"]["donation_alerts_token"] = $_POST["donate_link"] == 3 ? $_POST["donation_alerts_token"] : null;
+  $my["misc"]["donation_alerts_name"] = $_POST["donate_link"] == 3 ? $_POST["donation_alerts_name"] : null;
+  if ($_POST["donate_link"] == 3 && (!$_POST["donation_alerts_token"] || !$_POST["donation_alerts_name"]))
+    exit("ERR: 値が不足しています。");
+
   setConfig($my["id"], $my["misc"]);
 
   if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
@@ -110,13 +117,6 @@ if ($_POST) {
         </div>
 
         <div class="form-group">
-          <label for="conf_webhook_url">支援リンク</label>
-          <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
-                 value="<?=isset($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
-          <small id="conf_donate_url_note" class="form-text text-muted">FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。</small>
-        </div>
-
-        <div class="form-group">
           <label for="conf_webhook_url">配信者ID</label>
           <input type="text" class="form-control" name="broadcaster_id" value="<?=isset($my["broadcaster_id"]) ? s($my["broadcaster_id"]) : ""?>" required>
           <small class="form-text text-muted">
@@ -124,6 +124,79 @@ if ($_POST) {
             <span class="text-danger">変更すると以前のURLは使用できなくなりますのでご注意ください。</span>
           </small>
         </div>
+
+        <hr>
+
+        <h5>支援リンク設定</h5>
+        <div class="mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="donate_link" id="donate_link1" value="1">
+            <label class="form-check-label" for="donate_link1">設定しない</label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="donate_link" id="donate_link2" value="2"
+              <?=!empty($my["misc"]["donate_url"]) ? "checked" : ""?>>
+            <label class="form-check-label" for="donate_link2">リンクのみ</label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="donate_link" id="donate_link3" value="3"
+              <?=!empty($my["misc"]["donation_alerts_token"]) ? "checked" : ""?>>
+            <label class="form-check-label" for="donate_link3">コメントハイライト (自動) <small>by DonationAlerts</small></label>
+          </div>
+
+          <!--
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="donate_link" id="donate_link4" value="4">
+            <label class="form-check-label" for="donate_link4">コメントハイライト (手動)</label>
+          </div>
+          -->
+          <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank">コメントハイライトとは</a>
+        </div>
+
+        <div class="mb-3">
+          <div id="donate_link2_body" <?=!empty($my["misc"]["donate_url"]) ? "" : "style=display:none"?>>
+            <div class="form-group">
+              <label for="conf_webhook_url">支援リンク</label>
+              <input type="url" class="form-control" id="conf_donate_url" name="donate_url" aria-describedby="conf_donate_url_note" placeholder="https://example.com/hogehoge"
+                     value="<?=!empty($my["misc"]["donate_url"]) ? s($my["misc"]["donate_url"]) : ""?>">
+              <small id="conf_donate_url_note" class="form-text text-muted">
+                FANBOXやfantiaなどの支援リンクを配信ページの下部に追加できます。<br>
+                <span class="text-warning">コメントハイライトは有効化されません。</span>
+              </small>
+            </div>
+          </div>
+
+          <div id="donate_link3_body" <?=!empty($my["misc"]["donation_alerts_token"]) ? "" : "style=display:none"?>>
+            <label for="conf_donation_alerts_name">DonationAlerts ユーザID</label>
+            <input type="text" class="form-control" id="conf_donation_alerts_name" name="donation_alerts_name" value="<?=!empty($my["misc"]["donation_alerts_name"]) ? s($my["misc"]["donation_alerts_name"]) : ""?>">
+            <small class="form-text text-muted">
+              https://www.donationalerts.com/r/~~
+            </small>
+
+            <label for="conf_donation_alerts_token">DonationAlerts トークン</label>
+            <input type="text" class="form-control" id="conf_donation_alerts_token" name="donation_alerts_token" value="<?=!empty($my["misc"]["donation_alerts_token"]) ? s($my["misc"]["donation_alerts_token"]) : ""?>">
+            <small class="form-text text-muted">
+              <a href="https://www.donationalerts.com/" target="_blank">DonationAlerts</a>を使用した支援を設定すると、自動的にコメントハイライトが反映されるようになります。<br>
+              トークンは<a href="https://www.donationalerts.com/dashboard/general" target="_blank">General settings</a>の「Secret token」から入手できます。
+            </small>
+          </div>
+
+          <!--
+          <div id="donate_link4_body">
+            <div class="form-group">
+              <label>リスナー向け説明欄</label>
+              <textarea class="form-control" name="donate_link_manual" rows="4">aaa</textarea>
+              <small class="form-text text-muted">
+                説明欄サンプル<br>
+                <span class="text-warning">手動コメントハイライトは、あなたが支援してくれたユーザーを管理パネルから追加する必要があります。</span>
+              </small>
+            </div>
+          </div>
+          -->
+        </div>
+
       </div>
     <?php else : ?>
       <div class="box">
@@ -240,11 +313,14 @@ if ($_POST) {
 </form>
 
 <?php include "../include/footer.php"; ?>
-<script id="item_emoji_tmpl" type="text/x-handlebars-template">
-  <div class="item_emoji {{class}}" style="{{style}}" id="{{random_id}}">
-    {{repeat_helper}}
-  </div>
+<script>
+  $('input[name="donate_link"]:radio').change(function(){
+    const v = $(this).val();
+    const id = `#donate_link${v}_body`;
+
+    $("div[id^='donate_link'][id$='_body']").hide();
+    if ($(id)) $(id).show();
+  });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 </body>
 </html>

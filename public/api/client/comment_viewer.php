@@ -54,6 +54,19 @@ $liveUser = getUser($live["user_id"]);
     .hashtag {
       display: none;
     }
+
+    .alert {
+      display: table;
+      padding: 5px;
+    }
+
+    .alert-warning {
+      background-color: rgba(255, 243, 205, 0.8);
+    }
+
+    .alert-primary {
+      background-color: rgba(204, 229, 255, 0.8);
+    }
   </style>
 </head>
 <body>
@@ -62,10 +75,17 @@ $liveUser = getUser($live["user_id"]);
 </p>
 <div id="comments"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script src="../../js/knzklive.js"></script>
+<script src="../../js/knzklive.js?a"></script>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="com">
-    <b>{{account.display_name}}</b> <small>@{{account.acct}}</small>
+    {{#if donator_color}}
+    <span class="badge badge-pill" style="background:{{donator_color}}">
+        {{/if}}
+        <b>{{account.display_name}}</b>
+        {{#if donator_color}}
+        </span>
+    {{/if}}
+      <small>@{{account.acct}}</small>
     {{{content}}}
   </div>
 </script>
@@ -78,7 +98,8 @@ $liveUser = getUser($live["user_id"]);
   const config = {
     "live_toot": <?=$liveUser["misc"]["live_toot"] ? "true" : "false"?>,
     nw: [],
-    nu: []
+    nu: [],
+    dn: {}
   };
 
   function loadComment() {
@@ -133,6 +154,8 @@ $liveUser = getUser($live["user_id"]);
           if (msg.type === "change_config") {
             if (msg.mode === "ngs" || (msg.mode === "comment" && msg.result)) location.reload();
             if (msg.mode === "comment" && !msg.result) elemId("comments").style.display = "none";
+          } else if (msg.type === "donate") {
+            add_donator(msg);
           }
         }
       };
@@ -166,7 +189,7 @@ $liveUser = getUser($live["user_id"]);
           while (json[i]) {
             if (config.np.indexOf(json[i]["id"]) === -1) {
               json[i]["account"]["display_name"] = escapeHTML(json[i]["account"]["display_name"]);
-              reshtml += check_data(json[i]) ? tmpl(json[i]) : "";
+              reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], inst)) : "";
             }
             i++;
           }
@@ -184,23 +207,6 @@ $liveUser = getUser($live["user_id"]);
     });
   }
 
-  function check_data(data) {
-    let result = true;
-    for (let item of config.nw) {
-      if (data["content"].indexOf(item) !== -1 || data["account"]["display_name"].indexOf(item) !== -1) {
-        result = false;
-        break;
-      }
-    }
-    let acct =
-      data['account']['acct'] !== data['account']['username']
-        ? data['account']['acct']
-        : data['account']['username'] + '@' + inst;
-    if (config.nu.indexOf(acct) !== -1) {
-      result = false;
-    }
-    return result;
-  }
 
   function ws_onmessage(message, mode = "") {
     let ws_resdata, ws_reshtml;
@@ -217,7 +223,7 @@ $liveUser = getUser($live["user_id"]);
       const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
       if (ws_reshtml['id']) {
         ws_reshtml["account"]["display_name"] = escapeHTML(ws_reshtml["account"]["display_name"]);
-        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(ws_reshtml) : "") + elemId("comments").innerHTML;
+        elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(buildCommentData(ws_reshtml, inst)) : "") + elemId("comments").innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
@@ -254,6 +260,11 @@ $liveUser = getUser($live["user_id"]);
       if (json["p"]) {
         config.np = JSON.parse(atob(json["p"]));
       }
+      if (json["donator"]) {
+        for (let item of json["donator"]) {
+          add_donator(item);
+        }
+      }
 
       loadComment();
     }).catch(function(error) {
@@ -261,6 +272,14 @@ $liveUser = getUser($live["user_id"]);
       alert("内部エラーが発生しました");
     });
   };
+
+  function add_donator(data) {
+    config.dn[data["id"]] = data;
+    const datet = parseInt((new Date(data["ended_at"])).getTime() - (new Date()).getTime());
+    setTimeout(function () {
+      config.dn[data["id"]] = null;
+    }, datet);
+  }
 </script>
 </body>
 </html>

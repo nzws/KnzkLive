@@ -14,7 +14,7 @@ while (isset($post[$i])) {
     "account" => [
       "display_name" => $acct[$i]["name"],
       "acct" => $acct[$i]["acct"]." (local)",
-      "username" => $acct[$i]["acct"]." (local)",
+      "username" => $acct[$i]["acct"],
       "avatar" => $acct[$i]["misc"]["avatar"],
       "url" => $acct[$i]["misc"]["user_url"]
     ],

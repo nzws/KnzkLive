@@ -35,6 +35,7 @@
       <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
     </p>
   <?php endif; ?>
+  <div id="donators" class="mt-2" style="display: none"></div>
   <p class="invisible" id="err_comment">
     * コメントの読み込み中にエラーが発生しました。 <a href="javascript:loadComment()">再読込</a>
   </p>

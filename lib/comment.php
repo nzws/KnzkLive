@@ -29,7 +29,7 @@ function comment_post($content, $user_id, $live_id, $is_html = false) {
     "account" => [
       "display_name" => $my["name"],
       "acct" => $my["acct"]." (local)",
-      "username" => $my["acct"]." (local)",
+      "username" => $my["acct"],
       "avatar" => $my["misc"]["avatar"],
       "url" => $my["misc"]["user_url"]
     ],

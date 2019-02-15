@@ -19,8 +19,19 @@ if ($blocking) {
   }
 }
 
+$donator = get_donate($live["id"]);
+if ($donator) {
+  $i = 0;
+  while (isset($donator[$i])) {
+    $donator[$i]["account"] = user4Pub(getUser($donator[$i]["user_id"]));
+    $donator[$i]["ended_at"] = dateHelper($donator[$i]["ended_at"]);
+    ++$i;
+  }
+}
+
 api_json([
   "w" => base64_encode(json_encode($liveUser["ngwords"])),
   "u" => $blocking ? base64_encode(json_encode($blocking_users)) : null,
-  "p" => base64_encode(json_encode(get_comment_deleted_list($live["id"])))
-  ]);
+  "p" => base64_encode(json_encode(get_comment_deleted_list($live["id"]))),
+  "donator" => $donator ? $donator : null
+]);

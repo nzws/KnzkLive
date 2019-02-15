@@ -29,13 +29,17 @@ function db_fetch_all(& $stmt) {
     return $hits;
 }
 
-function node_update_conf($mode, $type, $value, $live_id) {
+function node_update_conf($mode, $type, $value, $live_id, $user_id = null) {
   global $env;
+
+  $user = $user_id ? getUser($user_id) : null;
+
   $data = [
     "mode" => $mode,
     "type" => $type,
     "value" => $value,
-    "live_id" => $live_id
+    "live_id" => $live_id,
+    "da_token" => !empty($user["misc"]["donation_alerts_token"]) ? $user["misc"]["donation_alerts_token"] : null
   ];
 
   $header = [
