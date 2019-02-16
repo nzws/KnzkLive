@@ -1,10 +1,19 @@
 <?php
 function add_donate($live_id, $user_id, $amount, $currency) {
-  $sec = intval(ex_rate($amount, $currency) / 100 * 3 * 60);
-  $end = date("Y-m-d H:i:s", strtotime("+{$sec} seconds"));
+  $yen = ex_rate($amount, $currency);
 
-  $colors = ["purple", "blue", "green", "red"];
-  $color = $colors[array_rand($colors)];
+  if ($yen < 500) {
+    $color = "deepskyblue";
+    $min = 3;
+  } elseif ($yen < 1000) {
+    $color = "lightseagreen";
+    $min = 5;
+  } else {
+    $color = "red";
+    $min = 10;
+  }
+
+  $end = date("Y-m-d H:i:s", strtotime("+{$min} minutes"));
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `donate` (live_id, user_id, amount, currency, ended_at, color) VALUES (?, ?, ?, ?, ?, ?);");
