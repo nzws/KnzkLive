@@ -34,7 +34,6 @@ function buildCommentData(data, inst) {
 }
 
 function check_donator(acct) {
-  console.log(acct);
   let result = false;
   for (let item in config.dn) {
     if (config.dn[item] && config.dn[item]['account']['acct'] === acct) {
@@ -42,8 +41,7 @@ function check_donator(acct) {
         new Date(config.dn[item]['ended_at']).getTime() - new Date().getTime()
       );
       if (datet <= 0) {
-        $('#dontate_' + data['id']).remove();
-        config.dn[data['id']] = null;
+        delete_donate(config.dn[item]['id']);
       } else {
         result = config.dn[item]['color'];
       }
@@ -72,4 +70,13 @@ function check_data(data) {
     result = false;
   }
   return result;
+}
+
+function delete_donate(id) {
+  $('#donate_' + id).remove();
+  delete config.dn[id];
+  if (Object.keys(config.dn).length <= 0) {
+    const dn = elemId('donators');
+    if (dn) $(dn).hide();
+  }
 }

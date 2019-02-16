@@ -932,8 +932,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
     const datet = parseInt((new Date(data["ended_at"])).getTime() - (new Date()).getTime());
     setTimeout(function () {
-      $("#donate_" + data["id"]).remove();
-      config.dn[data["id"]] = null;
+      delete_donate(data['id']);
     }, datet);
   }
 
