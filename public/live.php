@@ -152,6 +152,7 @@ $vote = loadVote($live["id"]);
 
     .donator {
       cursor: pointer;
+      vertical-align: -4px;
     }
   </style>
 </head>
