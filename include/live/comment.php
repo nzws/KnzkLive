@@ -39,6 +39,5 @@
   <p class="invisible" id="err_comment">
     * コメントの読み込み中にエラーが発生しました。 <a href="javascript:loadComment()">再読込</a>
   </p>
-  <hr>
 </div>
-<div id="comments" class="comment_block"></div>
+<div id="comments" class="comment_block mt-1"></div>
