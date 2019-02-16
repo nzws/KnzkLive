@@ -30,7 +30,7 @@ if ($_POST) {
   setConfig($my["id"], $my["misc"]);
 
   if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
-    if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"])) exit("ERR: この配信者IDは使用できません。");
+    if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) exit("ERR: この配信者IDは使用できません。");
     $userCache = null;
     $my = getMe();
   }
