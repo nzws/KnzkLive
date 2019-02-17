@@ -209,7 +209,7 @@ $vote = loadVote($live["id"]);
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <?php endif; ?>
-        <?php if (!empty($liveUser["misc"]["donate_url"]) || (!$my && !empty($liveUser["misc"]["donation_alerts_token"]))) : ?>
+        <?php if (!empty($liveUser["misc"]["donate_url"]) || (!$my && !empty($liveUser["misc"]["donation_alerts_token"])) || (!empty($liveUser["misc"]["donation_alerts_token"]) && $live["is_live"] === 0)) : ?>
           <a class="btn btn-outline-warning"
              href="<?=s(!empty($liveUser["misc"]["donation_alerts_token"]) ? "https://www.donationalerts.com/r/" . $liveUser["misc"]["donation_alerts_name"] : $liveUser["misc"]["donate_url"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
         <?php elseif (!empty($liveUser["misc"]["donation_alerts_token"])) : ?>
