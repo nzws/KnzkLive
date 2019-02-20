@@ -24,4 +24,4 @@ while (isset($post[$i])) {
   $i++;
 }
 
-api_json($post);
+api_json($post === false ? [] : $post);
