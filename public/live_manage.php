@@ -237,9 +237,13 @@ $vote = loadVote($live["id"]);
     <div class="row">
       <div class="col-md-6">
         <b>配信をシェア(配信者用):</b><br>
-        <div class="btn-group" role="group">
+        <div class="btn-group btn-block mt-3" role="group">
+          <button class="btn btn-primary disabled">Mastodon</button>
           <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #".liveTag($live))?>" target="_blank" class="btn btn-primary">標準</a>
           <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("{$liveurl}\n{$liveurl}\n{$liveurl}")?>" target="_blank" class="btn btn-primary">神崎</a>
+        </div>
+        <div class="btn-group btn-block" role="group">
+          <a href="https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=<?=urlencode("{$live["name"]} - #KnzkLive で配信中！ #".liveTag($live))?>" target="_blank" class="btn btn-info">Twitterで投稿</a>
         </div>
       </div>
       <div class="col-md-6">
