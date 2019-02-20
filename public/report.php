@@ -1,0 +1,84 @@
+<?php
+require_once("../lib/bootloader.php");
+$my = getMe();
+if (!$my) {
+  http_response_code(403);
+  exit("ERR:ログインしてください。");
+}
+
+if (isset($_GET["liveid"])) {
+  $live = getLive($_GET["liveid"]);
+  if (!$live) exit("err: 配信が存在しません。");
+  $liveUser = getUser($live["user_id"]);
+}
+
+if (isset($_POST["body"])) {
+  $id = bin2hex(openssl_random_pseudo_bytes(12));
+  $date = date('Y/m/d H:i:s');
+
+  $data = [
+    "content" => <<< EOF
+-- live.knzk.me/contact --
+ID: {$id}
+Date: {$date}
+Host: {$_SERVER["REMOTE_ADDR"]}
+UA: {$_SERVER['HTTP_USER_AGENT']}
+Target-live-id: {$live["id"]}
+Created-by: {$my["acct"]}
+Body:
+{$_POST["body"]}
+EOF
+  ];
+
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+  ));
+
+  $options = stream_context_create($options);
+  $contents = file_get_contents($env["report_discord_webhook_url"], false, $options);
+  if ($contents === false) exit("error: 送信に失敗しました。");
+}
+?>
+<!doctype html>
+<html lang="ja">
+<head>
+  <?php include "../include/header.php"; ?>
+  <title>通報 - <?=$env["Title"]?></title>
+</head>
+<body>
+<?php include "../include/navbar.php"; ?>
+<div class="container">
+  <?php if (isset($id)) : ?>
+    <div class="alert alert-success" role="alert">
+      <b>送信しました。</b> お問い合わせID: <?=$id?>
+    </div>
+  <?php else : ?>
+  <div class="box">
+    <h4>通報フォーム</h4>
+    <div class="col-md-7">
+      <form method="post" id="knzkpoint">
+        <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+
+        <?php if (isset($live)) : ?>
+        <p>
+          通報する配信: 「<b><?=$live["name"]?></b>」 by <?=$liveUser["name"]?>
+        </p>
+        <?php endif; ?>
+
+        <div class="form-group">
+          <label for="body">本文 (なにをどうしてほしいのか具体的にお願いいたします)</label>
+          <textarea class="form-control" name="body" placeholder="必須, 1000文字まで" maxlength="1000" required></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" onclick="return confirm('送信します。よろしいですか？')">送信</button>
+      </form>
+    </div>
+  </div>
+  <?php endif; ?>
+</div>
+
+<?php include "../include/footer.php"; ?>
+</body>
+</html>
