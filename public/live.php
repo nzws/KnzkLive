@@ -289,7 +289,6 @@ $vote = loadVote($live["id"]);
     </div>
   </div>
 </div>
-<?php endif; ?>
 
 <?php include "../include/live/modals.php"; ?>
 <?php if ($my["id"] === $live["user_id"]) include "../include/live/add_blocking.php"; ?>
@@ -1140,5 +1139,6 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     }
   </script>
 <?php endif; ?>
+<?php endif; // sensitive ?>
 </body>
 </html>
