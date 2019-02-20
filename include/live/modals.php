@@ -112,7 +112,7 @@
           </div>
         </div>
         <hr>
-        <?php if ($liveUser["id"] === 2 || $env["is_testing"]) : ?>
+        <?php if ($liveUser["id"] === 2 || $liveUser["id"] === 84 || $env["is_testing"]) : ?>
           <h5>神崎コンギョ (音)</h5>
           コ　ン　ギ　ョ
           <div class="text-right">

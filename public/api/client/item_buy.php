@@ -30,7 +30,7 @@ if ($_POST["type"] === "emoji") {
   $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 30 : 0) + ($_POST["big"] == 1 ? 30 : 0);
 } else if ($_POST["type"] === "knzk_kongyo") {
   $point = 1000;
-  if ($live["user_id"] !== 2 && !$env["is_testing"])
+  if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"])
     api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 } else {
   api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
