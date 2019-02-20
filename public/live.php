@@ -280,6 +280,9 @@ $vote = loadVote($live["id"]);
         </div>
       </div>
       <?php endif; ?>
+      <p>
+        <a href="https://nzws.me/contact?add=<?=urlencode("KnzkLive > 配信を通報 / ID:" . $live["id"])?>" target="_blank" class="text-danger">配信を通報する</a>
+      </p>
     </div>
     <div class="col-md-3" id="comment">
       <?php include "../include/live/comment.php"; ?>
