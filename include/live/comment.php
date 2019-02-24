@@ -13,21 +13,22 @@
   <?php endif; ?>
   <div class="mt-2 mb-2 comment_block">
     #<?=liveTag($live)?>: <b id="comment_count"><?=s($live["comment_count"])?></b>コメ
+    <b id="limit" class="float-right"></b>
   </div>
   <?php if ($my) : ?>
   <div class="comment_block">
-    <div class="form-group">
-      <textarea class="form-control" id="toot" rows="3" placeholder="コメント... (<?=$my["acct"]?>としてトゥート/コメント)" onkeyup="check_limit()"></textarea>
+    <div class="form-group mb-2">
+      <textarea class="form-control" id="toot" rows="3" placeholder="<?=$my["acct"]?>でトゥート/コメント" onkeyup="check_limit()"></textarea>
     </div>
 
-    <div class="custom-control custom-checkbox float-left">
+    <div class="custom-control custom-checkbox float-left my-2">
       <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
       <label class="custom-control-label" for="no_toot">
         <small>コメントのみ投稿 <a href="#" onclick="alert('有効にした状態で投稿すると、KnzkLiveにコメントしますが<?=$_SESSION["account_provider"]?>には投稿されません。');return false">？</a></small>
       </label>
     </div>
     <div style="text-align: right">
-      <b id="limit"></b>  <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
+      <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
     </div>
   </div>
   <?php else : ?>
