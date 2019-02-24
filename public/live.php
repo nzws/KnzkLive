@@ -54,11 +54,15 @@ $vote = loadVote($live["id"]);
   <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
 
   <style>
+    #comment {
+      padding: 0 5px;
+    }
     #comments {
       overflow-y: scroll;
       overflow-x: hidden;
       height: 600px;
     }
+
     .hashtag {
       display: none;
     }
@@ -115,9 +119,7 @@ $vote = loadVote($live["id"]);
 
     .comment {
       display: flex;
-      margin-bottom: 10px;
-      word-wrap: break-word;
-      word-break: break-all;
+      background-color: #393f4f;
     }
 
     .comment .avatar {
@@ -129,10 +131,35 @@ $vote = loadVote($live["id"]);
 
     .comment .content {
       padding-left: 5px;
+      display: flex;
     }
 
     .comment .name {
       cursor: pointer;
+      font-size: 1em;
+      display: block;
+    }
+
+    .postcontent {
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .postcontent p {
+      margin-bottom: 0;
+    }
+
+    .content .float-left {
+      padding-top: 0.25rem;
+    }
+
+    .content .float-right {
+      max-width: calc(100% - 50px);
+      padding: 0.25rem;
+    }
+
+    .comment .card-body {
+      padding: 0.25rem;
     }
 
     .admin-toggle.on > span.off, .admin-toggle.off > span.on {
@@ -182,7 +209,7 @@ $vote = loadVote($live["id"]);
 <?php else : ?>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
       <div id="err_live" class="text-warning"></div>
       <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
       <?php if ($my["id"] === $live["user_id"]) : ?>
@@ -229,7 +256,7 @@ $vote = loadVote($live["id"]);
 
       <p>
         <a href="<?=userUrl($liveUser["broadcaster_id"])?>" target="_blank" class="broadcaster_link">
-          <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded-circle"/>
+          <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
           <b><?=$liveUser["name"]?></b>
         </a>
       </p>
@@ -257,7 +284,7 @@ $vote = loadVote($live["id"]);
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
       </p>
     </div>
-    <div class="col-md-3" id="comment">
+    <div class="col-md-4" id="comment">
       <?php include "../include/live/comment.php"; ?>
     </div>
   </div>
@@ -266,22 +293,26 @@ $vote = loadVote($live["id"]);
 <?php include "../include/live/modals.php"; ?>
 <?php if ($my["id"] === $live["user_id"]) include "../include/live/add_blocking.php"; ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
-  <div id="post_{{id}}" class="comment">
-    <div>
-      <img src="{{account.avatar}}" class="avatar rounded-circle" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
-    </div>
-    <div class="content">
-      <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name">
-        {{#if donator_color}}
-        <span class="badge badge-pill" style="background:{{donator_color}}">
-        {{/if}}
-        <b>{{account.display_name}}</b>
-        {{#if donator_color}}
+  <div id="post_{{id}}" class="comment card mb-2">
+    <div class="content card-body">
+      <div class="float-left">
+        <img src="{{account.avatar}}" class="avatar rounded border" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
+      </div>
+      <div class="float-right card-text">
+        <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name text-truncate">
+          {{#if donator_color}}
+          <span class="badge badge-pill" style="background:{{donator_color}}">
+          {{/if}}
+          <b>{{account.display_name}}</b>
+          {{#if donator_color}}
+          </span>
+          {{/if}}
+            <small>@{{account.acct}}</small>
         </span>
-        {{/if}}
-          <small>@{{account.acct}}</small>
-      </span>
-      {{{content}}}
+        <div class="postcontent card-text">
+          {{{content}}}
+        </div>
+      </div>
     </div>
   </div>
 </script>
@@ -907,7 +938,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
 
   function add_donator(data) {
     $("#donators").show();
-    $("#donators").prepend(`<span class="badge badge-pill donator" onclick="userDropdown(this, null, '${data["account"]["acct"]}', '${data["account"]["url"]}')" id="donate_${data["id"]}" style="background:${data["color"]}"><img src="${data["account"]["avatar_url"]}" height="30" width="30" class="rounded-circle avatar"/> ${data["amount"]}${data["currency"]}</span>`);
+    $("#donators").prepend(`<span class="badge badge-pill donator" onclick="userDropdown(this, null, '${data["account"]["acct"]}', '${data["account"]["url"]}')" id="donate_${data["id"]}" style="background:${data["color"]}"><img src="${data["account"]["avatar_url"]}" height="30" width="30" class="rounded avatar"/> ${data["amount"]}${data["currency"]}</span>`);
     config.dn[data["id"]] = data;
 
     const datet = parseInt((new Date(data["ended_at"])).getTime() - (new Date()).getTime());
