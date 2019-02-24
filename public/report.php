@@ -17,19 +17,35 @@ if (isset($_POST["body"])) {
   $date = date('Y/m/d H:i:s');
 
   $data = [
-    "content" => <<< EOF
--- live.knzk.me/contact --
-ID: {$id}
-Date: {$date}
-Host: {$_SERVER["REMOTE_ADDR"]}
-UA: {$_SERVER['HTTP_USER_AGENT']}
-Target-live-id: {$live["id"]}
-Created-by: {$my["acct"]}
-Body:
-{$_POST["body"]}
-EOF
+    "content" => $_POST["body"],
+    "embeds" => [
+      [
+        "title" => "新しい通報",
+        "description" => $id,
+        "url" => liveUrl($live["id"]),
+        "color" => "16717636",
+        "author" => [
+          "name" => "KnzkLive",
+          "url" => "https://live.knzk.me",
+          "icon_url" => "https://github.com/KnzkDev.png"
+        ],
+        "fields" => [
+          [
+            "name" => "IP",
+            "value" => $_SERVER["REMOTE_ADDR"]
+          ],
+          [
+            "name" => "UA",
+            "value" => $_SERVER['HTTP_USER_AGENT']
+          ],
+          [
+            "name" => "Reported by",
+            "value" => $my["acct"]
+          ]
+        ]
+      ]
+    ]
   ];
-
 
   $options = array('http' => array(
     'method' => 'POST',
