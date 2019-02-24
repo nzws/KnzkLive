@@ -15,7 +15,7 @@ if (!$live) {
 
 $slot = getSlot($live["slot_id"]);
 $my = getMe();
-$blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["id"] : null);
+$blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
 if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
   http_response_code(403);
   exit("ERR:この配信は非公開です。| " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));

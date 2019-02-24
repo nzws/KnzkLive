@@ -11,10 +11,10 @@ $blocking = get_all_blocking_user($liveUser["id"]);
 if ($blocking) {
   $blocking_users = [];
   foreach ($blocking as $item) {
-    if (isset($_SESSION["acct"]) && $item["acct"] === $_SESSION["acct"] && $item["is_blocking_watch"] === 1) {
+    if (isset($_SESSION["acct"]) && $item["target_user_acct"] === $_SESSION["acct"] && $item["is_blocking_watch"] === 1) {
       $blocking_users[] = "#ME#";
     } else {
-      $blocking_users[] = $item["acct"];
+      $blocking_users[] = $item["target_user_acct"];
     }
   }
 }

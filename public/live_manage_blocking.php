@@ -41,11 +41,11 @@ $list = get_all_blocking_user($my["id"]);
         <tbody>
         <?php foreach ($list as $item) : ?>
           <tr>
-            <td><?=$item["acct"]?></td>
+            <td><?=$item["target_user_acct"]?></td>
             <td><?=$item["created_at"]?></td>
             <td><?=$item["is_permanent"] === 1 ? "はい" : "いいえ"?></td>
             <td><?=$item["is_blocking_watch"] === 1 ? "はい" : "いいえ"?></td>
-            <td><a href="#" onclick="remove('<?=$item["target_user_id"]?>', '<?=$item["acct"]?>', this);return false">削除</a></td>
+            <td><a href="#" onclick="remove('<?=$item["target_user_acct"]?>', this);return false">削除</a></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
@@ -56,7 +56,7 @@ $list = get_all_blocking_user($my["id"]);
 <?php include "../include/live/add_blocking.php"; ?>
 <?php include "../include/footer.php"; ?>
 <script>
-function remove(id, acct, obj = null) {
+function remove(acct, obj = null) {
   if (confirm(`「${acct}」のブロックを解除します。\nよろしいですか？`)) {
     fetch('<?=u("api/client/ngs/manage_users")?>', {
       headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -65,7 +65,7 @@ function remove(id, acct, obj = null) {
       body: buildQuery({
         csrf_token: `<?=$_SESSION['csrf_token']?>`,
         type: 'remove',
-        user_id: id
+        user_id: acct
       })
     }).then(function(response) {
       if (response.ok) {

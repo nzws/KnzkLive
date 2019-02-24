@@ -248,10 +248,10 @@ function update_realtime_config($mode, $result, $live_id) {
   $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
 }
 
-function blocking_user($live_user_id, $ip = null, $user_id = null) {
+function blocking_user($live_user_id, $ip = null, $user_acct = null) {
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ? AND (target_user_id = ? OR target_user_id IN (select id from `users` WHERE ip = ?));");
-  $stmt->bind_param("sss", $live_user_id, $user_id, $ip);
+  $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ? AND (target_user_acct = ? OR target_user_acct IN (select acct from `users` WHERE ip = ?));");
+  $stmt->bind_param("sss", $live_user_id, $user_acct, $ip);
   $stmt->execute();
   $row = db_fetch_all($stmt);
   $stmt->close();
@@ -261,7 +261,7 @@ function blocking_user($live_user_id, $ip = null, $user_id = null) {
 
 function get_all_blocking_user($live_user_id) {
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("SELECT users_blocking.*, users.acct FROM `users_blocking` INNER JOIN `users` ON users.id = users_blocking.target_user_id WHERE live_user_id = ?;");
+  $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ?;");
   $stmt->bind_param("s", $live_user_id);
   $stmt->execute();
   $row = db_fetch_all($stmt);
