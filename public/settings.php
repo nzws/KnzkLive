@@ -24,10 +24,11 @@ if ($_POST) {
   $my["misc"]["donate_url"] = $_POST["donate_link"] == 2 ? $_POST["donate_url"] : null;
   $my["misc"]["donation_alerts_token"] = $_POST["donate_link"] == 3 ? $_POST["donation_alerts_token"] : null;
   $my["misc"]["donation_alerts_name"] = $_POST["donate_link"] == 3 ? $_POST["donation_alerts_name"] : null;
+  $my["donation_desc"] = $_POST["donate_link"] == 4 ? $_POST["donation_desc"] : null;
   if ($_POST["donate_link"] == 3 && (!$_POST["donation_alerts_token"] || !$_POST["donation_alerts_name"]))
     exit("ERR: 値が不足しています。");
 
-  setConfig($my["id"], $my["misc"]);
+  setConfig($my["id"], $my["misc"], $my["donation_desc"]);
 
   if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
     if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) exit("ERR: この配信者IDは使用できません。");
@@ -146,12 +147,11 @@ if ($_POST) {
             <label class="form-check-label" for="donate_link3">コメントハイライト (自動) <small>by DonationAlerts</small></label>
           </div>
 
-          <!--
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="donate_link" id="donate_link4" value="4">
+            <input class="form-check-input" type="radio" name="donate_link" id="donate_link4" value="4"
+              <?=!empty($my["donation_desc"]) ? "checked" : ""?>>
             <label class="form-check-label" for="donate_link4">コメントハイライト (手動)</label>
           </div>
-          -->
           <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank">コメントハイライトとは</a>
         </div>
 
@@ -183,18 +183,15 @@ if ($_POST) {
             </small>
           </div>
 
-          <!--
-          <div id="donate_link4_body">
+          <div id="donate_link4_body" <?=!empty($my["donation_desc"]) ? "" : "style=display:none"?>>
             <div class="form-group">
               <label>リスナー向け説明欄</label>
-              <textarea class="form-control" name="donate_link_manual" rows="4">aaa</textarea>
+              <textarea class="form-control" name="donation_desc" rows="4"><?=!empty($my["donation_desc"]) ? $my["donation_desc"] : null?></textarea>
               <small class="form-text text-muted">
-                説明欄サンプル<br>
                 <span class="text-warning">手動コメントハイライトは、あなたが支援してくれたユーザーを管理パネルから追加する必要があります。</span>
               </small>
             </div>
           </div>
-          -->
         </div>
 
       </div>

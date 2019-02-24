@@ -154,8 +154,17 @@
       <div class="modal-body">
         <p>
           この配信者は<a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank"><b>コメントハイライト</b></a>機能を有効にしているため、下記の手順で支援すると、あなたがコメント欄で目立つように表示させる事が出来ます。<br>
-          <small>Powered by donationalerts.com</small>
         </p>
+        <?php if (!empty($liveUser["donation_desc"])) : ?>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">ID</span>
+            </div>
+            <input type="text" class="form-control" readonly value="<?=$my["acct"]?>" onclick="this.select(0,this.value.length)">
+          </div>
+        <hr>
+        <p><?=HTMLHelper($liveUser["donation_desc"])?></p>
+        <?php else : ?>
         <p>
           1. 支援ページを開いてください。
           <a href="https://www.donationalerts.com/r/<?=s($liveUser["misc"]["donation_alerts_name"])?>" target="_blank" class="btn btn-primary btn-block">支援ページを開く</a>
@@ -173,6 +182,7 @@
         <p>
           3. その他項目も設定し、「Donate」ボタンを押して決済すると支援完了です。
         </p>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -220,8 +230,50 @@
   </div>
 </div>
 
+  <div class="modal fade" id="addChModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">CH追加</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="blocking_acct">ユーザID</label>
+            <input type="email" class="form-control" id="blocking_acct" placeholder="ex) knzk@knzk.me">
+          </div>
+          <hr>
+
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" aria-label="Text input with dropdown button">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                  <div role="separator" class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Separated link</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit"
+                  onclick="add_ch()"
+                  class="btn btn-success btn-block">
+            :: 投票を作成 ::
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div class="modal fade" id="listenerModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document">　
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">リスナー一覧 <span class="badge badge-info"><b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span></span></h5>

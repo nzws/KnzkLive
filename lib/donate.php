@@ -76,7 +76,8 @@ function ex_rate($amount, $currency) {
   $rate = [
     "USD" => 110,
     "RUB" => 1.5,
-    "EUR" => 120
+    "EUR" => 120,
+    "JPY" => 1
   ];
   return isset($rate[$currency]) ? intval($amount * $rate[$currency]) : false;
 }
