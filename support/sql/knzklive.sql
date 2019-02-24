@@ -277,11 +277,10 @@ alter table users
   add donation_desc text null;
 
 -- 2019/02/25
-alter table users_blocking add target_user_acct varchar(255) null after live_user_id;
+alter table users_blocking add target_user_acct varchar(255) not null after live_user_id;
 alter table users_blocking add constraint users_blocking_live_user_id_target_user_acct_uindex unique (live_user_id, target_user_acct);
 
 drop index users_blocking_live_user_id_target_user_id_uindex on users_blocking;
-alter table users_blocking drop key users_blocking_live_user_id_target_user_id_uindex;
 alter table users_blocking drop column target_user_id;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
