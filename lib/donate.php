@@ -1,6 +1,7 @@
 <?php
 function add_donate($live_id, $user_id, $amount, $currency) {
   $yen = ex_rate($amount, $currency);
+  if (!$yen) return false;
 
   if ($yen < 500) {
     $color = "deepskyblue";

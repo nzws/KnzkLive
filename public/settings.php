@@ -188,7 +188,7 @@ if ($_POST) {
               <label>リスナー向け説明欄</label>
               <textarea class="form-control" name="donation_desc" rows="4"><?=!empty($my["donation_desc"]) ? $my["donation_desc"] : null?></textarea>
               <small class="form-text text-muted">
-                <span class="text-warning">手動コメントハイライトは、あなたが支援してくれたユーザーを管理パネルから追加する必要があります。</span>
+                <span class="text-warning">手動コメントハイライトは、あなたが支援してくれたユーザーを管理パネルから手動で追加する必要があります。</span>
               </small>
             </div>
           </div>

@@ -240,37 +240,82 @@
           </button>
         </div>
         <div class="modal-body">
+          <p>
+            コメントハイライトのユーザーを手動で追加できます。
+          </p>
           <div class="form-group">
             <label for="blocking_acct">ユーザID</label>
-            <input type="email" class="form-control" id="blocking_acct" placeholder="ex) knzk@knzk.me">
+            <input type="email" class="form-control" id="addch_acct" placeholder="ex) knzk@knzk.me">
           </div>
-          <hr>
 
           <div class="form-group">
+            <label>金額</label>
             <div class="input-group">
-              <input type="text" class="form-control" aria-label="Text input with dropdown button">
+              <input type="number" class="form-control" id="addch_amount">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" id="addch_currency">JPY</button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <div role="separator" class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('JPY')">JPY</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('USD')">USD</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('RUB')">RUB</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('EUR')">EUR</a>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="submit"
-                  onclick="add_ch()"
-                  class="btn btn-success btn-block">
-            :: 投票を作成 ::
-          </button>
+          <button type="submit" onclick="add_ch()" class="btn btn-success btn-block">追加</button>
         </div>
       </div>
     </div>
   </div>
+<script>
+  function change_addch_currency(currency) {
+    document.getElementById("addch_currency").innerText = currency;
+    return false;
+  }
+  
+  function add_ch() {
+    const currency = document.getElementById("addch_currency").innerText;
+    const acct = document.getElementById("addch_acct");
+    const amount = document.getElementById("addch_amount");
+
+    if (confirm(`「${acct.value}」を追加します。\nよろしいですか？`)) {
+      fetch('<?=u("api/client/live/add_ch")?>', {
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery({
+          csrf_token: `<?=$_SESSION['csrf_token']?>`,
+          acct: acct.value,
+          amount: amount.value,
+          currency: currency
+        })
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+          return null;
+        }
+        if (json["success"]) {
+          acct.value = "";
+          amount.value = "";
+          $("#addChModal").modal("hide");
+        } else {
+          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert("内部エラーが発生しました");
+      });
+    }
+  }
+</script>
 
 <div class="modal fade" id="listenerModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">　
