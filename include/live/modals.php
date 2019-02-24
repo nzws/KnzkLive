@@ -154,8 +154,17 @@
       <div class="modal-body">
         <p>
           この配信者は<a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank"><b>コメントハイライト</b></a>機能を有効にしているため、下記の手順で支援すると、あなたがコメント欄で目立つように表示させる事が出来ます。<br>
-          <small>Powered by donationalerts.com</small>
         </p>
+        <?php if (!empty($liveUser["donation_desc"])) : ?>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">ID</span>
+            </div>
+            <input type="text" class="form-control" readonly value="<?=$my["acct"]?>" onclick="this.select(0,this.value.length)">
+          </div>
+        <hr>
+        <p><?=HTMLHelper($liveUser["donation_desc"])?></p>
+        <?php else : ?>
         <p>
           1. 支援ページを開いてください。
           <a href="https://www.donationalerts.com/r/<?=s($liveUser["misc"]["donation_alerts_name"])?>" target="_blank" class="btn btn-primary btn-block">支援ページを開く</a>
@@ -173,6 +182,7 @@
         <p>
           3. その他項目も設定し、「Donate」ボタンを押して決済すると支援完了です。
         </p>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -220,8 +230,95 @@
   </div>
 </div>
 
+  <div class="modal fade" id="addChModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">CH追加</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            コメントハイライトのユーザーを手動で追加できます。
+          </p>
+          <div class="form-group">
+            <label for="blocking_acct">ユーザID</label>
+            <input type="email" class="form-control" id="addch_acct" placeholder="ex) knzk@knzk.me">
+          </div>
+
+          <div class="form-group">
+            <label>金額</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="addch_amount">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" id="addch_currency">JPY</button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('JPY')">JPY</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('USD')">USD</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('RUB')">RUB</a>
+                  <a class="dropdown-item" href="#" onclick="change_addch_currency('EUR')">EUR</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" onclick="add_ch()" class="btn btn-success btn-block">追加</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  function change_addch_currency(currency) {
+    document.getElementById("addch_currency").innerText = currency;
+    return false;
+  }
+  
+  function add_ch() {
+    const currency = document.getElementById("addch_currency").innerText;
+    const acct = document.getElementById("addch_acct");
+    const amount = document.getElementById("addch_amount");
+
+    if (confirm(`「${acct.value}」を追加します。\nよろしいですか？`)) {
+      fetch('<?=u("api/client/live/add_ch")?>', {
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        method: 'POST',
+        credentials: 'include',
+        body: buildQuery({
+          csrf_token: `<?=$_SESSION['csrf_token']?>`,
+          acct: acct.value,
+          amount: amount.value,
+          currency: currency
+        })
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }).then(function(json) {
+        if (json["error"]) {
+          alert(json["error"]);
+          return null;
+        }
+        if (json["success"]) {
+          acct.value = "";
+          amount.value = "";
+          $("#addChModal").modal("hide");
+        } else {
+          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
+        }
+      }).catch(function(error) {
+        console.error(error);
+        alert("内部エラーが発生しました");
+      });
+    }
+  }
+</script>
+
 <div class="modal fade" id="listenerModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document">　
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">リスナー一覧 <span class="badge badge-info"><b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span></span></h5>

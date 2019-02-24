@@ -272,6 +272,10 @@ create unique index donate_id_uindex
 -- 2019/02/16
 alter table donate modify amount float not null;
 
+-- 2019/02/19
+alter table users
+  add donation_desc text null;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
