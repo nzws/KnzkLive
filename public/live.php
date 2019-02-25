@@ -54,9 +54,6 @@ $vote = loadVote($live["id"]);
   <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
 
   <style>
-    #comment {
-      padding: 0 5px;
-    }
     #comments {
       overflow-y: scroll;
       overflow-x: hidden;
