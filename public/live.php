@@ -284,7 +284,7 @@ $vote = loadVote($live["id"]);
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
       </p>
     </div>
-    <div class="col-md-4" id="comment">
+    <div class="col-md-3" id="comment">
       <?php include "../include/live/comment.php"; ?>
     </div>
   </div>
