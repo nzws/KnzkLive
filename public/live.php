@@ -209,7 +209,7 @@ $vote = loadVote($live["id"]);
 <?php else : ?>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div id="err_live" class="text-warning"></div>
       <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
       <?php if ($my["id"] === $live["user_id"]) : ?>
