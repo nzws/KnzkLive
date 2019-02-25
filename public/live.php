@@ -304,7 +304,7 @@ $vote = loadVote($live["id"]);
   <div id="post_{{id}}" class="comment card mb-2">
     <div class="content card-body">
       <div class="float-left">
-        <img src="{{account.avatar}}" class="avatar rounded border" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
+        <img src="{{account.avatar}}" class="avatar rounded" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
       </div>
       <div class="float-right card-text">
         <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name text-truncate">
