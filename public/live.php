@@ -181,6 +181,14 @@ $vote = loadVote($live["id"]);
       cursor: pointer;
       vertical-align: -4px;
     }
+
+    .custom-control-label::after {
+      top: .4rem;
+    }
+
+    .custom-control-label::before {
+      margin-top: .1rem;
+    }
   </style>
 </head>
 <body>
@@ -218,7 +226,7 @@ $vote = loadVote($live["id"]);
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
-      <span style="float: right">
+      <span class="float-right">
           <span id="h"></span><span id="m"></span><span id="s"></span>
           <span id="count_open">
             アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 視聴者数: <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
@@ -228,7 +236,7 @@ $vote = loadVote($live["id"]);
           </span>
         </span>
       <br>
-      <div style="float: right">
+      <div class="float-right">
         <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
           <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
           <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
