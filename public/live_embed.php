@@ -248,15 +248,7 @@ $mode = $_SESSION["watch_type"];
         text += "LIVE";
       }
 
-      if (video.paused) {
-        setTimeout(function() {
-          try {
-            video.play();
-          } catch (e) {
-            $("#play_button").show();
-          }
-        }, 10);
-      }
+      if (video.paused) $("#play_button").show();
       showSplash();
     } else { //バッファ
       text += "BUFFERING";
