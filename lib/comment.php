@@ -20,7 +20,7 @@ function comment_post($content, $user_id, $live_id, $is_html = false) {
 
   if ($err) return "データベースエラー";
 
-  comment_count_add($live_id);
+  comment_count_add($live_id, $my["id"]);
 
   $data = [
     "id" => "knzklive_".$id,
@@ -61,13 +61,22 @@ function comment_get($live_id) {
   return isset($row[0]["id"]) ? $row : false;
 }
 
-function comment_count_add($live_id) {
+function comment_count_add($live_id, $user_id = null) {
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `live` SET `comment_count` = `comment_count` + 1 WHERE id = ?;");
   $stmt->bind_param("s", $live_id);
   $stmt->execute();
   $stmt->close();
   $mysqli->close();
+
+  if (!empty($user_id)) {
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("UPDATE `users` SET `point_count_today_toot` = `point_count_today_toot` + 2 WHERE id = ?;");
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    $stmt->close();
+    $mysqli->close();
+  }
 }
 
 function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false) {
