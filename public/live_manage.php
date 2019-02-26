@@ -72,7 +72,7 @@ if (isset($_POST["type"])) {
 }
 
 $liveurl = liveUrl($live["id"]);
-$comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("api/client/comment_viewer") . "?id=" . $live["id"];
+$comurl = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . u("comment_viewer") . "?id=" . $my["id"];
 
 $vote = loadVote($live["id"]);
 ?>
