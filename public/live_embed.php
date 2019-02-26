@@ -90,8 +90,11 @@ $mode = $_SESSION["watch_type"];
     .waiting_logo {
       width: 300px;
       max-width: 100%;
-      animation: pulse 2s infinite;
       margin-bottom: 10px;
+    }
+
+    .waiting_logo.animated {
+      animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
@@ -139,6 +142,8 @@ $mode = $_SESSION["watch_type"];
       max-width: 100%;
       padding: 20px;
       background: rgba(0, 0, 0, .5);
+      border: solid 1px #fff;
+      border-radius: 5px;
     }
 
     #play_button {
@@ -151,11 +156,15 @@ $mode = $_SESSION["watch_type"];
 
 <body>
 <div class="center_v dialog_box" id="play_button" style="display: none" onclick="seekLive()">
-    <h1>クリックして再生</h4>
+  <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
+  <div>
+    <b>クリックして再生...</b><br>
+    <small>(ブラウザが再生をブロックしました!?)</small>
+  </div>
 </div>
 
 <div class="center_v dialog_box" id="splash">
-    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
+    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo animated"/>
     <div id="splash_loadtext">配信サーバに接続しています...</div>
 </div>
 
@@ -248,7 +257,11 @@ $mode = $_SESSION["watch_type"];
         text += "LIVE";
       }
 
-      if (video.paused) $("#play_button").show();
+      if (video.paused) {
+        video.play().catch(function(e) {
+          $("#play_button").show();
+        });
+      }
       showSplash();
     } else { //バッファ
       text += "BUFFERING";
