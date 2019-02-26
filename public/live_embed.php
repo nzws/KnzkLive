@@ -247,10 +247,13 @@ $mode = $_SESSION["watch_type"];
       } else {
         text += "LIVE";
       }
-      try {
-        if (video.paused) video.play();
-      } catch(e) {
-        $("#play_button").show();
+
+      if (video.paused) {
+        try {
+          video.play();
+        } catch (e) {
+          $("#play_button").show();
+        }
       }
       showSplash();
     } else { //バッファ
