@@ -249,11 +249,13 @@ $mode = $_SESSION["watch_type"];
       }
 
       if (video.paused) {
-        try {
-          video.play();
-        } catch (e) {
-          $("#play_button").show();
-        }
+        setTimeout(function() {
+          try {
+            video.play();
+          } catch (e) {
+            $("#play_button").show();
+          }
+        }, 10);
       }
       showSplash();
     } else { //バッファ
