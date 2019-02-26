@@ -90,7 +90,8 @@ $mode = $_SESSION["watch_type"];
     .waiting_logo {
       width: 300px;
       max-width: 100%;
-      animation: pulse 4s infinite;
+      animation: pulse 2s infinite;
+      margin-bottom: 10px;
     }
 
     @keyframes pulse {
@@ -133,28 +134,32 @@ $mode = $_SESSION["watch_type"];
     #volume-range::-moz-range-track {
       height: 0;
     }
+
+    .dialog_box {
+      max-width: 100%;
+      padding: 20px;
+      background: rgba(0, 0, 0, .5);
+    }
+
+    #play_button {
+      cursor: pointer;
+      z-index: 9999;
+      background: #000;
+    }
   </style>
 </head>
 
 <body>
-<div id="splash">
-  <div class="center_v">
-    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
-  </div>
-  <div class="footer">
-    <div class="footer_content">
-      <b>KNZKLIVE</b><br>
-      PLAYER
-      <span class="right">
-        <span id="splash_loadtext">配信サーバに接続しています...</span>
-        <span> · <a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a> · </span>
-        <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
-      </span>
-    </div>
-  </div>
+<div class="center_v dialog_box" id="play_button" style="display: none" onclick="seekLive()">
+    <h1>クリックして再生</h4>
 </div>
 
-<div id="video" class="invisible">
+<div class="center_v dialog_box" id="splash">
+    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
+    <div id="splash_loadtext">配信サーバに接続しています...</div>
+</div>
+
+<div id="video">
   <video id="knzklive" class="center_v" autoplay preload="auto">
     <p>
       KnzkLive Playerからのお知らせ:<br>
@@ -196,6 +201,7 @@ $mode = $_SESSION["watch_type"];
   const video = document.getElementById("knzklive");
   let myLive = <?=$myLive ? "true" : "false"?>;
   let delay_sec = 3;
+  let heartbeat;
 
   function startWatching(v) {
     video.addEventListener("error", function() {
@@ -241,10 +247,15 @@ $mode = $_SESSION["watch_type"];
       } else {
         text += "LIVE";
       }
-      if (video.paused) video.play();
+      try {
+        if (video.paused) video.play();
+      } catch(e) {
+        $("#play_button").show();
+      }
       showSplash();
     } else { //バッファ
       text += "BUFFERING";
+      showSplash("バッファしています...");
     }
     document.getElementById("video_status").innerHTML = text;
   }
@@ -274,19 +285,19 @@ $mode = $_SESSION["watch_type"];
       }
       startWatching(video);
     }
-    setInterval(showStatus, 1000);
+    heartbeat = setInterval(showStatus, 1000);
   };
 
   function showSplash(text = "") {
     document.getElementById("splash_loadtext").innerHTML = text;
-    document.getElementById("splash").className = text ? "" : "invisible";
-    document.getElementById("video").className = text ? "invisible" : "";
-    if (text) parent.widemode("hide");
+    if (text) $("#splash").show();
+    else $("#splash").hide();
   }
 
   function seekLive() {
-    video.currentTime = (video.seekable).end(0) - 1;
+    $("#play_button").hide();
     video.play();
+    video.currentTime = (video.seekable).end(0) - 1;
   }
 
   function mute(i = 0, no_save) {
@@ -344,7 +355,9 @@ $mode = $_SESSION["watch_type"];
   }
 
   function end() {
-    $(".right").html("配信は終了しました。");
+    clearInterval(heartbeat);
+    $("#video").hide();
+    showSplash("配信は終了しました。");
   }
 </script>
 </body>
