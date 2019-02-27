@@ -156,7 +156,7 @@ $mode = $_SESSION["watch_type"];
 
 <body>
 <div class="center_v dialog_box" id="play_button" style="display: none" onclick="seekLive()">
-  <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo"/>
+  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo"/>
   <div>
     <b>クリックして再生...</b><br>
     <small>(ブラウザが再生をブロックしました!?)</small>
@@ -175,7 +175,7 @@ $mode = $_SESSION["watch_type"];
       この環境では視聴する事ができません。OS・ブラウザをアップデートするか、別の環境からお試しください。
     </p>
   </video>
-  <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="watermark" />
+  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="watermark" />
   <div class="footer" style="background: rgba(0,0,0,.5)">
     <div class="footer_content">
       <span id="video_status">LOADING</span>

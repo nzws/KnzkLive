@@ -4,7 +4,7 @@
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;">
     <a class="navbar-brand" href="<?=u("")?>">
-      <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" height="28"/>
+      <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" height="28"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
       aria-expanded="false" aria-label="Toggle navigation">
