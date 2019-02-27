@@ -146,12 +146,16 @@ $vote = loadVote($live["id"]);
       margin-bottom: 0;
     }
 
+    .postcontent .alert {
+      margin-bottom: 0;
+    }
+
     .content .float-left {
       padding-top: 0.25rem;
     }
 
     .content .float-right {
-      max-width: calc(100% - 50px);
+      width: calc(100% - 50px);
       padding: 0.25rem;
     }
 
