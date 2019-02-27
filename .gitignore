@@ -1,3 +1,6 @@
+# General
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -35,6 +38,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+vendor
 
 # TypeScript v1 declaration files
 typings/
@@ -62,8 +66,6 @@ config.json
 # next.js build output
 .next
 
+# Editor files
 .idea
 .vscode
-/vendor/
-
-.DS_Store
