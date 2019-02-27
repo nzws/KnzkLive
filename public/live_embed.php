@@ -376,16 +376,16 @@ $mode = $_SESSION["watch_type"];
     const can = document.getElementById("#comment_layer");
     $("#comment_layer").prepend('<div id=' + id + '>' + text + '</div>');
     const width = $("#comment_layer").width()
-    console.log(width)
+
     let i = 0
-    function animetion() {
+    function animation() {
       $('#' + id).css('right', i - text.length * 14) //1文字14px
       $('#' + id).css('bottom', height)
       i += 4
     }
     function scroll() {
       if(i < width) {
-        animetion();
+        animation();
         requestAnimationFrame(scroll);
       } else {
         $('#' + id).remove()
