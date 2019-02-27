@@ -162,7 +162,7 @@ $mode = $_SESSION["watch_type"];
 </div>
 
 <div class="center_v dialog_box" id="splash">
-    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo animated"/>
+    <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo animated"/>
     <div id="splash_loadtext">配信サーバに接続しています...</div>
 </div>
 
@@ -372,14 +372,14 @@ $mode = $_SESSION["watch_type"];
 
   function comment_view(text) {
     const id = Math.floor(Math.random() * 1000000);
-    const height = Math.floor( Math.random() * $("#comment_layer").height() -40) + 40;
+    const height = Math.floor( Math.random() * $("#comment_layer").height() - 40);
     const can = document.getElementById("#comment_layer");
     $("#comment_layer").prepend('<div id=' + id + '>' + text + '</div>');
     const width = $("#comment_layer").width()
     console.log(width)
     let i = 0
     function animetion() {
-      $('#' + id).css('right', i)
+      $('#' + id).css('right', i - text.length * 14) //1文字14px
       $('#' + id).css('bottom', height)
       i += 4
     }
