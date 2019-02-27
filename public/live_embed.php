@@ -384,7 +384,7 @@ $mode = $_SESSION["watch_type"];
       i += 4
     }
     function scroll() {
-      if(i < width) {
+      if(i < width + text.length * 14) {
         animation();
         requestAnimationFrame(scroll);
       } else {
