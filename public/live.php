@@ -98,6 +98,7 @@ $vote = loadVote($live["id"]);
     .is_wide #comment {
       position: fixed;
       right: 0;
+      top: 0;
       height: calc(100% - 35px);
       background: rgba(0,0,0,.3);
     }
