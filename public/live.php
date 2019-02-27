@@ -245,12 +245,13 @@ $vote = loadVote($live["id"]);
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
         <?php endif; ?>
-        <?php if (!empty($liveUser["misc"]["donate_url"]) || (!$my && !empty($liveUser["misc"]["donation_alerts_token"])) || (!empty($liveUser["misc"]["donation_alerts_token"]) && $live["is_live"] === 0)) : ?>
-          <a class="btn btn-outline-warning"
-             href="<?=s(!empty($liveUser["misc"]["donation_alerts_token"]) ? "https://www.donationalerts.com/r/" . $liveUser["misc"]["donation_alerts_name"] : $liveUser["misc"]["donate_url"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
-        <?php elseif (!empty($liveUser["misc"]["donation_alerts_token"]) || !empty($liveUser["donation_desc"])) : ?>
+
+        <?php if (donation_url($liveUser["id"], false) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal"><i class="fas fa-donate"></i> 支援 (CH)</button>
+        <?php elseif (donation_url($liveUser["id"])) : ?>
+          <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
         <?php endif; ?>
+
         <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>

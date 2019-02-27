@@ -16,6 +16,10 @@ $env["tw_login"]["secret"] = "";
 // $env["tw_login"]["redirect_uri"] = "https://live.knzk.me/auth/twitter";
 $env["tw_login"]["redirect_uri"] = "http" . (empty($env["is_testing"]) ? "s" : "") . "://" . $env["domain"] . $env["RootUrl"] . "auth/twitter" . (empty($env["is_testing"]) ? "" : ".php");
 
+$env["streamlabs"]["id"] = "";
+$env["streamlabs"]["secret"] = "";
+$env["streamlabs"]["redirect_uri"] = "http" . (empty($env["is_testing"]) ? "s" : "") . "://" . $env["domain"] . $env["RootUrl"] . "auth/streamlabs" . (empty($env["is_testing"]) ? "" : ".php");
+
 // config.js と同じものを使用してください。
 $env["database"]["host"] = "localhost";
 $env["database"]["port"] = 3306;

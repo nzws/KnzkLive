@@ -82,3 +82,15 @@ function ex_rate($amount, $currency) {
   ];
   return isset($rate[$currency]) ? intval($amount * $rate[$currency]) : false;
 }
+
+function donation_url($user_id, $allow_nonech = true) {
+  $u = getUser($user_id);
+  if (!$u) return null;
+
+  if (!empty($u["misc"]["donation_alerts_name"])) $url = "https://www.donationalerts.com/r/" . $u["misc"]["donation_alerts_name"];
+  elseif (!empty($u["misc"]["streamlabs_token"])) $url = "https://streamlabs.com/" . $u["misc"]["streamlabs_name"];
+  elseif (!empty($u["misc"]["donate_url"]) && $allow_nonech) $url = $u["misc"]["donate_url"];
+  else return null;
+
+  return s($url);
+}

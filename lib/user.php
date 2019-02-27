@@ -44,10 +44,10 @@ function setUserLive($id, $user_id) {
   $mysqli->close();
 }
 
-function setConfig($id, $misc, $donate_desc = null) {
+function setConfig($id, $misc, $donate_desc = false) {
   $misc = json_encode($misc, true);
   $mysqli = db_start();
-  if ($donate_desc) {
+  if ($donate_desc !== false) {
     $stmt = $mysqli->prepare("UPDATE `users` SET misc = ?, donation_desc = ? WHERE id = ?;");
     $stmt->bind_param("sss", $misc, $donate_desc, $id);
   } else {

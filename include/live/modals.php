@@ -167,11 +167,11 @@
         <?php else : ?>
         <p>
           1. 支援ページを開いてください。
-          <a href="https://www.donationalerts.com/r/<?=s($liveUser["misc"]["donation_alerts_name"])?>" target="_blank" class="btn btn-primary btn-block">支援ページを開く</a>
+          <a href="<?=donation_url($liveUser["id"], false)?>" target="_blank" class="btn btn-primary btn-block">支援ページを開く</a>
         </p>
 
         <p>
-          2. <b>(重要)</b> フォームの「Your name」欄に下記のIDをコピペしてください。KnzkLiveで個人を識別するために必要です。
+          2. <b>(重要)</b> フォームの「Your name」(または、Your Nickname, あなたのあだ名)欄に下記のIDをコピペしてください。KnzkLiveで個人を識別するために必要です。
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">ID</span>
@@ -180,7 +180,7 @@
         </div>
         </p>
         <p>
-          3. その他項目も設定し、「Donate」ボタンを押して決済すると支援完了です。
+          3. その他項目も設定し、寄付ボタンを押して決済すると支援完了です。
         </p>
         <?php endif; ?>
       </div>
@@ -274,7 +274,7 @@
     document.getElementById("addch_currency").innerText = currency;
     return false;
   }
-  
+
   function add_ch() {
     const currency = document.getElementById("addch_currency").innerText;
     const acct = document.getElementById("addch_acct");

@@ -77,6 +77,7 @@ app.post('/update_conf', function(req, res) {
       }
 
       if (b.da_token) startDAConnect(b.da_token, b.live_id);
+      if (b.sl_token) startSLConnect(b.sl_token, b.live_id);
     } else {
       //user
       conf.acct.push(b.value);
@@ -92,6 +93,7 @@ app.post('/update_conf', function(req, res) {
       }
 
       if (b.da_token) closeDAConnect(b.da_token);
+      if (b.sl_token) closeSLConnect(b.sl_token);
     }
   }
   res.end();
@@ -119,6 +121,7 @@ http.listen(3000, function() {
   console.log('[KnzkLive WebSocket] listening on *:3000');
 });
 
+// donation-alerts
 const daData = {};
 const socketio = require('socket.io-client');
 function startDAConnect(token, live_id) {
@@ -140,33 +143,9 @@ function startDAConnect(token, live_id) {
   daData[token].on('donation', function(msg) {
     const data = JSON.parse(msg);
     if (data['_is_test_alert']) {
-      exec(
-        `php ${__dirname}/../knzkctl donate ${live_id} testing`,
-        (err, stdout, stderr) => {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
+      donateTest(live_id);
     } else {
-      db.query(
-        'SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?)',
-        data['username'],
-        function(error, results, fields) {
-          if (error) throw error;
-          const user_id = results[0] ? results[0]['id'] : 0;
-          exec(
-            `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
-              data['amount']
-            )} ${data['currency']}`,
-            (err, stdout, stderr) => {
-              if (err) {
-                console.log(err);
-              }
-            }
-          );
-        }
-      );
+      donateRun(data['username'], live_id, data['amount'], data['currency']);
     }
   });
 }
@@ -174,6 +153,72 @@ function startDAConnect(token, live_id) {
 function closeDAConnect(token) {
   daData[token].close();
   daData[token] = null;
+}
+
+// stream-labs
+const slData = {};
+function startSLConnect(token, live_id) {
+  if (slData[token]) {
+    console.log('[Worker Donate-sl] already connected');
+    return false;
+  }
+
+  slData[token] = socketio(`https://sockets.streamlabs.com?token=${token}`, {
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionDelayMax: 5000,
+    reconnectionDelay: 1000
+  });
+
+  slData[token].on('event', function(eventData) {
+    if (eventData.type === 'donation') {
+      const msg = eventData.message[0];
+      if (!msg) return false;
+
+      if (msg.isTest) {
+        donateTest(live_id);
+      } else {
+        donateRun(msg.from, live_id, msg.amount, msg.currency);
+      }
+    }
+  });
+}
+
+function closeSLConnect(token) {
+  slData[token].close();
+  slData[token] = null;
+}
+
+function donateTest(live_id) {
+  exec(
+    `php ${__dirname}/../knzkctl donate ${live_id} testing`,
+    (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+}
+
+function donateRun(username, live_id, amount, currency) {
+  db.query(
+    'SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?)',
+    username,
+    function(error, results, fields) {
+      if (error) throw error;
+      const user_id = results[0] ? results[0]['id'] : 0;
+      exec(
+        `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
+          amount
+        )} ${currency}`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+    }
+  );
 }
 
 const WebSocketClient = require('websocket').client;
@@ -246,6 +291,8 @@ db.query('SELECT * FROM `users` WHERE live_current_id != 0', function(
     const misc = JSON.parse(item['misc']);
     if (misc['donation_alerts_token'])
       startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
+    if (misc['streamlabs_token'])
+      startSLConnect(misc['streamlabs_token'], item['live_current_id']);
   }
   console.log('[Worker Donate]');
 });

@@ -39,7 +39,8 @@ function node_update_conf($mode, $type, $value, $live_id, $user_id = null) {
     "type" => $type,
     "value" => $value,
     "live_id" => $live_id,
-    "da_token" => !empty($user["misc"]["donation_alerts_token"]) ? $user["misc"]["donation_alerts_token"] : null
+    "da_token" => !empty($user["misc"]["donation_alerts_token"]) ? $user["misc"]["donation_alerts_token"] : null,
+    "sl_token" => !empty($user["misc"]["streamlabs_token"]) ? $user["misc"]["streamlabs_token"] : null
   ];
 
   $header = [
