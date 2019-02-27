@@ -141,9 +141,7 @@ $mode = $_SESSION["watch_type"];
     .dialog_box {
       max-width: 100%;
       padding: 20px;
-      background: rgba(0, 0, 0, .5);
-      border: solid 1px #fff;
-      border-radius: 5px;
+      background: #212121;
     }
 
     #play_button {
@@ -195,6 +193,7 @@ $mode = $_SESSION["watch_type"];
   </div>
 </div>
 <div id="item_layer"></div>
+<div id="comment_layer"></div>
 
 <script id="item_emoji_tmpl" type="text/x-handlebars-template">
   <div class="item_emoji {{class}}" style="{{style}}" id="{{random_id}}">
@@ -211,7 +210,14 @@ $mode = $_SESSION["watch_type"];
   let myLive = <?=$myLive ? "true" : "false"?>;
   let delay_sec = 3;
   let heartbeat;
-
+  window.requestAnimationFrame = (function() {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+  function(f) { return window.setTimeout(f, 1000 / 120); };
+}());
   function startWatching(v) {
     video.addEventListener("error", function() {
       showSplash("読み込み中に不明なエラーが発生しました...");
@@ -364,6 +370,29 @@ $mode = $_SESSION["watch_type"];
     }, delay_sec);
   }
 
+  function comment_view(text) {
+    const id = Math.floor(Math.random() * 1000000);
+    const height = Math.floor( Math.random() * $("#comment_layer").height() -40) + 40;
+    const can = document.getElementById("#comment_layer");
+    $("#comment_layer").prepend('<div id=' + id + '>' + text + '</div>');
+    const width = $("#comment_layer").width()
+    console.log(width)
+    let i = 0
+    function animetion() {
+      $('#' + id).css('right', i)
+      $('#' + id).css('bottom', height)
+      i += 4
+    }
+    function scroll() {
+      if(i < width) {
+        animetion();
+        requestAnimationFrame(scroll);
+      } else {
+        $('#' + id).remove()
+      }
+    }
+    scroll();
+  }
   function end() {
     clearInterval(heartbeat);
     $("#video").hide();

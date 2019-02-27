@@ -671,6 +671,7 @@ $vote = loadVote($live["id"]);
         elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
         const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
         elemId("comments").innerHTML = (check_data(ws_reshtml) ? tmpl(buildCommentData(ws_reshtml, inst)) : "") + elemId("comments").innerHTML;
+        document.getElementById('iframe').contentWindow.comment_view(ws_reshtml['content']);
       }
     } else if (ws_resdata.event === 'delete') {
       var del_toot = elemId('post_' + ws_resdata.payload);
