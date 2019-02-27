@@ -164,7 +164,7 @@ $mode = $_SESSION["watch_type"];
 </div>
 
 <div class="center_v dialog_box" id="splash">
-    <img src="<?=$env["RootUrl"]?>img/knzklive_logo.png" class="waiting_logo animated"/>
+    <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo animated"/>
     <div id="splash_loadtext">配信サーバに接続しています...</div>
 </div>
 
