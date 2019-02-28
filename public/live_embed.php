@@ -65,6 +65,7 @@ $mode = $_SESSION["watch_type"];
       position: absolute;
       bottom: 0;
       width: 100%;
+      z-index: 20000;
     }
 
     .watermark {
@@ -94,7 +95,7 @@ $mode = $_SESSION["watch_type"];
     }
 
     .waiting_logo.animated {
-      animation: pulse 2s infinite;
+      animation: pulse 3s infinite;
     }
 
     @keyframes pulse {
@@ -138,35 +139,78 @@ $mode = $_SESSION["watch_type"];
       height: 0;
     }
 
-    .dialog_box {
-      max-width: 100%;
-      padding: 20px;
-      background: rgba(0, 0, 0, .5);
-      border: solid 1px #fff;
-      border-radius: 5px;
-      z-index: 9999;
+    #splash {
+      position: absolute;
+      bottom: 50px;
+      left: 30px;
+      font-size: 1.1rem;
+
+      padding: 5px;
+      background: rgba(0, 0, 0, .8);
+      border-radius: 3px;
+      z-index: 9000;
     }
 
     #play_button {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      padding: 20px;
+      padding-bottom: 50px;
+
       cursor: pointer;
       z-index: 10000;
-      background: #000;
+      background: #ea356d;
+      font-size: larger;
+    }
+
+    #play_button b {
+      font-size: 1.2rem;
+    }
+
+    #play_button img {
+      width: 280px;
+      position: absolute;
+      bottom: 0;
+      right: 100px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #splash {
+        left: 5px;
+        bottom: 40px;
+        font-size: 1rem;
+      }
+
+      #play_button img {
+        display: none;
+      }
+
+      .volume_controller {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
-<div class="center_v dialog_box" id="play_button" style="display: none" onclick="seekLive()">
-  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo"/>
-  <div>
-    <b>クリックして再生...</b><br>
-    <small>(ブラウザが再生をブロックしました!?)</small>
-  </div>
+<div id="play_button" style="display: none" onclick="seekLive()">
+  <b>[クリックして再生]</b><br>
+  <small>ブラウザが自動再生をブロックしました...</small>
+  <img src="<?=$env["RootUrl"]?>images/surprized_knzk.png"/>
 </div>
 
-<div class="center_v dialog_box" id="splash">
-    <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo animated"/>
+<div id="splash">
     <div id="splash_loadtext">配信サーバに接続しています...</div>
+</div>
+
+<div id="end_dialog" class="center_v" style="display: none">
+    <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo animated"/>
+    <p>
+      配信は終了しました。
+    </p>
 </div>
 
 <div id="video">
@@ -186,8 +230,10 @@ $mode = $_SESSION["watch_type"];
 
         <a href="javascript:mute()" id="mute" class="invisible"><i class="fas fa-volume-mute fa-fw"></i></a>
         <a href="javascript:mute(1)" id="volume"><i class="fas fa-volume-up fa-fw"></i></a>
-        <span style="margin-right: 8px"></span>
-        <input type="range" id="volume-range" onchange="volume(this.value)">
+        <span class="volume_controller">
+          <span style="margin-right: 8px"></span>
+          <input type="range" id="volume-range" onchange="volume(this.value)">
+        </span>
 
         <a href="javascript:parent.widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
         <a href="javascript:full()"><i class="fas fa-expand fa-fw"></i></a>
@@ -232,17 +278,17 @@ $mode = $_SESSION["watch_type"];
 
     video.addEventListener("playing", function() {
       showSplash();
-      v.play();
+      play(v);
     }, false);
 
     video.addEventListener("canplay", function() {
       showSplash();
-      v.play();
+      play(v);
     }, false);
 
     video.addEventListener("loadedmetadata", function () {
       showSplash();
-      v.play();
+      play(v);
     }, false);
 
     volume(70, true);
@@ -264,12 +310,6 @@ $mode = $_SESSION["watch_type"];
         text += `<a href="javascript:seekLive()">LIVE</a> · ` + delay_sec + "s";
       } else {
         text += "LIVE";
-      }
-
-      if (video.paused) {
-        video.play().catch(function(e) {
-          $("#play_button").show();
-        });
       }
       showSplash();
     } else { //バッファ
@@ -296,7 +336,7 @@ $mode = $_SESSION["watch_type"];
         hls.loadSource(hls_url);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          video.play();
+          play();
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = hls_url;
@@ -315,8 +355,14 @@ $mode = $_SESSION["watch_type"];
 
   function seekLive() {
     $("#play_button").hide();
-    video.play();
+    play();
     video.currentTime = (video.seekable).end(0) - 1;
+  }
+
+  function play(v = video) {
+    v.play().catch(function(e) {
+      $("#play_button").show();
+    });
   }
 
   function mute(i = 0, no_save) {
@@ -399,7 +445,8 @@ $mode = $_SESSION["watch_type"];
   function end() {
     clearInterval(heartbeat);
     $("#video").hide();
-    showSplash("配信は終了しました。");
+    showSplash();
+    $("#end_dialog").show();
   }
 </script>
 </body>
