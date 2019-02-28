@@ -141,7 +141,9 @@ $mode = $_SESSION["watch_type"];
     .dialog_box {
       max-width: 100%;
       padding: 20px;
-      background: #212121;
+      background: rgba(0, 0, 0, .5);
+      border: solid 1px #fff;
+      border-radius: 5px;
     }
 
     #play_button {
