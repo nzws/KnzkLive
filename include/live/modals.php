@@ -158,7 +158,7 @@
         <?php if (!empty($liveUser["donation_desc"])) : ?>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">ID</span>
+              <span class="input-group-text">アカウントID</span>
             </div>
             <input type="text" class="form-control" readonly value="<?=$my["acct"]?>" onclick="this.select(0,this.value.length)">
           </div>
@@ -176,7 +176,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">ID</span>
           </div>
-          <input type="text" class="form-control" readonly value="<?=$my["acct"]?>" onclick="this.select(0,this.value.length)">
+          <input type="text" class="form-control" readonly value="knzklive_<?=$my["id"]?>" onclick="this.select(0,this.value.length)">
         </div>
         </p>
         <p>

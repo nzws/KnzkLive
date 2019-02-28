@@ -201,24 +201,28 @@ function donateTest(live_id) {
 }
 
 function donateRun(username, live_id, amount, currency) {
-  db.query(
-    'SELECT * FROM `users` WHERE LOWER(acct) = LOWER(?)',
-    username,
-    function(error, results, fields) {
-      if (error) throw error;
-      const user_id = results[0] ? results[0]['id'] : 0;
-      exec(
-        `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
-          amount
-        )} ${currency}`,
-        (err, stdout, stderr) => {
-          if (err) {
-            console.log(err);
-          }
+  if (username.indexOf('knzklive_') === -1) return;
+  username = parseInt(username.replace('knzklive_', ''));
+  if (!username) return;
+
+  db.query('SELECT * FROM `users` WHERE id = ?', username, function(
+    error,
+    results,
+    fields
+  ) {
+    if (error) throw error;
+    const user_id = results[0] ? results[0]['id'] : 0;
+    exec(
+      `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
+        amount
+      )} ${currency}`,
+      (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
         }
-      );
-    }
-  );
+      }
+    );
+  });
 }
 
 const WebSocketClient = require('websocket').client;
