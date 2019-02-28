@@ -77,6 +77,7 @@ $mode = $_SESSION["watch_type"];
     .live_user {
       left: 10px;
       z-index: 40000;
+      opacity: 0.9;
     }
 
     .live_user img {
@@ -85,7 +86,6 @@ $mode = $_SESSION["watch_type"];
       width: 50px;
       height: 50px;
       border-radius: 5px;
-      opacity: 0.8;
       background: #fff;
     }
 
@@ -235,7 +235,7 @@ $mode = $_SESSION["watch_type"];
 </div>
 
 <div id="splash">
-    <div id="splash_loadtext">配信サーバに接続しています...</div>
+    <div id="splash_loadtext">接続しています...</div>
 </div>
 
 <div id="end_dialog" class="center_v" style="display: none">
@@ -313,7 +313,8 @@ $mode = $_SESSION["watch_type"];
     }, false);
 
     video.addEventListener("ended", function() {
-      showSplash("配信者からデータが送信されていません。");
+      clearInterval(heartbeat);
+      showSplash("ストリームはオフラインです。");
     }, false);
 
     video.addEventListener("playing", function() {
