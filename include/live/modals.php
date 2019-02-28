@@ -81,8 +81,8 @@
           <div class="col-sm-4">
             方向:
             <select class="form-control" id="item_emoji_dir">
-              <option value="left-to-right">左から右</option>
               <option value="right-to-left">右から左</option>
+              <option value="left-to-right">左から右</option>
               <option value="top-to-bottom">上から下</option>
               <option value="bottom-to-top">下から上</option>
             </select>
