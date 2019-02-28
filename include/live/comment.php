@@ -11,13 +11,7 @@
       <hr>
     </div>
   <?php endif; ?>
-<<<<<<< Updated upstream
-  <div class="mt-2 mb-2 comment_block">
-    <b id="limit" class="float-right"></b>
-  </div>
-=======
   <div class="comment_block"></div>
->>>>>>> Stashed changes
   <?php if ($my) : ?>
   <div class="comment_block">
     <div class="form-group">

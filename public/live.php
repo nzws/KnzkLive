@@ -184,10 +184,10 @@ $vote = loadVote($live["id"]);
       margin-top: .1rem;
     }
 
-<<<<<<< Updated upstream
     .live-info {
       margin-right: 15px;
-=======
+    }
+
     .comment-limit {
       width: 100%;
       height: 0px;
@@ -208,7 +208,6 @@ $vote = loadVote($live["id"]);
     .comment-form {
       position: relative;
       bottom: 30px
->>>>>>> Stashed changes
     }
   </style>
 </head>
