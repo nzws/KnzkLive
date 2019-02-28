@@ -165,11 +165,6 @@ $vote = loadVote($live["id"]);
       display: none;
     }
 
-    a.broadcaster_link {
-      color: #fff;
-      text-decoration: none;
-    }
-
     #donators {
       overflow-x: scroll;
       white-space: nowrap;
@@ -268,13 +263,6 @@ $vote = loadVote($live["id"]);
         </div>
         <input type="text" class="form-control" placeholder="タイトル (100文字以下)" value="<?=$live["name"]?>" id="edit_name">
       </div>
-
-      <p>
-        <a href="<?=userUrl($liveUser["broadcaster_id"])?>" target="_blank" class="broadcaster_link">
-          <img src="<?=$liveUser["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
-          <b><?=$liveUser["name"]?></b>
-        </a>
-      </p>
       <span class="text-secondary">
         <?php if ($live["is_live"] !== 0) : ?>
           <?=date("Y/m/d H:i", strtotime($live["created_at"]))?> に開始
