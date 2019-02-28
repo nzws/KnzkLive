@@ -24,6 +24,10 @@
   font-size: 200%;
 }
 
+#comment_layer div p {
+  margin: 0 auto;
+}
+
 .spin img {
   animation: spin 1s linear infinite;
 }
