@@ -144,11 +144,12 @@ $mode = $_SESSION["watch_type"];
       background: rgba(0, 0, 0, .5);
       border: solid 1px #fff;
       border-radius: 5px;
+      z-index: 9999;
     }
 
     #play_button {
       cursor: pointer;
-      z-index: 9999;
+      z-index: 10000;
       background: #000;
     }
   </style>
