@@ -136,14 +136,14 @@ html[data-page='live'] {
   }
 
   .comment-limit {
-    width: 100%;
+    width: calc(100% - 30px);
     height: 0px;
     position: absolute;
   }
 
   #limit {
     position: relative;
-    right: 38px;
+    right: 8px;
     bottom: 38px;
     color: #495057;
   }
