@@ -278,17 +278,17 @@ $mode = $_SESSION["watch_type"];
 
     video.addEventListener("playing", function() {
       showSplash();
-      play(v);
+      v.play();
     }, false);
 
     video.addEventListener("canplay", function() {
       showSplash();
-      play(v);
+      v.play();
     }, false);
 
     video.addEventListener("loadedmetadata", function () {
       showSplash();
-      play(v);
+      v.play();
     }, false);
 
     volume(70, true);
@@ -312,6 +312,12 @@ $mode = $_SESSION["watch_type"];
         text += "LIVE";
       }
       showSplash();
+
+      if (video.paused) {
+        video.play().catch(function(e) {
+          $("#play_button").show();
+        });
+      }
     } else { //バッファ
       text += "BUFFERING";
       showSplash("バッファしています...");
@@ -336,7 +342,7 @@ $mode = $_SESSION["watch_type"];
         hls.loadSource(hls_url);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          play();
+          video.play();
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = hls_url;
@@ -355,14 +361,8 @@ $mode = $_SESSION["watch_type"];
 
   function seekLive() {
     $("#play_button").hide();
-    play();
+    video.play();
     video.currentTime = (video.seekable).end(0) - 1;
-  }
-
-  function play(v = video) {
-    v.play().catch(function(e) {
-      $("#play_button").show();
-    });
   }
 
   function mute(i = 0, no_save) {
