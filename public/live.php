@@ -318,7 +318,6 @@ $vote = loadVote($live["id"]);
           {{#if donator_color}}
           </span>
           {{/if}}
-            <small>@{{account.acct}}</small>
         </span>
         <div class="postcontent card-text">
           {{{content}}}
@@ -830,10 +829,11 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
   }
 
   function userDropdown(obj, id, acct, url) {
-    let is_local = false;
+    let is_local = false, local_icon = "";
     if (acct.match(/\(local\)/i)) {
       is_local = true;
       acct = acct.replace(" (local)", "");
+      local_icon = `<i class="fas fa-home" title="ローカルコメント"></i> `;
     }
 
     $(".user-dropdown").remove();
@@ -855,11 +855,10 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       trigger: 'focus',
       template: `
 <div class="dropdown-menu user-dropdown" tabindex="0" onclick="$('.user-dropdown').popover('dispose')">
-   <button type="button" class="close" style="padding-right: 20px">
-     <span aria-hidden="true">&times;</span>
-   </button>
-  <h6 class="dropdown-header">@${acct}</h6>
+  <h6 class="dropdown-header">${local_icon}@${acct}</h6>
   ${html}
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item text-muted" href="#" onclick="return false">閉じる</a>
 </div>
 `,
       html: true
