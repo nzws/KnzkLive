@@ -1,8 +1,9 @@
-#item_layer {
+#item_layer,
+#comment_layer {
   position: absolute;
   width: 100%;
   height: calc(100% - 35px);
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .item_emoji {
@@ -15,6 +16,16 @@
 
 .item_emoji.big img {
   width: 100px;
+}
+
+#comment_layer div {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 200%;
+}
+
+#comment_layer div p {
+  margin: 0 auto;
 }
 
 .spin img {
@@ -63,7 +74,8 @@
   }
 }
 
-.bottom-to-top > img, .top-to-bottom > img {
+.bottom-to-top > img,
+.top-to-bottom > img {
   display: block;
 }
 
