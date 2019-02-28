@@ -11,7 +11,6 @@
       <hr>
     </div>
   <?php endif; ?>
-  <div class="comment_block"></div>
   <?php if ($my) : ?>
   <div class="comment_block">
     <div class="form-group">
