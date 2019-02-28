@@ -11,15 +11,19 @@
       <hr>
     </div>
   <?php endif; ?>
+<<<<<<< Updated upstream
   <div class="mt-2 mb-2 comment_block">
     <b id="limit" class="float-right"></b>
   </div>
+=======
+  <div class="comment_block"></div>
+>>>>>>> Stashed changes
   <?php if ($my) : ?>
   <div class="comment_block">
-    <div class="form-group mb-2">
+    <div class="form-group">
       <textarea class="form-control" id="toot" rows="3" placeholder="<?=$my["acct"]?>でトゥート/コメント" onkeyup="check_limit()"></textarea>
     </div>
-
+    <div class="comment-limit"><p id="limit" class="float-right"></p></div>
     <div class="custom-control custom-checkbox float-left my-1">
       <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
       <label class="custom-control-label" for="no_toot">
