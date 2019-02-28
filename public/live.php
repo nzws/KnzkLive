@@ -187,6 +187,28 @@ $vote = loadVote($live["id"]);
     .live-info {
       margin-right: 15px;
     }
+
+    .comment-limit {
+      width: 100%;
+      height: 0px;
+      position: absolute;
+    }
+
+    #limit {
+      position: relative;
+      right: 38px;
+      bottom: 38px;
+      color: #495057;
+    }
+
+    p#limit {
+      margin-bottom: 0;
+    }
+
+    .comment-form {
+      position: relative;
+      bottom: 30px
+    }
   </style>
 </head>
 <body>
