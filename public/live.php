@@ -406,22 +406,14 @@ $vote = loadVote($live["id"]);
     const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
     const datet = parseInt((now.getTime() - (new Date("<?=dateHelper($live["created_at"])?>")).getTime()) / 1000);
 
-<<<<<<< HEAD
     let html = `<i class="fas fa-clock"></i> `;
-=======
-    let html = "";
->>>>>>> f4c93a514de63a62b8305e72148d9ccdb79182ab
     let hour = parseInt(datet / 3600);
     let min = parseInt((datet / 60) % 60);
     let sec = datet % 60;
 
     if (hour > 0) {
       if (hour < 10) hour = "0" + hour;
-<<<<<<< HEAD
       html += hour + ":";
-=======
-      html += `<i class="fas fa-clock"></i> ` + hour + ":";
->>>>>>> f4c93a514de63a62b8305e72148d9ccdb79182ab
     }
 
     if (min < 10) min = "0" + min;
