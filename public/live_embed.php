@@ -77,7 +77,6 @@ $mode = $_SESSION["watch_type"];
     .live_user {
       left: 10px;
       z-index: 40000;
-      opacity: 0.9;
     }
 
     .live_user img {
@@ -87,6 +86,7 @@ $mode = $_SESSION["watch_type"];
       height: 50px;
       border-radius: 5px;
       background: #fff;
+      opacity: 0.9;
     }
 
     .live_user b {
@@ -100,6 +100,7 @@ $mode = $_SESSION["watch_type"];
         black 2px 1px,  black -2px 1px,
         black 2px -1px, black -2px -1px;
       color: #fff;
+      opacity: 0.8;
     }
 
     .watermark {
