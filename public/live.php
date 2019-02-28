@@ -233,7 +233,7 @@ $vote = loadVote($live["id"]);
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
       <span class="float-right">
-        <span class="live-info"><span id="h"></span><span id="m"></span><span id="s"></span></span>
+        <span class="live-info" id="time"></span>
         <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
         <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
 
@@ -406,20 +406,23 @@ $vote = loadVote($live["id"]);
     const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
     const datet = parseInt((now.getTime() - (new Date("<?=dateHelper($live["created_at"])?>")).getTime()) / 1000);
 
-    var hour = parseInt(datet / 3600);
-    var min = parseInt((datet / 60) % 60);
-    var sec = datet % 60;
+    let html = "";
+    let hour = parseInt(datet / 3600);
+    let min = parseInt((datet / 60) % 60);
+    let sec = datet % 60;
 
     if (hour > 0) {
       if (hour < 10) hour = "0" + hour;
-      elemId("h").innerHTML = `<i class="fas fa-clock"></i> ` + hour + ":";
+      html += `<i class="fas fa-clock"></i> ` + hour + ":";
     }
 
     if (min < 10) min = "0" + min;
-    elemId("m").innerHTML = min + ":";
+    html += min + ":";
 
     if (sec < 10) sec = "0" + sec;
-    elemId("s").innerHTML = sec;
+    html += sec;
+
+    elemId("time").innerHTML = html;
   }
 
   function reloadLive() {
