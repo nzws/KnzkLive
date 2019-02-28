@@ -89,6 +89,19 @@ $mode = $_SESSION["watch_type"];
       background: #fff;
     }
 
+    .live_user b {
+      text-shadow:
+        black 2px 0,  black -2px 0,
+        black 0 -2px, black 0 2px,
+        black 2px 2px , black -2px 2px,
+        black 2px -2px, black -2px -2px,
+        black 1px 2px,  black -1px 2px,
+        black 1px -2px, black -1px -2px,
+        black 2px 1px,  black -2px 1px,
+        black 2px -1px, black -2px -1px;
+      color: #fff;
+    }
+
     .watermark {
       opacity: .6;
       right: 20px;
