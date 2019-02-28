@@ -63,10 +63,7 @@ $vote = loadVote($live["id"]);
     .hashtag {
       display: none;
     }
-    .avatar_img_navbar {
-      float: left;
-      margin-right: 10px;
-    }
+
     .side-buttons, .side-buttons:hover {
       color: #17a2b8;
       text-decoration: none;

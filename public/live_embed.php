@@ -2,6 +2,7 @@
 require_once("../lib/bootloader.php");
 $_GET["id"] = s($_GET["id"]);
 $live = getLive($_GET["id"]);
+$liveUser = getUser($live["user_id"]);
 $my = getMe();
 if (!$_GET["id"] || !$live) {
   header("HTTP/1.1 404 Not Found");
@@ -68,10 +69,28 @@ $mode = $_SESSION["watch_type"];
       z-index: 20000;
     }
 
+    .header {
+      position: absolute;
+      top: 15px;
+    }
+
+    .live_user {
+      left: 10px;
+      z-index: 40000;
+    }
+
+    .live_user img {
+      float: left;
+      margin-right: 10px;
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      opacity: 0.8;
+      background: #fff;
+    }
+
     .watermark {
       opacity: .6;
-      position: absolute;
-      top: 18px;
       right: 20px;
       height: 18px;
     }
@@ -220,8 +239,14 @@ $mode = $_SESSION["watch_type"];
       この環境では視聴する事ができません。OS・ブラウザをアップデートするか、別の環境からお試しください。
     </p>
   </video>
-  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="watermark" />
-  <div class="footer" style="background: rgba(0,0,0,.5)">
+  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="watermark header"/>
+  <div class="header live_user hover">
+    <a href="<?=userUrl($liveUser["broadcaster_id"])?>" target="_blank" class="broadcaster_link">
+      <img src="<?=$liveUser["misc"]["avatar"]?>"/>
+      <b><?=$liveUser["name"]?></b>
+    </a>
+  </div>
+  <div class="footer hover" style="background: rgba(0,0,0,.5)">
     <div class="footer_content">
       <span id="video_status">LOADING</span>
       <span> · <a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a></span>
@@ -259,6 +284,8 @@ $mode = $_SESSION["watch_type"];
   let myLive = <?=$myLive ? "true" : "false"?>;
   let delay_sec = 3;
   let heartbeat;
+  let hover = 0;
+
   window.requestAnimationFrame = (function() {
   return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
@@ -351,6 +378,10 @@ $mode = $_SESSION["watch_type"];
       startWatching(video);
     }
     heartbeat = setInterval(showStatus, 1000);
+
+    setTimeout(function() {
+      $(".hover").hide();
+    }, 5000);
   };
 
   function showSplash(text = "") {
@@ -447,6 +478,24 @@ $mode = $_SESSION["watch_type"];
     $("#video").hide();
     showSplash();
     $("#end_dialog").show();
+  }
+
+  window.onmouseover = window.onclick = function watchHover() {
+    $(".hover").show();
+    hover++;
+    setTimeout(function() {
+      hover--;
+
+      if ($(":hover").length) {
+        watchHover();
+        return;
+      }
+
+      if (hover <= 0) {
+        hover = 0;
+        $(".hover").hide();
+      }
+    }, 5000);
   }
 </script>
 </body>
