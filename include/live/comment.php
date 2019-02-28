@@ -12,7 +12,6 @@
     </div>
   <?php endif; ?>
   <div class="mt-2 mb-2 comment_block">
-    #<?=liveTag($live)?>: <b id="comment_count"><?=s($live["comment_count"])?></b>コメ
     <b id="limit" class="float-right"></b>
   </div>
   <?php if ($my) : ?>

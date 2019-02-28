@@ -191,6 +191,10 @@ $vote = loadVote($live["id"]);
     .custom-control-label::before {
       margin-top: .1rem;
     }
+
+    .live-info {
+      margin-right: 15px;
+    }
   </style>
 </head>
 <body>
@@ -229,14 +233,17 @@ $vote = loadVote($live["id"]);
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
       <span class="float-right">
-          <span id="h"></span><span id="m"></span><span id="s"></span>
-          <span id="count_open">
-            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 視聴者数: <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
-          </span>
-          <span id="count_end" class="invisible">
-            アイテム: <b class="point_count"><?=$live["point_count"]?></b>KP · 総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人 · 最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
-          </span>
+        <span class="live-info"><span id="h"></span><span id="m"></span><span id="s"></span></span>
+        <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
+        <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
+
+        <span id="count_open">
+          <i class="fas fa-users"></i> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
         </span>
+        <span id="count_end" class="invisible">
+          総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人    最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+        </span>
+      </span>
       <br>
       <div class="float-right">
         <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
@@ -405,14 +412,14 @@ $vote = loadVote($live["id"]);
 
     if (hour > 0) {
       if (hour < 10) hour = "0" + hour;
-      elemId("h").innerHTML = hour + ":";
+      elemId("h").innerHTML = `<i class="fas fa-clock"></i> ` + hour + ":";
     }
 
     if (min < 10) min = "0" + min;
     elemId("m").innerHTML = min + ":";
 
     if (sec < 10) sec = "0" + sec;
-    elemId("s").innerHTML = sec + " · ";
+    elemId("s").innerHTML = sec;
   }
 
   function reloadLive() {
