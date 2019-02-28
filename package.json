@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "ws:start": "node ws/index.js",
-    "fmt": "prettier --write \"**/*.js\""
+    "fmt": "prettier --write \"**/*.js\"",
+    "build": "gulp"
   },
   "dependencies": {
     "express": "4.16.4",
@@ -20,6 +21,8 @@
     "ws": "6.1.4"
   },
   "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-sass": "^4.0.2",
     "husky": "1.3.1",
     "prettier": "1.16.4",
     "pretty-quick": "1.10.0"

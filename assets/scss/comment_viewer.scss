@@ -1,0 +1,49 @@
+body {
+  /* thx https://qiita.com/NoxGit/items/eb0904822c0f0fe97650 */
+  text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
+    black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,
+    black 1px 2px, black -1px 2px, black 1px -2px, black -1px -2px,
+    black 2px 1px, black -2px 1px, black 2px -1px, black -2px -1px;
+
+  background: transparent;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', YuGothic,
+    'ヒラギノ角ゴ ProN W3', Hiragino Kaku Gothic ProN, Arial, 'メイリオ', Meiryo,
+    sans-serif;
+}
+
+a,
+a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+  margin-top: 10px;
+}
+
+.invisible {
+  display: none;
+}
+
+.com {
+  margin-top: 20px;
+}
+
+.hashtag {
+  display: none;
+}
+
+.alert {
+  display: table;
+  padding: 5px;
+}
+
+.alert-warning {
+  background-color: rgba(255, 243, 205, 0.8);
+}
+
+.alert-primary {
+  background-color: rgba(204, 229, 255, 0.8);
+}

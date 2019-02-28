@@ -1,0 +1,5 @@
+@mixin media($breakpoint: md, $mode: min) {
+  @media screen and (#{$mode}-width: #{map_get($grid-breakpoints, $breakpoint)}) {
+    @content;
+  }
+}

@@ -15,67 +15,14 @@ if (!$live) {
 $liveUser = getUser($live["user_id"]);
 ?>
 <!doctype html>
-<html lang="ja">
+<html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>KnzkLive Comment-Viewer</title>
     <meta name="robots" content="noindex">
-    <style>
-        body {
-      /* thx https://qiita.com/NoxGit/items/eb0904822c0f0fe97650 */
-      text-shadow:
-        black 2px 0,  black -2px 0,
-        black 0 -2px, black 0 2px,
-        black 2px 2px , black -2px 2px,
-        black 2px -2px, black -2px -2px,
-        black 1px 2px,  black -1px 2px,
-        black 1px -2px, black -1px -2px,
-        black 2px 1px,  black -2px 1px,
-        black 2px -1px, black -2px -1px;
-
-      background: transparent;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
-    }
-
-    a,
-    a:hover {
-      color: #fff;
-      text-decoration: none;
-    }
-
-    p {
-      margin: 0;
-      margin-top: 10px;
-    }
-
-    .invisible {
-      display: none;
-    }
-
-    .com {
-      margin-top: 20px;
-    }
-
-    .hashtag {
-      display: none;
-    }
-
-    .alert {
-      display: table;
-      padding: 5px;
-    }
-
-    .alert-warning {
-      background-color: rgba(255, 243, 205, 0.8);
-    }
-
-    .alert-primary {
-      background-color: rgba(204, 229, 255, 0.8);
-    }
-  </style>
+    <link rel="stylesheet" href="<?=$env["RootUrl"]?>bundle/comment_viewer.css?t=<?=filemtime(__DIR__ . "/bundle/comment_viewer.css")?>">
 </head>
 
 <body>

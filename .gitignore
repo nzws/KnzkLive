@@ -69,3 +69,6 @@ config.json
 # Editor files
 .idea
 .vscode
+
+public/bundle/*
+!public/bundle/.gitkeep

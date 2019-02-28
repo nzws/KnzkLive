@@ -10,7 +10,7 @@ $new_live = ($user["live_current_id"]) ? getLive($user["live_current_id"]) : nul
 if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) $new_live = null;
 ?>
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-page="user">
 <head>
   <?php include "../include/header.php"; ?>
   <title><?=$user["name"]?> のユーザーページ - <?=$env["Title"]?></title>
@@ -23,38 +23,6 @@ if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_start
   <meta property="og:site_name" content="<?=$env["Title"]?>"/>
   <meta property="og:description" content="<?=$user["name"]?> (<?=$user["acct"]?>) のユーザーページ"/>
   <meta name="description" content="<?=$user["name"]?> (<?=$user["acct"]?>) のユーザーページ">
-
-  <style>
-    .jumbotron {
-      background: no-repeat center center #0a0a0a;
-      background-size: cover;
-      padding: 0;
-    }
-
-    .jumbotron .container {
-      padding: 2rem 1rem;
-      background: rgba(0, 0, 0, .4);
-    }
-
-    .avatar {
-      border-radius: 100%;
-      width: 180px;
-      height: 180px;
-    }
-
-    .live {
-      margin-bottom: 10px;
-    }
-
-    .live a, a.jumb_link {
-      color: initial;
-      text-decoration: none;
-    }
-
-    a.jumb_link {
-      color: #fff;
-    }
-  </style>
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>

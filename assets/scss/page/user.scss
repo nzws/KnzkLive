@@ -1,0 +1,32 @@
+html[data-page='user'] {
+  .jumbotron {
+    background: no-repeat center center #0a0a0a;
+    background-size: cover;
+    padding: 0;
+  }
+
+  .jumbotron .container {
+    padding: 2rem 1rem;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .avatar {
+    border-radius: 100%;
+    width: 180px;
+    height: 180px;
+  }
+
+  .live {
+    margin-bottom: 10px;
+  }
+
+  .live a,
+  a.jumb_link {
+    color: initial;
+    text-decoration: none;
+  }
+
+  a.jumb_link {
+    color: #fff;
+  }
+}

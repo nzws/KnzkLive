@@ -1,0 +1,53 @@
+html[data-page='index'] {
+  .top_lists {
+    width: 100%;
+    padding: 10px 0;
+    background: #333;
+
+    .no {
+      text-align: center;
+      color: #606984;
+      margin: 50px 0;
+    }
+  }
+
+  .card {
+    color: #212529;
+    margin-top: 5px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .history .card-base {
+    margin-bottom: 10px;
+
+    .name {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    a {
+      color: #fff;
+    }
+  }
+
+  .card-img-top {
+    width: 150px;
+  }
+
+  .card-img-div {
+    text-align: center;
+    background: #212121;
+  }
+
+  .card-body {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+  }
+}

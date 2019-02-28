@@ -3,55 +3,10 @@ require_once("../lib/bootloader.php");
 $lives = getAllLive();
 ?>
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-page="index">
 <head>
   <?php include "../include/header.php"; ?>
   <title>トップ - <?=$env["Title"]?></title>
-  <style>
-    .top_lists {
-      width: 100%;
-      padding: 10px 0;
-      background: #333;
-    }
-
-    .top_lists .no {
-      text-align: center;
-      color: #606984;
-      margin: 50px 0;
-    }
-    .card {
-      color: #212529;
-      margin-top: 5px;
-    }
-    .history .card-base .name {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-    }
-    .card-base a {
-      text-decoration: none;
-    }
-    .history .card-base a {
-      color: #fff;
-    }
-    .history .card-base {
-      margin-bottom: 10px;
-    }
-    .card-img-top {
-      width: 150px;
-    }
-    .card-img-div {
-      text-align: center;
-      background: #212121;
-    }
-    .card-body {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-    }
-  </style>
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>

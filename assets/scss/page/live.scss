@@ -1,0 +1,159 @@
+html[data-page='live'] {
+  #comments {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 600px;
+  }
+
+  .hashtag {
+    display: none;
+  }
+
+  .side-buttons,
+  .side-buttons:hover {
+    color: #17a2b8;
+    text-decoration: none;
+  }
+  .modal-title {
+    color: #212529;
+  }
+  .share_buttons button {
+    margin: 3px;
+    padding: 0.375rem 0.1rem;
+  }
+  #live-name {
+    font-weight: 600;
+  }
+
+  .is_wide {
+    overflow: hidden;
+  }
+
+  .is_wide .nav-container {
+    display: none;
+  }
+
+  .is_wide #iframe {
+    width: 100%;
+    position: fixed;
+  }
+
+  .is_wide #comment {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: calc(100% - 35px);
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .is_wide footer {
+    display: none;
+  }
+
+  .is_wide #comments {
+    height: calc(100% - 250px);
+  }
+
+  .admin_panel {
+    color: #000;
+  }
+
+  .comment {
+    display: flex;
+    background-color: #393f4f;
+  }
+
+  .comment .avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  .comment .content {
+    padding-left: 5px;
+    display: flex;
+  }
+
+  .comment .name {
+    cursor: pointer;
+    font-size: 1em;
+    display: block;
+  }
+
+  .postcontent {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .postcontent p {
+    margin-bottom: 0;
+  }
+
+  .postcontent .alert {
+    margin-bottom: 0;
+  }
+
+  .content .float-left {
+    padding-top: 0.25rem;
+  }
+
+  .content .float-right {
+    width: calc(100% - 50px);
+    padding: 0.25rem;
+  }
+
+  .comment .card-body {
+    padding: 0.25rem;
+  }
+
+  .admin-toggle.on > span.off,
+  .admin-toggle.off > span.on {
+    display: none;
+  }
+
+  #donators {
+    overflow-x: scroll;
+    white-space: nowrap;
+    height: 45px;
+  }
+
+  .donator {
+    cursor: pointer;
+    vertical-align: -4px;
+  }
+
+  .custom-control-label::after {
+    top: 0.4rem;
+  }
+
+  .custom-control-label::before {
+    margin-top: 0.1rem;
+  }
+
+  .live-info {
+    margin-right: 15px;
+  }
+
+  .comment-limit {
+    width: 100%;
+    height: 0px;
+    position: absolute;
+  }
+
+  #limit {
+    position: relative;
+    right: 38px;
+    bottom: 38px;
+    color: #495057;
+  }
+
+  p#limit {
+    margin-bottom: 0;
+  }
+
+  .comment-form {
+    position: relative;
+    bottom: 30px;
+  }
+}
