@@ -14,4 +14,7 @@
 https://github.com/yuzulabo/KnzkLive-Publish-Server
 
 ### Special Thanks ✨
-KnzkLive logo: [Xiltvs](https://pawoo.net/@Xiltvs)
+
+- Creator of KnzkLive logo: [Xiltvs](https://pawoo.net/@Xiltvs)
+- [All contributors](https://github.com/KnzkDev/KnzkLive/graphs/contributors) 🤝
+- All KnzkLive users 💕
