@@ -134,7 +134,7 @@ $vote = loadVote($live["id"]);
           <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
         <?php endif; ?>
 
-        <button type="button" class="btn btn-link side-buttons" onclick="live.share()"><i class="fas fa-share-square"></i> 共有</button>
+        <button type="button" class="btn btn-link side-buttons" onclick="live.share.share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
       <h4 id="live-name" class="live_info"><?=$live["name"]?></h4>

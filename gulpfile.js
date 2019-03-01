@@ -4,6 +4,8 @@ const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const composer = require('gulp-uglify/composer');
 const uglifyES = require('uglify-es');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
 
 function css() {
   return src('assets/scss/*.scss')
@@ -12,6 +14,7 @@ function css() {
         outputStyle: 'compressed'
       })
     )
+    .pipe(postcss([autoprefixer()]))
     .pipe(dest('public/bundle'));
 }
 

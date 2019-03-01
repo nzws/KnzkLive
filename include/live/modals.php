@@ -9,31 +9,31 @@
       </div>
       <div class="modal-body">
         <div class="row justify-content-md-center share_buttons">
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('twitter')">
+          <button class="btn btn-outline-info col-md-2" onclick="live.share.share_modal('twitter')">
             <i class="fab fa-twitter fa-fw fa-2x"></i><br>
             Twitter
           </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('mastodon')">
+          <button class="btn btn-outline-primary col-md-2" onclick="live.share.share_modal('mastodon')">
             <i class="fab fa-mastodon fa-fw fa-2x"></i><br>
             Mastodon
           </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('weibo')">
+          <button class="btn btn-outline-danger col-md-2" onclick="live.share.share_modal('weibo')">
             <i class="fab fa-weibo fa-fw fa-2x"></i><br>
             Weibo
           </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('facebook')">
+          <button class="btn btn-outline-primary col-md-2" onclick="live.share.share_modal('facebook')">
             <i class="fab fa-facebook fa-fw fa-2x"></i><br>
             Facebook
           </button>
-          <button class="btn btn-outline-success col-md-2" onclick="share_modal('line')">
+          <button class="btn btn-outline-success col-md-2" onclick="live.share.share_modal('line')">
             <i class="fab fa-line fa-fw fa-2x"></i><br>
             LINE
           </button>
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('skype')">
+          <button class="btn btn-outline-info col-md-2" onclick="live.share.share_modal('skype')">
             <i class="fab fa-skype fa-fw fa-2x"></i><br>
             Skype
           </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('flipboard')">
+          <button class="btn btn-outline-danger col-md-2" onclick="live.share.share_modal('flipboard')">
             <i class="fab fa-flipboard fa-fw fa-2x"></i><br>
             Flipboard
           </button>
