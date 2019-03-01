@@ -41,7 +41,6 @@ $liveUser = getUser($live["user_id"]);
         {{#if donator_color}}
         </span>
     {{/if}}
-      <small>@{{account.acct}}</small>
     {{{content}}}
   </div>
 </script>
