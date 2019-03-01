@@ -59,6 +59,8 @@ $vote = loadVote($live["id"]);
       hashtag_o: "<?=liveTag($live)?>",
       hashtag: " #" + this.hashtag_o + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
       url: "<?=$liveurl?>",
+      is_broadcaster: <?=$live["user_id"] === $liveUser["id"] ? "true" : "false"?>,
+      created_at: "<?=dateHelper($live["created_at"])?>"
       account: {
         id: <?=$liveUser["id"]?>,
         acct: "<?=$liveUser["acct"]?>",
@@ -68,6 +70,9 @@ $vote = loadVote($live["id"]);
     window.onload = function() {
       window.live = knzk.live;
       live.ready();
+<?php if (!$live["misc"]["able_comment"]) : ?>
+      $(".comment_block").hide();
+<?php endif; ?>
     }
   </script>
 </head>
@@ -217,105 +222,6 @@ $vote = loadVote($live["id"]);
   if (token) api_header["Authorization"] = 'Bearer ' + token;
   */
   var frame_url = "";
-
-  function watch(first) {
-    fetch('<?=u("api/client/watch")?>?id=<?=s($live["id"])?>', {
-      method: 'GET',
-      credentials: 'include',
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      const err = elemId("err_live");
-      err.innerHTML = "";
-
-      if (json["live_status"] === 1) err.innerHTML = "配信者からデータが送信されていません。";
-      if (json["live_status"] === 0) {
-        err.innerHTML = "この配信は終了しました。";
-        widemode("hide");
-        elemId("count_open").className = "invisible";
-        elemId("count_end").className = "";
-        if (watch_data["live_status"] !== 0)
-          document.getElementById('iframe').contentWindow.end();
-      }
-      if (json["live_status"] === 2 && watch_data["live_status"] !== 2) reloadLive();
-
-      elemId("is_not_started").className = json["is_started"] ? "invisible" : "text-warning";
-
-      if (json["name"] !== watch_data["name"]) {
-        elemId("live-name").innerHTML = json["name"];
-        elemId("title-name").innerHTML = json["name"] + ` - <?=$env["Title"]?>`;
-      }
-      if (json["description"] !== watch_data["description"]) elemId("live-description").innerHTML = json["description"];
-
-      if (json["viewers_count"] !== watch_data["viewers_count"]) $(".count").html(json["viewers_count"]);
-      if (json["point_count"] !== watch_data["point_count"]) $(".point_count").html(json["point_count"]);
-      if (json["viewers_max"] !== watch_data["viewers_max"]) $(".max").html(json["viewers_max"]);
-      if (json["viewers_max_concurrent"] !== watch_data["viewers_max_concurrent"]) elemId("max_c").innerHTML = json["viewers_max_concurrent"];
-      watch_data = json;
-      if (first) setInterval(date_disp, 1000);
-    }).catch(function(error) {
-      console.error(error);
-      elemId("err_live").innerHTML = "データが読み込めません: ネットワークかサーバに問題が発生しています...";
-    });
-  }
-
-  function update_watch() {
-    fetch('<?=u("api/client/update_watching")?>?id=<?=s($live["id"])?>', {
-      method: 'GET',
-      credentials: 'include',
-    });
-  }
-
-  function date_disp() {
-    /* thx https://www.tagindex.com/javascript/time/timer2.html */
-    const now = watch_data["live_status"] === 0 ? new Date(watch_data["ended_at"]) : new Date();
-    const datet = parseInt((now.getTime() - (new Date("<?=dateHelper($live["created_at"])?>")).getTime()) / 1000);
-
-    let html = `<i class="fas fa-clock"></i> `;
-    let hour = parseInt(datet / 3600);
-    let min = parseInt((datet / 60) % 60);
-    let sec = datet % 60;
-
-    if (hour > 0) {
-      if (hour < 10) hour = "0" + hour;
-      html += hour + ":";
-    }
-
-    if (min < 10) min = "0" + min;
-    html += min + ":";
-
-    if (sec < 10) sec = "0" + sec;
-    html += sec;
-
-    elemId("time").innerHTML = html;
-  }
-
-  function reloadLive() {
-    document.getElementById('iframe').src = document.getElementById('iframe').src;
-  }
-
-  function vote(id) {
-    elemId("prop_vote").className = "invisible";
-    fetch('<?=u("api/client/vote/add")?>?id=<?=s($live["id"])?>&type=' + id, {
-      method: 'GET',
-      credentials: 'include'
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(c) {
-
-    }).catch(function(error) {
-      console.error(error);
-      elemId("prop_vote").className = "";
-    });
-  }
 
   function loadComment() {
     elemId("err_comment").className = "invisible";
@@ -495,11 +401,6 @@ $vote = loadVote($live["id"]);
     }
   }
 
-  function widemode(mode) {
-    const body = document.querySelector("body");
-    body.className = ((body.className === "is_wide" && !mode) || mode === "hide") ? "" : "is_wide";
-  }
-
   function update_money_disp(item) {
     let point = 0;
     if (item === "emoji") {
@@ -558,39 +459,6 @@ $vote = loadVote($live["id"]);
       console.error(error);
       alert("内部エラーが発生しました");
     });
-  }
-
-  function comment_delete(id, acct) {
-    if (confirm(acct + 'の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。')) {
-      fetch('<?=u("api/client/live/comment_delete")?>', {
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery({
-          csrf_token: `<?=$_SESSION['csrf_token']?>`,
-          delete_id: id.replace("knzklive_", ""),
-          live_id: <?=$live["id"]?>,
-          is_knzklive: id.indexOf("knzklive_") !== -1 ? 1 : 0
-        })
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-          return null;
-        }
-        if (!json["success"]) {
-          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert("内部エラーが発生しました");
-      });
-    }
   }
 
   function userDropdown(obj, id, acct, url) {
@@ -714,17 +582,6 @@ $vote = loadVote($live["id"]);
     });
   }
 
-  function add_donator(data) {
-    $("#donators").show();
-    $("#donators").prepend(`<span class="badge badge-pill donator" onclick="userDropdown(this, null, '${data["account"]["acct"]}', '${data["account"]["url"]}')" id="donate_${data["id"]}" style="background:${data["color"]}"><img src="${data["account"]["avatar_url"]}" height="30" width="30" class="rounded-circle avatar"/> ${data["amount"]}${data["currency"]}</span>`);
-    config.dn[data["id"]] = data;
-
-    const datet = parseInt((new Date(data["ended_at"])).getTime() - (new Date()).getTime());
-    setTimeout(function () {
-      delete_donate(data['id']);
-    }, datet);
-  }
-
   function open_listener_modal() {
     $("#listenerModal").modal("show");
     fetch('<?=u("api/client/live/listener")?>', {
@@ -758,113 +615,14 @@ $vote = loadVote($live["id"]);
 
   /*
   window.onload = function () {
-    <?php if (!$live["misc"]["able_comment"]) : ?>
-    $(".comment_block").hide();
-    <?php endif; ?>
     getNgs();
     check_limit();
     watch(true);
-    setInterval(watch, 5000);
-    <?php if ($live["is_live"] != 0) : ?>
-    update_watch();
-    setInterval(update_watch, 20000);
-    <?php endif; ?>
-    $('#toot').keydown(function (e){
-      if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
-        post_comment()
-      }
-    });
   };
   */
 </script>
 <?php if ($my["id"] === $live["user_id"]) : ?>
   <script>
-    function open_enquete() {
-      const vote = [
-        elemId("open_vote1"),
-        elemId("open_vote2"),
-        elemId("open_vote3"),
-        elemId("open_vote4")
-      ];
-      const title = elemId("open_vote_title");
-
-      if (confirm('投票を開始します。\nよろしいですか？')) {
-        fetch('<?=u("api/client/live/vote")?>', {
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
-          method: 'POST',
-          credentials: 'include',
-          body: buildQuery({
-            csrf_token: `<?=$_SESSION['csrf_token']?>`,
-            title: title.value,
-            vote1: vote[0].value,
-            vote2: vote[1].value,
-            vote3: vote[2].value,
-            vote4: vote[3].value,
-            is_post: elemId("vote_ispost").checked ? 1 : 0
-          })
-        }).then(function(response) {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }).then(function(json) {
-          if (json["error"]) {
-            alert(json["error"]);
-            return null;
-          }
-          if (json["success"]) {
-            $('#enqueteModal').modal('hide');
-            $('#open_enquete_btn').hide();
-            $('#close_enquete_btn').show();
-            title.value = "";
-            vote[0].value = "";
-            vote[1].value = "";
-            vote[2].value = "";
-            vote[3].value = "";
-          } else {
-            alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-          }
-        }).catch(function(error) {
-          console.error(error);
-          alert("内部エラーが発生しました");
-        });
-      }
-    }
-
-    function closeEnquete() {
-      if (confirm('投票を終了します。\nよろしいですか？')) {
-        fetch('<?=u("api/client/live/vote")?>', {
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
-          method: 'POST',
-          credentials: 'include',
-          body: buildQuery({
-            csrf_token: `<?=$_SESSION['csrf_token']?>`,
-            end: true
-          })
-        }).then(function(response) {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }).then(function(json) {
-          if (json["error"]) {
-            alert(json["error"]);
-            return null;
-          }
-          if (json["success"]) {
-            $('#open_enquete_btn').show();
-            $('#close_enquete_btn').hide();
-          } else {
-            alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-          }
-        }).catch(function(error) {
-          console.error(error);
-          alert("内部エラーが発生しました");
-        });
-      }
-    }
 
     function edit_live() {
       const name = elemId('edit_name').value;

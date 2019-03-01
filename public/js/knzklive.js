@@ -47,12 +47,3 @@ function check_data(data) {
   }
   return result;
 }
-
-function delete_donate(id) {
-  $('#donate_' + id).remove();
-  delete config.dn[id];
-  if (Object.keys(config.dn).length <= 0) {
-    const dn = elemId('donators');
-    if (dn) $(dn).hide();
-  }
-}

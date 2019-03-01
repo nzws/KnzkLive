@@ -1,3 +1,5 @@
+const toast = require('./toast');
+
 class api {
   static request(url, method = 'GET', body = {}, header = {}) {
     if (!header['content-type'])
@@ -28,7 +30,7 @@ class api {
         })
         .then(function(json) {
           if (json['error']) {
-            toastr.warn(json['error'], 'エラー');
+            toast.new(json['error'], '.bg-warning');
             reject(error);
             return;
           }
@@ -38,9 +40,9 @@ class api {
         })
         .catch(function(error) {
           console.error(error);
-          toastr.error(
-            'サーバーと通信中にエラーが発生しました。<br>通信環境が正常かお確かめください。',
-            'エラー'
+          toast.new(
+            'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',
+            '.bg-danger'
           );
           reject(error);
         });

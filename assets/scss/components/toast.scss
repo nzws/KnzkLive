@@ -1,0 +1,13 @@
+.knzk_toast {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 15px;
+  animation: 0.3s show;
+}
+
+.knzk_toast.hide {
+  animation: 0.3s hide;
+}

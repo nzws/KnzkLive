@@ -19,7 +19,7 @@
     <hr>
     <h5>ツール</h5>
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn"><i class="fas fa-poll-h"></i> アンケート</button>
-    <button type="button" class="btn btn-warning" onclick="closeEnquete()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
+    <button type="button" class="btn btn-warning" onclick="live.vote.close()" id="close_enquete_btn" style="display: none"><i class="fas fa-poll-h"></i> アンケートを終了</button>
 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChModal"><i class="fas fa-donate"></i> CH追加</button>
     <hr>

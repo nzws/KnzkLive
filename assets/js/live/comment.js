@@ -59,10 +59,36 @@ class comment {
         })
         .catch(error => {
           console.log(error);
-          toastr.error(
-            'サーバーと通信中にエラーが発生しました。<br>通信環境が正常かお確かめください。',
-            'エラー'
+          toast.new(
+            'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',
+            '.bg-danger'
           );
+        });
+    }
+  }
+
+  static comment_delete(id, acct) {
+    if (!config.live.is_broadcaster) return false;
+
+    if (
+      confirm(
+        acct +
+          'の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。'
+      )
+    ) {
+      api
+        .request('client/live/comment_delete', 'POST', {
+          delete_id: id.replace('knzklive_', ''),
+          live_id: config.live.id,
+          is_knzklive: id.indexOf('knzklive_') !== -1 ? 1 : 0
+        })
+        .then(json => {
+          if (!json['success']) {
+            toast.warn(
+              'エラーが発生しました。データベースに問題が発生している可能性があります。',
+              '.bg-danger'
+            );
+          }
         });
     }
   }

@@ -1,3 +1,5 @@
+const kit = require('../components/kanzakit');
+
 class donate {
   static add(data) {
     $('#donators').show();
@@ -18,8 +20,17 @@ class donate {
       new Date(data['ended_at']).getTime() - new Date().getTime()
     );
     setTimeout(function() {
-      this.delete(data['id']);
+      donate.delete(data['id']);
     }, datet);
+  }
+
+  static delete(id) {
+    kit.elemRemove(kit.elemId('donate_' + id));
+    delete config.dn[id];
+    if (Object.keys(config.dn).length <= 0) {
+      const dn = kit.elemId('donators');
+      if (dn) $(dn).hide();
+    }
   }
 }
 

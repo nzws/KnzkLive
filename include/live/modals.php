@@ -221,7 +221,7 @@
         <small class="form-text text-muted">3と4はオプション</small>
 
         <button type="submit"
-                onclick="open_enquete()"
+                onclick="live.vote.create()"
                 class="btn btn-success btn-block">
           :: 投票を作成 ::
         </button>
