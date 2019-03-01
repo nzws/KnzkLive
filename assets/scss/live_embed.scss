@@ -1,5 +1,6 @@
 @import 'components/item';
 @import 'components/animation';
+@import 'components/media';
 
 html,
 body {
@@ -49,25 +50,25 @@ video {
 .live_user {
   left: 10px;
   z-index: 40000;
-}
 
-.live_user img {
-  float: left;
-  margin-right: 10px;
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  background: #fff;
-  opacity: 0.9;
-}
+  img {
+    float: left;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    background: #fff;
+    opacity: 0.9;
+  }
 
-.live_user b {
-  text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
-    black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,
-    black 1px 2px, black -1px 2px, black 1px -2px, black -1px -2px,
-    black 2px 1px, black -2px 1px, black 2px -1px, black -2px -1px;
-  color: #fff;
-  opacity: 0.8;
+  b {
+    text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
+      black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,
+      black 1px 2px, black -1px 2px, black 1px -2px, black -1px -2px,
+      black 2px 1px, black -2px 1px, black 2px -1px, black -2px -1px;
+    color: #fff;
+    opacity: 0.8;
+  }
 }
 
 .watermark {
@@ -92,10 +93,10 @@ video {
   width: 300px;
   max-width: 100%;
   margin-bottom: 10px;
-}
 
-.waiting_logo.animated {
-  animation: pulse 3s infinite;
+  &.animated {
+    animation: pulse 3s infinite;
+  }
 }
 
 .right {
@@ -111,18 +112,18 @@ video {
   background: #fafafa;
   height: 3px;
   width: 100px;
-}
 
-#volume-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background: #f3f3f3;
-  height: 15px;
-  width: 15px;
-  border-radius: 100%;
-}
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #f3f3f3;
+    height: 15px;
+    width: 15px;
+    border-radius: 100%;
+  }
 
-#volume-range::-moz-range-track {
-  height: 0;
+  &::-moz-range-track {
+    height: 0;
+  }
 }
 
 #splash {
@@ -150,20 +151,20 @@ video {
   z-index: 10000;
   background: #ea356d;
   font-size: larger;
+
+  b {
+    font-size: 1.2rem;
+  }
+
+  img {
+    width: 280px;
+    position: absolute;
+    bottom: 0;
+    right: 100px;
+  }
 }
 
-#play_button b {
-  font-size: 1.2rem;
-}
-
-#play_button img {
-  width: 280px;
-  position: absolute;
-  bottom: 0;
-  right: 100px;
-}
-
-@media screen and (max-width: 768px) {
+@include media(md, max) {
   #splash {
     left: 5px;
     bottom: 40px;

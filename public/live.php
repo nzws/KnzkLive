@@ -52,6 +52,24 @@ $vote = loadVote($live["id"]);
   <meta property="og:site_name" content="<?=$env["Title"]?>"/>
   <meta property="og:description" content="<?=s($live["description"])?>"/>
   <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
+
+  <script>
+    window.config.live = {
+      id: <?=$live["id"]?>,
+      hashtag_o: "<?=liveTag($live)?>",
+      hashtag: " #" + this.hashtag_o + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
+      url: "<?=$liveurl?>",
+      account: {
+        id: <?=$liveUser["id"]?>,
+        acct: "<?=$liveUser["acct"]?>",
+        name: "<?=$liveUser["name"]?>"
+      }
+    }
+    window.onload = function() {
+      window.live = knzk.live;
+      live.ready();
+    }
+  </script>
 </head>
 <body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
@@ -116,7 +134,7 @@ $vote = loadVote($live["id"]);
           <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
         <?php endif; ?>
 
-        <button type="button" class="btn btn-link side-buttons" onclick="share()"><i class="fas fa-share-square"></i> 共有</button>
+        <button type="button" class="btn btn-link side-buttons" onclick="live.share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
       <p></p>
       <h4 id="live-name" class="live_info"><?=$live["name"]?></h4>
@@ -185,6 +203,7 @@ $vote = loadVote($live["id"]);
 <?php include "../include/footer.php"; ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 <script>
+  /*
   const inst = "<?=$env["masto_login"]["domain"]?>";
   let login_inst = "<?=isset($_SESSION["login_domain"]) ? s($_SESSION["login_domain"]) : ""?>";
   if (!login_inst) login_inst = inst;
@@ -196,6 +215,7 @@ $vote = loadVote($live["id"]);
   var heartbeat, cm_ws, watch_data = {}, io, w_heartbeat;
   var api_header = {'content-type': 'application/json'};
   if (token) api_header["Authorization"] = 'Bearer ' + token;
+  */
   var frame_url = "";
 
   function watch(first) {
@@ -449,72 +469,6 @@ $vote = loadVote($live["id"]);
     });
   }
 
-  function post_comment() {
-    const v = elemId("toot").value;
-    if (!v) return;
-    const isKnzk = elemId("no_toot").checked;
-
-    const option = (isKnzk || login_inst === "twitter.com") ? {headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery({
-        live_id: <?=s($live["id"])?>,
-        content: v,
-        csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        is_local: isKnzk ? 1 : 0,
-        content_tw: v + hashtag
-      })} : {headers: api_header,
-      method: 'POST',
-      body: JSON.stringify({
-        status: v + hashtag,
-        visibility: "public"
-      })};
-
-
-    fetch((isKnzk || login_inst === "twitter.com") ? '<?=u("api/client/comment_post")?>' : 'https://' + login_inst + '/api/v1/statuses', option)
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    })
-    .then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return;
-      }
-      if (json) {
-        elemId("toot").value = "";
-        check_limit();
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      alert("投稿中にエラーが発生しました。通信状況やインスタンスの状況をご確認ください。");
-    });
-  }
-
-  function delete_comment(_id) {
-    fetch('https://' + login_inst + '/api/v1/statuses/' + _id, {
-      headers: api_header,
-      method: 'DELETE'
-    })
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    })
-    .then(function(json) {
-    })
-    .catch(error => {
-      console.log(error);
-      alert("投稿中にエラーが発生しました。通信状況やインスタンスの状況をご確認ください。");
-    });
-  }
-
   function ws_onmessage(message, mode = "") {
     let ws_resdata, ws_reshtml;
     if (mode) { //KnzkLive Comment
@@ -539,54 +493,6 @@ $vote = loadVote($live["id"]);
       var del_toot = elemId('post_' + ws_resdata.payload);
       if (del_toot) del_toot.parentNode.removeChild(del_toot);
     }
-  }
-
-  function check_limit() {
-    if (!token) return; //未ログイン
-    const l = elemId("limit");
-    const d = elemId("toot").value;
-    l.innerText = (login_inst === "twitter.com" ? 140 : 500) - hashtag.length - d.length;
-  }
-
-  function share() {
-    if (navigator.share) {
-      navigator.share({
-        title: `${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`,
-        url: "<?=$liveurl?>"
-      });
-    } else {
-      $('#shareModal').modal('toggle');
-    }
-  }
-
-  function share_modal(mode) {
-    let url = "";
-    if (mode === "twitter") {
-      url = `https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
-    } else if (mode === "mastodon") {
-      const instance = prompt('Mastodonのドメインを入力してください', login_inst);
-      if (instance) {
-        const text = `【視聴中】
-${watch_data["name"]} by <?=$liveUser["name"]?>
-
-<?=$liveurl?>
-
-
-#KnzkLive #<?=liveTag($live)?>`;
-        url = "https://" + instance + "/share?text=" + encodeURIComponent(text);
-      }
-    } else if (mode === "facebook") {
-      url = "https://www.facebook.com/sharer/sharer.php?u=<?=urlencode($liveurl)?>";
-    } else if (mode === "line") {
-      url = "http://line.me/R/msg/text/?<?=urlencode($liveurl)?>";
-    } else if (mode === "weibo") {
-      url = `http://service.weibo.com/share/share.php?url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
-    } else if (mode === "skype") {
-      url = `https://web.skype.com/share?url=<?=urlencode($liveurl)?>&text=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
-    } else if (mode === "flipboard") {
-      url = `https://share.flipboard.com/bookmarklet/popout?v=2&url=<?=urlencode($liveurl)?>&title=` + encodeURIComponent(`${watch_data["name"]} by <?=$liveUser["name"]?> - KnzkLive`);
-    }
-    window.open(url);
   }
 
   function widemode(mode) {
@@ -850,6 +756,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
     });
   }
 
+  /*
   window.onload = function () {
     <?php if (!$live["misc"]["able_comment"]) : ?>
     $(".comment_block").hide();
@@ -868,6 +775,7 @@ ${watch_data["name"]} by <?=$liveUser["name"]?>
       }
     });
   };
+  */
 </script>
 <?php if ($my["id"] === $live["user_id"]) : ?>
   <script>

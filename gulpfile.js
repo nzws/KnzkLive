@@ -1,5 +1,9 @@
-const { src, dest, parallel } = require('gulp');
+const { src, dest, parallel, series, watch } = require('gulp');
 const sass = require('gulp-sass');
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const composer = require('gulp-uglify/composer');
+const uglifyES = require('uglify-es');
 
 function css() {
   return src('assets/scss/*.scss')
@@ -12,11 +16,21 @@ function css() {
 }
 
 function js() {
-  return src('assets/js/*.js', { sourcemaps: true })
-    .pipe(concat('app.min.js'))
-    .pipe(dest('build/js', { sourcemaps: true }));
+  return browserify({
+    entries: ['./assets/js/index.js']
+  })
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(dest('public/bundle'));
+}
+
+function minifyjs() {
+  return src('public/bundle/bundle.js')
+    .pipe(composer(uglifyES, console)())
+    .pipe(dest('public/bundle'));
 }
 
 exports.js = js;
-exports.css = css;
-exports.default = parallel(css);
+exports.watch = watch('assets/**/*.*', parallel(js, css));
+exports.build = series(css, js, minifyjs);
+exports.default = exports.build;

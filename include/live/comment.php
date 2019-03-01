@@ -14,7 +14,7 @@
   <?php if ($my) : ?>
   <div class="comment_block">
     <div class="form-group">
-      <textarea class="form-control" id="toot" rows="3" placeholder="<?=$my["acct"]?>でトゥート/コメント" onkeyup="check_limit()"></textarea>
+      <textarea class="form-control" id="toot" rows="3" placeholder="<?=$my["acct"]?>でトゥート/コメント" onkeyup="live.comment.check_limit()"></textarea>
     </div>
     <div class="comment-limit"><p id="limit" class="float-right"></p></div>
     <div class="custom-control custom-checkbox float-left my-1">
@@ -24,7 +24,7 @@
       </label>
     </div>
     <div class="text-right">
-      <button class="btn btn-outline-primary" onclick="post_comment()">コメント</button>
+      <button class="btn btn-outline-primary" onclick="live.comment.post()">コメント</button>
     </div>
   </div>
   <?php else : ?>
