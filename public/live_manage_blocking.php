@@ -45,7 +45,7 @@ $list = get_all_blocking_user($my["id"]);
             <td><?=$item["created_at"]?></td>
             <td><?=$item["is_permanent"] === 1 ? "はい" : "いいえ"?></td>
             <td><?=$item["is_blocking_watch"] === 1 ? "はい" : "いいえ"?></td>
-            <td><a href="#" onclick="remove('<?=$item["target_user_acct"]?>', this);return false">削除</a></td>
+            <td><a href="#" onclick="knzk.live.admin.removeBlocking('<?=$item["target_user_acct"]?>', this);return false">削除</a></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
@@ -55,40 +55,5 @@ $list = get_all_blocking_user($my["id"]);
 </div>
 <?php include "../include/live/add_blocking.php"; ?>
 <?php include "../include/footer.php"; ?>
-<script>
-function remove(acct, obj = null) {
-  if (confirm(`「${acct}」のブロックを解除します。\nよろしいですか？`)) {
-    fetch('<?=u("api/client/ngs/manage_users")?>', {
-      headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery({
-        csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        type: 'remove',
-        user_id: acct
-      })
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return null;
-      }
-      if (json["success"]) {
-        $(obj).parent().parent().remove();
-      } else {
-        alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-      }
-    }).catch(function(error) {
-      console.error(error);
-      alert("内部エラーが発生しました");
-    });
-  }
-}
-</script>
 </body>
 </html>

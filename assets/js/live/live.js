@@ -30,7 +30,7 @@ class live {
           : 'text-warning';
 
         if (json['name'] !== config.live.watch_data['name']) {
-          kit.elemId('live-name').innertext = json['name'];
+          kit.elemId('live-name').innerText = json['name'];
           kit.elemId('title-name').innerText = json['name'] + ' - KnzkLive';
         }
 

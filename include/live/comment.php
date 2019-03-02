@@ -34,7 +34,10 @@
   <?php endif; ?>
   <div id="donators" class="mt-2" style="display: none"></div>
   <p class="invisible" id="err_comment">
-    * コメントの読み込み中にエラーが発生しました。 <a href="#" onclick="knzk.comment_loader.closeAll(null, true)">再読込</a>
+    <span class="text-warning">
+    コメントストリーミングに再接続しています...<br>
+    <small>もしずっとこの表示のままであればページを再読み込みしてください。</small>
+    </span>
   </p>
 </div>
 <div id="comments" class="comment_block mt-1"></div>

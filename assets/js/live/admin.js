@@ -96,8 +96,6 @@ class admin {
   }
 
   static addBlocking() {
-    if (!config.live.is_broadcaster) return false;
-
     const acct = kit.elemId('blocking_acct').value;
     if (confirm(`「${acct}」をブロックします。\nよろしいですか？`)) {
       api
@@ -114,6 +112,90 @@ class admin {
             kit.elemId('blocking_acct').value = '';
             $('#blockingModal').modal('hide');
             if (!config.live) location.reload();
+          } else {
+            toast.new(
+              'エラーが発生しました。データベースに問題が発生している可能性があります。',
+              '.bg-danger'
+            );
+          }
+        });
+    }
+  }
+
+  static removeBlocking(acct, obj = null) {
+    if (confirm(`「${acct}」のブロックを解除します。\nよろしいですか？`)) {
+      api
+        .request('client/ngs/manage_users', 'POST', {
+          type: 'remove',
+          user_id: acct
+        })
+        .then(json => {
+          if (json['success']) {
+            $(obj)
+              .parent()
+              .parent()
+              .remove();
+          } else {
+            toast.new(
+              'エラーが発生しました。データベースに問題が発生している可能性があります。',
+              '.bg-danger'
+            );
+          }
+        });
+    }
+  }
+
+  static updateNGWord(name, type, obj = null) {
+    const mode = type ? '追加' : '削除';
+    if (confirm(`「${name}」を${mode}します。\nよろしいですか？`)) {
+      api
+        .request('client/ngs/manage_words', 'POST', {
+          type: type ? 'add' : 'remove',
+          word: name
+        })
+        .then(json => {
+          if (json['success']) {
+            if (type) {
+              $('tbody').prepend(
+                `<tr><td><a href="#" onclick="knzk.live.admin.updateNGWord('${
+                  json['word']
+                }', false, this);return false">削除</a>　${
+                  json['word']
+                }</td></tr>`
+              );
+              kit.elemId('word').value = '';
+            } else
+              $(obj)
+                .parent()
+                .parent()
+                .remove();
+          } else {
+            toast.new(
+              'エラーが発生しました。データベースに問題が発生している可能性があります。',
+              '.bg-danger'
+            );
+          }
+        });
+    }
+  }
+
+  static addCH() {
+    const currency = kit.elemId('addch_currency').innerText;
+    const acct = kit.elemId('addch_acct');
+    const amount = kit.elemId('addch_amount');
+
+    if (confirm(`「${acct.value}」を追加します。\nよろしいですか？`)) {
+      api
+        .request('client/live/add_ch', 'POST', {
+          acct: acct.value,
+          amount: amount.value,
+          currency: currency
+        })
+        .then(json => {
+          if (json['success']) {
+            acct.value = '';
+            amount.value = '';
+            $('#addChModal').modal('hide');
           } else {
             toast.new(
               'エラーが発生しました。データベースに問題が発生している可能性があります。',

@@ -100,7 +100,17 @@ class comment_loader {
                 $('#prop_vote').show();
               } else if (msg.type === 'vote_end') {
                 $('#prop_vote').hide();
-                api.request('client/vote/reset', 'GET', { id: config.live.id });
+                fetch(
+                  config.endpoint +
+                    'client/vote/reset' +
+                    config.suffix +
+                    '?id=' +
+                    config.live.id,
+                  {
+                    method: 'GET',
+                    credentials: 'include'
+                  }
+                );
               } else if (msg.type === 'item') {
                 if (msg.item_type === 'knzk_kongyo') {
                   const volume = localStorage.getItem('kplayer_volume');
@@ -228,26 +238,32 @@ class comment_loader {
     api
       .request('client/ngs/get', 'POST', { live_id: config.live.id })
       .then(json => {
-        if (json['w']) {
-          config.nw = JSON.parse(atob(json['w']));
+        config.nw = json['w'] ? JSON.parse(atob(json['w'])) : [];
+        config.nu = json['u'] ? JSON.parse(atob(json['u'])) : [];
+        config.np = json['p'] ? JSON.parse(atob(json['p'])) : [];
+
+        // 一度支援者リストをリセットする
+        if (
+          config.live.page === 'livepage' &&
+          config.dn &&
+          Object.keys(config.dn).length >= 0
+        ) {
+          for (let i in config.dn) {
+            livepage_donate.delete(i);
+          }
         }
-        if (json['u']) {
-          config.nu = JSON.parse(atob(json['u']));
-          if (
-            config.nu.indexOf('#ME#') !== -1 &&
-            config.live.page === 'livepage'
-          )
-            location.reload();
-        }
-        if (json['p']) {
-          config.np = JSON.parse(atob(json['p']));
-        }
+
+        config.dn = {};
         if (json['donator']) {
           for (let item of json['donator']) {
             if (config.live.page === 'livepage') livepage_donate.add(item);
             else comment_viewer.addDonate(item);
           }
         }
+
+        if (config.nu.indexOf('#ME#') !== -1 && config.live.page === 'livepage')
+          location.reload();
+
         comment_loader.closeAll(null, true);
       });
   }

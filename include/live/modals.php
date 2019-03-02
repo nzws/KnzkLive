@@ -264,7 +264,7 @@
             </div>
           </div>
 
-          <button type="submit" onclick="add_ch()" class="btn btn-success btn-block">追加</button>
+          <button type="submit" onclick="knzk.live.admin.addCH()" class="btn btn-success btn-block">追加</button>
         </div>
       </div>
     </div>
@@ -273,47 +273,6 @@
   function change_addch_currency(currency) {
     document.getElementById("addch_currency").innerText = currency;
     return false;
-  }
-
-  function add_ch() {
-    const currency = document.getElementById("addch_currency").innerText;
-    const acct = document.getElementById("addch_acct");
-    const amount = document.getElementById("addch_amount");
-
-    if (confirm(`「${acct.value}」を追加します。\nよろしいですか？`)) {
-      fetch('<?=u("api/client/live/add_ch")?>', {
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery({
-          csrf_token: `<?=$_SESSION['csrf_token']?>`,
-          acct: acct.value,
-          amount: amount.value,
-          currency: currency
-        })
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-          return null;
-        }
-        if (json["success"]) {
-          acct.value = "";
-          amount.value = "";
-          $("#addChModal").modal("hide");
-        } else {
-          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert("内部エラーが発生しました");
-      });
-    }
   }
 </script>
 
