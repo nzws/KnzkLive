@@ -35,7 +35,9 @@ $liveUser = getUser($live["user_id"]);
           hashtag_o: "<?=liveTag($live)?>",
           created_at: "<?=dateHelper($live["created_at"])?>",
           websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
-          watch_data = {},
+          watch_data: {},
+          websocket: {},
+          heartbeat: {},
           page: "comment_viewer"
         }
       };
@@ -52,7 +54,6 @@ $liveUser = getUser($live["user_id"]);
 </p>
 <div id="comments"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script src="../../js/knzklive.js?a"></script>
 
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="com">

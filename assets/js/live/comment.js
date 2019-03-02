@@ -123,7 +123,9 @@ class comment {
             kit.elemId('comments').innerHTML;
           kit
             .elemId('iframe')
-            .contentWindow.comment_view(ws_reshtml['content']);
+            .contentWindow.knzk.live_embed.danmaku.comment_view(
+              ws_reshtml['content']
+            );
         }
       }
     } else if (ws_resdata.event === 'delete') {

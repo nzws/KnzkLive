@@ -125,7 +125,11 @@ class comment_loader {
                 }
                 kit
                   .elemId('iframe')
-                  .contentWindow.run_item(msg.item_type, msg.item, 10);
+                  .contentWindow.knzk.live_embed.danmaku.run_item(
+                    msg.item_type,
+                    msg.item,
+                    10
+                  );
               } else if (msg.type === 'change_config') {
                 if (msg.mode === 'sensitive' && msg.result) {
                   const frame = kit.elemId('iframe');
@@ -231,7 +235,7 @@ class comment_loader {
 
     if (!hide_toast)
       toast.new('(' + type + ') コメントサーバーに再接続しています...');
-    setTimeout(comment_loader.load, 2000);
+    comment_loader.load();
   }
 
   static getNgs() {

@@ -1,9 +1,8 @@
 const kit = require('./components/kanzakit');
-const common = require('./comment_loader');
 
 class comment_viewer {
   static ready() {
-    common.getNgs();
+    knzk.comment_loader.getNgs();
   }
 
   static onmessage(message, mode = '') {
@@ -26,8 +25,8 @@ class comment_viewer {
           ws_reshtml['account']['display_name']
         );
         kit.elemId('comments').innerHTML =
-          (common.checkData(ws_reshtml)
-            ? tmpl(common.buildCommentData(ws_reshtml))
+          (knzk.comment_loader.checkData(ws_reshtml)
+            ? tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
             : '') + kit.elemId('comments').innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
