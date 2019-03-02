@@ -9,31 +9,31 @@
       </div>
       <div class="modal-body">
         <div class="row justify-content-md-center share_buttons">
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('twitter')">
+          <button class="btn btn-outline-info col-md-2" onclick="live.share.share_modal('twitter')">
             <i class="fab fa-twitter fa-fw fa-2x"></i><br>
             Twitter
           </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('mastodon')">
+          <button class="btn btn-outline-primary col-md-2" onclick="live.share.share_modal('mastodon')">
             <i class="fab fa-mastodon fa-fw fa-2x"></i><br>
             Mastodon
           </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('weibo')">
+          <button class="btn btn-outline-danger col-md-2" onclick="live.share.share_modal('weibo')">
             <i class="fab fa-weibo fa-fw fa-2x"></i><br>
             Weibo
           </button>
-          <button class="btn btn-outline-primary col-md-2" onclick="share_modal('facebook')">
+          <button class="btn btn-outline-primary col-md-2" onclick="live.share.share_modal('facebook')">
             <i class="fab fa-facebook fa-fw fa-2x"></i><br>
             Facebook
           </button>
-          <button class="btn btn-outline-success col-md-2" onclick="share_modal('line')">
+          <button class="btn btn-outline-success col-md-2" onclick="live.share.share_modal('line')">
             <i class="fab fa-line fa-fw fa-2x"></i><br>
             LINE
           </button>
-          <button class="btn btn-outline-info col-md-2" onclick="share_modal('skype')">
+          <button class="btn btn-outline-info col-md-2" onclick="live.share.share_modal('skype')">
             <i class="fab fa-skype fa-fw fa-2x"></i><br>
             Skype
           </button>
-          <button class="btn btn-outline-danger col-md-2" onclick="share_modal('flipboard')">
+          <button class="btn btn-outline-danger col-md-2" onclick="live.share.share_modal('flipboard')">
             <i class="fab fa-flipboard fa-fw fa-2x"></i><br>
             Flipboard
           </button>
@@ -89,26 +89,26 @@
           </div>
           <div class="col-sm-4">
             個数 <small>(1~100, <b>n*5</b>KP)</small>:
-            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="update_money_disp('emoji')" onchange="update_money_disp('emoji')">
+            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="live.item.updateMoneyDisp('emoji')" onchange="live.item.updateMoneyDisp('emoji')">
           </div>
         </div>
         <div class="mt-2">
           <div class="float-left">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_spin">
                 回転あり (+<b>30</b>KP)<br>
               </label>
             </div>
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="update_money_disp('emoji')">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_big">
                 大きさ二倍盛り (+<b>30</b>KP)<br>
               </label>
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-success" onclick="item_buy('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
           </div>
         </div>
         <hr>
@@ -116,7 +116,7 @@
           <h5>神崎コンギョ (音)</h5>
           コ　ン　ギ　ョ
           <div class="text-right">
-            <button class="btn btn-success" onclick="item_buy('knzk_kongyo')">1000KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('knzk_kongyo')">1000KPで投下</button>
           </div>
         <?php endif; ?>
       </div>
@@ -135,7 +135,7 @@
       </div>
       <div class="modal-body">
         この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = config.live.frame_url">:: 視聴する ::</button>
       </div>
     </div>
   </div>
@@ -221,7 +221,7 @@
         <small class="form-text text-muted">3と4はオプション</small>
 
         <button type="submit"
-                onclick="open_enquete()"
+                onclick="live.vote.create()"
                 class="btn btn-success btn-block">
           :: 投票を作成 ::
         </button>
@@ -264,7 +264,7 @@
             </div>
           </div>
 
-          <button type="submit" onclick="add_ch()" class="btn btn-success btn-block">追加</button>
+          <button type="submit" onclick="knzk.live.admin.addCH()" class="btn btn-success btn-block">追加</button>
         </div>
       </div>
     </div>
@@ -273,47 +273,6 @@
   function change_addch_currency(currency) {
     document.getElementById("addch_currency").innerText = currency;
     return false;
-  }
-
-  function add_ch() {
-    const currency = document.getElementById("addch_currency").innerText;
-    const acct = document.getElementById("addch_acct");
-    const amount = document.getElementById("addch_amount");
-
-    if (confirm(`「${acct.value}」を追加します。\nよろしいですか？`)) {
-      fetch('<?=u("api/client/live/add_ch")?>', {
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery({
-          csrf_token: `<?=$_SESSION['csrf_token']?>`,
-          acct: acct.value,
-          amount: amount.value,
-          currency: currency
-        })
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-          return null;
-        }
-        if (json["success"]) {
-          acct.value = "";
-          amount.value = "";
-          $("#addChModal").modal("hide");
-        } else {
-          alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert("内部エラーが発生しました");
-      });
-    }
   }
 </script>
 

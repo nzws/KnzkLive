@@ -12,7 +12,7 @@ if (!$my && $live["privacy_mode"] == "3") {
   http_response_code(403);
   exit("ERR:この配信は非公開です。");
 }
-$myLive = $my["id"] == $live["user_id"];
+$myLive = $my["id"] === $live["user_id"];
 if (!$myLive && $live["is_started"] == "0") {
   http_response_code(403);
   exit("ERR:この配信はまだ開始されていません。");
@@ -33,9 +33,9 @@ $mode = $_SESSION["watch_type"];
 </head>
 
 <body>
-<div id="play_button" style="display: none" onclick="seekLive()">
+<div id="play_button" style="display: none" onclick="knzk.live_embed.player.seekLive()">
   <b>[クリックして再生]</b><br>
-  <small>ブラウザが自動再生をブロックしました...</small>
+  <small>(ブラウザが自動再生をブロックしました...)</small>
   <img src="<?=$env["RootUrl"]?>images/surprized_knzk.png"/>
 </div>
 
@@ -71,15 +71,15 @@ $mode = $_SESSION["watch_type"];
       <span class="right video_control">
         <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
 
-        <a href="javascript:mute()" id="mute" class="invisible"><i class="fas fa-volume-mute fa-fw"></i></a>
-        <a href="javascript:mute(1)" id="volume"><i class="fas fa-volume-up fa-fw"></i></a>
+        <a href="javascript:knzk.live_embed.player.mute()" id="mute" class="invisible"><i class="fas fa-volume-mute fa-fw"></i></a>
+        <a href="javascript:knzk.live_embed.player.mute(1)" id="volume"><i class="fas fa-volume-up fa-fw"></i></a>
         <span class="volume_controller">
           <span style="margin-right: 8px"></span>
-          <input type="range" id="volume-range" onchange="volume(this.value)">
+          <input type="range" id="volume-range" onchange="knzk.live_embed.player.volume(this.value)">
         </span>
 
-        <a href="javascript:parent.widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
-        <a href="javascript:full()"><i class="fas fa-expand fa-fw"></i></a>
+        <a href="javascript:parent.live.live.widemode()"><i class="fas fa-arrows-alt-h fa-fw"></i></a>
+        <a href="javascript:knzk.live_embed.player.full()"><i class="fas fa-expand fa-fw"></i></a>
       </span>
     </div>
   </div>
@@ -96,225 +96,22 @@ $mode = $_SESSION["watch_type"];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="<?=$env["RootUrl"]?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
-  const type = '<?=s($mode)?>';
-  const video = document.getElementById("knzklive");
-  let myLive = <?=$myLive ? "true" : "false"?>;
-  let delay_sec = 3;
-  let heartbeat;
-  let hover = 0;
+  window.video = document.getElementById("knzklive");
 
-  window.requestAnimationFrame = (function() {
-  return window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-  function(f) { return window.setTimeout(f, 1000 / 120); };
-}());
-  function startWatching(v) {
-    video.addEventListener("error", function() {
-      showSplash("読み込み中に不明なエラーが発生しました...");
-    }, false);
-
-    video.addEventListener("ended", function() {
-      clearInterval(heartbeat);
-      showSplash("ストリームはオフラインです。");
-    }, false);
-
-    video.addEventListener("playing", function() {
-      showSplash();
-      v.play();
-    }, false);
-
-    video.addEventListener("canplay", function() {
-      showSplash();
-      v.play();
-    }, false);
-
-    video.addEventListener("loadedmetadata", function () {
-      showSplash();
-      v.play();
-    }, false);
-
-    volume(70, true);
-    if (localStorage.getItem('kplayer_mute')) mute(localStorage.getItem('kplayer_mute'));
-    if (localStorage.getItem('kplayer_volume')) volume(localStorage.getItem('kplayer_volume'));
-    if (myLive) mute(1, true)
-  }
-
-  function showStatus() {
-    let buffer;
-    try {
-      buffer = (video.buffered).end(0);
-    } catch (e) {}
-    const play = video.currentTime;
-    let text = "";
-    if (buffer > play && play && buffer) { //再生
-      delay_sec = Math.round(buffer - play);
-      if (type !== "HLS") {
-        text += `<a href="javascript:seekLive()">LIVE</a> · ` + delay_sec + "s";
-      } else {
-        text += "LIVE";
-      }
-      showSplash();
-
-      if (video.paused) {
-        video.play().catch(function(e) {
-          $("#play_button").show();
-        });
-      }
-    } else { //バッファ
-      text += "BUFFERING";
-      showSplash("バッファしています...");
-    }
-    document.getElementById("video_status").innerHTML = text;
-  }
-
-  window.onload = function () {
-    if (type !== "HLS" && flvjs.isSupported()) { //ws-flv
-      const flvPlayer = flvjs.createPlayer({
-        type: 'flv',
-        isLive: true,
-        url: '<?=(empty($_SERVER["HTTPS"]) ? "ws" : "wss")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv'
-      });
-      flvPlayer.attachMediaElement(video);
-      startWatching(flvPlayer);
-      flvPlayer.load();
-    } else { //hls
-      const hls_url = `<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8`;
-      if(Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(hls_url);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          video.play();
-        });
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = hls_url;
-        video.load();
-      }
-      startWatching(video);
-    }
-    heartbeat = setInterval(showStatus, 1000);
-
-    setTimeout(function() {
-      $(".hover").hide();
-    }, 5000);
+  window.config = {
+    type: '<?=s($mode)?>',
+    myLive: <?=$myLive ? "true" : "false"?>,
+    flv: '<?=(empty($_SERVER["HTTPS"]) ? "ws" : "wss")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
+    hls: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8',
+    heartbeat: null,
+    delay_sec: 3,
+    hover: 0
   };
 
-  function showSplash(text = "") {
-    document.getElementById("splash_loadtext").innerHTML = text;
-    if (text) $("#splash").show();
-    else $("#splash").hide();
-  }
-
-  function seekLive() {
-    $("#play_button").hide();
-    video.play();
-    video.currentTime = (video.seekable).end(0) - 1;
-  }
-
-  function mute(i = 0, no_save) {
-    i = parseInt(i);
-    document.getElementById("mute").className = i ? "" : "invisible";
-    document.getElementById("volume").className = !i ? "" : "invisible";
-    video.muted = i;
-    if (!no_save) localStorage.setItem('kplayer_mute', i);
-  }
-
-  function volume(i, no_save) {
-    document.getElementById("volume-range").value = i;
-    video.volume = i * 0.01;
-    if (!no_save) localStorage.setItem('kplayer_volume', i);
-  }
-
-  function full() {
-    const v = document.querySelector("body");
-    let i;
-    if (document.webkitCancelFullScreen) i = document.webkitFullscreenElement;
-    if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
-    else if (document.exitFullscreen) i = document.fullscreenElement;
-
-    if (i) {
-      if (v.webkitRequestFullscreen) document.webkitCancelFullScreen(); //Webkit
-      else if (v.mozRequestFullscreen) document.mozCancelFullscreen(); //Firefox
-      else if (v.requestFullscreen) document.exitFullscreen();
-    } else {
-      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen(); //Webkit
-      if (v.mozRequestFullscreen) v.mozRequestFullscreen(); //Firefox
-      else if (v.requestFullscreen) v.requestFullscreen();
-    }
-  }
-
-  Handlebars.registerHelper('repeat_helper', function() {
-    let html = "";
-    for (let i = 0; i < this.repeat_num; i++) {
-      html += this.repeat_html;
-    }
-    return new Handlebars.SafeString(html);
-  });
-
-  function run_item(type, value, clear_sec = 0) {
-    value["random_id"] = "item_" + (Math.random().toString(36).slice(-8));
-
-    const tmpl = Handlebars.compile(document.getElementById("item_" + type + "_tmpl").innerHTML);
-
-    setTimeout(function () {
-      $("#item_layer").append(tmpl(value));
-      setTimeout(function () {
-        const del = document.getElementById(value["random_id"]);
-        if (del) del.parentNode.removeChild(del);
-      }, clear_sec * 1000);
-    }, delay_sec);
-  }
-
-  function comment_view(text) {
-    const id = Math.floor(Math.random() * 1000000);
-    const height = Math.floor( Math.random() * $("#comment_layer").height() - 40);
-    const can = document.getElementById("#comment_layer");
-    $("#comment_layer").prepend('<div id=' + id + '>' + text + '</div>');
-    const width = $("#comment_layer").width()
-
-    let i = 0
-    function animation() {
-      $('#' + id).css('right', i - text.length * 14) //1文字14px
-      $('#' + id).css('bottom', height)
-      i += 4
-    }
-    function scroll() {
-      if(i < width + text.length * 14) {
-        animation();
-        requestAnimationFrame(scroll);
-      } else {
-        $('#' + id).remove()
-      }
-    }
-    scroll();
-  }
-  function end() {
-    clearInterval(heartbeat);
-    $("#video").hide();
-    showSplash();
-    $("#end_dialog").show();
-  }
-
-  window.onmouseover = window.onclick = function watchHover() {
-    $(".hover").show();
-    hover++;
-    setTimeout(function() {
-      hover--;
-
-      if ($(":hover").length) {
-        watchHover();
-        return;
-      }
-
-      if (hover <= 0) {
-        hover = 0;
-        $(".hover").hide();
-      }
-    }, 5000);
+  window.onload = function() {
+    knzk.live_embed.ready();
   }
 </script>
 </body>

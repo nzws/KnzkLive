@@ -29,7 +29,7 @@ if (!$my["broadcaster_id"]) {
       <div class="input-group">
         <input class="form-control" type="text" id="word" placeholder="NGワードを追加...">
         <div class="input-group-append">
-          <button class="btn btn-primary" type="button" onclick="update(elemId('word').value, true)">追加</button>
+          <button class="btn btn-primary" type="button" onclick="knzk.live.admin.updateNGWord(document.getElementById('word').value, true)">追加</button>
         </div>
       </div>
     </form>
@@ -38,7 +38,7 @@ if (!$my["broadcaster_id"]) {
       <table class="table">
         <tbody>
         <?php foreach ($my["ngwords"] as $item) : ?>
-          <tr><td><a href="#" onclick="update('<?=$item?>', false, this);return false">削除</a>　<?=$item?></td></tr>
+          <tr><td><a href="#" onclick="knzk.live.admin.updateNGWord('<?=$item?>', false, this);return false">削除</a>　<?=$item?></td></tr>
         <?php endforeach; ?>
         </tbody>
       </table>
@@ -49,44 +49,5 @@ if (!$my["broadcaster_id"]) {
 </div>
 
 <?php include "../include/footer.php"; ?>
-<script>
-function update(name, type, obj = null) {
-  const mode = type ? "追加" : "削除";
-  if (confirm(`「${name}」を${mode}します。\nよろしいですか？`)) {
-    fetch('<?=u("api/client/ngs/manage_words")?>', {
-      headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery({
-        csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        type: type ? 'add' : 'remove',
-        word: name
-      })
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return null;
-      }
-      if (json["success"]) {
-        if (type) {
-          $("tbody").prepend(`<tr><td><a href="#" onclick="remove('${json["word"]}', false, this);return false">削除</a>　${json["word"]}</td></tr>`);
-          elemId('word').value = "";
-        } else $(obj).parent().parent().remove();
-      } else {
-        alert("エラーが発生しました。データベースに問題が発生している可能性があります。");
-      }
-    }).catch(function(error) {
-      console.error(error);
-      alert("内部エラーが発生しました");
-    });
-  }
-}
-</script>
 </body>
 </html>
