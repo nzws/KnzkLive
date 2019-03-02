@@ -21,8 +21,8 @@ $liveUser = getUser($live["user_id"]);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>KnzkLive Comment-Viewer</title>
     <meta name="robots" content="noindex">
-    <link rel="stylesheet" href="<?=$env["RootUrl"]?>bundle/comment_viewer.css?t=<?=filemtime(__DIR__ . "/bundle/comment_viewer.css")?>">
-    <script src="<?=$env["RootUrl"]?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
+    <link rel="stylesheet" href="<?=(empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"])?>bundle/comment_viewer.css?t=<?=filemtime(__DIR__ . "/bundle/comment_viewer.css")?>">
+    <script src="<?=(empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"])?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
     <script>
       window.config = {
         endpoint: "<?=$env["RootUrl"]?>api/",

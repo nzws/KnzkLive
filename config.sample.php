@@ -3,6 +3,7 @@ $env["Title"] = "KnzkLive : 広告なし, 配信時間無制限の生配信コ�
 
 $env["RootUrl"] = "/";
 $env["domain"] = "live.knzk.me.example";
+$env["assets_url"] = ""; // https://assets.knzklive.example/
 $env["is_testing"] = false;
 
 $env["notification_token"] = "xxxx"; //@KnzkLiveNotificationのトークン

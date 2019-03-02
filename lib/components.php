@@ -19,6 +19,11 @@ function userUrl($id) {
   return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("user") . "?id=" : $env["RootUrl"] . "user/") . $id;
 }
 
+function assetsUrl() {
+  global $env;
+  return (empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"]);
+}
+
 function liveTag($live) {
   return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_".$live["id"];
 }

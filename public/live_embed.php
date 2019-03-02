@@ -29,14 +29,14 @@ $mode = $_SESSION["watch_type"];
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
-  <link rel="stylesheet" href="<?=$env["RootUrl"]?>bundle/live_embed.css?t=<?=filemtime(__DIR__ . "/bundle/live_embed.css")?>">
+  <link rel="stylesheet" href="<?=assetsUrl()?>bundle/live_embed.css?t=<?=filemtime(__DIR__ . "/bundle/live_embed.css")?>">
 </head>
 
 <body>
 <div id="play_button" style="display: none" onclick="knzk.live_embed.player.seekLive()">
   <b>[クリックして再生]</b><br>
   <small>(ブラウザが自動再生をブロックしました...)</small>
-  <img src="<?=$env["RootUrl"]?>images/surprized_knzk.png"/>
+  <img src="<?=assetsUrl()?>static/surprized_knzk.png"/>
 </div>
 
 <div id="splash">
@@ -44,7 +44,7 @@ $mode = $_SESSION["watch_type"];
 </div>
 
 <div id="end_dialog" class="center_v" style="display: none">
-    <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="waiting_logo animated"/>
+    <img src="<?=assetsUrl()?>static/knzklive_logo.png" class="waiting_logo animated"/>
     <p>
       配信は終了しました。
     </p>
@@ -57,7 +57,7 @@ $mode = $_SESSION["watch_type"];
       この環境では視聴する事ができません。OS・ブラウザをアップデートするか、別の環境からお試しください。
     </p>
   </video>
-  <img src="<?=$env["RootUrl"]?>images/knzklive_logo.png" class="watermark header"/>
+  <img src="<?=assetsUrl()?>static/knzklive_logo.png" class="watermark header"/>
   <div class="header live_user hover">
     <a href="<?=userUrl($liveUser["broadcaster_id"])?>" target="_blank" class="broadcaster_link">
       <img src="<?=$liveUser["misc"]["avatar"]?>"/>
@@ -96,7 +96,7 @@ $mode = $_SESSION["watch_type"];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="<?=$env["RootUrl"]?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
+<script src="<?=(empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"])?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
   window.video = document.getElementById("knzklive");
 
