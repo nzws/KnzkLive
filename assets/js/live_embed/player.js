@@ -72,7 +72,7 @@ class player {
       } else {
         text += 'LIVE';
       }
-      showSplash();
+      player.showSplash();
 
       if (video.paused) {
         video.play().catch(function(e) {
