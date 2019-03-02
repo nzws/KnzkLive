@@ -24,7 +24,7 @@ class item {
       body['emoji'] = kit.elemId('item_emoji_emoji').value;
       body['spin'] = kit.elemId('item_emoji_spin').checked ? 1 : 0;
       body['big'] = kit.elemId('item_emoji_big').checked ? 1 : 0;
-    } else if (type === 'knzk_kongyo') {
+    } else if (type === 'knzk_kongyo' || type === 'knzk_kongyo_kami') {
     } else {
       return null;
     }

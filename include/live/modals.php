@@ -111,13 +111,23 @@
             <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
           </div>
         </div>
-        <hr>
+
         <?php if ($liveUser["id"] === 2 || $liveUser["id"] === 84 || $env["is_testing"]) : ?>
+          <hr>
           <h5>神崎コンギョ (音)</h5>
           コ　ン　ギ　ョ
           <div class="text-right">
             <button class="btn btn-success" onclick="live.item.buyItem('knzk_kongyo')">1000KPで投下</button>
           </div>
+          <?php if ($my["point_count"] >= 10000) : ?>
+          <hr>
+          <h5>神崎爆弾【コンギョ】 (音)</h5>
+          KPの神にのみ持つことを許される禁断の爆弾...<br>
+          <small>* 通常のコンギョとは異なり音量・ミュート状態に関わらず最大以上の音量でリスナーに爆弾が投下されます。</small>
+          <div class="text-right">
+            <button class="btn btn-success" onclick="live.item.buyItem('knzk_kongyo_kami')">10000KPで投下</button>
+          </div>
+          <?php endif; ?>
         <?php endif; ?>
       </div>
     </div>

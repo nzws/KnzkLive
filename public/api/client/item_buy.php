@@ -32,6 +32,10 @@ if ($_POST["type"] === "emoji") {
   $point = 1000;
   if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"])
     api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
+} else if ($_POST["type"] === "knzk_kongyo_kami") {
+  $point = 10000;
+  if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"])
+    api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 } else {
   api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 }
@@ -56,6 +60,9 @@ if ($_POST["type"] === "emoji") {
 } else if ($_POST["type"] === "knzk_kongyo") {
   $desc = "神　崎　コ　ン　ギ　ョ";
   send_item([], $live["id"], "knzk_kongyo");
+} else if ($_POST["type"] === "knzk_kongyo_kami") {
+  $desc = "神　　崎　　爆　　弾";
+  send_item([], $live["id"], "knzk_kongyo_kami");
 }
 
 $n = add_point($my["id"], $point * -1, "item", $desc);
