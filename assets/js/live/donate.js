@@ -4,7 +4,7 @@ class donate {
   static add(data) {
     $('#donators').show();
     $('#donators').prepend(
-      `<span class="badge badge-pill donator" onclick="userDropdown(this, null, '${
+      `<span class="badge badge-pill donator" onclick="live.live.userDropdown(this, null, '${
         data['account']['acct']
       }', '${data['account']['url']}')" id="donate_${
         data['id']

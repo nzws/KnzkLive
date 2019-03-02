@@ -1,11 +1,12 @@
 const kit = require('../components/kanzakit');
+const api = require('../components/api');
 
 class live {
   static watch() {
     api
       .request('client/watch', 'GET', { id: config.live.id })
       .then(json => {
-        const err = elemId('err_live');
+        const err = kit.elemId('err_live');
         err.innerHTML = '';
 
         if (json['live_status'] === 1)
@@ -44,7 +45,7 @@ class live {
           $('.max').html(json['viewers_max']);
         if (
           json['viewers_max_concurrent'] !==
-          watch_data['viewers_max_concurrent']
+          config.live.watch_data['viewers_max_concurrent']
         )
           kit.elemId('max_c').innerHTML = json['viewers_max_concurrent'];
         config.live.watch_data = json;
@@ -96,6 +97,47 @@ class live {
       (document.body.className === 'is_wide' && !mode) || mode === 'hide'
         ? ''
         : 'is_wide';
+  }
+
+  static userDropdown(obj, id, acct, url) {
+    let is_local = false,
+      local_icon = '';
+    if (acct.match(/\(local\)/i)) {
+      is_local = true;
+      acct = acct.replace(' (local)', '');
+      local_icon = `<i class="fas fa-home" title="ローカルコメント"></i> `;
+    }
+
+    $('.user-dropdown').remove();
+    let html = '';
+    if (url)
+      html += `<a class="dropdown-item" href="${url}" target="_blank">ウェブページに移動</a>`;
+
+    if (config.live.is_broadcaster) {
+      html += `
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
+      `;
+      if (id)
+        html += `<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を削除</a>`;
+    }
+
+    $(obj).popover({
+      title: '',
+      content: 'aaaa',
+      placement: 'bottom',
+      trigger: 'focus',
+      template: `
+<div class="dropdown-menu user-dropdown" tabindex="0" onclick="$('.user-dropdown').popover('dispose')">
+  <h6 class="dropdown-header">${local_icon}@${acct}</h6>
+  ${html}
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item text-muted" href="#" onclick="return false">閉じる</a>
+</div>
+`,
+      html: true
+    });
+    $(obj).popover('show');
   }
 }
 

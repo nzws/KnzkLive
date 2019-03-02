@@ -28,6 +28,10 @@ class kanzakit {
   static elemRemove(element) {
     return element ? element.parentNode.removeChild(element) : false;
   }
+
+  static search(base, searchtext) {
+    return base.indexOf(searchtext) !== -1;
+  }
 }
 
 module.exports = kanzakit;

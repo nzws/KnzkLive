@@ -65,8 +65,10 @@ $vote = loadVote($live["id"]);
         id: <?=$liveUser["id"]?>,
         acct: "<?=$liveUser["acct"]?>",
         name: "<?=$liveUser["name"]?>"
-      }
+      },
+      watch_data = {}
     }
+
     window.onload = function() {
       window.live = knzk.live;
       live.ready();
@@ -126,8 +128,8 @@ $vote = loadVote($live["id"]);
       <br>
       <div class="float-right">
         <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
-          <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="undo_edit_live()"><i class="fas fa-times"></i> 編集廃棄</button>
-          <button type="button" class="btn btn-outline-success live_edit invisible" onclick="edit_live()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
+          <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="live.admin.undoEditLive()"><i class="fas fa-times"></i> 編集廃棄</button>
+          <button type="button" class="btn btn-outline-success live_edit invisible" onclick="live.admin.editLive()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
         <?php endif; ?>
         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
           <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
@@ -186,10 +188,10 @@ $vote = loadVote($live["id"]);
   <div id="post_{{id}}" class="comment card mb-2">
     <div class="content card-body">
       <div class="float-left">
-        <img src="{{account.avatar}}" class="avatar rounded" width="50" height="50" onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
+        <img src="{{account.avatar}}" class="avatar rounded" width="50" height="50" onclick="live.live.userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')"/>
       </div>
       <div class="float-right card-text">
-        <span onclick="userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name text-truncate">
+        <span onclick="live.live.userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name text-truncate">
           {{#if donator_color}}
           <span class="badge badge-pill" style="background:{{donator_color}}">
           {{/if}}
@@ -401,145 +403,6 @@ $vote = loadVote($live["id"]);
     }
   }
 
-  function update_money_disp(item) {
-    let point = 0;
-    if (item === "emoji") {
-      point += parseInt(elemId("item_emoji_count").value) * 5;
-      point += elemId("item_emoji_spin").checked ? 30 : 0;
-      point += elemId("item_emoji_big").checked ? 30 : 0;
-    }
-    elemId("item_" + item + "_point").textContent = point;
-  }
-
-  function item_buy(type, is_confirmed = false) {
-    const body = {
-      live_id: <?=s($live["id"])?>,
-      csrf_token: `<?=$_SESSION['csrf_token']?>`,
-      type: type,
-      confirm: is_confirmed ? 1 : 0
-    };
-    if (type === "emoji") {
-      body["count"] = parseInt(elemId("item_emoji_count").value);
-      body["dir"] = elemId("item_emoji_dir").value;
-      body["emoji"] = elemId("item_emoji_emoji").value;
-      body["spin"] = elemId("item_emoji_spin").checked ? 1 : 0;
-      body["big"] = elemId("item_emoji_big").checked ? 1 : 0;
-    } else if (type === "knzk_kongyo") {
-    } else {
-      return null;
-    }
-
-    fetch('<?=u("api/client/item_buy")?>', {
-      headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery(body)
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return null;
-      }
-      if (json["confirm"]) {
-        if (confirm(json["point"] + "KP消費します。よろしいですか？")) {
-          const p = $(".now_user_point");
-          p.html(parseInt(p.html()) - json["point"]);
-          item_buy(type, true);
-        }
-      }
-      if (json["success"]) {
-        $('#itemModal').modal('hide');
-      }
-    }).catch(function(error) {
-      console.error(error);
-      alert("内部エラーが発生しました");
-    });
-  }
-
-  function userDropdown(obj, id, acct, url) {
-    let is_local = false, local_icon = "";
-    if (acct.match(/\(local\)/i)) {
-      is_local = true;
-      acct = acct.replace(" (local)", "");
-      local_icon = `<i class="fas fa-home" title="ローカルコメント"></i> `;
-    }
-
-    $(".user-dropdown").remove();
-    let html = "";
-    if (url) html += `<a class="dropdown-item" href="${url}" target="_blank">ウェブページに移動</a>`;
-
-    <?php if ($my["id"] === $live["user_id"]) : ?>
-    html += `
-<div class="dropdown-divider"></div>
-<a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
-`;
-    if (id) html += `<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を削除</a>`;
-    <?php endif; ?>
-
-    $(obj).popover({
-      title: '',
-      content: 'aaaa',
-      placement: 'bottom',
-      trigger: 'focus',
-      template: `
-<div class="dropdown-menu user-dropdown" tabindex="0" onclick="$('.user-dropdown').popover('dispose')">
-  <h6 class="dropdown-header">${local_icon}@${acct}</h6>
-  ${html}
-  <div class="dropdown-divider"></div>
-  <a class="dropdown-item text-muted" href="#" onclick="return false">閉じる</a>
-</div>
-`,
-      html: true
-    });
-    $(obj).popover('show');
-  }
-
-  function liveSetting(mode) {
-    // admin_panel_comment_display
-    if (confirm('よろしいですか？')) {
-      fetch('<?=u("api/client/live/setting")?>', {
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery({
-          type: mode,
-          csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        })
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-          return null;
-        }
-        if (json["success"]) {
-          const elem = "#admin_panel_" + mode + "_display";
-          $(elem).removeClass("off on");
-          $(elem).addClass(json["result"] ? "on" : "off");
-          if ($(elem).hasClass("btn-warning")) {
-            $(elem).addClass("btn-info");
-            $(elem).removeClass("btn-warning");
-          } else {
-            $(elem).addClass("btn-warning");
-            $(elem).removeClass("btn-info");
-          }
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert("内部エラーが発生しました");
-      });
-    }
-  }
-
   function getNgs() {
     fetch('<?=u("api/client/ngs/get")?>', {
       headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -582,37 +445,6 @@ $vote = loadVote($live["id"]);
     });
   }
 
-  function open_listener_modal() {
-    $("#listenerModal").modal("show");
-    fetch('<?=u("api/client/live/listener")?>', {
-      headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'GET',
-      credentials: 'include',
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return null;
-      }
-      if (json) {
-        let html = "";
-        for (let item of json) {
-          item.name = escapeHTML(item.name);
-          html += `<tr><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${item.name}</b> <small>@${item.acct}</small></td></tr>`;
-        }
-        elemId("listener_list").innerHTML = html;
-      }
-    }).catch(function(error) {
-      console.error(error);
-      alert("内部エラーが発生しました");
-    });
-  }
-
   /*
   window.onload = function () {
     getNgs();
@@ -621,66 +453,6 @@ $vote = loadVote($live["id"]);
   };
   */
 </script>
-<?php if ($my["id"] === $live["user_id"]) : ?>
-  <script>
-
-    function edit_live() {
-      const name = elemId('edit_name').value;
-      const desc = elemId('edit_desc').value;
-
-      if (!name || !desc) {
-        alert('エラー: タイトルか説明が入力されていません。');
-        return;
-      }
-
-      fetch('<?=u("api/client/edit_live")?>', {
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-        },
-        method: 'POST',
-        credentials: 'include',
-        body: buildQuery({
-          name: name,
-          description: desc,
-          csrf_token: `<?=$_SESSION['csrf_token']?>`
-        })
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(json) {
-        if (json["error"]) {
-          alert(json["error"]);
-        } else {
-          $('.live_info').removeClass('invisible');
-          $('.live_edit').addClass('invisible');
-          watch();
-        }
-      }).catch(function(error) {
-        console.error(error);
-        alert('送信中にエラーが発生しました。');
-      });
-    }
-
-    function undo_edit_live() {
-      elemId('edit_name').value = watch_data["name"];
-
-      const parser = document.createElement('div');
-      parser.innerHTML = watch_data["description"];
-      elemId('edit_desc').value = parser.textContent;
-
-      $('.live_info').removeClass('invisible');
-      $('.live_edit').addClass('invisible');
-    }
-
-    function openEditLive() {
-      $('.live_info').addClass('invisible');
-      $('.live_edit').removeClass('invisible');
-    }
-  </script>
-<?php endif; ?>
 <?php endif; // sensitive ?>
 </body>
 </html>

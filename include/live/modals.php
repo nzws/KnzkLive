@@ -89,19 +89,19 @@
           </div>
           <div class="col-sm-4">
             個数 <small>(1~100, <b>n*5</b>KP)</small>:
-            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="update_money_disp('emoji')" onchange="update_money_disp('emoji')">
+            <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="live.item.updateMoneyDisp('emoji')" onchange="live.item.updateMoneyDisp('emoji')">
           </div>
         </div>
         <div class="mt-2">
           <div class="float-left">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="update_money_disp('emoji')">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_spin">
                 回転あり (+<b>30</b>KP)<br>
               </label>
             </div>
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="update_money_disp('emoji')">
+              <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_big">
                 大きさ二倍盛り (+<b>30</b>KP)<br>
               </label>

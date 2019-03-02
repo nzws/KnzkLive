@@ -1,5 +1,6 @@
 const kit = require('../components/kanzakit');
 const toast = require('../components/toast');
+const api = require('../components/api');
 
 class vote {
   static vote(id) {

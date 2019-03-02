@@ -15,5 +15,7 @@ module.exports = {
   comment: require('./live/comment'),
   share: require('./live/share'),
   vote: require('./live/vote'),
-  live: require('./live/live')
+  live: require('./live/live'),
+  admin: require('./live/admin'),
+  item: require('./live/item')
 };
