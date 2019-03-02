@@ -117,20 +117,21 @@ class player {
     const v = document.body;
     let i;
     if (document.webkitCancelFullScreen) i = document.webkitFullscreenElement;
-    if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
+    else if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
+    else if (document.msExitFullscreen) i = document.msFullScreenElement;
     else if (document.exitFullscreen) i = document.fullscreenElement;
 
     if (i) {
       if (v.webkitRequestFullscreen) document.webkitCancelFullScreen();
-      //Webkit
       else if (v.mozRequestFullscreen) document.mozCancelFullscreen();
-      //Firefox
+      else if (v.msRequestFullscreen) document.msExitFullscreen();
       else if (v.requestFullscreen) document.exitFullscreen();
     } else {
-      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen(); //Webkit
-      if (v.mozRequestFullscreen) v.mozRequestFullscreen();
-      //Firefox
+      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+      else if (v.mozRequestFullscreen) v.mozRequestFullscreen();
       else if (v.requestFullscreen) v.requestFullscreen();
+      else if (v.msRequestFullscreen) v.msRequestFullscreen();
+      else if (document.exitFullscreen) i = document.fullscreenElement;
     }
   }
 

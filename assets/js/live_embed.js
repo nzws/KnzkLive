@@ -1,18 +1,8 @@
 module.exports = {
   ready: function() {
+    require('./components/prefixkit')();
+
     window.onmouseover = window.onclick = this.player.watchHover;
-    window.requestAnimationFrame = (function() {
-      return (
-        window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        function(f) {
-          return window.setTimeout(f, 1000 / 120);
-        }
-      );
-    })();
 
     Handlebars.registerHelper('repeat_helper', function() {
       let html = '';
