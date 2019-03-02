@@ -3,11 +3,11 @@
     KnzkLive (Beta)
   </h1>
   <p align="center">
-    No ads, Unlimited Open-Source Live Streaming Service 🔊
+    No ads❌, Unlimited💫, Open-Source🙌 Live Streaming Service 🎤✨
   </p>
 </div>
 
-![screenshot](https://i.imgur.com/VWKNFBA.png)
+![Imgur](https://i.imgur.com/wXNK6wT.jpg)
 
 ### See also
 
