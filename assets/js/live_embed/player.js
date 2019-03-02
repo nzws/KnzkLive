@@ -64,7 +64,7 @@ class player {
     if (buffer > play && play && buffer) {
       //再生
       config.delay_sec = Math.round(buffer - play);
-      if (type !== 'HLS') {
+      if (config.type !== 'HLS') {
         text +=
           `<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a> · ` +
           config.delay_sec +

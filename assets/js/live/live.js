@@ -17,7 +17,7 @@ class live {
           kit.elemId('count_open').className = 'invisible';
           kit.elemId('count_end').className = '';
           if (config.live.watch_data['live_status'] !== 0)
-            document.getElementById('iframe').contentWindow.end();
+            kit.elemId('iframe').contentWindow.knzk.live_embed.player.end();
         }
         if (
           json['live_status'] === 2 &&
@@ -51,6 +51,7 @@ class live {
         config.live.watch_data = json;
       })
       .catch(error => {
+        console.error(error);
         kit.elemId('err_live').innerHTML =
           'データが読み込めません: ネットワークかサーバに問題が発生しています...';
       });
