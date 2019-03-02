@@ -59,7 +59,7 @@ class live {
   static date() {
     const now =
       config.live.watch_data['live_status'] === 0
-        ? new Date(watch_data['ended_at'])
+        ? new Date(config.live.watch_data['ended_at'])
         : new Date();
     const datet = parseInt(
       (now.getTime() - new Date(config.live.created_at).getTime()) / 1000
@@ -119,7 +119,7 @@ class live {
       <a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
       `;
       if (id)
-        html += `<a class="dropdown-item text-danger" href="#" onclick="comment_delete('${id}', '${acct}');return false">投稿を削除</a>`;
+        html += `<a class="dropdown-item text-danger" href="#" onclick="live.comment.delete('${id}', '${acct}');return false">投稿を削除</a>`;
     }
 
     $(obj).popover({

@@ -1,6 +1,11 @@
+const common_comment = require('./comment_loader');
+
 module.exports = {
   ready: function() {
     this.comment.check_limit();
+    common_comment.getNgs();
+    this.live.watch();
+    this.live.update_watch();
 
     setInterval(this.live.watch, 5000);
     setInterval(this.live.update_watch, 20000);

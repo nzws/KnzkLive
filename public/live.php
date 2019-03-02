@@ -57,16 +57,20 @@ $vote = loadVote($live["id"]);
     window.config.live = {
       id: <?=$live["id"]?>,
       hashtag_o: "<?=liveTag($live)?>",
-      hashtag: " #" + this.hashtag_o + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
+      hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
       url: "<?=$liveurl?>",
       is_broadcaster: <?=$live["user_id"] === $liveUser["id"] ? "true" : "false"?>,
-      created_at: "<?=dateHelper($live["created_at"])?>"
+      created_at: "<?=dateHelper($live["created_at"])?>",
+      websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
       account: {
         id: <?=$liveUser["id"]?>,
         acct: "<?=$liveUser["acct"]?>",
         name: "<?=$liveUser["name"]?>"
       },
-      watch_data = {}
+      watch_data: {},
+      websocket: {},
+      heartbeat: {},
+      page: "livepage"
     }
 
     window.onload = function() {
@@ -209,250 +213,6 @@ $vote = loadVote($live["id"]);
 </script>
 <?php include "../include/footer.php"; ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script>
-  /*
-  const inst = "<?=$env["masto_login"]["domain"]?>";
-  let login_inst = "<?=isset($_SESSION["login_domain"]) ? s($_SESSION["login_domain"]) : ""?>";
-  if (!login_inst) login_inst = inst;
-  const hashtag_o = "<?=liveTag($live)?>";
-  const hashtag = " #" + hashtag_o + (login_inst === "twitter.com" ? " via <?=$liveurl?>" : "");
-  const token = "<?=$my && $_SESSION["token"] ? s($_SESSION["token"]) : ""?>";
-  const config = {nw: [], nu: [], dn: {}};
-  const acct = "<?=$my ? $my["acct"] : ""?>";
-  var heartbeat, cm_ws, watch_data = {}, io, w_heartbeat;
-  var api_header = {'content-type': 'application/json'};
-  if (token) api_header["Authorization"] = 'Bearer ' + token;
-  */
-  var frame_url = "";
-
-  function loadComment() {
-    elemId("err_comment").className = "invisible";
-
-    fetch('https://' + inst + '/api/v1/timelines/tag/' + hashtag_o, {
-      headers: {'content-type': 'application/json'},
-      method: 'GET'
-    })
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    })
-    .then(function(json) {
-      let reshtml = "";
-      let ws_url = 'wss://' + inst + '/api/v1/streaming/?stream=hashtag&tag=' + hashtag_o;
-
-      cm_ws = new WebSocket(ws_url);
-      cm_ws.onopen = function() {
-        heartbeat = setInterval(() => cm_ws.send("ping"), 5000);
-        cm_ws.onmessage = ws_onmessage;
-
-        cm_ws.onclose = function() {
-          clearInterval(heartbeat);
-          loadComment();
-        };
-      };
-
-      io = new WebSocket("<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>");
-      io.onopen = function() {
-        w_heartbeat = setInterval(function () {
-          if (io.readyState !== 0 && io.readyState !== 1) io.close();
-          io.send("ping");
-        }, 5000);
-      };
-
-      io.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        if (data.type === "pong" || !data.payload) return;
-        if (data.event === "delete") {
-          const del_toot = elemId('post_' + data.payload);
-          if (del_toot) del_toot.parentNode.removeChild(del_toot);
-          return;
-        }
-        const msg = JSON.parse(data.payload);
-        if (data.event === "prop") {
-          if (msg.type === "vote_start") {
-            elemId("vote_title").textContent = msg.title;
-            elemId("vote1").textContent = msg.vote[0];
-            elemId("vote2").textContent = msg.vote[1];
-            if (msg.vote[2]) {
-              elemId("vote3").textContent = msg.vote[2];
-              $("#vote3").removeClass("invisible");
-            } else {
-              $("#vote3").addClass("invisible");
-            }
-
-            if (msg.vote[3]) {
-              elemId("vote4").textContent = msg.vote[3];
-              $("#vote4").removeClass("invisible");
-            } else {
-              $("#vote4").addClass("invisible");
-            }
-
-            elemId("prop_vote").className = "";
-          } else if (msg.type === "vote_end") {
-            elemId("prop_vote").className = "invisible";
-            fetch('<?=u("api/client/vote/reset")?>?id=<?=s($live["id"])?>', {
-              method: 'GET',
-              credentials: 'include'
-            });
-          } else if (msg.type === "item") {
-            if (msg.item_type === "knzk_kongyo") {
-              const volume = localStorage.getItem('kplayer_volume');
-              const mute = localStorage.getItem('kplayer_mute');
-              const audio = new Audio('https://static.knzk.me/knzklive/kongyo.mp3');
-              audio.volume = volume ? volume * 0.01 : 0.8;
-              audio.muted = parseInt(mute === null ? 0 : mute);
-              audio.play();
-              return;
-            }
-            document.getElementById('iframe').contentWindow.run_item(msg.item_type, msg.item, 10);
-          } else if (msg.type === "change_config") {
-            if (msg.mode === "sensitive" && msg.result) {
-              const frame = document.getElementById('iframe');
-              frame_url = frame.src;
-              frame.src = "";
-              $('#sensitiveModal').modal('show');
-            } else if (msg.mode === "comment") {
-              if (msg.result) {
-                $(".comment_block").show();
-              } else {
-                $(".comment_block").hide();
-              }
-            } else if (msg.mode === "ngs") {
-              getNgs();
-            }
-          } else if (msg.type === "donate") {
-            add_donator(msg);
-          }
-        } else if (data.event === "update") {
-          ws_onmessage(msg, "update");
-        }
-      };
-
-      io.onclose = function() {
-        io = null;
-        clearInterval(w_heartbeat);
-        w_heartbeat = null;
-        loadComment();
-      };
-
-      fetch('<?=u("api/client/comment_get")?>?id=<?=s($live["id"])?>', {
-        method: 'GET',
-        credentials: 'include'
-      }).then(function(response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function(c) {
-        if (c) {
-          json = json.concat(c);
-          json.sort(function(a,b) {
-            return (Date.parse(a["created_at"]) < Date.parse(b["created_at"]) ? 1 : -1);
-          });
-        }
-        if (json) {
-          let i = 0;
-          const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
-          while (json[i]) {
-            if (config.np.indexOf(json[i]["id"]) === -1) {
-              reshtml += check_data(json[i]) ? tmpl(buildCommentData(json[i], inst)) : "";
-            }
-            i++;
-          }
-        }
-
-        elemId("comments").innerHTML = reshtml;
-      }).catch(function(error) {
-        console.error(error);
-        elemId("err_comment").className = "text-danger";
-      });
-    })
-    .catch(error => {
-      console.log(error);
-      elemId("err_comment").className = "text-danger";
-    });
-  }
-
-  function ws_onmessage(message, mode = "") {
-    let ws_resdata, ws_reshtml;
-    if (mode) { //KnzkLive Comment
-      ws_resdata = {};
-      ws_resdata.event = mode;
-      ws_reshtml = message;
-    } else { //Mastodon
-      ws_resdata = JSON.parse(message.data);
-      ws_reshtml = JSON.parse(ws_resdata.payload);
-    }
-
-    if (ws_resdata.event === 'update') {
-      if (ws_reshtml['id']) {
-        elemId("comment_count").textContent = parseInt(elemId("comment_count").textContent) + 1;
-        const tmpl = Handlebars.compile(document.getElementById("com_tmpl").innerHTML);
-        if (check_data(ws_reshtml)) {
-          elemId("comments").innerHTML = (tmpl(buildCommentData(ws_reshtml, inst))) + elemId("comments").innerHTML;
-          document.getElementById('iframe').contentWindow.comment_view(ws_reshtml['content']);
-        }
-      }
-    } else if (ws_resdata.event === 'delete') {
-      var del_toot = elemId('post_' + ws_resdata.payload);
-      if (del_toot) del_toot.parentNode.removeChild(del_toot);
-    }
-  }
-
-  function getNgs() {
-    fetch('<?=u("api/client/ngs/get")?>', {
-      headers: {'content-type': 'application/x-www-form-urlencoded'},
-      method: 'POST',
-      credentials: 'include',
-      body: buildQuery({
-        csrf_token: `<?=$_SESSION['csrf_token']?>`,
-        live_id: <?=$live["id"]?>
-      })
-    }).then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }).then(function(json) {
-      if (json["error"]) {
-        alert(json["error"]);
-        return null;
-      }
-      if (json["w"]) {
-        config.nw = JSON.parse(atob(json["w"]));
-      }
-      if (json["u"]) {
-        config.nu = JSON.parse(atob(json["u"]));
-        if (config.nu.indexOf("#ME#") !== -1) location.reload();
-      }
-      if (json["p"]) {
-        config.np = JSON.parse(atob(json["p"]));
-      }
-      if (json["donator"]) {
-        for (let item of json["donator"]) {
-          add_donator(item);
-        }
-      }
-      loadComment();
-    }).catch(function(error) {
-      console.error(error);
-      alert("内部エラーが発生しました");
-    });
-  }
-
-  /*
-  window.onload = function () {
-    getNgs();
-    check_limit();
-    watch(true);
-  };
-  */
-</script>
 <?php endif; // sensitive ?>
 </body>
 </html>

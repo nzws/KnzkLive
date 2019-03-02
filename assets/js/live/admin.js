@@ -94,6 +94,35 @@ class admin {
         live.watch();
       });
   }
+
+  static addBlocking() {
+    if (!config.live.is_broadcaster) return false;
+
+    const acct = kit.elemId('blocking_acct').value;
+    if (confirm(`「${acct}」をブロックします。\nよろしいですか？`)) {
+      api
+        .request('client/ngs/manage_users', 'POST', {
+          type: 'add',
+          acct: acct,
+          is_permanent: kit.elemId('blocking_permanent').checked ? 1 : 0,
+          is_blocking_watch: kit.elemId('blocking_blocking_watch').checked
+            ? 1
+            : 0
+        })
+        .then(json => {
+          if (json['success']) {
+            kit.elemId('blocking_acct').value = '';
+            $('#blockingModal').modal('hide');
+            if (!config.live) location.reload();
+          } else {
+            toast.new(
+              'エラーが発生しました。データベースに問題が発生している可能性があります。',
+              '.bg-danger'
+            );
+          }
+        });
+    }
+  }
 }
 
 module.exports = admin;

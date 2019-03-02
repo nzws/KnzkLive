@@ -108,7 +108,7 @@
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-success" onclick="item_buy('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
           </div>
         </div>
         <hr>
@@ -116,7 +116,7 @@
           <h5>神崎コンギョ (音)</h5>
           コ　ン　ギ　ョ
           <div class="text-right">
-            <button class="btn btn-success" onclick="item_buy('knzk_kongyo')">1000KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('knzk_kongyo')">1000KPで投下</button>
           </div>
         <?php endif; ?>
       </div>
@@ -135,7 +135,7 @@
       </div>
       <div class="modal-body">
         この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = frame_url">:: 視聴する ::</button>
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = config.live.frame_url">:: 視聴する ::</button>
       </div>
     </div>
   </div>

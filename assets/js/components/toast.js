@@ -9,7 +9,7 @@ class toast {
     text,
     bgcolor = '.bg-primary',
     textcolor = '#fff',
-    close_delay = 5000
+    close_delay = 3500
   ) {
     if (!text) {
       console.error('[KnzkToast]', 'text is required!');

@@ -76,7 +76,7 @@ function update(name, type, obj = null) {
       if (json["success"]) {
         if (type) {
           $("tbody").prepend(`<tr><td><a href="#" onclick="remove('${json["word"]}', false, this);return false">削除</a>　${json["word"]}</td></tr>`);
-          elemId('word').value = "";
+          document.getElementById('word').value = "";
         } else $(obj).parent().parent().remove();
       } else {
         alert("エラーが発生しました。データベースに問題が発生している可能性があります。");

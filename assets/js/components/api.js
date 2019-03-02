@@ -31,7 +31,7 @@ class api {
         .then(function(json) {
           if (json['error']) {
             toast.new(json['error'], '.bg-warning');
-            reject(error);
+            reject(json);
             return;
           }
           if (config['is_debug'])

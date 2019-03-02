@@ -33,7 +33,7 @@ class vote {
           vote2: vote[1].value,
           vote3: vote[2].value,
           vote4: vote[3].value,
-          is_post: elemId('vote_ispost').checked ? 1 : 0
+          is_post: kit.elemId('vote_ispost').checked ? 1 : 0
         })
         .then(json => {
           if (json['success']) {

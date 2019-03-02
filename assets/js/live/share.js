@@ -29,12 +29,7 @@ class share {
       );
       if (instance)
         url =
-          'https://' +
-          instance +
-          '/share?text=' +
-          config.live.url +
-          '/n' +
-          text;
+          'https://' + instance + '/share?text=' + config.live.url + ' ' + text;
     } else if (mode === 'facebook') {
       url = 'https://www.facebook.com/sharer/sharer.php?u=' + config.live.url;
     } else if (mode === 'line') {

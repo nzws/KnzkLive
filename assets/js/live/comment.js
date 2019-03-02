@@ -1,6 +1,9 @@
 const kit = require('../components/kanzakit');
 const api = require('../components/api');
 
+// const common = require('../comment_loader');
+// ここから読み取れなくて謎、とりあえず knzk.comment_loader 使えば取れる
+
 class comment {
   static check_limit() {
     if (!config.account) return; //未ログイン
@@ -67,7 +70,7 @@ class comment {
     }
   }
 
-  static comment_delete(id, acct) {
+  static delete(id, acct) {
     if (!config.live.is_broadcaster) return false;
 
     if (
@@ -90,6 +93,41 @@ class comment {
             );
           }
         });
+    }
+  }
+
+  static onmessage(message, mode = '') {
+    let ws_resdata, ws_reshtml;
+    if (mode) {
+      //KnzkLive Comment
+      ws_resdata = {};
+      ws_resdata.event = mode;
+      ws_reshtml = message;
+    } else {
+      //Mastodon
+      ws_resdata = JSON.parse(message.data);
+      ws_reshtml = JSON.parse(ws_resdata.payload);
+    }
+
+    if (ws_resdata.event === 'update') {
+      if (ws_reshtml['id']) {
+        kit.elemId('comment_count').textContent =
+          parseInt(kit.elemId('comment_count').textContent) + 1;
+        const tmpl = Handlebars.compile(
+          document.getElementById('com_tmpl').innerHTML
+        );
+
+        if (knzk.comment_loader.checkData(ws_reshtml)) {
+          kit.elemId('comments').innerHTML =
+            tmpl(knzk.comment_loader.buildCommentData(ws_reshtml)) +
+            kit.elemId('comments').innerHTML;
+          kit
+            .elemId('iframe')
+            .contentWindow.comment_view(ws_reshtml['content']);
+        }
+      }
+    } else if (ws_resdata.event === 'delete') {
+      kit.elemRemove(kit.elemId('post_' + ws_resdata.payload));
     }
   }
 }
