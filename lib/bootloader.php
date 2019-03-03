@@ -15,12 +15,6 @@ if ($env["is_testing"]) {
   ini_set('display_errors', 1);
 }
 
-if ($env["is_maintenance"]) {
-    http_response_code(503);
-    //include PATH."public/errors/503.html";
-    exit("Error: maintenance");
-}
-
 if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
   $_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
 }
@@ -54,3 +48,7 @@ require_once($libpt."point.php");
 require_once($libpt."donate.php");
 
 $toot_get_limit = 200;
+
+if ($env["is_maintenance"]) {
+  showError("現在メンテナンス中です。", 503);
+}

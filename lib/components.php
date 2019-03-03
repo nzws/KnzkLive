@@ -51,3 +51,11 @@ function dispSecDate($sec) {
 
   return $text;
 }
+
+function showError($text, $http_status = null) {
+  global $errortext;
+
+  if (!empty($http_status)) http_response_code($http_status);
+  $errortext = $text;
+  include __DIR__ . "/../include/errorpage.php";
+}
