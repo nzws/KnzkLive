@@ -103,10 +103,14 @@ class live {
   static userDropdown(obj, id, acct, url) {
     let is_local = false,
       local_icon = '';
-    if (acct.match(/\(local\)/i)) {
+    if (kit.search(acct, '(local)')) {
+      // ローカル
       is_local = true;
       acct = acct.replace(' (local)', '');
       local_icon = `<i class="fas fa-home" title="ローカルコメント"></i> `;
+    } else {
+      // Mastodon
+      if (!kit.search(acct, '@')) acct += '@' + config.main_domain;
     }
 
     $('.user-dropdown').remove();
