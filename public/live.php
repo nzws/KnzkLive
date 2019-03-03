@@ -59,7 +59,7 @@ $vote = loadVote($live["id"]);
       hashtag_o: "<?=liveTag($live)?>",
       hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
       url: "<?=$liveurl?>",
-      is_broadcaster: <?=$live["user_id"] === $liveUser["id"] ? "true" : "false"?>,
+      is_broadcaster: <?=$my && $live["user_id"] === $my["id"] ? "true" : "false"?>,
       created_at: "<?=dateHelper($live["created_at"])?>",
       websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
       account: {

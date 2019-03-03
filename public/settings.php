@@ -12,7 +12,6 @@ if ($my["broadcaster_id"]) {
 }
 
 if ($_POST) {
-  $my["misc"]["live_toot"] = isset($_POST["live_toot"]);
   $my["misc"]["to_title"] = isset($_POST["to_title"]);
   $my["misc"]["no_toot_default"] = isset($_POST["no_toot_default"]);
   $my["misc"]["auto_close"] = isset($_POST["auto_close"]);

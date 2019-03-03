@@ -29,14 +29,16 @@
   </div>
   <?php else : ?>
     <p>
-      <span class="text-warning">* コメントを投稿するにはログインしてください。<?=(!$liveUser["misc"]["live_toot"] ? "<br><br>{$env["masto_login"]["domain"]}のアカウントにフォローされているアカウントから #".liveTag($live)." をつけてトゥートしてもコメントする事ができます。" : "")?></span>
+    コメントを投稿するにはKnzkLiveにログインするか、 <b>#<?=liveTag($live)?></b> でトゥートしてください！<br>
+    <small class="text-warning">* Mastodonからのコメントは <?=$env["masto_login"]["domain"]?> のハッシュタグTLから読み込まれます。<?=$env["masto_login"]["domain"]?> にフォローされていて公開トゥートのみ表示できます。</small>
     </p>
+    <hr>
   <?php endif; ?>
   <div id="donators" class="mt-2" style="display: none"></div>
   <p class="invisible" id="err_comment">
     <span class="text-warning">
     コメントストリーミングに再接続しています...<br>
-    <small>もしずっとこの表示のままであればページを再読み込みしてください。</small>
+    <small>もしこの状態から変わらなければページを再読み込みしてください。</small>
     </span>
   </p>
 </div>
