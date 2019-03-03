@@ -1,4 +1,13 @@
 html[data-page='index'] {
+  .card-base {
+    color: #212529;
+    margin-top: 5px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
   .top_lists {
     width: 100%;
     padding: 10px 0;
@@ -9,14 +18,9 @@ html[data-page='index'] {
       color: #606984;
       margin: 50px 0;
     }
-  }
-
-  .card {
-    color: #212529;
-    margin-top: 5px;
 
     a {
-      text-decoration: none;
+      color: initial;
     }
   }
 
@@ -44,7 +48,8 @@ html[data-page='index'] {
     background: #212121;
   }
 
-  .card-body {
+  .card-body,
+  .card-title {
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
