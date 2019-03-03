@@ -13,7 +13,7 @@ module.exports = {
 
     $('#toot').keydown(function(e) {
       if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
-        this.comment.post();
+        knzk.live.comment.post();
       }
     });
   },
