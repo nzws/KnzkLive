@@ -4,7 +4,7 @@ class player {
   static startWatching(v) {
     video.addEventListener(
       'error',
-      function() {
+      () => {
         player.showSplash('読み込み中に不明なエラーが発生しました...');
       },
       false
@@ -12,7 +12,7 @@ class player {
 
     video.addEventListener(
       'ended',
-      function() {
+      () => {
         clearInterval(config.heartbeat);
         player.showSplash('ストリームはオフラインです。');
       },
@@ -21,7 +21,7 @@ class player {
 
     video.addEventListener(
       'playing',
-      function() {
+      () => {
         player.showSplash();
         v.play();
       },
@@ -30,7 +30,7 @@ class player {
 
     video.addEventListener(
       'canplay',
-      function() {
+      () => {
         player.showSplash();
         v.play();
       },
@@ -39,7 +39,7 @@ class player {
 
     video.addEventListener(
       'loadedmetadata',
-      function() {
+      () => {
         player.showSplash();
         v.play();
       },
@@ -75,7 +75,7 @@ class player {
       player.showSplash();
 
       if (video.paused) {
-        video.play().catch(function(e) {
+        video.play().catch(e => {
           $('#play_button').show();
         });
       }
@@ -145,7 +145,7 @@ class player {
   static watchHover() {
     $('.hover').show();
     config.hover++;
-    setTimeout(function() {
+    setTimeout(() => {
       config.hover--;
 
       if ($(':hover').length) {

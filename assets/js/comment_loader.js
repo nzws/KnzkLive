@@ -21,14 +21,14 @@ class comment_loader {
         method: 'GET'
       }
     )
-      .then(function(response) {
+      .then(response => {
         if (response.ok) {
           return response.json();
         } else {
           throw response;
         }
       })
-      .then(function(json) {
+      .then(json => {
         let reshtml = '';
 
         config.live.websocket.mastodon = new WebSocket(
@@ -37,7 +37,7 @@ class comment_loader {
             '/api/v1/streaming/?stream=hashtag&tag=' +
             config.live.hashtag_o
         );
-        config.live.websocket.mastodon.onopen = function() {
+        config.live.websocket.mastodon.onopen = () => {
           config.live.heartbeat.mastodon = setInterval(
             () => config.live.websocket.mastodon.send('ping'),
             5000
@@ -47,14 +47,14 @@ class comment_loader {
               ? livepage_comment.onmessage
               : comment_viewer.onmessage;
 
-          config.live.websocket.mastodon.onclose = function() {
+          config.live.websocket.mastodon.onclose = () => {
             kit.elemId('err_comment').className = '';
           };
         };
 
         config.live.websocket.knzk = new WebSocket(config.live.websocket_url);
-        config.live.websocket.knzk.onopen = function() {
-          config.live.heartbeat.knzk = setInterval(function() {
+        config.live.websocket.knzk.onopen = () => {
+          config.live.heartbeat.knzk = setInterval(() => {
             if (
               config.live.websocket.knzk.readyState !== 0 &&
               config.live.websocket.knzk.readyState !== 1
@@ -63,11 +63,11 @@ class comment_loader {
             config.live.websocket.knzk.send('ping');
           }, 5000);
         };
-        config.live.websocket.knzk.onclose = function() {
+        config.live.websocket.knzk.onclose = () => {
           kit.elemId('err_comment').className = '';
         };
 
-        config.live.websocket.knzk.onmessage = function(e) {
+        config.live.websocket.knzk.onmessage = e => {
           const data = JSON.parse(e.data);
           if (data.type === 'pong' || !data.payload) return;
           if (data.event === 'delete') {
@@ -188,7 +188,7 @@ class comment_loader {
           .then(c => {
             if (c) {
               json = json.concat(c);
-              json.sort(function(a, b) {
+              json.sort((a, b) => {
                 return Date.parse(a['created_at']) < Date.parse(b['created_at'])
                   ? 1
                   : -1;

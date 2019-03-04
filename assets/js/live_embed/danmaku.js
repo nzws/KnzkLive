@@ -8,7 +8,7 @@ class danmaku {
       kit.elemId('item_' + type + '_tmpl').innerHTML
     );
 
-    setTimeout(function() {
+    setTimeout(() => {
       $('#item_layer').append(tmpl(value));
       setTimeout(
         () => kit.elemRemove(kit.elemId(value['random_id'])),

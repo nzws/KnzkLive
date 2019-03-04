@@ -31,7 +31,7 @@ class comment {
           is_local: isKnzk ? 1 : 0,
           content_tw: v + config.live.hashtag
         })
-        .then(function(json) {
+        .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
             comment.check_limit();
@@ -49,14 +49,14 @@ class comment {
           visibility: 'public'
         })
       })
-        .then(function(response) {
+        .then(response => {
           if (response.ok) {
             return response.json();
           } else {
             throw response;
           }
         })
-        .then(function(json) {
+        .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
             comment.check_limit();

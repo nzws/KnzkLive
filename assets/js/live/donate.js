@@ -19,7 +19,7 @@ class donate {
     const datet = parseInt(
       new Date(data['ended_at']).getTime() - new Date().getTime()
     );
-    setTimeout(function() {
+    setTimeout(() => {
       donate.delete(data['id']);
     }, datet);
   }

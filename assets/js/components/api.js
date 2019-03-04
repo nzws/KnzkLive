@@ -19,7 +19,7 @@ class api {
           body: method === 'POST' ? api.buildQuery(body) : null
         }
       )
-        .then(function(response) {
+        .then(response => {
           if (config['is_debug'])
             console.log('[Knzk-Debug] API Response', response);
           if (response.ok) {
@@ -28,7 +28,7 @@ class api {
             throw response;
           }
         })
-        .then(function(json) {
+        .then(json => {
           if (json['error']) {
             toast.new(json['error'], '.bg-warning');
             reject(json);
@@ -38,7 +38,7 @@ class api {
             console.log('[Knzk-Debug] API Response received', json);
           resolve(json);
         })
-        .catch(function(error) {
+        .catch(error => {
           console.error(error);
           toast.new(
             'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',

@@ -39,7 +39,7 @@ class comment_viewer {
     const datet = parseInt(
       new Date(data['ended_at']).getTime() - new Date().getTime()
     );
-    setTimeout(function() {
+    setTimeout(() => {
       comment_viewer.deleteDonate(data['id']);
     }, datet);
   }

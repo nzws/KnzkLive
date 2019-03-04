@@ -11,7 +11,7 @@ module.exports = {
     setInterval(this.live.update_watch, 20000);
     setInterval(this.live.date, 1000);
 
-    $('#toot').keydown(function(e) {
+    $('#toot').keydown(e => {
       if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
         knzk.live.comment.post();
       }
