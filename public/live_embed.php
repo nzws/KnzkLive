@@ -29,7 +29,7 @@ $mode = $_SESSION["watch_type"];
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
-  <link rel="stylesheet" href="<?=assetsUrl()?>bundle/live_embed.css?t=<?=filemtime(__DIR__ . "/bundle/live_embed.css")?>">
+  <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/bundle/bundle.css")?>">
 </head>
 
 <body>

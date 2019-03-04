@@ -1,3 +1,5 @@
+import '../scss/index.scss';
+
 window.knzk = {
   live: require('./live'),
   comment_loader: require('./comment_loader'),
