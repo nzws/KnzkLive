@@ -7,7 +7,7 @@
 <meta name="msapplication-TileColor" content="#000000">
 <meta name="theme-color" content="#000000">
 
-<link rel="stylesheet" href="<?=assetsUrl()?>bundle/style.css?t=<?=filemtime(__DIR__ . "/../public/bundle/style.css")?>">
+<link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.css")?>">
 <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
   window.config = {

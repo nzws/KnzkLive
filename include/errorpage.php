@@ -13,7 +13,7 @@ function assets() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Error / エラー - KnzkLive</title>
-  <link rel="stylesheet" href="<?=assets()?>bundle/style.css?t=<?=filemtime(__DIR__ . "/../public/bundle/style.css")?>">
+  <link rel="stylesheet" href="<?=assets()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.css")?>">
   <link rel="shortcut icon" type="image/x-icon" href="<?=assets()?>static/favicon.ico">
 </head>
 <body>
