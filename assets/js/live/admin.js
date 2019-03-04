@@ -27,6 +27,8 @@ class admin {
               elem.classList.add('btn-warning');
               elem.classList.remove('btn-info');
             }
+
+            toast.new(mode + ': 設定しました。', '.bg-success');
           }
         });
     }

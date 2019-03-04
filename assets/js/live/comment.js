@@ -1,6 +1,8 @@
 const kit = require('../components/kanzakit');
 const api = require('../components/api');
 
+const toast = require('../components/toast');
+
 // const common = require('../comment_loader');
 // ここから読み取れなくて謎、とりあえず knzk.comment_loader 使えば取れる
 
