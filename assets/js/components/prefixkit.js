@@ -1,14 +1,9 @@
-module.exports = function() {
-  window.requestAnimationFrame = (function() {
-    return (
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      function(f) {
-        return window.setTimeout(f, 1000 / 120);
-      }
-    );
-  })();
+module.exports = () => {
+  window.requestAnimationFrame = (() =>
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    (f => window.setTimeout(f, 1000 / 120)))();
 };

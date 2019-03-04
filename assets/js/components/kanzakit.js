@@ -30,7 +30,7 @@ class kanzakit {
   }
 
   static search(base, searchtext) {
-    return base && base.indexOf(searchtext) !== -1;
+    return base && base.includes(searchtext);
   }
 }
 

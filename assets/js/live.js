@@ -1,7 +1,7 @@
 const common_comment = require('./comment_loader');
 
 module.exports = {
-  ready: function() {
+  ready() {
     this.comment.check_limit();
     common_comment.getNgs();
     this.live.watch();
@@ -11,8 +11,8 @@ module.exports = {
     setInterval(this.live.update_watch, 20000);
     setInterval(this.live.date, 1000);
 
-    $('#toot').keydown(function(e) {
-      if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
+    $('#toot').keydown(({ keyCode, ctrlKey, metaKey }) => {
+      if (keyCode === 13 && (ctrlKey || metaKey)) {
         knzk.live.comment.post();
       }
     });

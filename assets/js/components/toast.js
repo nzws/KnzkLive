@@ -18,12 +18,12 @@ class toast {
 
     const id = kit.randInt(0, 100000);
     const element = document.createElement('div');
-    element.id = 'toast_' + id;
-    element.className =
-      (bgcolor.indexOf('.') !== -1 ? bgcolor.replace('.', '') : '') +
-      ' knzk_toast';
+    element.id = `toast_${id}`;
+    element.className = `${
+      bgcolor.includes('.') ? bgcolor.replace('.', '') : ''
+    } knzk_toast`;
     element.innerText = text;
-    element.style.background = bgcolor.indexOf('.') === -1 ? bgcolor : '';
+    element.style.background = !bgcolor.includes('.') ? bgcolor : '';
     element.style.color = textcolor;
     document.body.appendChild(element);
 
@@ -35,7 +35,7 @@ class toast {
   }
 
   static close(id) {
-    const elem = kit.elemId('toast_' + id);
+    const elem = kit.elemId(`toast_${id}`);
 
     if (elem) {
       elem.classList.add('hide');

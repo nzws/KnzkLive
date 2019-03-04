@@ -1,5 +1,5 @@
 module.exports = {
-  ready: function() {
+  ready() {
     require('./components/prefixkit')();
 
     window.onmouseover = window.onclick = this.player.watchHover;
@@ -28,7 +28,7 @@ module.exports = {
         const hls = new Hls();
         hls.loadSource(config.hls);
         hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
           video.play();
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -39,7 +39,7 @@ module.exports = {
     }
     config.heartbeat = setInterval(this.player.showStatus, 1000);
 
-    setTimeout(function() {
+    setTimeout(() => {
       $('.hover').hide();
     }, 5000);
   },

@@ -15,7 +15,7 @@ class admin {
         })
         .then(json => {
           if (json['success']) {
-            const elem = kit.elemId('admin_panel_' + mode + '_display');
+            const elem = kit.elemId(`admin_panel_${mode}_display`);
 
             elem.classList.remove('off', 'on');
             elem.classList.add(json['result'] ? 'on' : 'off');
@@ -28,7 +28,7 @@ class admin {
               elem.classList.remove('btn-info');
             }
 
-            toast.new(mode + ': 設定しました。', '.bg-success');
+            toast.new(`${mode}: 設定しました。`, '.bg-success');
           }
         });
     }
@@ -87,7 +87,7 @@ class admin {
 
     api
       .request('client/edit_live', 'POST', {
-        name: name,
+        name,
         description: desc
       })
       .then(json => {
@@ -103,7 +103,7 @@ class admin {
       api
         .request('client/ngs/manage_users', 'POST', {
           type: 'add',
-          acct: acct,
+          acct,
           is_permanent: kit.elemId('blocking_permanent').checked ? 1 : 0,
           is_blocking_watch: kit.elemId('blocking_blocking_watch').checked
             ? 1
@@ -191,7 +191,7 @@ class admin {
         .request('client/live/add_ch', 'POST', {
           acct: acct.value,
           amount: amount.value,
-          currency: currency
+          currency
         })
         .then(json => {
           if (json['success']) {

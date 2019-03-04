@@ -28,12 +28,11 @@ class share {
         config.account.domain || config.domain
       );
       if (instance)
-        url =
-          'https://' + instance + '/share?text=' + config.live.url + ' ' + text;
+        url = `https://${instance}/share?text=${config.live.url} ${text}`;
     } else if (mode === 'facebook') {
-      url = 'https://www.facebook.com/sharer/sharer.php?u=' + config.live.url;
+      url = `https://www.facebook.com/sharer/sharer.php?u=${config.live.url}`;
     } else if (mode === 'line') {
-      url = 'http://line.me/R/msg/text/?' + config.live.url;
+      url = `http://line.me/R/msg/text/?${config.live.url}`;
     } else if (mode === 'weibo') {
       url = `http://service.weibo.com/share/share.php?url=${
         config.live.url

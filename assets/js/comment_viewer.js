@@ -6,7 +6,8 @@ class comment_viewer {
   }
 
   static onmessage(message, mode = '') {
-    let ws_resdata, ws_reshtml;
+    let ws_resdata;
+    let ws_reshtml;
     if (mode) {
       //KnzkLive Comment
       ws_resdata = {};
@@ -30,7 +31,7 @@ class comment_viewer {
             : '') + kit.elemId('comments').innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
-      kit.elemRemove(kit.elemId('post_' + ws_resdata.payload));
+      kit.elemRemove(kit.elemId(`post_${ws_resdata.payload}`));
     }
   }
 
@@ -39,7 +40,7 @@ class comment_viewer {
     const datet = parseInt(
       new Date(data['ended_at']).getTime() - new Date().getTime()
     );
-    setTimeout(function() {
+    setTimeout(() => {
       comment_viewer.deleteDonate(data['id']);
     }, datet);
   }

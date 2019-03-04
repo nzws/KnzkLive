@@ -19,13 +19,13 @@ class donate {
     const datet = parseInt(
       new Date(data['ended_at']).getTime() - new Date().getTime()
     );
-    setTimeout(function() {
+    setTimeout(() => {
       donate.delete(data['id']);
     }, datet);
   }
 
   static delete(id) {
-    kit.elemRemove(kit.elemId('donate_' + id));
+    kit.elemRemove(kit.elemId(`donate_${id}`));
     delete config.dn[id];
     if (Object.keys(config.dn).length <= 0) {
       const dn = kit.elemId('donators');

@@ -31,17 +31,17 @@ class comment {
           is_local: isKnzk ? 1 : 0,
           content_tw: v + config.live.hashtag
         })
-        .then(function(json) {
+        .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
             comment.check_limit();
           }
         });
     } else {
-      fetch('https://' + config.account.domain + '/api/v1/statuses', {
+      fetch(`https://${config.account.domain}/api/v1/statuses`, {
         headers: {
           'content-type': 'application/json',
-          Authorization: 'Bearer ' + config.account.token
+          Authorization: `Bearer ${config.account.token}`
         },
         method: 'POST',
         body: JSON.stringify({
@@ -49,14 +49,14 @@ class comment {
           visibility: 'public'
         })
       })
-        .then(function(response) {
+        .then(response => {
           if (response.ok) {
             return response.json();
           } else {
             throw response;
           }
         })
-        .then(function(json) {
+        .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
             comment.check_limit();
@@ -77,15 +77,14 @@ class comment {
 
     if (
       confirm(
-        acct +
-          'の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。'
+        `${acct}の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。`
       )
     ) {
       api
         .request('client/live/comment_delete', 'POST', {
           delete_id: id.replace('knzklive_', ''),
           live_id: config.live.id,
-          is_knzklive: id.indexOf('knzklive_') !== -1 ? 1 : 0
+          is_knzklive: id.includes('knzklive_') ? 1 : 0
         })
         .then(json => {
           if (!json['success']) {
@@ -99,7 +98,8 @@ class comment {
   }
 
   static onmessage(message, mode = '') {
-    let ws_resdata, ws_reshtml;
+    let ws_resdata;
+    let ws_reshtml;
     if (mode) {
       //KnzkLive Comment
       ws_resdata = {};
@@ -131,7 +131,7 @@ class comment {
         }
       }
     } else if (ws_resdata.event === 'delete') {
-      kit.elemRemove(kit.elemId('post_' + ws_resdata.payload));
+      kit.elemRemove(kit.elemId(`post_${ws_resdata.payload}`));
     }
   }
 }
