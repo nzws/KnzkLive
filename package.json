@@ -8,6 +8,7 @@
   "private": true,
   "scripts": {
     "ws:start": "node ws/index.js",
+    "lint:css": "stylelint **/*.scss",
     "fmt": "prettier --write \"**/*.js\"",
     "watch": "webpack --watch",
     "build": "webpack"
@@ -38,6 +39,11 @@
     "prettier": "1.16.4",
     "pretty-quick": "1.10.0",
     "sass-loader": "7.1.0",
+    "stylelint": "9.10.1",
+    "stylelint-config-prettier": "5.0.0",
+    "stylelint-config-standard": "18.2.0",
+    "stylelint-scss": "3.5.4",
+    "stylelint-webpack-plugin": "0.10.5",
     "terser-webpack-plugin": "1.2.3",
     "vinyl-source-stream": "2.0.0",
     "webpack": "4.29.6",
