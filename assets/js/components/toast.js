@@ -20,10 +20,10 @@ class toast {
     const element = document.createElement('div');
     element.id = `toast_${id}`;
     element.className = `${
-      bgcolor.indexOf('.') !== -1 ? bgcolor.replace('.', '') : ''
+      bgcolor.includes('.') ? bgcolor.replace('.', '') : ''
     } knzk_toast`;
     element.innerText = text;
-    element.style.background = bgcolor.indexOf('.') === -1 ? bgcolor : '';
+    element.style.background = !bgcolor.includes('.') ? bgcolor : '';
     element.style.color = textcolor;
     document.body.appendChild(element);
 

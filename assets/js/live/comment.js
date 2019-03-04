@@ -84,7 +84,7 @@ class comment {
         .request('client/live/comment_delete', 'POST', {
           delete_id: id.replace('knzklive_', ''),
           live_id: config.live.id,
-          is_knzklive: id.indexOf('knzklive_') !== -1 ? 1 : 0
+          is_knzklive: id.includes('knzklive_') ? 1 : 0
         })
         .then(json => {
           if (!json['success']) {

@@ -196,7 +196,7 @@ class comment_loader {
                 document.getElementById('com_tmpl').innerHTML
               );
               while (json[i]) {
-                if (config.np.indexOf(json[i]['id']) === -1) {
+                if (!config.np.includes(json[i]['id'])) {
                   reshtml += comment_loader.checkData(json[i])
                     ? tmpl(comment_loader.buildCommentData(json[i]))
                     : '';
@@ -272,7 +272,7 @@ class comment_loader {
           }
         }
 
-        if (config.nu.indexOf('#ME#') !== -1 && config.live.page === 'livepage')
+        if (config.nu.includes('#ME#') && config.live.page === 'livepage')
           location.reload();
 
         comment_loader.closeAll(null, true);
@@ -283,8 +283,8 @@ class comment_loader {
     let result = true;
     for (let item of config.nw) {
       if (
-        data['content'].indexOf(item) !== -1 ||
-        data['account']['display_name'].indexOf(item) !== -1
+        data['content'].includes(item) ||
+        data['account']['display_name'].includes(item)
       ) {
         result = false;
         break;
