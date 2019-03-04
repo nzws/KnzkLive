@@ -28,9 +28,9 @@ function liveTag($live) {
   return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_".$live["id"];
 }
 
-function HTMLHelper($text) {
+function HTMLHelper($text, $options = []) {
   $text = s($text);
-  $text = nl2br($text);
+  $text = !empty($options["ignore_nl"]) ? $text : nl2br($text);
   $text = preg_replace("/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/", "<a href='\\1' rel='nofollow' target='_blank'>\\1</a>", $text);
   return $text;
 }
