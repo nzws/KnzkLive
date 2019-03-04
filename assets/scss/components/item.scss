@@ -8,9 +8,19 @@
 
 .item_emoji {
   position: absolute;
+
   img {
     width: 50px;
   }
+}
+
+.spin img {
+  animation: spin 1s linear infinite;
+}
+
+.bottom-to-top > img,
+.top-to-bottom > img {
+  display: block;
 }
 
 .item_emoji.big img {
@@ -36,14 +46,11 @@
   }
 }
 
-.spin img {
-  animation: spin 1s linear infinite;
-}
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -80,11 +87,6 @@
     left: -100%;
     right: 100%;
   }
-}
-
-.bottom-to-top > img,
-.top-to-bottom > img {
-  display: block;
 }
 
 .bottom-to-top {
