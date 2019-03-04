@@ -9,6 +9,7 @@
   "scripts": {
     "ws:start": "node ws/index.js",
     "fmt": "prettier --write \"**/*.js\"",
+    "watch": "webpack --watch",
     "build": "webpack"
   },
   "dependencies": {
