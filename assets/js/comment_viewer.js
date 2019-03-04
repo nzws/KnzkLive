@@ -31,7 +31,7 @@ class comment_viewer {
             : '') + kit.elemId('comments').innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
-      kit.elemRemove(kit.elemId('post_' + ws_resdata.payload));
+      kit.elemRemove(kit.elemId(`post_${ws_resdata.payload}`));
     }
   }
 

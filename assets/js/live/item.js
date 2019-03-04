@@ -9,7 +9,7 @@ class item {
       point += kit.elemId('item_emoji_spin').checked ? 30 : 0;
       point += kit.elemId('item_emoji_big').checked ? 30 : 0;
     }
-    kit.elemId('item_' + item + '_point').textContent = point;
+    kit.elemId(`item_${item}_point`).textContent = point;
   }
 
   static buyItem(type, is_confirmed = false) {
@@ -31,7 +31,7 @@ class item {
 
     api.request('client/item_buy', 'POST', body).then(json => {
       if (json['confirm']) {
-        if (confirm(json['point'] + 'KP消費します。よろしいですか？')) {
+        if (confirm(`${json['point']}KP消費します。よろしいですか？`)) {
           const p = $('.now_user_point');
           p.html(parseInt(p.html()) - json['point']);
           item.buyItem(type, true);

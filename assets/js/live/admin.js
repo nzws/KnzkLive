@@ -15,7 +15,7 @@ class admin {
         })
         .then(json => {
           if (json['success']) {
-            const elem = kit.elemId('admin_panel_' + mode + '_display');
+            const elem = kit.elemId(`admin_panel_${mode}_display`);
 
             elem.classList.remove('off', 'on');
             elem.classList.add(json['result'] ? 'on' : 'off');
@@ -28,7 +28,7 @@ class admin {
               elem.classList.remove('btn-info');
             }
 
-            toast.new(mode + ': 設定しました。', '.bg-success');
+            toast.new(`${mode}: 設定しました。`, '.bg-success');
           }
         });
     }

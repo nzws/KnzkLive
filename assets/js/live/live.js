@@ -31,7 +31,7 @@ class live {
 
         if (json['name'] !== config.live.watch_data['name']) {
           kit.elemId('live-name').innerText = json['name'];
-          kit.elemId('title-name').innerText = json['name'] + ' - KnzkLive';
+          kit.elemId('title-name').innerText = `${json['name']} - KnzkLive`;
         }
 
         if (json['description'] !== config.live.watch_data['description'])
@@ -72,14 +72,14 @@ class live {
     let sec = datet % 60;
 
     if (hour > 0) {
-      if (hour < 10) hour = '0' + hour;
-      html += hour + ':';
+      if (hour < 10) hour = `0${hour}`;
+      html += `${hour}:`;
     }
 
-    if (min < 10) min = '0' + min;
-    html += min + ':';
+    if (min < 10) min = `0${min}`;
+    html += `${min}:`;
 
-    if (sec < 10) sec = '0' + sec;
+    if (sec < 10) sec = `0${sec}`;
     html += sec;
 
     kit.elemId('time').innerHTML = html;
@@ -110,7 +110,7 @@ class live {
       local_icon = `<i class="fas fa-home" title="ローカルコメント"></i> `;
     } else {
       // Mastodon
-      if (!kit.search(acct, '@')) acct += '@' + config.main_domain;
+      if (!kit.search(acct, '@')) acct += `@${config.main_domain}`;
     }
 
     $('.user-dropdown').remove();

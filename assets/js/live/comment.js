@@ -38,10 +38,10 @@ class comment {
           }
         });
     } else {
-      fetch('https://' + config.account.domain + '/api/v1/statuses', {
+      fetch(`https://${config.account.domain}/api/v1/statuses`, {
         headers: {
           'content-type': 'application/json',
-          Authorization: 'Bearer ' + config.account.token
+          Authorization: `Bearer ${config.account.token}`
         },
         method: 'POST',
         body: JSON.stringify({
@@ -77,8 +77,7 @@ class comment {
 
     if (
       confirm(
-        acct +
-          'の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。'
+        `${acct}の投稿を削除します。よろしいですか？\n* SNSに同時投稿している場合はKnzkLiveでのみ非表示になります。`
       )
     ) {
       api
@@ -132,7 +131,7 @@ class comment {
         }
       }
     } else if (ws_resdata.event === 'delete') {
-      kit.elemRemove(kit.elemId('post_' + ws_resdata.payload));
+      kit.elemRemove(kit.elemId(`post_${ws_resdata.payload}`));
     }
   }
 }

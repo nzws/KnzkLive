@@ -11,7 +11,7 @@ class api {
         config.endpoint +
           url +
           config.suffix +
-          (body && method !== 'POST' ? '?' + api.buildQuery(body) : ''),
+          (body && method !== 'POST' ? `?${api.buildQuery(body)}` : ''),
         {
           headers: header,
           method,
@@ -55,7 +55,7 @@ class api {
     for (key in data) {
       body += `${key}=${encodeURIComponent(data[key])}&`;
     }
-    body += 'd=' + new Date().getTime();
+    body += `d=${new Date().getTime()}`;
     return body;
   }
 }

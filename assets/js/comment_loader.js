@@ -12,10 +12,9 @@ class comment_loader {
     kit.elemId('err_comment').className = 'invisible';
 
     fetch(
-      'https://' +
-        config.main_domain +
-        '/api/v1/timelines/tag/' +
-        config.live.hashtag_o,
+      `https://${config.main_domain}/api/v1/timelines/tag/${
+        config.live.hashtag_o
+      }`,
       {
         headers: { 'content-type': 'application/json' },
         method: 'GET'
@@ -32,10 +31,9 @@ class comment_loader {
         let reshtml = '';
 
         config.live.websocket.mastodon = new WebSocket(
-          'wss://' +
-            config.main_domain +
-            '/api/v1/streaming/?stream=hashtag&tag=' +
+          `wss://${config.main_domain}/api/v1/streaming/?stream=hashtag&tag=${
             config.live.hashtag_o
+          }`
         );
         config.live.websocket.mastodon.onopen = () => {
           config.live.heartbeat.mastodon = setInterval(
@@ -71,7 +69,7 @@ class comment_loader {
           const data = JSON.parse(e.data);
           if (data.type === 'pong' || !data.payload) return;
           if (data.event === 'delete') {
-            kit.elemRemove(kit.elemId('post_' + data.payload));
+            kit.elemRemove(kit.elemId(`post_${data.payload}`));
             return;
           }
 
@@ -101,11 +99,9 @@ class comment_loader {
               } else if (msg.type === 'vote_end') {
                 $('#prop_vote').hide();
                 fetch(
-                  config.endpoint +
-                    'client/vote/reset' +
-                    config.suffix +
-                    '?id=' +
-                    config.live.id,
+                  `${config.endpoint}client/vote/reset${config.suffix}?id=${
+                    config.live.id
+                  }`,
                   {
                     method: 'GET',
                     credentials: 'include'
@@ -245,7 +241,7 @@ class comment_loader {
     config.live.heartbeat.knzk = null;
 
     if (!hide_toast)
-      toast.new('(' + type + ') コメントサーバーに再接続しています...');
+      toast.new(`(${type}) コメントサーバーに再接続しています...`);
     comment_loader.load();
   }
 
@@ -297,7 +293,7 @@ class comment_loader {
     let acct =
       data['account']['acct'] !== data['account']['username']
         ? data['account']['acct'].replace(' (local)', '')
-        : data['account']['username'] + '@' + config.main_domain;
+        : `${data['account']['username']}@${config.main_domain}`;
     if (kit.search(config.nu, acct)) {
       result = false;
     }
@@ -328,7 +324,7 @@ class comment_loader {
     const acct =
       data['account']['acct'] !== data['account']['username']
         ? data['account']['acct'].replace(' (local)', '')
-        : data['account']['username'] + '@' + config.main_domain;
+        : `${data['account']['username']}@${config.main_domain}`;
 
     data['account']['display_name'] = kit.escape(
       data['account']['display_name']
