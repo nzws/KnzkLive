@@ -24,7 +24,7 @@ if (isset($_GET["watch_type"])) $_SESSION["watch_type"] = $_GET["watch_type"] ==
 $mode = $_SESSION["watch_type"];
 ?>
 <!DOCTYPE html>
-<html>
+<html data-page="live_embed">
 <head>
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">

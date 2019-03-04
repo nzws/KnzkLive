@@ -15,13 +15,13 @@ if (!$live) {
 $liveUser = getUser($live["user_id"]);
 ?>
 <!doctype html>
-<html>
+<html data-page="comment_viewer">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>KnzkLive Comment-Viewer</title>
     <meta name="robots" content="noindex">
-    <link rel="stylesheet" href="<?=assetsUrl()?>bundle/comment_viewer.css?t=<?=filemtime(__DIR__ . "/bundle/comment_viewer.css")?>">
+    <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/bundle/bundle.css")?>">
     <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
     <script>
       window.config = {

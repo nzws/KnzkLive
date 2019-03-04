@@ -1,49 +1,53 @@
-body {
-  /* thx https://qiita.com/NoxGit/items/eb0904822c0f0fe97650 */
-  text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
-    black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,
-    black 1px 2px, black -1px 2px, black 1px -2px, black -1px -2px,
-    black 2px 1px, black -2px 1px, black 2px -1px, black -2px -1px;
-
+html[data-page='comment_viewer'] {
   background: transparent;
-  color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', YuGothic,
-    'ヒラギノ角ゴ ProN W3', Hiragino Kaku Gothic ProN, Arial, 'メイリオ', Meiryo,
-    sans-serif;
-}
 
-a,
-a:hover {
-  color: #fff;
-  text-decoration: none;
-}
+  body {
+    /* thx https://qiita.com/NoxGit/items/eb0904822c0f0fe97650 */
+    text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
+      black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,
+      black 1px 2px, black -1px 2px, black 1px -2px, black -1px -2px,
+      black 2px 1px, black -2px 1px, black 2px -1px, black -2px -1px;
 
-p {
-  margin: 0;
-  margin-top: 10px;
-}
+    background: transparent;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', YuGothic,
+      'ヒラギノ角ゴ ProN W3', Hiragino Kaku Gothic ProN, Arial, 'メイリオ',
+      Meiryo, sans-serif;
+  }
 
-.invisible {
-  display: none;
-}
+  a,
+  a:hover {
+    color: #fff;
+    text-decoration: none;
+  }
 
-.com {
-  margin-top: 20px;
-}
+  p {
+    margin: 0;
+    margin-top: 10px;
+  }
 
-.hashtag {
-  display: none;
-}
+  .invisible {
+    display: none;
+  }
 
-.alert {
-  display: table;
-  padding: 5px;
-}
+  .com {
+    margin-top: 20px;
+  }
 
-.alert-warning {
-  background-color: rgba(255, 243, 205, 0.8);
-}
+  .hashtag {
+    display: none;
+  }
 
-.alert-primary {
-  background-color: rgba(204, 229, 255, 0.8);
+  .alert {
+    display: table;
+    padding: 5px;
+  }
+
+  .alert-warning {
+    background-color: rgba(255, 243, 205, 0.8);
+  }
+
+  .alert-primary {
+    background-color: rgba(204, 229, 255, 0.8);
+  }
 }
