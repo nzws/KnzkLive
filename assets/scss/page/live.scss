@@ -14,13 +14,16 @@ html[data-page='live'] {
     color: #17a2b8;
     text-decoration: none;
   }
+
   .modal-title {
     color: #212529;
   }
+
   .share_buttons button {
     margin: 3px;
     padding: 0.375rem 0.1rem;
   }
+
   #live-name {
     font-weight: 600;
   }
@@ -137,7 +140,7 @@ html[data-page='live'] {
 
   .comment-limit {
     width: calc(100% - 30px);
-    height: 0px;
+    height: 0;
     position: absolute;
   }
 

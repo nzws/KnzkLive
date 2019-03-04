@@ -2,6 +2,7 @@ const path = require('path');
 const glob = require('glob');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackBar = require('webpackbar');
 
@@ -32,6 +33,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin('public/bundle'),
+    new StyleLintPlugin(),
     new WebpackBar({ profile: true, reporter: 'profile' })
   ],
   optimization: {
