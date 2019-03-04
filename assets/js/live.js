@@ -1,7 +1,7 @@
 const common_comment = require('./comment_loader');
 
 module.exports = {
-  ready: function() {
+  ready() {
     this.comment.check_limit();
     common_comment.getNgs();
     this.live.watch();

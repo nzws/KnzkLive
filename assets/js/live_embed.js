@@ -1,5 +1,5 @@
 module.exports = {
-  ready: function() {
+  ready() {
     require('./components/prefixkit')();
 
     window.onmouseover = window.onclick = this.player.watchHover;
