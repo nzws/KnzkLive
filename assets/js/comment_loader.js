@@ -324,6 +324,11 @@ class comment_loader {
     return result;
   }
 
+  static msgreplace(str) {
+    const reg = new RegExp(/(<br>|<br \/>)/, 'gm');
+    return str.replace(reg, ' ');
+  }
+
   static buildCommentData(data) {
     const acct =
       data['account']['acct'] !== data['account']['username']
@@ -333,7 +338,11 @@ class comment_loader {
     data['account']['display_name'] = kit.escape(
       data['account']['display_name']
     );
+
     data['donator_color'] = comment_loader.checkDonator(acct);
+
+    data['content'] = comment_loader.msgreplace(data['content']);
+
     return data;
   }
 }
