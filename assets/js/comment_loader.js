@@ -188,11 +188,11 @@ class comment_loader {
           .then(c => {
             if (c) {
               json = json.concat(c);
-              json.sort((a, b) => {
-                return Date.parse(a['created_at']) < Date.parse(b['created_at'])
+              json.sort((a, b) =>
+                Date.parse(a['created_at']) < Date.parse(b['created_at'])
                   ? 1
-                  : -1;
-              });
+                  : -1
+              );
             }
             if (json) {
               let i = 0;
