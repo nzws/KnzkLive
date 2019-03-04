@@ -341,7 +341,7 @@ class comment_loader {
 
     data['donator_color'] = comment_loader.checkDonator(acct);
 
-    data['content'] = comment_loader.msgreplace(data['content']);
+    data.content = comment_loader.msgreplace(data.content);
 
     return data;
   }
