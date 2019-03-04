@@ -99,7 +99,8 @@ class comment {
   }
 
   static onmessage(message, mode = '') {
-    let ws_resdata, ws_reshtml;
+    let ws_resdata;
+    let ws_reshtml;
     if (mode) {
       //KnzkLive Comment
       ws_resdata = {};

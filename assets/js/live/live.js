@@ -101,8 +101,8 @@ class live {
   }
 
   static userDropdown(obj, id, acct, url) {
-    let is_local = false,
-      local_icon = '';
+    let is_local = false;
+    let local_icon = '';
     if (kit.search(acct, '(local)')) {
       // ローカル
       is_local = true;

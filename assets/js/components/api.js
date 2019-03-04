@@ -50,8 +50,8 @@ class api {
   }
 
   static buildQuery(data) {
-    let body = '',
-      key;
+    let body = '';
+    let key;
     for (key in data) {
       body += `${key}=${encodeURIComponent(data[key])}&`;
     }
