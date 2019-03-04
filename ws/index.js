@@ -2,6 +2,7 @@ const app = require('express')();
 const http = require('http').Server(app);
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
+
 const lastUpdate = {
   detect: null,
   tipknzk: null,
@@ -66,26 +67,26 @@ app.post('/update_conf', function(req, res) {
   console.log('[KnzkLive WebSocket] Update conf', req.body);
   const b = req.body;
   if (b.mode === 'add') {
-    //add
+    // add
     if (b.type === 'hashtag') {
-      //hashtag
+      // hashtag
       if (b.value !== 'default') {
         conf.hashtag.push(b.value);
       } else {
-        conf.hashtag.push('knzklive_' + b.live_id);
-        conf.hashtag_id['knzklive_' + b.live_id] = b.live_id;
+        conf.hashtag.push(`knzklive_${b.live_id}`);
+        conf.hashtag_id[`knzklive_${b.live_id}`] = b.live_id;
       }
 
       if (b.da_token) startDAConnect(b.da_token, b.live_id);
       if (b.sl_token) startSLConnect(b.sl_token, b.live_id);
     } else {
-      //user
+      // user
       conf.acct.push(b.value);
     }
     conf.hashtag = Array.from(new Set(conf.hashtag));
     conf.acct = Array.from(new Set(conf.acct));
   } else {
-    //del
+    // del
     if (b.type === 'hashtag') {
       const index = conf.hashtag.indexOf(b.value);
       if (index !== -1) {
@@ -102,7 +103,7 @@ app.post('/update_conf', function(req, res) {
 const ws = new WebSocket.Server({ server: http });
 
 ws.on('connection', function(c, req) {
-  console.log(new Date() + ' Connected.');
+  console.log(`${new Date()} Connected.`);
   c.url = req.url;
   c.on('message', function(message) {
     c.send(JSON.stringify({ event: 'pong' }));
@@ -112,7 +113,7 @@ ws.on('connection', function(c, req) {
 function send(liveId, message) {
   ws.clients.forEach(function(c) {
     if (c.readyState !== WebSocket.OPEN) return;
-    if (c.url !== '/api/streaming/live/' + liveId) return;
+    if (c.url !== `/api/streaming/live/${liveId}`) return;
     c.send(message);
   });
 }
@@ -124,6 +125,7 @@ http.listen(3000, function() {
 // donation-alerts
 const daData = {};
 const socketio = require('socket.io-client');
+
 function startDAConnect(token, live_id) {
   if (daData[token]) {
     console.log('[Worker Donate] already connected');
@@ -137,15 +139,15 @@ function startDAConnect(token, live_id) {
   });
 
   daData[token].on('connect', function() {
-    daData[token].emit('add-user', { token: token, type: 'minor' });
+    daData[token].emit('add-user', { token, type: 'minor' });
   });
 
   daData[token].on('donation', function(msg) {
     const data = JSON.parse(msg);
-    if (data['_is_test_alert']) {
+    if (data._is_test_alert) {
       donateTest(live_id);
     } else {
-      donateRun(data['username'], live_id, data['amount'], data['currency']);
+      donateRun(data.username, live_id, data.amount, data.currency);
     }
   });
 }
@@ -211,7 +213,7 @@ function donateRun(username, live_id, amount, currency) {
     fields
   ) {
     if (error) throw error;
-    const user_id = results[0] ? results[0]['id'] : 0;
+    const user_id = results[0] ? results[0].id : 0;
     exec(
       `php ${__dirname}/../knzkctl donate ${live_id} ${user_id} ${parseInt(
         amount
@@ -228,9 +230,10 @@ function donateRun(username, live_id, amount, currency) {
 const WebSocketClient = require('websocket').client;
 const mysql = require('mysql');
 const striptags = require('striptags');
-const exec = require('child_process').exec;
+const { exec } = require('child_process');
 const fetch = require('node-fetch');
 const config = require('../config');
+
 let conf = {
   hashtag: [],
   acct: [],
@@ -262,12 +265,12 @@ db.query('SELECT * FROM `live` WHERE is_live = 1 OR is_live = 2', function(
   fields
 ) {
   if (error) throw error;
-  for (let item of results) {
-    if (item['custom_hashtag']) {
-      conf.hashtag.push(item['custom_hashtag']);
+  for (const item of results) {
+    if (item.custom_hashtag) {
+      conf.hashtag.push(item.custom_hashtag);
     } else {
-      conf.hashtag.push('knzklive_' + item['id']);
-      conf.hashtag_id['knzklive_' + item['id']] = item['id'];
+      conf.hashtag.push(`knzklive_${item.id}`);
+      conf.hashtag_id[`knzklive_${item.id}`] = item.id;
     }
   }
   console.log('[Worker Hashtag]', conf.hashtag, conf.hashtag_id);
@@ -279,8 +282,8 @@ db.query('SELECT * FROM `users` WHERE twitter_id IS NULL', function(
   fields
 ) {
   if (error) throw error;
-  for (let item of results) {
-    conf.acct.push(item['acct']);
+  for (const item of results) {
+    conf.acct.push(item.acct);
   }
   console.log('[Worker Users]', conf.acct);
 });
@@ -291,12 +294,12 @@ db.query('SELECT * FROM `users` WHERE live_current_id != 0', function(
   fields
 ) {
   if (error) throw error;
-  for (let item of results) {
-    const misc = JSON.parse(item['misc']);
-    if (misc['donation_alerts_token'])
-      startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
-    if (misc['streamlabs_token'])
-      startSLConnect(misc['streamlabs_token'], item['live_current_id']);
+  for (const item of results) {
+    const misc = JSON.parse(item.misc);
+    if (misc.donation_alerts_token)
+      startDAConnect(misc.donation_alerts_token, item.live_current_id);
+    if (misc.streamlabs_token)
+      startSLConnect(misc.streamlabs_token, item.live_current_id);
   }
   console.log('[Worker Donate]');
 });
@@ -313,7 +316,7 @@ function StartWorker() {
   const client = new WebSocketClient();
 
   client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
+    console.log(`Connect Error: ${error.toString()}`);
     reConnect();
   });
 
@@ -321,7 +324,7 @@ function StartWorker() {
     console.log('WebSocket Client Connected');
 
     connection.on('error', function(error) {
-      console.log('Connection Error: ' + error.toString());
+      console.log(`Connection Error: ${error.toString()}`);
       reConnect();
     });
 
@@ -332,45 +335,41 @@ function StartWorker() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
-          lastUpdate['detect'] = Date.now();
+          lastUpdate.detect = Date.now();
           const ord = JSON.parse(message.utf8Data);
           const json = JSON.parse(ord.payload);
           if (ord.event === 'update') {
-            if (
-              json['visibility'] !== 'public' &&
-              json['visibility'] !== 'unlisted'
-            )
+            if (json.visibility !== 'public' && json.visibility !== 'unlisted')
               return;
-            if (json['reblog']) return;
-            if (json['account']['username'] === json['account']['acct'])
-              json['account']['acct'] =
-                json['account']['acct'] + '@' + config.domain;
+            if (json.reblog) return;
+            if (json.account.username === json.account.acct)
+              json.account.acct = `${json.account.acct}@${config.domain}`;
 
-            if (conf.acct.indexOf(json['account']['acct']) !== -1) {
+            if (conf.acct.indexOf(json.account.acct) !== -1) {
               db.query(
                 'UPDATE `users` SET `point_count_today_toot` = `point_count_today_toot` + 2 WHERE acct = ?',
-                json['account']['acct'],
+                json.account.acct,
                 function(error, results, fields) {
                   if (error) throw error;
-                  console.log('[Detect User]', json['account']['acct']);
+                  console.log('[Detect User]', json.account.acct);
                 }
               );
             }
 
-            if (json['tags'] && json['tags'][0]) {
-              for (let i of json['tags']) {
-                if (conf.hashtag.indexOf(i['name']) !== -1) {
-                  const sql =
-                    'UPDATE `live` SET `comment_count` = `comment_count` + 1 ' +
-                    (conf.hashtag_id[i['name']]
+            if (json.tags && json.tags[0]) {
+              for (const i of json.tags) {
+                if (conf.hashtag.indexOf(i.name) !== -1) {
+                  const sql = `UPDATE \`live\` SET \`comment_count\` = \`comment_count\` + 1 ${
+                    conf.hashtag_id[i.name]
                       ? 'WHERE `id` = ?'
-                      : 'WHERE `custom_hashtag` = ?');
-                  const value = conf.hashtag_id[i['name']]
-                    ? conf.hashtag_id[i['name']]
-                    : i['name'];
+                      : 'WHERE `custom_hashtag` = ?'
+                  }`;
+                  const value = conf.hashtag_id[i.name]
+                    ? conf.hashtag_id[i.name]
+                    : i.name;
                   db.query(sql, value, function(error, results, fields) {
                     if (error) throw error;
-                    console.log('[Detect Hashtag] ' + i['name']);
+                    console.log(`[Detect Hashtag] ${i.name}`);
                   });
                 }
               }
@@ -383,14 +382,14 @@ function StartWorker() {
     });
   });
 
-  client.connect('wss://' + config.domain + '/api/v1/streaming/?stream=public');
+  client.connect(`wss://${config.domain}/api/v1/streaming/?stream=public`);
 }
 
 function StartTIPKnzk() {
   const client = new WebSocketClient();
 
   client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
+    console.log(`Connect Error: ${error.toString()}`);
     reConnect('TIPKnzk');
   });
 
@@ -398,7 +397,7 @@ function StartTIPKnzk() {
     console.log('WebSocket Client Connected');
 
     connection.on('error', function(error) {
-      console.log('Connection Error: ' + error.toString());
+      console.log(`Connection Error: ${error.toString()}`);
       reConnect('TIPKnzk');
     });
 
@@ -409,42 +408,40 @@ function StartTIPKnzk() {
     connection.on('message', function(message) {
       try {
         if (message.type === 'utf8') {
-          lastUpdate['tipknzk'] = Date.now();
+          lastUpdate.tipknzk = Date.now();
           const ord = JSON.parse(message.utf8Data);
           let json = JSON.parse(ord.payload);
-          if (ord.event !== 'notification' || json['type'] !== 'mention')
-            return;
-          json = json['status'];
+          if (ord.event !== 'notification' || json.type !== 'mention') return;
+          json = json.status;
           let to_acct;
-          for (let i of json['mentions']) {
-            if (i['acct'].toLowerCase() !== config.tipknzk_acct.toLowerCase()) {
-              to_acct = i['acct'];
-              if (i['acct'] === i['username'])
-                to_acct = to_acct + '@' + config.domain;
+          for (const i of json.mentions) {
+            if (i.acct.toLowerCase() !== config.tipknzk_acct.toLowerCase()) {
+              to_acct = i.acct;
+              if (i.acct === i.username)
+                to_acct = `${to_acct}@${config.domain}`;
               break;
             }
           }
           if (!to_acct) return;
-          if (json['account']['username'] === json['account']['acct'])
-            json['account']['acct'] =
-              json['account']['acct'] + '@' + config.domain;
+          if (json.account.username === json.account.acct)
+            json.account.acct = `${json.account.acct}@${config.domain}`;
 
-          const data = striptags(json['content']).split(' ');
+          const data = striptags(json.content).split(' ');
           if (data[1] === 'tip') {
             exec(
               `php ${__dirname}/../knzkctl tipknzk ${parseInt(data[3])} ${
-                json['account']['acct']
+                json.account.acct
               } ${to_acct}`,
               (err, stdout, stderr) => {
                 if (err) {
                   console.log(err);
                 }
                 post(
-                  '@' + json['account']['acct'] + ' ' + stdout,
+                  `@${json.account.acct} ${stdout}`,
                   {
-                    in_reply_to_id: json['id']
+                    in_reply_to_id: json.id
                   },
-                  json['visibility']
+                  json.visibility
                 );
               }
             );
@@ -457,10 +454,9 @@ function StartTIPKnzk() {
   });
 
   client.connect(
-    'wss://' +
-      config.domain +
-      '/api/v1/streaming/?stream=user&access_token=' +
+    `wss://${config.domain}/api/v1/streaming/?stream=user&access_token=${
       config.tipknzk_token
+    }`
   );
 }
 
@@ -468,9 +464,9 @@ StartWorker();
 StartTIPKnzk();
 
 function post(value, option = {}, visibility = 'public') {
-  var optiondata = {
+  const optiondata = {
     status: value,
-    visibility: visibility
+    visibility
   };
 
   if (option.cw) {
@@ -485,10 +481,10 @@ function post(value, option = {}, visibility = 'public') {
   if (option.sensitive) {
     optiondata.sensitive = option.sensitive;
   }
-  fetch('https://' + config.domain + '/api/v1/statuses', {
+  fetch(`https://${config.domain}/api/v1/statuses`, {
     headers: {
       'content-type': 'application/json',
-      Authorization: 'Bearer ' + config.tipknzk_token
+      Authorization: `Bearer ${config.tipknzk_token}`
     },
     method: 'POST',
     body: JSON.stringify(optiondata)
@@ -496,17 +492,16 @@ function post(value, option = {}, visibility = 'public') {
     .then(function(response) {
       if (response.ok) {
         return response.json();
-      } else {
-        console.warn('NG:POST:SERVER');
-        return null;
       }
+      console.warn('NG:POST:SERVER');
+      return null;
     })
     .then(function(json) {
       if (json) {
-        if (json['id']) {
+        if (json.id) {
           console.log('OK:POST');
         } else {
-          console.warn('NG:POST:' + json);
+          console.warn(`NG:POST:${json}`);
         }
       }
     });

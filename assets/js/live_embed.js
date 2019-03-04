@@ -13,7 +13,7 @@ module.exports = {
     });
 
     if (config.type !== 'HLS' && flvjs.isSupported()) {
-      //ws-flv
+      // ws-flv
       const flvPlayer = flvjs.createPlayer({
         type: 'flv',
         isLive: true,
@@ -23,7 +23,7 @@ module.exports = {
       this.player.startWatching(flvPlayer);
       flvPlayer.load();
     } else {
-      //hls
+      // hls
       if (Hls.isSupported()) {
         const hls = new Hls();
         hls.loadSource(config.hls);

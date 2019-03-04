@@ -62,11 +62,12 @@ class player {
     const play = video.currentTime;
     let text = '';
     if (buffer > play && play && buffer) {
-      //再生
+      // 再生
       config.delay_sec = Math.round(buffer - play);
       if (config.type !== 'HLS') {
-        text += `${`<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a> · ` +
-          config.delay_sec}s`;
+        text += `${`<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a> · ${
+          config.delay_sec
+        }`}s`;
       } else {
         text += 'LIVE';
       }
@@ -78,7 +79,7 @@ class player {
         });
       }
     } else {
-      //バッファ
+      // バッファ
       text += 'BUFFERING';
       player.showSplash('バッファしています...');
     }
@@ -124,13 +125,11 @@ class player {
       else if (v.mozRequestFullscreen) document.mozCancelFullscreen();
       else if (v.msRequestFullscreen) document.msExitFullscreen();
       else if (v.requestFullscreen) document.exitFullscreen();
-    } else {
-      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
-      else if (v.mozRequestFullscreen) v.mozRequestFullscreen();
-      else if (v.requestFullscreen) v.requestFullscreen();
-      else if (v.msRequestFullscreen) v.msRequestFullscreen();
-      else if (document.exitFullscreen) i = document.fullscreenElement;
-    }
+    } else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+    else if (v.mozRequestFullscreen) v.mozRequestFullscreen();
+    else if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.msRequestFullscreen) v.msRequestFullscreen();
+    else if (document.exitFullscreen) i = document.fullscreenElement;
   }
 
   static end() {

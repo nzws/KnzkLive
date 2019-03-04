@@ -8,7 +8,7 @@ const toast = require('../components/toast');
 
 class comment {
   static check_limit() {
-    if (!config.account) return; //未ログイン
+    if (!config.account) return; // 未ログイン
     const d = kit.elemId('toot').value;
 
     const result =
@@ -52,9 +52,8 @@ class comment {
         .then(response => {
           if (response.ok) {
             return response.json();
-          } else {
-            throw response;
           }
+          throw response;
         })
         .then(json => {
           if (json) {
@@ -87,7 +86,7 @@ class comment {
           is_knzklive: id.includes('knzklive_') ? 1 : 0
         })
         .then(json => {
-          if (!json['success']) {
+          if (!json.success) {
             toast.warn(
               'エラーが発生しました。データベースに問題が発生している可能性があります。',
               '.bg-danger'
@@ -101,18 +100,18 @@ class comment {
     let ws_resdata;
     let ws_reshtml;
     if (mode) {
-      //KnzkLive Comment
+      // KnzkLive Comment
       ws_resdata = {};
       ws_resdata.event = mode;
       ws_reshtml = message;
     } else {
-      //Mastodon
+      // Mastodon
       ws_resdata = JSON.parse(message.data);
       ws_reshtml = JSON.parse(ws_resdata.payload);
     }
 
     if (ws_resdata.event === 'update') {
-      if (ws_reshtml['id']) {
+      if (ws_reshtml.id) {
         kit.elemId('comment_count').textContent =
           parseInt(kit.elemId('comment_count').textContent) + 1;
         const tmpl = Handlebars.compile(
@@ -126,7 +125,7 @@ class comment {
           kit
             .elemId('iframe')
             .contentWindow.knzk.live_embed.danmaku.comment_view(
-              ws_reshtml['content']
+              ws_reshtml.content
             );
         }
       }

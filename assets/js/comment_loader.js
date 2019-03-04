@@ -23,9 +23,8 @@ class comment_loader {
       .then(response => {
         if (response.ok) {
           return response.json();
-        } else {
-          throw response;
         }
+        throw response;
       })
       .then(json => {
         let reshtml = '';
@@ -185,9 +184,7 @@ class comment_loader {
             if (c) {
               json = json.concat(c);
               json.sort((a, b) =>
-                Date.parse(a['created_at']) < Date.parse(b['created_at'])
-                  ? 1
-                  : -1
+                Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1
               );
             }
             if (json) {
@@ -196,7 +193,7 @@ class comment_loader {
                 document.getElementById('com_tmpl').innerHTML
               );
               while (json[i]) {
-                if (!config.np.includes(json[i]['id'])) {
+                if (!config.np.includes(json[i].id)) {
                   reshtml += comment_loader.checkData(json[i])
                     ? tmpl(comment_loader.buildCommentData(json[i]))
                     : '';
@@ -249,9 +246,9 @@ class comment_loader {
     api
       .request('client/ngs/get', 'POST', { live_id: config.live.id })
       .then(json => {
-        config.nw = json['w'] ? JSON.parse(atob(json['w'])) : [];
-        config.nu = json['u'] ? JSON.parse(atob(json['u'])) : [];
-        config.np = json['p'] ? JSON.parse(atob(json['p'])) : [];
+        config.nw = json.w ? JSON.parse(atob(json.w)) : [];
+        config.nu = json.u ? JSON.parse(atob(json.u)) : [];
+        config.np = json.p ? JSON.parse(atob(json.p)) : [];
 
         // 一度支援者リストをリセットする
         if (
@@ -259,14 +256,14 @@ class comment_loader {
           config.dn &&
           Object.keys(config.dn).length >= 0
         ) {
-          for (let i in config.dn) {
+          for (const i in config.dn) {
             livepage_donate.delete(i);
           }
         }
 
         config.dn = {};
-        if (json['donator']) {
-          for (let item of json['donator']) {
+        if (json.donator) {
+          for (const item of json.donator) {
             if (config.live.page === 'livepage') livepage_donate.add(item);
             else comment_viewer.addDonate(item);
           }
@@ -281,19 +278,19 @@ class comment_loader {
 
   static checkData(data) {
     let result = true;
-    for (let item of config.nw) {
+    for (const item of config.nw) {
       if (
-        data['content'].includes(item) ||
-        data['account']['display_name'].includes(item)
+        data.content.includes(item) ||
+        data.account.display_name.includes(item)
       ) {
         result = false;
         break;
       }
     }
-    let acct =
-      data['account']['acct'] !== data['account']['username']
-        ? data['account']['acct'].replace(' (local)', '')
-        : `${data['account']['username']}@${config.main_domain}`;
+    const acct =
+      data.account.acct !== data.account.username
+        ? data.account.acct.replace(' (local)', '')
+        : `${data.account.username}@${config.main_domain}`;
     if (kit.search(config.nu, acct)) {
       result = false;
     }
@@ -302,17 +299,17 @@ class comment_loader {
 
   static checkDonator(acct) {
     let result = false;
-    for (let item in config.dn) {
-      if (config.dn[item] && config.dn[item]['account']['acct'] === acct) {
+    for (const item in config.dn) {
+      if (config.dn[item] && config.dn[item].account.acct === acct) {
         const datet = parseInt(
-          new Date(config.dn[item]['ended_at']).getTime() - new Date().getTime()
+          new Date(config.dn[item].ended_at).getTime() - new Date().getTime()
         );
         if (datet <= 0) {
           if (config.live.page === 'livepage')
-            livepage_donate.delete(config.dn[item]['id']);
-          else comment_viewer.deleteDonate(config.dn[item]['id']);
+            livepage_donate.delete(config.dn[item].id);
+          else comment_viewer.deleteDonate(config.dn[item].id);
         } else {
-          result = config.dn[item]['color'];
+          result = config.dn[item].color;
         }
         break;
       }
@@ -322,14 +319,12 @@ class comment_loader {
 
   static buildCommentData(data) {
     const acct =
-      data['account']['acct'] !== data['account']['username']
-        ? data['account']['acct'].replace(' (local)', '')
-        : `${data['account']['username']}@${config.main_domain}`;
+      data.account.acct !== data.account.username
+        ? data.account.acct.replace(' (local)', '')
+        : `${data.account.username}@${config.main_domain}`;
 
-    data['account']['display_name'] = kit.escape(
-      data['account']['display_name']
-    );
-    data['donator_color'] = comment_loader.checkDonator(acct);
+    data.account.display_name = kit.escape(data.account.display_name);
+    data.donator_color = comment_loader.checkDonator(acct);
     return data;
   }
 }

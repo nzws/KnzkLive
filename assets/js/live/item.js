@@ -19,25 +19,25 @@ class item {
       confirm: is_confirmed ? 1 : 0
     };
     if (type === 'emoji') {
-      body['count'] = parseInt(kit.elemId('item_emoji_count').value);
-      body['dir'] = kit.elemId('item_emoji_dir').value;
-      body['emoji'] = kit.elemId('item_emoji_emoji').value;
-      body['spin'] = kit.elemId('item_emoji_spin').checked ? 1 : 0;
-      body['big'] = kit.elemId('item_emoji_big').checked ? 1 : 0;
+      body.count = parseInt(kit.elemId('item_emoji_count').value);
+      body.dir = kit.elemId('item_emoji_dir').value;
+      body.emoji = kit.elemId('item_emoji_emoji').value;
+      body.spin = kit.elemId('item_emoji_spin').checked ? 1 : 0;
+      body.big = kit.elemId('item_emoji_big').checked ? 1 : 0;
     } else if (type === 'knzk_kongyo' || type === 'knzk_kongyo_kami') {
     } else {
       return null;
     }
 
     api.request('client/item_buy', 'POST', body).then(json => {
-      if (json['confirm']) {
-        if (confirm(`${json['point']}KP消費します。よろしいですか？`)) {
+      if (json.confirm) {
+        if (confirm(`${json.point}KP消費します。よろしいですか？`)) {
           const p = $('.now_user_point');
-          p.html(parseInt(p.html()) - json['point']);
+          p.html(parseInt(p.html()) - json.point);
           item.buyItem(type, true);
         }
       }
-      if (json['success']) {
+      if (json.success) {
         $('#itemModal').modal('hide');
       }
     });

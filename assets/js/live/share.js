@@ -2,7 +2,7 @@ class share {
   static share() {
     if (navigator.share) {
       navigator.share({
-        title: `${config.live.watch_data['name']} by ${
+        title: `${config.live.watch_data.name} by ${
           config.live.account.name
         } - KnzkLive`,
         url: config.live.url
@@ -15,13 +15,14 @@ class share {
   static share_modal(mode) {
     let url = '';
     const text = encodeURIComponent(
-      `${config.live.watch_data['name']} by ${
+      `${config.live.watch_data.name} by ${
         config.live.account.name
       } - #KnzkLive #${config.live.hashtag_o}`
     );
     if (mode === 'twitter') {
-      url =
-        `https://twitter.com/intent/tweet?url=${config.live.url}&text=` + text;
+      url = `https://twitter.com/intent/tweet?url=${
+        config.live.url
+      }&text=${text}`;
     } else if (mode === 'mastodon') {
       const instance = prompt(
         'Mastodonのドメインを入力してください',

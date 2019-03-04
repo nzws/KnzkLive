@@ -36,7 +36,7 @@ class vote {
           is_post: kit.elemId('vote_ispost').checked ? 1 : 0
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             $('#enqueteModal').modal('hide');
             $('#open_enquete_btn').hide();
             $('#close_enquete_btn').show();
@@ -64,7 +64,7 @@ class vote {
           end: true
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             $('#open_enquete_btn').show();
             $('#close_enquete_btn').hide();
           } else {

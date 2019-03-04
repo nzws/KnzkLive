@@ -4,7 +4,7 @@ class api {
   static request(url, method = 'GET', body = {}, header = {}) {
     if (!header['content-type'])
       header['content-type'] = 'application/x-www-form-urlencoded';
-    if (method === 'POST') body['csrf_token'] = config['csrf_token'];
+    if (method === 'POST') body.csrf_token = config.csrf_token;
 
     return new Promise((resolve, reject) => {
       fetch(
@@ -20,21 +20,20 @@ class api {
         }
       )
         .then(response => {
-          if (config['is_debug'])
+          if (config.is_debug)
             console.log('[Knzk-Debug] API Response', response);
           if (response.ok) {
             return response.json();
-          } else {
-            throw response;
           }
+          throw response;
         })
         .then(json => {
-          if (json['error']) {
-            toast.new(json['error'], '.bg-warning');
+          if (json.error) {
+            toast.new(json.error, '.bg-warning');
             reject(json);
             return;
           }
-          if (config['is_debug'])
+          if (config.is_debug)
             console.log('[Knzk-Debug] API Response received', json);
           resolve(json);
         })

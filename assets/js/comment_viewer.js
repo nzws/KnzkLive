@@ -9,21 +9,21 @@ class comment_viewer {
     let ws_resdata;
     let ws_reshtml;
     if (mode) {
-      //KnzkLive Comment
+      // KnzkLive Comment
       ws_resdata = {};
       ws_resdata.event = mode;
       ws_reshtml = message;
     } else {
-      //Mastodon
+      // Mastodon
       ws_resdata = JSON.parse(message.data);
       ws_reshtml = JSON.parse(ws_resdata.payload);
     }
 
     if (ws_resdata.event === 'update') {
       const tmpl = Handlebars.compile(kit.elemId('com_tmpl').innerHTML);
-      if (ws_reshtml['id']) {
-        ws_reshtml['account']['display_name'] = kit.escape(
-          ws_reshtml['account']['display_name']
+      if (ws_reshtml.id) {
+        ws_reshtml.account.display_name = kit.escape(
+          ws_reshtml.account.display_name
         );
         kit.elemId('comments').innerHTML =
           (knzk.comment_loader.checkData(ws_reshtml)
@@ -36,12 +36,12 @@ class comment_viewer {
   }
 
   static addDonate(data) {
-    config.dn[data['id']] = data;
+    config.dn[data.id] = data;
     const datet = parseInt(
-      new Date(data['ended_at']).getTime() - new Date().getTime()
+      new Date(data.ended_at).getTime() - new Date().getTime()
     );
     setTimeout(() => {
-      comment_viewer.deleteDonate(data['id']);
+      comment_viewer.deleteDonate(data.id);
     }, datet);
   }
 

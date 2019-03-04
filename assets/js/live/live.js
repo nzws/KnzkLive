@@ -9,45 +9,42 @@ class live {
         const err = kit.elemId('err_live');
         err.innerHTML = '';
 
-        if (json['live_status'] === 1)
+        if (json.live_status === 1)
           err.innerHTML = '配信者からデータが送信されていません。';
-        if (json['live_status'] === 0) {
+        if (json.live_status === 0) {
           err.innerHTML = 'この配信は終了しました。';
           live.widemode('hide');
           kit.elemId('count_open').className = 'invisible';
           kit.elemId('count_end').className = '';
-          if (config.live.watch_data['live_status'] !== 0)
+          if (config.live.watch_data.live_status !== 0)
             kit.elemId('iframe').contentWindow.knzk.live_embed.player.end();
         }
-        if (
-          json['live_status'] === 2 &&
-          config.live.watch_data['live_status'] !== 2
-        )
+        if (json.live_status === 2 && config.live.watch_data.live_status !== 2)
           live.reloadLive();
 
-        kit.elemId('is_not_started').className = json['is_started']
+        kit.elemId('is_not_started').className = json.is_started
           ? 'invisible'
           : 'text-warning';
 
-        if (json['name'] !== config.live.watch_data['name']) {
-          kit.elemId('live-name').innerText = json['name'];
-          kit.elemId('title-name').innerText = `${json['name']} - KnzkLive`;
+        if (json.name !== config.live.watch_data.name) {
+          kit.elemId('live-name').innerText = json.name;
+          kit.elemId('title-name').innerText = `${json.name} - KnzkLive`;
         }
 
-        if (json['description'] !== config.live.watch_data['description'])
-          kit.elemId('live-description').innerHTML = json['description'];
+        if (json.description !== config.live.watch_data.description)
+          kit.elemId('live-description').innerHTML = json.description;
 
-        if (json['viewers_count'] !== config.live.watch_data['viewers_count'])
-          $('.count').html(json['viewers_count']);
-        if (json['point_count'] !== config.live.watch_data['point_count'])
-          $('.point_count').html(json['point_count']);
-        if (json['viewers_max'] !== config.live.watch_data['viewers_max'])
-          $('.max').html(json['viewers_max']);
+        if (json.viewers_count !== config.live.watch_data.viewers_count)
+          $('.count').html(json.viewers_count);
+        if (json.point_count !== config.live.watch_data.point_count)
+          $('.point_count').html(json.point_count);
+        if (json.viewers_max !== config.live.watch_data.viewers_max)
+          $('.max').html(json.viewers_max);
         if (
-          json['viewers_max_concurrent'] !==
-          config.live.watch_data['viewers_max_concurrent']
+          json.viewers_max_concurrent !==
+          config.live.watch_data.viewers_max_concurrent
         )
-          kit.elemId('max_c').innerHTML = json['viewers_max_concurrent'];
+          kit.elemId('max_c').innerHTML = json.viewers_max_concurrent;
         config.live.watch_data = json;
       })
       .catch(error => {
@@ -59,8 +56,8 @@ class live {
 
   static date() {
     const now =
-      config.live.watch_data['live_status'] === 0
-        ? new Date(config.live.watch_data['ended_at'])
+      config.live.watch_data.live_status === 0
+        ? new Date(config.live.watch_data.ended_at)
         : new Date();
     const datet = parseInt(
       (now.getTime() - new Date(config.live.created_at).getTime()) / 1000

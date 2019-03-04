@@ -14,11 +14,11 @@ class admin {
           type: mode
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             const elem = kit.elemId(`admin_panel_${mode}_display`);
 
             elem.classList.remove('off', 'on');
-            elem.classList.add(json['result'] ? 'on' : 'off');
+            elem.classList.add(json.result ? 'on' : 'off');
 
             if (kit.search(elem.className, 'btn-warning')) {
               elem.classList.add('btn-info');
@@ -41,7 +41,7 @@ class admin {
     api.request('client/live/listener', 'GET').then(json => {
       if (json) {
         let html = '';
-        for (let item of json) {
+        for (const item of json) {
           item.name = kit.escape(item.name);
           html += `<tr><td><img src="${
             item.avatar_url
@@ -64,10 +64,10 @@ class admin {
   static undoEditLive() {
     if (!config.live.is_broadcaster) return false;
 
-    kit.elemId('edit_name').value = config.live.watch_data['name'];
+    kit.elemId('edit_name').value = config.live.watch_data.name;
 
     const parser = document.createElement('div');
-    parser.innerHTML = config.live.watch_data['description'];
+    parser.innerHTML = config.live.watch_data.description;
     kit.elemId('edit_desc').value = parser.textContent;
 
     $('.live_info').removeClass('invisible');
@@ -110,7 +110,7 @@ class admin {
             : 0
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             kit.elemId('blocking_acct').value = '';
             $('#blockingModal').modal('hide');
             if (!config.live) location.reload();
@@ -132,7 +132,7 @@ class admin {
           user_id: acct
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             $(obj)
               .parent()
               .parent()
@@ -156,14 +156,12 @@ class admin {
           word: name
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             if (type) {
               $('tbody').prepend(
                 `<tr><td><a href="#" onclick="knzk.live.admin.updateNGWord('${
-                  json['word']
-                }', false, this);return false">削除</a>　${
-                  json['word']
-                }</td></tr>`
+                  json.word
+                }', false, this);return false">削除</a>　${json.word}</td></tr>`
               );
               kit.elemId('word').value = '';
             } else
@@ -194,7 +192,7 @@ class admin {
           currency
         })
         .then(json => {
-          if (json['success']) {
+          if (json.success) {
             acct.value = '';
             amount.value = '';
             $('#addChModal').modal('hide');
