@@ -14,7 +14,7 @@ class api {
           (body && method !== 'POST' ? '?' + api.buildQuery(body) : ''),
         {
           headers: header,
-          method: method,
+          method,
           credentials: 'include',
           body: method === 'POST' ? api.buildQuery(body) : null
         }

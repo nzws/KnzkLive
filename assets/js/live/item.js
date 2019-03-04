@@ -15,7 +15,7 @@ class item {
   static buyItem(type, is_confirmed = false) {
     const body = {
       live_id: config.live.id,
-      type: type,
+      type,
       confirm: is_confirmed ? 1 : 0
     };
     if (type === 'emoji') {

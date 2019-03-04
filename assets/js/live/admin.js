@@ -87,7 +87,7 @@ class admin {
 
     api
       .request('client/edit_live', 'POST', {
-        name: name,
+        name,
         description: desc
       })
       .then(json => {
@@ -103,7 +103,7 @@ class admin {
       api
         .request('client/ngs/manage_users', 'POST', {
           type: 'add',
-          acct: acct,
+          acct,
           is_permanent: kit.elemId('blocking_permanent').checked ? 1 : 0,
           is_blocking_watch: kit.elemId('blocking_blocking_watch').checked
             ? 1
@@ -191,7 +191,7 @@ class admin {
         .request('client/live/add_ch', 'POST', {
           acct: acct.value,
           amount: amount.value,
-          currency: currency
+          currency
         })
         .then(json => {
           if (json['success']) {
