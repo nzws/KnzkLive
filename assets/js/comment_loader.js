@@ -325,8 +325,7 @@ class comment_loader {
   }
 
   static msgreplace(str) {
-    const reg = new RegExp(/(<br>|<br \/>)/, 'gm');
-    return str.replace(reg, ' ');
+    return str.replace(/(<br>|<br \/>)/gm, ' ');
   }
 
   static buildCommentData(data) {
