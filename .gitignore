@@ -71,4 +71,3 @@ config.json
 .vscode
 
 public/bundle/*
-!public/bundle/.gitkeep
