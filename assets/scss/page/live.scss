@@ -90,7 +90,8 @@ html[data-page='live'] {
   }
 
   .postcontent p {
-    margin-bottom: 0;
+    display: inline;
+    padding-right: 5px;
   }
 
   .postcontent .alert {

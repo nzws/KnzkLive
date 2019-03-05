@@ -33,6 +33,8 @@
   font-size: 200%;
 
   p {
+    display: inline;
+    padding-right: 5px;
     margin: 0 auto;
     text-shadow: black 2px 0, black -2px 0, black 0 -2px, black 0 2px,
       black 2px 2px, black -2px 2px, black 2px -2px, black -2px -2px,

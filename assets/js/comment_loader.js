@@ -7,6 +7,8 @@ const livepage_comment = require('./live/comment');
 
 const comment_viewer = require('./comment_viewer');
 
+const reg = new RegExp(/(<br>|<br \/>)/, 'gm');
+
 class comment_loader {
   static load() {
     kit.elemId('err_comment').className = 'invisible';
@@ -320,6 +322,10 @@ class comment_loader {
     return result;
   }
 
+  static msgreplace(str, reg) {
+    return str.replace(reg, ' ');
+  }
+
   static buildCommentData(data) {
     const acct =
       data['account']['acct'] !== data['account']['username']
@@ -329,7 +335,11 @@ class comment_loader {
     data['account']['display_name'] = kit.escape(
       data['account']['display_name']
     );
+
     data['donator_color'] = comment_loader.checkDonator(acct);
+
+    data.content = comment_loader.msgreplace(data.content, reg);
+
     return data;
   }
 }
