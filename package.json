@@ -20,7 +20,7 @@
     "socket.io-client": "2.2.0",
     "striptags": "3.1.1",
     "websocket": "1.0.28",
-    "ws": "6.1.4"
+    "ws": "6.2.0"
   },
   "devDependencies": {
     "@babel/core": "7.3.4",
