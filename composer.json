@@ -1,15 +1,16 @@
 {
-    "name": "knzkdev/knzklive",
-    "description": "No ads, Unlimited Open-Source Live Streaming Service",
-    "type": "project",
-    "license": "MPL-2.0",
-    "authors": [
-      {
-        "name": "KnzkDev Team",
-        "email": "contact-knzklive@nzws.me"
-      }
-    ],
-    "require": {
-        "abraham/twitteroauth": "1.0.1"
+  "name": "knzkdev/knzklive",
+  "description": "No ads, Unlimited Open-Source Live Streaming Service",
+  "type": "project",
+  "license": "MPL-2.0",
+  "authors": [
+    {
+      "name": "KnzkDev Team",
+      "email": "contact-knzklive@nzws.me"
     }
+  ],
+  "require": {
+    "abraham/twitteroauth": "1.0.1",
+    "ua-parser/uap-php": "^3.8"
+  }
 }

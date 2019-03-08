@@ -1,6 +1,18 @@
 <?php if ($env["is_testing"]) : ?>
 <div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
 <?php endif; ?>
+<?php
+$ua = UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']);
+if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
+?>
+<div class="alert alert-danger alert-dismissible fade show rounded-0" role="alert">
+  <b>mac Safari</b> または <b>iOS全般</b> の環境ではKnzkLiveを正常にご利用頂く事ができません。別の端末・ブラウザにてお試しください。<br>
+  <small>これらの環境でないにも関わらず表示されていますか？<a href="https://github.com/KnzkDev/KnzkLive/issues/new" target="_blank">私達に教えて下さい</a>。</small>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<?php endif; ?>
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;">
     <a class="navbar-brand" href="<?=u("")?>">
