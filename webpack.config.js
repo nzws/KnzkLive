@@ -32,7 +32,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin('public/bundle'),
+    new CleanWebpackPlugin(),
     new StyleLintPlugin(),
     new WebpackBar({ profile: true, reporter: 'profile' })
   ],
