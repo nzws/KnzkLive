@@ -77,7 +77,8 @@ if ($_POST) {
           <input type="checkbox" class="custom-control-input" id="hide_watching_list" name="hide_watching_list" value="1" <?=(!empty($my["misc"]["hide_watching_list"]) ? "checked" : "")?>>
           <label class="custom-control-label" for="hide_watching_list">
             こっそり視聴モードを有効にする<br>
-            <small>通常、配信者はログイン中の視聴ユーザー一覧を閲覧できますが、これを有効にするとあなたは表示されなくなります。</small>
+            <small>通常、配信者はログイン中の視聴ユーザー一覧を閲覧できますが、これを有効にするとあなたは表示されなくなります。</small><br>
+            <small class="text-warning">こっそり視聴を有効にすると配信視聴によるポイントゲットはできません。</small>
           </label>
         </div>
       </div>
@@ -292,7 +293,7 @@ if ($_POST) {
             <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
           </tr>
           <tr>
-            <td><a href="#" onclick="alert('配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
+            <td><a href="#" onclick="alert('配信を視聴すると1分あたり2KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
             <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
