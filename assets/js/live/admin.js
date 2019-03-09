@@ -5,29 +5,26 @@ const toast = require('../components/toast');
 const live = require('./live');
 
 class admin {
-  static toggle(mode) {
-    if (!config.live.is_broadcaster) return false;
+  static toggle(mode, is_force = false) {
+    if (!config.live.is_broadcaster && !is_force) return false;
 
     if (confirm('よろしいですか？')) {
+      if (
+        mode === 'stop' &&
+        is_force &&
+        !confirm(
+          '【警告】\n配信を管理者権限で強制終了します！！後からやり直す事は出来ません。本当によろしいですか？'
+        )
+      )
+        return;
       api
         .request('client/live/setting', 'POST', {
-          type: mode
+          type: mode,
+          live_id: config.live.id,
+          force: is_force ? 1 : 0
         })
         .then(json => {
           if (json['success']) {
-            const elem = kit.elemId(`admin_panel_${mode}_display`);
-
-            elem.classList.remove('off', 'on');
-            elem.classList.add(json['result'] ? 'on' : 'off');
-
-            if (kit.search(elem.className, 'btn-warning')) {
-              elem.classList.add('btn-info');
-              elem.classList.remove('btn-warning');
-            } else {
-              elem.classList.add('btn-warning');
-              elem.classList.remove('btn-info');
-            }
-
             toast.new(`${mode}: 設定しました。`, '.bg-success');
           }
         });
@@ -94,6 +91,7 @@ class admin {
         $('.live_info').removeClass('invisible');
         $('.live_edit').addClass('invisible');
         live.watch();
+        toast.new(`編集しました。`, '.bg-success');
       });
   }
 

@@ -154,6 +154,24 @@ class comment_loader {
                 } else if (msg.mode === 'ngs') {
                   comment_loader.getNgs();
                 }
+
+                const elem = kit.elemId(`admin_panel_${msg.mode}_display`);
+
+                if (elem) {
+                  elem.classList.remove('off', 'on');
+                  elem.classList.add(msg.result ? 'on' : 'off');
+
+                  if (
+                    (msg.mode === 'sensitive' && msg.result) ||
+                    (msg.mode !== 'sensitive' && !msg.result)
+                  ) {
+                    elem.classList.add('btn-info');
+                    elem.classList.remove('btn-warning');
+                  } else {
+                    elem.classList.add('btn-warning');
+                    elem.classList.remove('btn-info');
+                  }
+                }
               } else if (msg.type === 'donate') {
                 livepage_donate.add(msg);
               }

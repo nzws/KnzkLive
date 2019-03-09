@@ -37,5 +37,5 @@ $env["websocket_url"] = "http://localhost:3000";
 
 $env["report_discord_webhook_url"] = "";
 
-// 管理者のID
-$env["admin_id"] = 1;
+// 管理者のID (配列)
+$env["admin_ids"] = [1];

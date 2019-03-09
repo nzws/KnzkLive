@@ -14,7 +14,6 @@ if (isset($_GET["liveid"])) {
 
 if (isset($_POST["body"])) {
   $id = bin2hex(openssl_random_pseudo_bytes(12));
-  $date = date('Y/m/d H:i:s');
 
   $data = [
     "content" => $_POST["body"],
@@ -47,15 +46,7 @@ if (isset($_POST["body"])) {
     ]
   ];
 
-  $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-  ));
-
-  $options = stream_context_create($options);
-  $contents = file_get_contents($env["report_discord_webhook_url"], false, $options);
-  if ($contents === false) exit("error: 送信に失敗しました。");
+  if (!sendToDiscord($data)) exit("error: 送信に失敗しました。");
 }
 ?>
 <!doctype html>
@@ -85,7 +76,7 @@ if (isset($_POST["body"])) {
         <?php endif; ?>
 
         <div class="form-group">
-          <label for="body">本文 (なにをどうしてほしいのか具体的にお願いいたします)</label>
+          <label for="body">本文 (なにをどうしてほしいのか具体的にお願いします)</label>
           <textarea class="form-control" name="body" placeholder="必須, 1000文字まで" maxlength="1000" required></textarea>
         </div>
         <button class="btn btn-primary btn-block" type="submit" onclick="return confirm('送信します。よろしいですか？')">送信</button>

@@ -41,7 +41,7 @@ if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_start
               <?php if (!empty($user["broadcaster_id"])) : ?>
                 <span class="badge badge-warning">配信者</span>
               <?php endif; ?>
-              <?php if (isset($env["admin_id"]) && $user["id"] === $env["admin_id"]) : ?>
+              <?php if (is_admin($user["id"])) : ?>
                 <span class="badge" style="background-color: purple;">ADMIN</span>
               <?php endif; ?>
             </p>

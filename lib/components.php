@@ -59,3 +59,23 @@ function showError($text, $http_status = null) {
   $errortext = $text;
   include __DIR__ . "/../include/errorpage.php";
 }
+
+function is_admin($user_id) {
+  global $env;
+  return isset($env["admin_ids"]) && array_search($user_id, $env["admin_ids"]) !== false;
+}
+
+function sendToDiscord($data) {
+  global $env;
+
+  if (empty($env["report_discord_webhook_url"])) return false;
+
+  $options = array('http' => array(
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+  ));
+
+  $options = stream_context_create($options);
+  return file_get_contents($env["report_discord_webhook_url"], false, $options) !== false;
+}

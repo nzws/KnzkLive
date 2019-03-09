@@ -174,7 +174,11 @@ $vote = loadVote($live["id"]);
 
       <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
       <hr>
-      <?php include "../include/live/adminpanel.php"; ?>
+      <?php include "../include/live/broadcaster_panel.php"; ?>
+      <?php endif; ?>
+      <?php if (is_admin($my["id"])) : ?>
+      <hr>
+      <?php include "../include/live/admin_panel.php"; ?>
       <?php endif; ?>
       <p>
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
