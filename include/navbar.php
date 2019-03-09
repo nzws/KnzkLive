@@ -2,7 +2,8 @@
 <div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
 <?php endif; ?>
 <?php
-$ua = UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']);
+if (empty($_SESSION["UA_CONF"])) $_SESSION["UA_CONF"] = serialize(UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']));
+$ua = unserialize($_SESSION["UA_CONF"]);
 if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 ?>
 <div class="alert alert-danger alert-dismissible fade show rounded-0" role="alert">
