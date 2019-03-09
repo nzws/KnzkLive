@@ -54,20 +54,6 @@ if (isset($_POST["type"])) {
     if (!empty($my["misc"]["webhook_url"]) && isset($_POST["start_push"])) {
       postWebHook($live);
     }
-  } elseif ($_POST["type"] == "edit") {
-    if (!$live["misc"]["is_sensitive"] && isset($_POST["sensitive"])) update_realtime_config("sensitive", true, $live["id"]);
-    $title = s($_POST["title"]);
-    $desc = s($_POST["description"]);
-    $live["misc"]["is_sensitive"] = isset($_POST["sensitive"]);
-    $misc = json_encode($live["misc"]);
-
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET name = ?, description = ?, misc = ? WHERE id = ?;");
-    $stmt->bind_param('ssss', $title, $desc, $misc, $live["id"]);
-    $stmt->execute();
-    $stmt->close();
-    $mysqli->close();
-    $live = getLive($live["id"]);
   }
 }
 
@@ -149,33 +135,9 @@ $vote = loadVote($live["id"]);
 <?php endif; ?>
 
 <div class="container">
-  <div class="box">
-    <form method="post">
-      <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-      <input type="hidden" name="type" value="edit">
-      <div class="form-group">
-        <label for="title">配信タイトル</label>
-        <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=$live["name"]?>">
-        <small id="title_note" class="form-text text-muted">100文字以下</small>
-      </div>
-
-      <div class="form-group">
-        <label for="description">配信の説明</label>
-        <textarea class="form-control" id="description" name="description" rows="4" required><?=$live["description"]?></textarea>
-      </div>
-
-      <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1" <?=($live["misc"]["is_sensitive"] ? "checked" : "")?>>
-        <label class="form-check-label" for="sensitive">
-          センシティブな配信としてマークする<br>
-          <small>途中から有効にすると一度視聴者全員のプレイヤーが停止し警告がポップアップで表示されます</small>
-        </label>
-      </div>
-
-      <button type="submit" class="btn btn-primary">更新</button>
-    </form>
-  </div>
-  <hr>
+  <p>
+    <small>配信タイトル・説明の編集は<a href="<?=$liveurl?>">配信ページ</a>に移動しました。</small>
+  </p>
 
   <div class="box">
     <div class="row">
