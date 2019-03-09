@@ -293,7 +293,7 @@ if ($_POST) {
             <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
           </tr>
           <tr>
-            <td><a href="#" onclick="alert('配信を視聴すると1分あたり2KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
+            <td><a href="#" onclick="alert('配信を視聴すると10分あたり20KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
             <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
