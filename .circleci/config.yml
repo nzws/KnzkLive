@@ -2,18 +2,31 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:latest-browsers
+      - image: circleci/php:latest-node
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
       - run:
-          name: Install dependences
-          command: yarn
+          name: Install php dependences
+          command: composer install -n --prefer-dist
       - save_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: composer-v1-{{ checksum "composer.lock" }}
           paths:
-            - ./node_modules
+            - vendor
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "yarn.lock" }}
+            - node-v1-
+      - run:
+          name: Install node dependences
+          command: yarn --frozen-lockfile
+      - save_cache:
+          key: node-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
       - run:
           name: Run lint
           command: yarn lint
