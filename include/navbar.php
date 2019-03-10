@@ -30,9 +30,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
             <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
           </div>
             <?php if ($my["broadcaster_id"]) : ?>
-                <form class="dropdown-item">
-                  <a class="btn btn-warning btn-block" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
-                </form>
+              <a class="dropdown-item bg-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
             <?php endif; ?>
           <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
           <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
