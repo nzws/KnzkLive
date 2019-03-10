@@ -24,9 +24,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
         <i class="fas fa-bars"></i>
       </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-        <?php
-        if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
-        if (isset($my["id"])) : ?>
+        <?php if ($my = getMe()) : ?>
           <div class="dropdown-item">
             <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
             <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
@@ -48,9 +46,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
       </div>
     </div>
     <div class="d-none d-md-flex align-items-center justify-content-end row col-6">
-      <?php
-      if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
-      if (isset($my["id"])) : ?>
+      <?php if ($my = getMe()) : ?>
         <div class="header-items">
           <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
         </div>
