@@ -21,13 +21,18 @@ module.exports = {
         loader: ['babel-loader?cacheDirectory']
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss)$/,
+        exclude: /node_modules/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2|svg)$/,
+        use: [{ loader: 'file-loader', options: { name: '[name].[ext]' } }]
       }
     ]
   },
