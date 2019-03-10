@@ -15,28 +15,43 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 </div>
 <?php endif; ?>
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #393f4f;">
-    <a class="navbar-brand" href="<?=u("")?>">
+  <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
+    <a class="col-auto header-brand" href="<?=u("")?>">
       <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-        <?php
-        if (!isset($my) && isset($_SESSION["acct"])) $my = getMe();
-        if (isset($my["id"])) : ?>
-          <form class="form-inline mr-2">
+    <div class="btn-group col-3 d-md-none header-toggler">
+      <button type="button" class="btn btn-outline-secondary rounded header-toggler-btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <?php if ($my = getMe()) : ?>
+          <div class="dropdown-item">
+            <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
             <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
-          </form>
+          </div>
             <?php if ($my["broadcaster_id"]) : ?>
-                <form class="form-inline">
-                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
-                </form>
+              <a class="dropdown-item bg-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
             <?php endif; ?>
-          <li class="nav-item dropdown active mr-sm-1">
+          <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
+          <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
+        <?php else : ?>
+          <h6 class="dropdown-header">次のアカウントでログイン:</h6>
+          <button class="dropdown-item text-primary" data-toggle="modal" data-target="#loginModal"><i class="fab fa-mastodon"></i> Mastodon</button>
+          <a class="dropdown-item text-info" href="<?=u("auth/twitter")?>"><i class="fab fa-twitter"></i> Twitter</a>
+        <?php endif; ?>
+      </div>
+    </div>
+    <div class="d-none d-md-flex align-items-center justify-content-end row col-6">
+      <?php if ($my = getMe()) : ?>
+        <div class="header-items">
+          <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
+        </div>
+          <?php if ($my["broadcaster_id"]) : ?>
+              <div class="header-items">
+                <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
+              </div>
+          <?php endif; ?>
+          <div class="nav-item dropdown active header-items">
             <a class="nav-link header_avatar_dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
             </a>
@@ -49,17 +64,16 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
               <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
               <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
             </div>
-          </li>
-        <?php else : ?>
-          <form class="form-inline">
-            Login:
-            <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
-            <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
-          </form>
-        <?php endif; ?>
-        </ul>
+          </div>
+      <?php else : ?>
+        <form class="header-items">
+          Login:
+          <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
+          <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
+        </form>
+      <?php endif; ?>
     </div>
-  </nav>
+  </div>
 </div>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">

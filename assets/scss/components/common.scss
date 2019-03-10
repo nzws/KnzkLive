@@ -19,14 +19,13 @@ a:hover {
 }
 
 .avatar_img_navbar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-color: #fff;
 }
 
 .header_avatar_dropdown {
   padding: 0;
-  padding-left: 0.5rem;
 }
 
 .footer {
@@ -48,7 +47,25 @@ a:hover {
 }
 
 .navbar {
-  border-radius: 5px;
+  height: 56px;
+}
+
+.header-brand,
+.header-toggler {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.header-toggler {
+  flex: 0;
+}
+
+.header-toggler-btn {
+  padding: 7px 20px;
+}
+
+.header-items {
+  margin-left: 1em;
 }
 
 .box {
