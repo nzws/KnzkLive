@@ -1,3 +1,6 @@
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
 import '../scss/index.scss';
 
 window.knzk = {

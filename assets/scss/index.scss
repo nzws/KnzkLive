@@ -1,3 +1,9 @@
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+@import 'components/variables';
+@import '~bootstrap/scss/bootstrap';
 @import 'components/animation';
 @import 'components/media';
 @import 'components/common';
@@ -7,5 +13,5 @@
 @import 'page/live';
 @import 'page/user';
 @import 'page/errorpage';
-@import 'comment_viewer';
-@import 'live_embed';
+@import 'page/comment_viewer';
+@import 'page/live_embed';
