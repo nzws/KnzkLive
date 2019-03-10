@@ -4,7 +4,7 @@
   </div>
   <div class="card-body">
     <h5>基本設定</h5>
-    <a class="btn btn-danger" onclick="return confirm('配信を終了します。よろしいですか？')" href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>"><i class="far fa-stop-circle"></i> 配信終了</a>
+    <a class="btn btn-danger" onclick="return confirm('配信を終了します。よろしいですか？')" href="<?=u("live_manage")?>?mode=shutdown&t=<?=$_SESSION['csrf_token']?>"><i class="fas fa-stop-circle"></i> 配信終了</a>
     <button type="button" class="btn btn-primary" onclick="live.admin.openEditLive()"><i class="fas fa-pencil-alt"></i> 編集</button>
     <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["is_sensitive"] ? "info on" : "warning off")?>" onclick="live.admin.toggle('sensitive')" id="admin_panel_sensitive_display"><i class="fas fa-eye-slash"></i> センシティブを<span class="on">無効化</span><span class="off">有効化</span></button>
     <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_item"] ? "warning on" : "info off")?>" onclick="live.admin.toggle('item')" id="admin_panel_item_display"><i class="fas fa-hat-wizard"></i> アイテムを<span class="on">無効化</span><span class="off">有効化</span></button>
