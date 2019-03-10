@@ -31,17 +31,15 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
           </div>
             <?php if ($my["broadcaster_id"]) : ?>
                 <form class="dropdown-item">
-                  <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
+                  <a class="btn btn-warning btn-block" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
                 </form>
             <?php endif; ?>
           <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
           <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
         <?php else : ?>
-          <form class="dropdown-item">
-            Login:
-            <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
-            <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
-          </form>
+          <h6 class="dropdown-header">次のアカウントでログイン:</h6>
+          <button class="dropdown-item text-primary" data-toggle="modal" data-target="#loginModal"><i class="fab fa-mastodon"></i> Mastodon</button>
+          <a class="dropdown-item text-info" href="<?=u("auth/twitter")?>"><i class="fab fa-twitter"></i> Twitter</a>
         <?php endif; ?>
       </div>
     </div>
