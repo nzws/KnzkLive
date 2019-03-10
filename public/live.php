@@ -41,7 +41,6 @@ $vote = loadVote($live["id"]);
 <html lang="ja" data-page="live">
 <head>
   <?php include "../include/header.php"; ?>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
   <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
 
   <meta property="og:title" content="<?=$live["name"]?>"/>
