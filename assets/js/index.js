@@ -1,4 +1,6 @@
-import 'jquery';
+import $ from 'jquery';
+window.$ = $;
+
 import 'popper.js';
 import 'bootstrap';
 import '../scss/index.scss';
