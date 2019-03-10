@@ -3,6 +3,10 @@ window.$ = $;
 
 import 'popper.js';
 import 'bootstrap';
+import 'flv.js';
+import 'hls.js';
+import 'handlebars/dist/handlebars';
+import 'clipboard';
 import '../scss/index.scss';
 
 window.knzk = {

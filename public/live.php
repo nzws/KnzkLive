@@ -215,7 +215,6 @@ $vote = loadVote($live["id"]);
   </div>
 </script>
 <?php include "../include/footer.php"; ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 <?php endif; // sensitive ?>
 </body>
 </html>

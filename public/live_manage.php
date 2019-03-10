@@ -216,7 +216,6 @@ $vote = loadVote($live["id"]);
 </div>
 
 <?php include "../include/footer.php"; ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
 <script>
   <?php if (isset($_GET["new"]) && $my["misc"]["auto_open_start"]) : ?>
   window.open('<?=$liveurl?>');
