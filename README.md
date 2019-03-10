@@ -8,11 +8,15 @@
 
 > No ads, Unlimited, Open-Source Live Streaming Service.
 
-### See also
+## See also
 
 https://github.com/yuzulabo/KnzkLive-Publish-Server
 
-### Special Thanks
+## License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/custom%2B5332%2Fgit%40github.com%3AKnzkDev%2FKnzkLive.git.svg?type=large)](https://app.fossa.io/projects/custom%2B5332%2Fgit%40github.com%3AKnzkDev%2FKnzkLive.git?ref=badge_large)
+
+## Special Thanks
 
 - Creator of KnzkLive logo: [Xiltvs](https://pawoo.net/@Xiltvs)
 - [All contributors](https://github.com/KnzkDev/KnzkLive/graphs/contributors)

@@ -23,3 +23,12 @@ jobs:
       - run:
           name: Run check:deps
           command: yarn check:deps
+      - run:
+          name: Install fossa-cli
+          command: |
+            curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
+      - run:
+          name: Run fossa-cli & Upload build analysis
+          command: |
+            fossa init
+            FOSSA_API_KEY=$FOSSA_API_KEY fossa
