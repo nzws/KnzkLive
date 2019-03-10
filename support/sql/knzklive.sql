@@ -283,6 +283,10 @@ alter table users_blocking add constraint users_blocking_live_user_id_target_use
 drop index users_blocking_live_user_id_target_user_id_uindex on users_blocking;
 alter table users_blocking drop column target_user_id;
 
+-- 2019/03/09
+alter table users_watching
+	add created_at timestamp default current_timestamp not null;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
