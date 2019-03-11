@@ -28,10 +28,10 @@ if ($_POST["type"] === "emoji") {
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
   $point = (intval($_POST["count"]) * 5) + ($_POST["spin"] == 1 ? 30 : 0) + ($_POST["big"] == 1 ? 30 : 0);
-} else if ($_POST["type"] === "knzk_kongyo") {
-  $point = 1000;
-  if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"])
-    api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
+} else if ($_POST["type"] === "voice") {
+  $item = getItem($_POST["voice"]);
+  if (!$item) api_json(["error" => "エラー: IDが不正です。"]);
+  $point = $item["point"];
 } else if ($_POST["type"] === "knzk_kongyo_kami") {
   $point = 10000;
   if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"])
@@ -57,9 +57,9 @@ if ($_POST["type"] === "emoji") {
     $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";
     send_item($data, $live["id"], "emoji");
   }
-} else if ($_POST["type"] === "knzk_kongyo") {
-  $desc = "神　崎　コ　ン　ギ　ョ";
-  send_item([], $live["id"], "knzk_kongyo");
+} else if ($_POST["type"] === "voice") {
+  $desc = $item["name"];
+  send_item(["url" => $env["storage"]["root_url"] . "voice/" . $item["file_name"]], $live["id"], "voice");
 } else if ($_POST["type"] === "knzk_kongyo_kami") {
   $desc = "神　　崎　　爆　　弾";
   send_item([], $live["id"], "knzk_kongyo_kami");

@@ -8,6 +8,9 @@ class item {
       point += parseInt(kit.elemId('item_emoji_count').value) * 5;
       point += kit.elemId('item_emoji_spin').checked ? 30 : 0;
       point += kit.elemId('item_emoji_big').checked ? 30 : 0;
+    } else if (item === 'voice') {
+      const id = kit.elemId('item_voice').value;
+      point = kit.elemId('item_voice_' + id).dataset.point;
     }
     kit.elemId(`item_${item}_point`).textContent = point;
   }
@@ -24,7 +27,9 @@ class item {
       body['emoji'] = kit.elemId('item_emoji_emoji').value;
       body['spin'] = kit.elemId('item_emoji_spin').checked ? 1 : 0;
       body['big'] = kit.elemId('item_emoji_big').checked ? 1 : 0;
-    } else if (type === 'knzk_kongyo' || type === 'knzk_kongyo_kami') {
+    } else if (type === 'voice') {
+      body['voice'] = kit.elemId('item_voice').value;
+    } else if (type === 'knzk_kongyo_kami') {
     } else {
       return null;
     }

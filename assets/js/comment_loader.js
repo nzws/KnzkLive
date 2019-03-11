@@ -110,12 +110,10 @@ class comment_loader {
                   }
                 );
               } else if (msg.type === 'item') {
-                if (msg.item_type === 'knzk_kongyo') {
+                if (msg.item_type === 'voice') {
                   const volume = localStorage.getItem('kplayer_volume');
                   const mute = localStorage.getItem('kplayer_mute');
-                  const audio = new Audio(
-                    'https://static.knzk.me/knzklive/kongyo.mp3'
-                  );
+                  const audio = new Audio(msg.item.url);
                   audio.volume = volume ? volume * 0.01 : 0.8;
                   audio.muted = parseInt(mute === null ? 0 : mute);
                   audio.play();

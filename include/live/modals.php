@@ -112,13 +112,18 @@
           </div>
         </div>
 
+        <hr>
+        <h5>カスタムSE</h5>
+        リスナー全員に音を投下できます。
+        <select class="form-control" id="item_voice" onchange="live.item.updateMoneyDisp('voice')">
+          <?php foreach(getItems($liveUser["id"], "voice") as $item) : ?>
+            <option value="<?=$item["id"]?>" data-point="<?=$item["point"]?>" id="item_voice_<?=$item["id"]?>"><?=$item["name"]?> (<?=$item["point"]?>KP)</option>
+          <?php endforeach; ?>
+        </select>
+        <div class="text-right">
+          <button class="btn btn-success" onclick="live.item.buyItem('voice')"><span id="item_voice_point"></span>KPで投下</button>
+        </div>
         <?php if ($liveUser["id"] === 2 || $liveUser["id"] === 84 || $env["is_testing"]) : ?>
-          <hr>
-          <h5>神崎コンギョ (音)</h5>
-          コ　ン　ギ　ョ
-          <div class="text-right">
-            <button class="btn btn-success" onclick="live.item.buyItem('knzk_kongyo')">1000KPで投下</button>
-          </div>
           <?php if ($my["point_count"] >= 10000) : ?>
           <hr>
           <h5>神崎爆弾【コンギョ】 (音)</h5>

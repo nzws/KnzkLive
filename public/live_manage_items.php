@@ -7,17 +7,18 @@ if (!$my["broadcaster_id"]) showError('あなたには配信権限がありま�
 if (!empty($_POST)) {
   $name = s($_POST["word"]);
   if (!checkV($name, 1, 20)) showError('バリデーションエラー: name', 400);
-  $point = intval($_POST["point"]);
-  if (!($point >= 0 && $point <= 10000)) showError('バリデーションエラー: point', 400);
   $_POST["type"] = s($_POST["type"]);
 
   if ($_POST["type"] === "voice") {
     $able_item = null;
     $able_comment = null;
+    $point = intval($_POST["point"]);
+    if (!($point >= 0 && $point <= 10000)) showError('バリデーションエラー: point', 400);
   } elseif ($_POST["type"] === "emoji") {
     if (!ctype_alnum($name)) showError("バリデーションエラー: 英数字", 400);
     $able_item = isset($_POST["emoji_type_item"]) && $_POST["emoji_type_item"] == 1 ? 1 : 0;
     $able_comment = isset($_POST["emoji_type_comment"]) && $_POST["emoji_type_comment"] == 1 ? 1 : 0;
+    $point = 0;
   } else {
     showError("バリデーションエラー: type", 400);
   }
@@ -134,17 +135,6 @@ if (!empty($_POST)) {
         </div>
 
         <div class="form-group">
-          <label>投下に必要なポイント (アイテムのみ)</label>
-          <div class="input-group">
-            <input type="number" class="form-control" value="1" name="point" aria-describedby="kp" required>
-            <div class="input-group-append">
-              <span class="input-group-text" id="kp">KP</span>
-            </div>
-          </div>
-          <small class="form-text text-muted">0~10000KPまで</small>
-        </div>
-
-        <div class="form-group">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="emoji_type_comment" name="emoji_type_comment" value="1" checked>
               <label class="custom-control-label" for="emoji_type_comment">
@@ -179,7 +169,7 @@ if (!empty($_POST)) {
           <?php foreach (getItems($my["id"], 'emoji') as $item) : ?>
             <tr id="emoji_<?=$item["id"]?>">
               <td><img src="<?=$env["storage"]["root_url"]?>emoji/<?=$item["file_name"]?>" class="emoji"/> <?=$item["name"]?></td>
-              <td><?=$item["able_item"] === 1 ? i("check") . " (" . $item["point"] . ")" : i("times")?></td>
+              <td><?=$item["able_item"] === 1 ? i("check") : i("times")?></td>
               <td><?=$item["able_comment"] === 1 ? i("check") : i("times")?></td>
               <td><a href="#" onclick="knzk.settings.items.remove('<?=$item["id"]?>', 'emoji');return false">削除</a></td>
             </tr>
