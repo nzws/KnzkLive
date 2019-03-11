@@ -39,7 +39,7 @@ function getEmojis($user_id, $type) {
   if (isset($row[0]["id"])) {
     foreach ($row as $item) {
       $d[] = [
-        "url" => $env["storage"]["root_url"] . $item["file_name"],
+        "url" => $env["storage"]["root_url"] . "emoji/" . $item["file_name"],
         "code" => $item["name"]
       ];
     }

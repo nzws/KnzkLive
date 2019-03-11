@@ -284,6 +284,16 @@ class comment_loader {
           }
         }
 
+        config.emoji = [];
+        if (json.emoji) {
+          json.emoji.forEach(v => {
+            config.emoji.push({
+              regexp: new RegExp(`:${v.code}:`, 'g'),
+              url: v.url
+            });
+          });
+        }
+
         config.dn = {};
         if (json['donator']) {
           for (let item of json['donator']) {
@@ -353,6 +363,13 @@ class comment_loader {
     data['account']['display_name'] = kit.escape(
       data['account']['display_name']
     );
+
+    config.emoji.forEach(v => {
+      data.content = data.content.replace(
+        v.regexp,
+        `<img src="${v.url}" class="emoji"/>`
+      );
+    });
 
     data['donator_color'] = comment_loader.checkDonator(acct);
 

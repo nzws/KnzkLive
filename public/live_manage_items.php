@@ -16,8 +16,8 @@ if (!empty($_POST)) {
     $able_comment = null;
   } elseif ($_POST["type"] === "emoji") {
     if (!ctype_alnum($name)) showError("バリデーションエラー: 英数字", 400);
-    $able_item = $_POST["emoji_type_item"] == 1 ? 1 : 0;
-    $able_comment = $_POST["emoji_type_comment"] == 1 ? 1 : 0;
+    $able_item = isset($_POST["emoji_type_item"]) && $_POST["emoji_type_item"] == 1 ? 1 : 0;
+    $able_comment = isset($_POST["emoji_type_comment"]) && $_POST["emoji_type_comment"] == 1 ? 1 : 0;
   } else {
     showError("バリデーションエラー: type", 400);
   }

@@ -308,6 +308,9 @@ create unique index items_id_uindex
 create index items_user_id_type_index
 	on items (user_id, type);
 
+create unique index items_type_user_id_name_uindex
+  on items (type, user_id, name);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
