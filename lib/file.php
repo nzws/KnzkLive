@@ -97,7 +97,7 @@ function initStorage() {
   return new League\Flysystem\Filesystem($adapter);
 }
 
-function uploadFlie($data, $file_type, $user_id) {
+function uploadFlie($data, $file_type) {
   global $env;
 
   $check = checkFileInfo($data);
