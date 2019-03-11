@@ -46,6 +46,8 @@ require_once($libpt."mastodon_auth.php");
 require_once($libpt."prop.vote.php");
 require_once($libpt."point.php");
 require_once($libpt."donate.php");
+require_once($libpt."file.php");
+require_once($libpt."items.php");
 
 $toot_get_limit = 200;
 

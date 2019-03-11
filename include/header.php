@@ -15,6 +15,7 @@
     csrf_token: "<?=$_SESSION['csrf_token']?>",
     main_domain: "<?=$env["masto_login"]["domain"]?>",
     is_debug: <?=$env["is_testing"] ? "true" : "false"?>,
+    storage_url: "<?=$env["storage"]["root_url"]?>"
 <?php if ($my = getMe()) : ?>
     account: {
       id: <?=$my["id"]?>,

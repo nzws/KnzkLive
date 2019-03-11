@@ -21,9 +21,10 @@ $env["streamlabs"]["id"] = "";
 $env["streamlabs"]["secret"] = "";
 $env["streamlabs"]["redirect_uri"] = "http" . (empty($env["is_testing"]) ? "s" : "") . "://" . $env["domain"] . $env["RootUrl"] . "auth/streamlabs" . (empty($env["is_testing"]) ? "" : ".php");
 
-$env["storage"]["endpoint"] = "";
-$env["storage"]["region"] = "";
+$env["storage"]["root_url"] = "https://files.example.com/"; // または https://[オブジェクトストレージのドメイン]/[バケット名]/
+$env["storage"]["endpoint"] = "https://storage.googleapis.com";
 $env["storage"]["bucket"] = "";
+$env["storage"]["region"] = "";
 $env["storage"]["key"] = "";
 $env["storage"]["secret"] = "";
 

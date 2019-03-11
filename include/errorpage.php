@@ -19,13 +19,14 @@ function assets() {
 <body>
 <img src="<?=assets()?>static/surprized_knzk.png"/>
 <?php if (!empty($errortext)) : ?>
+  <h6 class="text-secondary">エラーが発生しました</h6>
   <h2><?=$errortext?></h2>
 <?php else : ?>
   <h1>We're sorry, but something went wrong.</h1>
   <h1>申し訳ありません。予期せぬエラーが発生しました。</h1>
 <?php endif; ?>
 <p>
-  <a href="<?=$env["RootUrl"]?>">ホームに戻る / Back to home</a><br>
+  <a href="#" onclick="window.history.back(-1)">前のページに戻る</a> / <a href="<?=$env["RootUrl"]?>">ホームに戻る</a><br>
   KnzkLive
 </p>
 </body>

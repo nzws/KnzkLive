@@ -71,15 +71,23 @@ function checkMime($data, $allow_file_type) {
 
 function initS3() {
   global $env;
-  return new \Aws\S3\S3Client([
-    'version' => 'latest',
-    'endpoint' => $env["storage"]["endpoint"],
-    'region' => $env["storage"]["region"],
-    'credentials' => new Aws\Credentials\Credentials($env["storage"]["key"], $env["storage"]["secret"]),
-    'http' => [
-      'verify' => !$env["is_debug"]
-    ]
-  ]);
+
+  try {
+    return new \Aws\S3\S3Client([
+      'version' => 'latest',
+      'endpoint' => $env["storage"]["endpoint"],
+      'region' => $env["storage"]["region"],
+      'credentials' => new Aws\Credentials\Credentials($env["storage"]["key"], $env["storage"]["secret"]),
+      'http' => [
+        'verify' => !$env["is_testing"]
+      ]
+    ]);
+  } catch (\Aws\S3\Exception\S3Exception $e) {
+    if ($env["is_testing"]) {
+      echo $e->getMessage() . PHP_EOL;
+    }
+    exit("ERR: AWS");
+  }
 }
 
 function uploadFlie($data, $file_type, $user_id) {
@@ -89,10 +97,10 @@ function uploadFlie($data, $file_type, $user_id) {
   if (!$check["success"]) return ["success" => false, "error" => $check["error"]];
 
   switch ($file_type) {
-    case "item_sound":
+    case "voice":
       $type = "audio";
       break;
-    case "custom_emoji":
+    case "emoji":
       $type = "image";
       break;
     default:
@@ -123,7 +131,7 @@ function uploadFlie($data, $file_type, $user_id) {
       return ["success" => false, "error" => "データベースエラー"];
     }
   } catch (\Aws\S3\Exception\S3Exception $e) {
-    if ($env["is_debug"]) {
+    if ($env["is_testing"]) {
       echo $e->getMessage() . PHP_EOL;
     }
     return ["success" => false, "error" => "アップロードエラー"];
@@ -140,7 +148,7 @@ function deleteFile($file_name, $file_type) {
       'Key'    => $file_type . "/" . $file_name,
     ]);
   } catch (\Aws\S3\Exception\S3Exception $e) {
-    if ($env["is_debug"]) {
+    if ($env["is_testing"]) {
       echo $e->getMessage() . PHP_EOL;
     }
     return false;
