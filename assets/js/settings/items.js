@@ -1,12 +1,12 @@
-import kit from '../components/kanzakit';
-import toast from '../components/toast';
-import api from '../components/api';
+const kit = require('../components/kanzakit');
+const toast = require('../components/toast');
+const api = require('../components/api');
 
 class items {
   static remove(id, type) {
     if (confirm(`よろしいですか？`)) {
       api
-        .request('client/items', 'POST', {
+        .request('client/settings/items', 'POST', {
           id: id
         })
         .then(json => {
@@ -32,3 +32,5 @@ class items {
     audio.play();
   }
 }
+
+module.exports = items;

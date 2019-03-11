@@ -6,7 +6,7 @@ $my = getMe();
 if (!$my || !$my["broadcaster_id"])
   api_json(["error" => "エラー: あなたは配信者ではないか、未ログインです。"]);
 
-$file = getFile($_POST["id"]);
+$file = getItem($_POST["id"]);
 if (!$file || $file["user_id"] !== $my["id"])
   api_json(["error" => "エラー: このファイルは存在しないか、権限がありません。"]);
 

@@ -45,6 +45,7 @@ function checkMime($data, $allow_file_type) {
 
   $mime = mime_content_type($data['tmp_name']);
   $list = [
+    "image/pjpeg" => "image/jpeg",
     "image/jpeg" => [
       "ext" => "jpg",
       "type" => "image"
@@ -53,27 +54,32 @@ function checkMime($data, $allow_file_type) {
       "ext" => "png",
       "type" => "image"
     ],
+    "audio/mpeg3" => "audio/mp3",
+    "audio/mpeg" => "audio/mp3",
+    "audio/x-mpeg-3" => "audio/mp3",
     "audio/mp3" => [
       "ext" => "mp3",
       "type" => "audio"
     ],
+    "audio/x-wav" => "audio/wav",
     "audio/wav" => [
       "ext" => "wav",
       "type" => "audio"
     ]
   ];
 
+  if (isset($list[$mime]) && is_string($list[$mime])) $mime = $list[$mime];
   if (!isset($list[$mime]) || $list[$mime]["type"] !== $allow_file_type) $err["error"] = "ファイルタイプが不正です";
   if (isset($err["error"])) return $err;
 
   return ["success" => true, "mime" => $mime, "ext" => $list[$mime]["ext"]];
 }
 
-function initS3() {
+function initStorage() {
   global $env;
 
-  try {
-    return new \Aws\S3\S3Client([
+  if ($env["storage"]["type"] === "s3") {
+    $client = new \Aws\S3\S3Client([
       'version' => 'latest',
       'endpoint' => $env["storage"]["endpoint"],
       'region' => $env["storage"]["region"],
@@ -82,12 +88,13 @@ function initS3() {
         'verify' => !$env["is_testing"]
       ]
     ]);
-  } catch (\Aws\S3\Exception\S3Exception $e) {
-    if ($env["is_testing"]) {
-      echo $e->getMessage() . PHP_EOL;
-    }
-    exit("ERR: AWS");
+
+    $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"]);
+  } else {
+    $adapter = new League\Flysystem\Adapter\Local(__DIR__.'/../public/upload/');
   }
+
+  return new League\Flysystem\Filesystem($adapter);
 }
 
 function uploadFlie($data, $file_type, $user_id) {
@@ -110,29 +117,23 @@ function uploadFlie($data, $file_type, $user_id) {
   $mime = checkMime($data, $type);
   if (!$mime["success"]) return ["success" => false, "error" => $mime["error"]];
 
-  $s3 = initS3();
+  $storage = initStorage();
   try {
     $id = generateHash();
-    $file_name = $id . "." . $data["ext"];
-    $result = $s3->putObject([
-      'Bucket' => $env["storage"]["bucket"],
-      'Key'    => $file_type . "/" . $file_name,
-      'Body'   => file_get_contents($data['tmp_name']),
-      'ContentType' => $mime["mime"],
-      'ACL'    => 'public-read',
-      'Metadata' => [
-        'CRS-Uploaded-By' => $user_id
-      ]
-    ]);
+    $file_name = $id . "." . $mime["ext"];
 
-    if ($result["ObjectURL"]) {
-      return ["success" => true, "file_name" => $file_name];
-    } else {
-      return ["success" => false, "error" => "データベースエラー"];
-    }
-  } catch (\Aws\S3\Exception\S3Exception $e) {
+    /*
+    $stream = fopen($data['tmp_name'], 'r');
+    $result = $storage->writeStream($file_type . "/" . $file_name, $stream);
+    fclose($stream);
+    */
+
+    $result = $storage->write($file_type . "/" . $file_name, file_get_contents($data['tmp_name']));
+
+    return ["success" => $result, "file_name" => $file_name];
+  } catch (\League\Flysystem\FileExistsException $e) {
     if ($env["is_testing"]) {
-      echo $e->getMessage() . PHP_EOL;
+      echo $e;
     }
     return ["success" => false, "error" => "アップロードエラー"];
   }
@@ -141,19 +142,18 @@ function uploadFlie($data, $file_type, $user_id) {
 function deleteFile($file_name, $file_type) {
   global $env;
 
-  $s3 = initS3();
+  $path = $file_type . "/" . $file_name;
+  $storage = initStorage();
   try {
-    $result = $s3->deleteObject([
-      'Bucket' => $env["storage"]["bucket"],
-      'Key'    => $file_type . "/" . $file_name,
-    ]);
-  } catch (\Aws\S3\Exception\S3Exception $e) {
+    $result = true;
+    if ($storage->has($path)) $result = $storage->delete($path);
+  } catch (\League\Flysystem\FileExistsException $e) {
     if ($env["is_testing"]) {
-      echo $e->getMessage() . PHP_EOL;
+      echo $e;
     }
     return false;
   }
 
-  return true;
+  return $result;
 }
 

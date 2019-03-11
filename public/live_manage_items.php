@@ -169,8 +169,7 @@ if (!empty($_POST)) {
         <table class="table">
           <thead>
           <tr>
-            <th><th>
-            <th>絵文字ID</th>
+            <th>絵文字</th>
             <th>アイテム? (KP)</th>
             <th>コメント?</th>
             <th>コマンド</th>
@@ -179,7 +178,7 @@ if (!empty($_POST)) {
           <tbody>
           <?php foreach (getItems($my["id"], 'emoji') as $item) : ?>
             <tr id="emoji_<?=$item["id"]?>">
-              <td><?=$item["name"]?></td>
+              <td><img src="<?=$env["storage"]["root_url"]?>emoji/<?=$item["file_name"]?>" class="emoji"/> <?=$item["name"]?></td>
               <td><?=$item["able_item"] === 1 ? i("check") . " (" . $item["point"] . ")" : i("times")?></td>
               <td><?=$item["able_comment"] === 1 ? i("check") : i("times")?></td>
               <td><a href="#" onclick="knzk.settings.items.remove('<?=$item["id"]?>', 'emoji');return false">削除</a></td>
