@@ -90,11 +90,15 @@ function resizeImage($data) {
 function convertAudio($data) {
   global $env;
 
-  $video = FFMpeg\FFMpeg::create()->open($data['tmp_name']);
-  $audio_format = new FFMpeg\Format\Audio\Mp3();
+  if (!empty($env["ignore_audio_check"])) {
+    $file = $data['tmp_name'];
+  } else {
+    $video = FFMpeg\FFMpeg::create()->open($data['tmp_name']);
+    $audio_format = new FFMpeg\Format\Audio\Mp3();
 
-  $file = sys_get_temp_dir() . '/' . generateHash() . '.mp3';
-  $video->save($audio_format, $file);
+    $file = sys_get_temp_dir() . '/' . generateHash() . '.mp3';
+    $video->save($audio_format, $file);
+  }
 
   return file_get_contents($file); // this is blob
 }
