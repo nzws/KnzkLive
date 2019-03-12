@@ -19,16 +19,14 @@ class danmaku {
     const id = kit.randInt(0, 10000);
     $('#comment_layer').prepend(`<div id=${id}>${text}</div>`);
 
-    const height = Math.floor(
-      Math.random() * $('#comment_layer').height() - 40
-    );
+    const height = $('#comment_layer').children().length * 35;
     const width = $('#comment_layer').width();
 
     let i = 0;
     function animation() {
       $(`#${id}`).css('right', i - text.length * 14); // 1文字14px
-      $(`#${id}`).css('bottom', height);
-      i += 4;
+      $(`#${id}`).css('top', height);
+      i += 2;
     }
 
     function scroll() {
