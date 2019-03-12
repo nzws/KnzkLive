@@ -1,6 +1,7 @@
 'use strict';
 
-const pkg = require('../package.json');
+const npm = require('../package.json');
+const composer = require('../composer');
 const chalk = require('chalk');
 const logSymbols = require('log-symbols');
 
@@ -16,5 +17,6 @@ function validateDependencyObject(object) {
   });
 }
 
-validateDependencyObject(pkg.dependencies);
-validateDependencyObject(pkg.devDependencies);
+validateDependencyObject(npm.dependencies);
+validateDependencyObject(npm.devDependencies);
+validateDependencyObject(composer.require);
