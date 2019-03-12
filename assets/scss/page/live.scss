@@ -145,14 +145,33 @@ html[data-page='live'] {
     position: absolute;
   }
 
+  .comment-option {
+    height: 38px;
+  }
+
+  .comment-option .custom-control {
+    position: absolute;
+    margin: 6px 0;
+  }
+
+  .comment-btn {
+    position: absolute;
+    width: 90px;
+    right: 15px;
+  }
+
   #limit {
     position: relative;
     right: 8px;
-    bottom: 38px;
+    bottom: 25px;
     color: #495057;
   }
 
   p#limit {
+    margin-bottom: 0;
+  }
+
+  .comment_block .form-group {
     margin-bottom: 0;
   }
 
