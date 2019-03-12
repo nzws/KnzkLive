@@ -89,6 +89,7 @@ if ($_POST) {
         <p>* この設定は過去、未来全ての配信に適用されます。</p>
 
         <ul>
+        <li><a href="<?=u("live_manage_items")?>">カスタムSE/絵文字設定</a></li>
           <li><a href="<?=u("live_manage_ngword")?>">NGワード設定</a></li>
           <li><a href="<?=u("live_manage_blocking")?>">ユーザーブロック設定</a></li>
         </ul>

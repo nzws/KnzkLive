@@ -68,15 +68,17 @@
         <div class="row">
           <div class="col-sm-4">
             絵文字:
-            <select class="form-control" id="item_emoji_emoji">
-              <option>👍</option>
-              <option>❤️</option>
-              <option>👏️</option>
-              <option>🎉️</option>
-              <option>🍮</option>
-              <option value="liver">配信者のアイコン</option>
-              <option value="me">あなたのアイコン</option>
-            </select>
+            <input type="hidden" id="item_emoji">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" id="emojiDropdown" data-toggle="dropdown">
+                絵文字を選択...
+              </button>
+              <div class="dropdown-menu p-1" aria-labelledby="emojiDropdown">
+                <?php foreach (getEmojis($liveUser["id"], "item") as $item) : ?>
+                  <img src="<?=$item["url"]?>" class="emoji picker" title="<?=$item["code"]?>" onclick="live.item.checkEmoji('<?=$item['code']?>')"/>
+                <?php endforeach; ?>
+              </div>
+            </div>
           </div>
           <div class="col-sm-4">
             方向:
@@ -112,17 +114,21 @@
           </div>
         </div>
 
+        <?php if (isset(getItems($liveUser["id"], "voice")[0])) : ?>
         <hr>
         <h5>カスタムSE</h5>
         リスナー全員に音を投下できます。
-        <select class="form-control" id="item_voice" onchange="live.item.updateMoneyDisp('voice')">
+        <select class="form-control" id="item_voice">
           <?php foreach(getItems($liveUser["id"], "voice") as $item) : ?>
             <option value="<?=$item["id"]?>" data-point="<?=$item["point"]?>" id="item_voice_<?=$item["id"]?>"><?=$item["name"]?> (<?=$item["point"]?>KP)</option>
           <?php endforeach; ?>
         </select>
-        <div class="text-right">
-          <button class="btn btn-success" onclick="live.item.buyItem('voice')"><span id="item_voice_point"></span>KPで投下</button>
+        <div class="text-right mt-1">
+          <button class="btn btn-success" onclick="live.item.buyItem('voice')">投下</button>
         </div>
+        <?php endif; ?>
+
+
         <?php if ($liveUser["id"] === 2 || $liveUser["id"] === 84 || $env["is_testing"]) : ?>
           <?php if ($my["point_count"] >= 10000) : ?>
           <hr>

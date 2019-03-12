@@ -15,6 +15,10 @@ class item {
     kit.elemId(`item_${item}_point`).textContent = point;
   }
 
+  static checkEmoji(code) {
+    kit.elemId('item_emoji').value = code;
+  }
+
   static buyItem(type, is_confirmed = false) {
     const body = {
       live_id: config.live.id,
@@ -24,7 +28,7 @@ class item {
     if (type === 'emoji') {
       body['count'] = parseInt(kit.elemId('item_emoji_count').value);
       body['dir'] = kit.elemId('item_emoji_dir').value;
-      body['emoji'] = kit.elemId('item_emoji_emoji').value;
+      body['emoji'] = kit.elemId('item_emoji').value;
       body['spin'] = kit.elemId('item_emoji_spin').checked ? 1 : 0;
       body['big'] = kit.elemId('item_emoji_big').checked ? 1 : 0;
     } else if (type === 'voice') {

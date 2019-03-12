@@ -114,7 +114,7 @@ class comment_loader {
                   const volume = localStorage.getItem('kplayer_volume');
                   const mute = localStorage.getItem('kplayer_mute');
                   const audio = new Audio(msg.item.url);
-                  audio.volume = volume ? volume * 0.01 : 0.8;
+                  audio.volume = volume * 0.01;
                   audio.muted = parseInt(mute === null ? 0 : mute);
                   audio.play();
                   return;
