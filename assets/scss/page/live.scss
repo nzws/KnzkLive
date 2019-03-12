@@ -179,4 +179,11 @@ html[data-page='live'] {
     position: relative;
     bottom: 30px;
   }
+
+  .emoji.picker {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    margin: 5px;
+  }
 }

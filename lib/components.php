@@ -79,3 +79,17 @@ function sendToDiscord($data) {
   $options = stream_context_create($options);
   return file_get_contents($env["report_discord_webhook_url"], false, $options) !== false;
 }
+
+function generateHash($retry = 0) {
+  $hash = bin2hex(openssl_random_pseudo_bytes(32, $is_secure));
+  return $is_secure || $retry > 5 ? $hash : generateHash($retry + 1);
+}
+
+function i($name, $type = "s") {
+  return "<i class='fa{$type} fa-{$name}'></i>";
+}
+
+function checkV($var, $min_length = 0, $max_length = 0) {
+  $length = mb_strlen($var);
+  return ($length >= $min_length && $length <= $max_length);
+}

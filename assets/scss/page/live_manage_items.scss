@@ -1,0 +1,11 @@
+html[data-page='live_manage_items'] {
+  .tab-pane {
+    padding-top: 10px;
+  }
+
+  .nav-tabs {
+    .nav-link {
+      color: $white;
+    }
+  }
+}

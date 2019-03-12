@@ -287,6 +287,30 @@ alter table users_blocking drop column target_user_id;
 alter table users_watching
 	add created_at timestamp default current_timestamp not null;
 
+-- 2019/03/11
+create table items
+(
+	id bigint auto_increment,
+	type varchar(10) not null,
+	user_id int(255) not null,
+	name varchar(255) not null,
+	point int(255) default 0 not null,
+	file_name varchar(255) not null,
+	created_at timestamp default current_timestamp() not null,
+	able_item int(2) null,
+	able_comment int(2) null,
+	primary key (id)
+);
+
+create unique index items_id_uindex
+	on items (id);
+
+create index items_user_id_type_index
+	on items (user_id, type);
+
+create unique index items_type_user_id_name_uindex
+  on items (type, user_id, name);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

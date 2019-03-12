@@ -267,7 +267,7 @@ function get_all_blocking_user($live_user_id) {
   $row = db_fetch_all($stmt);
   $stmt->close();
   $mysqli->close();
-  return isset($row[0]) ? $row : null;
+  return isset($row[0]) ? $row : [];
 }
 
 function disconnectClient($live) {

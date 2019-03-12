@@ -110,13 +110,11 @@ class comment_loader {
                   }
                 );
               } else if (msg.type === 'item') {
-                if (msg.item_type === 'knzk_kongyo') {
+                if (msg.item_type === 'voice') {
                   const volume = localStorage.getItem('kplayer_volume');
                   const mute = localStorage.getItem('kplayer_mute');
-                  const audio = new Audio(
-                    'https://static.knzk.me/knzklive/kongyo.mp3'
-                  );
-                  audio.volume = volume ? volume * 0.01 : 0.8;
+                  const audio = new Audio(msg.item.url);
+                  audio.volume = volume * 0.01;
                   audio.muted = parseInt(mute === null ? 0 : mute);
                   audio.play();
                   return;
@@ -284,6 +282,16 @@ class comment_loader {
           }
         }
 
+        config.emojis = [];
+        if (json.emojis) {
+          json.emojis.forEach(emoji => {
+            config.emojis.push({
+              regexp: new RegExp(`:${emoji.code}:`, 'g'),
+              url: emoji.url
+            });
+          });
+        }
+
         config.dn = {};
         if (json['donator']) {
           for (let item of json['donator']) {
@@ -353,6 +361,13 @@ class comment_loader {
     data['account']['display_name'] = kit.escape(
       data['account']['display_name']
     );
+
+    config.emojis.forEach(emoji => {
+      data.content = data.content.replace(
+        emoji.regexp,
+        `<img src="${emoji.url}" class="emoji"/>`
+      );
+    });
 
     data['donator_color'] = comment_loader.checkDonator(acct);
 

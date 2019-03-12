@@ -46,8 +46,17 @@ require_once($libpt."mastodon_auth.php");
 require_once($libpt."prop.vote.php");
 require_once($libpt."point.php");
 require_once($libpt."donate.php");
+require_once($libpt."file.php");
+require_once($libpt."items.php");
 
 $toot_get_limit = 200;
+/*
+$max_filesize = return_bytes(ini_get('upload_max_filesize'));
+$_8mb = 8388608;
+if ($_8mb < intval($max_filesize)) {
+  ini_set('upload_max_filesize', '1M');
+}
+*/
 
 if ($env["is_maintenance"]) {
   showError("現在メンテナンス中です。", 503);

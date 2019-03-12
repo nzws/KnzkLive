@@ -71,3 +71,6 @@ config.json
 .vscode
 
 public/bundle/*
+
+public/upload/*
+!public/upload/.gitkeep
