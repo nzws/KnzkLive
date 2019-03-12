@@ -36,5 +36,5 @@ api_json([
   "u" => $blocking ? base64_encode(json_encode($blocking_users)) : null,
   "p" => base64_encode(json_encode(get_comment_deleted_list($live["id"]))),
   "donator" => $donator ? $donator : null,
-  "emoji" => $emoji ? $emoji : null
+  "emojis" => $emoji ? $emoji : null
 ]);

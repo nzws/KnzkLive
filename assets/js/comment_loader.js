@@ -282,12 +282,12 @@ class comment_loader {
           }
         }
 
-        config.emoji = [];
-        if (json.emoji) {
-          json.emoji.forEach(v => {
-            config.emoji.push({
-              regexp: new RegExp(`:${v.code}:`, 'g'),
-              url: v.url
+        config.emojis = [];
+        if (json.emojis) {
+          json.emojis.forEach(emoji => {
+            config.emojis.push({
+              regexp: new RegExp(`:${emoji.code}:`, 'g'),
+              url: emoji.url
             });
           });
         }
@@ -362,10 +362,10 @@ class comment_loader {
       data['account']['display_name']
     );
 
-    config.emoji.forEach(v => {
+    config.emojis.forEach(emoji => {
       data.content = data.content.replace(
-        v.regexp,
-        `<img src="${v.url}" class="emoji"/>`
+        emoji.regexp,
+        `<img src="${emoji.url}" class="emoji"/>`
       );
     });
 
