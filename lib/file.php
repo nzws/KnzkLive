@@ -88,7 +88,12 @@ function resizeImage($data) {
 }
 
 function convertAudio($data) {
-  $video = FFMpeg\FFMpeg::create()->open($data['tmp_name']);
+  global $env;
+
+  $video = FFMpeg\FFMpeg::create([
+    'ffmpeg.binaries' => $env["ffmpeg"]["ffmpeg_path"],
+    'ffprobe.binaries' => $env["ffmpeg"]["ffprobe_path"]
+  ])->open($data['tmp_name']);
   $audio_format = new FFMpeg\Format\Audio\Mp3();
 
   $file = sys_get_temp_dir() . '/' . generateHash() . '.mp3';

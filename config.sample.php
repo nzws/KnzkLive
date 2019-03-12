@@ -48,3 +48,6 @@ $env["report_discord_webhook_url"] = "";
 
 // 管理者のID (配列)
 $env["admin_ids"] = [1];
+
+$env["ffmpeg"]["ffmpeg_path"] = "";
+$env["ffmpeg"]["ffprobe_path"] = "";
