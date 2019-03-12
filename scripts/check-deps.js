@@ -1,7 +1,7 @@
 'use strict';
 
 const npm = require('../package.json');
-const composer = require('../composer');
+const composer = require('../composer.json');
 const chalk = require('chalk');
 const logSymbols = require('log-symbols');
 
