@@ -17,14 +17,14 @@
       <textarea class="form-control" id="toot" rows="3" placeholder="<?=$my["acct"]?>でトゥート/コメント" onkeyup="live.comment.check_limit()"></textarea>
     </div>
     <div class="comment-limit"><p id="limit" class="float-right"></p></div>
-    <div class="custom-control custom-checkbox float-left my-1">
-      <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
-      <label class="custom-control-label" for="no_toot">
-        <small>コメントのみ投稿 <a href="#" onclick="alert('有効にした状態で投稿すると、KnzkLiveにコメントしますが<?=$_SESSION["account_provider"]?>には投稿されません。');return false">？</a></small>
-      </label>
-    </div>
-    <div class="text-right">
-      <button class="btn btn-outline-primary" onclick="live.comment.post()">コメント</button>
+    <div class="comment-option my-2">
+      <div class="custom-control custom-checkbox col">
+        <input type="checkbox" class="custom-control-input" id="no_toot" value="1" <?=($my["misc"]["no_toot_default"] ? "checked" : "")?>>
+        <label class="custom-control-label" for="no_toot">
+          <small>コメントのみ投稿 <a href="#" onclick="alert('有効にした状態で投稿すると、KnzkLiveにコメントしますが<?=$_SESSION["account_provider"]?>には投稿されません。');return false">？</a></small>
+        </label>
+      </div>
+      <button class="btn btn-primary col comment-btn" onclick="live.comment.post()">コメント</button>
     </div>
   </div>
   <?php else : ?>

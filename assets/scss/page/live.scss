@@ -127,6 +127,11 @@ html[data-page='live'] {
     vertical-align: -4px;
   }
 
+  .custom-control {
+    position: absolute;
+    margin: 6px 0;
+  }
+
   .custom-control-label::after {
     top: 0.4rem;
   }
@@ -145,14 +150,28 @@ html[data-page='live'] {
     position: absolute;
   }
 
+  .comment-option {
+    height: 38px;
+  }
+
+  .comment-btn {
+    position: absolute;
+    width: 90px;
+    right: 15px;
+  }
+
   #limit {
     position: relative;
     right: 8px;
-    bottom: 38px;
+    bottom: 25px;
     color: #495057;
   }
 
   p#limit {
+    margin-bottom: 0;
+  }
+
+  .comment_block .form-group {
     margin-bottom: 0;
   }
 
