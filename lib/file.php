@@ -75,6 +75,28 @@ function checkMime($data, $allow_file_type) {
   return ["success" => true, "mime" => $mime, "ext" => $list[$mime]["ext"]];
 }
 
+function resizeImage($data) {
+  $manager = new \Intervention\Image\ImageManager(array('driver' => 'gd'));
+  $img = $manager->make($data['tmp_name']);
+  $width = $img->width();
+  $height = $img->height();
+
+  if ($width > 1920) $img = $img->resize(1920, null);
+  if ($height > 1080) $img = $img->resize(null, 1080);
+
+  return $img->encode(); // this is blob
+}
+
+function convertAudio($data) {
+  $video = FFMpeg\FFMpeg::create()->open($data['tmp_name']);
+  $audio_format = new FFMpeg\Format\Audio\Mp3();
+
+  $file = sys_get_temp_dir() . '/' . generateHash() . '.mp3';
+  $video->save($audio_format, $file);
+
+  return file_get_contents($file); // this is blob
+}
+
 function initStorage() {
   global $env;
 
@@ -117,10 +139,22 @@ function uploadFlie($data, $file_type) {
   $mime = checkMime($data, $type);
   if (!$mime["success"]) return ["success" => false, "error" => $mime["error"]];
 
+  switch ($type) {
+    case "audio":
+      $blob = convertAudio($data);
+      break;
+    case "image":
+      $blob = resizeImage($data);
+      break;
+    default:
+      $err = true;
+      break;
+  }
+  if (isset($err)) return ["success" => false, "error" => "ファイル形式"];
+
   $storage = initStorage();
   try {
-    $id = generateHash();
-    $file_name = $id . "." . $mime["ext"];
+    $file_name = generateHash() . "." . $mime["ext"];
 
     /*
     $stream = fopen($data['tmp_name'], 'r');
@@ -128,7 +162,7 @@ function uploadFlie($data, $file_type) {
     fclose($stream);
     */
 
-    $result = $storage->write($file_type . "/" . $file_name, file_get_contents($data['tmp_name']));
+    $result = $storage->write($file_type . "/" . $file_name, $blob);
 
     return ["success" => $result, "file_name" => $file_name];
   } catch (\League\Flysystem\FileExistsException $e) {
