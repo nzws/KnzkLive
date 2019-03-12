@@ -127,11 +127,6 @@ html[data-page='live'] {
     vertical-align: -4px;
   }
 
-  .custom-control {
-    position: absolute;
-    margin: 6px 0;
-  }
-
   .custom-control-label::after {
     top: 0.4rem;
   }
@@ -152,6 +147,11 @@ html[data-page='live'] {
 
   .comment-option {
     height: 38px;
+  }
+
+  .comment-option .custom-control {
+    position: absolute;
+    margin: 6px 0;
   }
 
   .comment-btn {
