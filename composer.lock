@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "483d9daeebebf567eea456bdad338171",
+    "content-hash": "1b2ae085f5d60fe8349669fa0371f9da",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -125,16 +125,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.90.1",
+            "version": "3.90.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3262a84de9428766646223963c944b2be2cd09c0"
+                "reference": "b912d351a44ce0c66c7c69ae937deb3756c61039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3262a84de9428766646223963c944b2be2cd09c0",
-                "reference": "3262a84de9428766646223963c944b2be2cd09c0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b912d351a44ce0c66c7c69ae937deb3756c61039",
+                "reference": "b912d351a44ce0c66c7c69ae937deb3756c61039",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-03-12T18:11:23+00:00"
+            "time": "2019-03-13T18:07:53+00:00"
         },
         {
             "name": "composer/ca-bundle",
