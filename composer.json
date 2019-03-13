@@ -11,7 +11,7 @@
   ],
   "require": {
     "abraham/twitteroauth": "1.0.1",
-    "ua-parser/uap-php": "3.8",
+    "ua-parser/uap-php": "3.8.6",
     "aws/aws-sdk-php": "3.89",
     "league/flysystem": "1.0",
     "league/flysystem-aws-s3-v3": "1.0",
