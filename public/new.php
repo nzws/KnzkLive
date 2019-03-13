@@ -78,17 +78,20 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
 <body>
 <?php include "../include/navbar.php"; ?>
 <div class="container">
+  <p>
+    <a href="https://github.com/KnzkDev/KnzkLive/wiki/broadcast_intro" target="_blank">Wiki: 配信を始めるには</a>
+  </p>
   <form method="post">
     <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
     <div class="form-group">
       <label for="title">配信タイトル</label>
-      <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=$last["name"]?>">
+      <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=isset($last["name"]) ? $last["name"] : null?>">
       <small id="title_note" class="form-text text-muted">100文字以下</small>
     </div>
 
     <div class="form-group">
       <label for="description">配信の説明</label>
-      <textarea class="form-control" id="description" name="description" rows="4" required><?=$last["description"]?></textarea>
+      <textarea class="form-control" id="description" name="description" rows="4" required><?=isset($last["description"]) ? $last["description"] : null?></textarea>
     </div>
 
     <div class="form-group form-check">
@@ -126,7 +129,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     <b>コメントハッシュタグ設定:</b><br>
     <small>他のユーザーが既に使用していないか確認した上で設定してください。</small><br>
     空欄にすると #knzklive_(連番) が使用されます。<br>
-    <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)" value="<?=$last["custom_hashtag"]?>">
+    <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)" value="<?=isset($last["custom_hashtag"]) ? $last["custom_hashtag"] : null?>">
     <hr>
     <div class="form-group form-check">
       <input type="checkbox" class="form-check-input" id="term" required>

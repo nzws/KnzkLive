@@ -152,7 +152,7 @@ $vote = loadVote($live["id"]);
         </div>
       </div>
       <div class="col-md-6">
-        <b>コメビュURL:</b><br>
+        <b>コメビュURL:</b> (<a href="https://github.com/KnzkDev/KnzkLive/wiki/broadcast_commentviewer" target="_blank">コメビュについて</a>)<br>
         <div class="input-group">
           <input class="form-control" type="text" value="<?=$comurl?>" readonly>
           <div class="input-group-append">
