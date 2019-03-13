@@ -40,13 +40,10 @@ html[data-page='comment_viewer'] {
   .alert {
     display: table;
     padding: 5px;
+    color: $white;
   }
 
-  .alert-warning {
-    background-color: rgba(255, 243, 205, 0.8);
-  }
-
-  .alert-primary {
-    background-color: rgba(204, 229, 255, 0.8);
+  ::-webkit-scrollbar {
+    display: none;
   }
 }
