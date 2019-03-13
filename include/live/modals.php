@@ -58,7 +58,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><i class="fas fa-hat-wizard"></i> アイテム <span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></h5>
-
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -67,15 +66,15 @@
         <h5>絵文字</h5>
         <div class="row">
           <div class="col-sm-4">
+            <input type="hidden" id="item_emoji" value="default_good">
             絵文字:
-            <input type="hidden" id="item_emoji">
             <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" id="emojiDropdown" data-toggle="dropdown">
-                絵文字を選択...
+              <button class="btn btn-secondary btn-block dropdown-toggle" id="emojiDropdown" data-toggle="dropdown">
+                <img src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" id="emojiDropdown_img" class="emoji"/>
               </button>
-              <div class="dropdown-menu p-1" aria-labelledby="emojiDropdown">
+              <div class="dropdown-menu" aria-labelledby="emojiDropdown" style="width: 165px">
                 <?php foreach (getEmojis($liveUser["id"], "item") as $item) : ?>
-                  <img src="<?=$item["url"]?>" class="emoji picker" title="<?=$item["code"]?>" onclick="live.item.checkEmoji('<?=$item['code']?>')"/>
+                  <img src="<?=$item["url"]?>" class="emoji picker" title="<?=$item["code"]?>" onclick="live.item.checkEmoji(this)"/>
                 <?php endforeach; ?>
               </div>
             </div>

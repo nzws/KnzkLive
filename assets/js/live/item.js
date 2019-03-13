@@ -15,8 +15,9 @@ class item {
     kit.elemId(`item_${item}_point`).textContent = point;
   }
 
-  static checkEmoji(code) {
-    kit.elemId('item_emoji').value = code;
+  static checkEmoji(obj) {
+    kit.elemId('item_emoji').value = obj.title;
+    kit.elemId('emojiDropdown_img').src = obj.src;
   }
 
   static buyItem(type, is_confirmed = false) {
