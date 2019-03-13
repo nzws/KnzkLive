@@ -133,7 +133,7 @@ class live {
       placement: 'bottom',
       trigger: 'focus',
       template: `
-<div class="dropdown-menu user-dropdown" tabindex="0" onclick="$('.user-dropdown').popover('dispose')">
+<div class="dropdown-menu user-dropdown">
   <h6 class="dropdown-header">${local_icon}@${acct}</h6>
   ${html}
   <div class="dropdown-divider"></div>
@@ -143,6 +143,10 @@ class live {
       html: true
     });
     $(obj).popover('show');
+
+    $('.user-dropdown').on('click', function() {
+      $('.user-dropdown').popover('dispose');
+    });
   }
 }
 
