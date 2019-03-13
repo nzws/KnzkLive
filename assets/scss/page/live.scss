@@ -186,4 +186,8 @@ html[data-page='live'] {
     cursor: pointer;
     margin: 5px;
   }
+
+  #listener_list td {
+    color: $black;
+  }
 }
