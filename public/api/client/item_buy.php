@@ -14,7 +14,7 @@ if ($_POST["type"] === "emoji") {
 
   if (!is_numeric($_POST["count"]) || $_POST["count"] < 1 || $_POST["count"] > 100)
     api_json(["error" => "エラー: 個数が不正です。"]);
-  if (array_search($_POST["dir"], ["left-to-right", "right-to-left", "top-to-bottom", "bottom-to-top"]) === false)
+  if (array_search($_POST["dir"], ["left-to-right", "right-to-left", "top-to-bottom", "bottom-to-top", "random"]) === false)
     api_json(["error" => "エラー: 方向が不正です。"]);
 
   $emojis = getEmojis($live["user_id"], "item");
@@ -45,14 +45,27 @@ if ($_POST["confirm"] != 1) api_json(["confirm" => true, "point" => $point]); //
 
 if ($_POST["type"] === "emoji") {
   $desc = s($emojis[$emoji_id]["code"]) . "絵文字" . s($_POST["count"]);
-  $data = [
-    "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
-    "repeat_num" => ($_POST["count"] < 6 ? $_POST["count"] : 6),
-    "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
-  ];
-  for ($i = 0; $i < intval(ceil($_POST["count"] / 6)); $i++) {
-    $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";
+  if ($_POST["dir"] === "random") {
+    $data = [
+      "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
+      "repeat_num" => 1,
+      "count" => $_POST["count"],
+      "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
+      "type" => $_POST["dir"]
+    ];
     send_item($data, $live["id"], "emoji");
+  } else {
+    $data = [
+      "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
+      "repeat_num" => ($_POST["count"] < 6 ? $_POST["count"] : 6),
+      "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
+      "type" => $_POST["dir"]
+    ];
+
+    for ($i = 0; $i < intval(ceil($_POST["count"] / 6)); $i++) {
+      $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";
+      send_item($data, $live["id"], "emoji");
+    }
   }
 } else if ($_POST["type"] === "voice") {
   $desc = $item["name"];

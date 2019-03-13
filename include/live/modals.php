@@ -87,6 +87,7 @@
               <option value="left-to-right">左から右</option>
               <option value="top-to-bottom">上から下</option>
               <option value="bottom-to-top">下から上</option>
+              <option value="random">ランダムに散らばる</option>
             </select>
           </div>
           <div class="col-sm-4">

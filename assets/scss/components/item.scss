@@ -12,6 +12,10 @@
   img {
     width: 50px;
   }
+
+  &.random {
+    animation: 0.3s show;
+  }
 }
 
 .spin img {
