@@ -86,7 +86,7 @@ if ($_POST) {
 
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="comment_classic" name="comment_classic" value="1" <?=(!empty($my["misc"]["comment_classic"]) ? "checked" : "")?>>
+          <input type="checkbox" class="custom-control-input" id="comment_classic" name="comment_classic" value="1" <?=(!empty($my["misc"]["comment_classic"]) ? " checked" : "")?>>
           <label class="custom-control-label" for="comment_classic">
             コメントを上から下に流す (クラシックモード)
           </label>
