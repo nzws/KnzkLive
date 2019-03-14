@@ -10,7 +10,7 @@ class live {
         err.innerHTML = '';
 
         if (json['live_status'] === 1)
-          err.innerHTML = '配信者からデータが送信されていません。';
+          err.innerHTML = '配信者のプッシュを待っています...';
         if (json['live_status'] === 0) {
           err.innerHTML = 'この配信は終了しました。';
           live.widemode('hide');

@@ -12,10 +12,11 @@ module.exports = {
     setInterval(this.live.date, 1000);
 
     $('#toot').keydown(({ keyCode, ctrlKey, metaKey }) => {
-      if (keyCode === 13 && (ctrlKey || metaKey)) {
+      if (keyCode === 13) {
         knzk.live.comment.post();
       }
     });
+    $('[data-toggle="popover"]').popover();
   },
   comment: require('./live/comment'),
   share: require('./live/share'),
