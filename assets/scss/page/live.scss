@@ -1,8 +1,23 @@
 html[data-page='live'] {
+  .livebody {
+    overflow: hidden;
+  }
+
+  .main {
+    overflow-y: scroll;
+    height: 100vh;
+  }
+
+  #comment {
+    height: 100%;
+  }
+
   #comments {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 600px;
+    display: flex;
+    flex-direction: column-reverse;
+    height: calc(100vh - 168px);
   }
 
   .hashtag {
@@ -67,7 +82,7 @@ html[data-page='live'] {
   }
 
   .comment {
-    display: flex;
+    display: block;
     background-color: #393f4f;
   }
 

@@ -81,7 +81,7 @@ $vote = loadVote($live["id"]);
     }
   </script>
 </head>
-<body>
+<body class="livebody">
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
 <?php if (!empty($new_live)) : ?>
   <div class="container">
@@ -107,7 +107,7 @@ $vote = loadVote($live["id"]);
 <?php else : ?>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xl-9 col-lg-8">
+    <div class="col-xl-9 col-lg-8 main">
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
@@ -172,6 +172,7 @@ $vote = loadVote($live["id"]);
       <p>
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
       </p>
+      <?php include "../include/footer.php"; ?>
     </div>
     <div class="col-xl-3 col-lg-4" id="comment">
       <div>
@@ -229,7 +230,6 @@ $vote = loadVote($live["id"]);
     </div>
   </div>
 </script>
-<?php include "../include/footer.php"; ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 <?php endif; // sensitive ?>
 </body>
