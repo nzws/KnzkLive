@@ -41,7 +41,7 @@ function createVote($live_id, $title, $data, $hashtag, $user_id) {
 EOF;
 
     if ($_SESSION["prop_vote_is_post"]) toot($text);
-    else comment_post($text, $user_id, $live_id);
+    else comment_post("<p class='vote_alert'>". s($text) . "</p>", $user_id, $live_id, true);
 
   return empty($err);
 }
@@ -71,7 +71,7 @@ EOF;
   if (!empty($v["v3"])) $res .= "\n{$v["v3"]}: {$v["v3_count"]}票";
   if (!empty($v["v4"])) $res .= "\n{$v["v4"]}: {$v["v4_count"]}票";
   if ($_SESSION["prop_vote_is_post"]) toot($res);
-  else comment_post($res, $user_id, $live_id);
+  else comment_post("<p class='vote_alert'>". s($res) . "</p>", $user_id, $live_id, true);
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `prop_vote` SET `is_ended` = 1 WHERE `live_id` = ? AND `is_ended` = 0;");
