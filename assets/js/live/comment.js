@@ -24,7 +24,7 @@ class comment {
       (config.account.domain === 'twitter.com' ? 140 : 500) -
       config.live.hashtag.length -
       d.length;
-    toot.maxlength = result;
+    toot.maxLength = parseInt(result);
   }
 
   static toggleLocal() {
