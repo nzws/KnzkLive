@@ -81,7 +81,7 @@ $vote = loadVote($live["id"]);
     }
   </script>
 </head>
-<body class="livebody">
+<body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
 <?php if (!empty($new_live)) : ?>
   <div class="container">
