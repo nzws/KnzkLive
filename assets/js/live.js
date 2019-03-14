@@ -1,5 +1,4 @@
 const common_comment = require('./comment_loader');
-const kit = require('./components/kanzakit');
 
 module.exports = {
   ready() {
