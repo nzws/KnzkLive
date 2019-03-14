@@ -42,7 +42,10 @@ class comment {
 
   static post() {
     const v = kit.elemId('toot').value;
-    if (!v) return;
+
+    const space = v.replace(/ /gi, '').replace(/　/gi, '');
+
+    if (!space) return;
     const isKnzk = !!kit.elemId('no_toot').value;
 
     if (isKnzk || config.account.domain === 'twitter.com') {
