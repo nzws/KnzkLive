@@ -358,10 +358,6 @@ class comment_loader {
         ? data['account']['acct'].replace(' (local)', '')
         : `${data['account']['username']}@${config.main_domain}`;
 
-    data['account']['display_name'] = kit.escape(
-      data['account']['display_name']
-    );
-
     config.emojis.forEach(emoji => {
       data.content = data.content.replace(
         emoji.regexp,
