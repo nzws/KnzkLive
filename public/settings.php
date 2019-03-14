@@ -155,19 +155,19 @@ if ($_POST) {
           <div class="form-check">
             <input class="form-check-input" type="radio" name="donate_link" id="donate_link3" value="3"
               <?=!empty($my["donation_desc"]) ? "checked" : ""?>>
-            <label class="form-check-label" for="donate_link4">コメントハイライト (手動)</label>
+            <label class="form-check-label" for="donate_link3">コメントハイライト (手動)</label>
           </div>
 
           <div class="form-check">
             <input class="form-check-input" type="radio" name="donate_link" id="donate_link4" value="4"
               <?=!empty($my["misc"]["donation_alerts_token"]) ? "checked" : ""?>>
-            <label class="form-check-label" for="donate_link3">コメントハイライト (自動) <small>(DonationAlerts)</small></label>
+            <label class="form-check-label" for="donate_link4">コメントハイライト (自動) <small>(DonationAlerts)</small></label>
           </div>
 
           <div class="form-check">
             <input class="form-check-input" type="radio" name="donate_link" id="donate_link5" value="5"
               <?=!empty($my["misc"]["streamlabs_token"]) ? "checked" : ""?>>
-            <label class="form-check-label" for="donate_link3">コメントハイライト (自動) <small>(StreamLabs)</small></label>
+            <label class="form-check-label" for="donate_link5">コメントハイライト (自動) <small>(StreamLabs)</small></label>
           </div>
 
           <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank">コメントハイライトとは</a>
@@ -213,7 +213,7 @@ if ($_POST) {
           </div>
 
         <div id="donate_link5_body" <?=!empty($my["misc"]["streamlabs_token"]) ? "" : "style=display:none"?>>
-            <label for="conf_streamlabs_name">StreamLabs ユーザID</label>
+            <label for="conf_streamlabs_name">StreamLabs リンクID</label>
             <input type="text" class="form-control" id="conf_streamlabs_name" name="streamlabs_name" value="<?=!empty($my["misc"]["streamlabs_name"]) ? s($my["misc"]["streamlabs_name"]) : ""?>">
             <small class="form-text text-muted">
               https://streamlabs.com/~~ の ~~ を入力
