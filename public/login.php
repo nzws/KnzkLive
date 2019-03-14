@@ -74,6 +74,7 @@ if (!$code) {
         $misc["avatar"] = $json_acct["avatar_static"];
         $misc["header"] = $json_acct["header_static"];
         $misc["user_url"] = $json_acct["url"];
+        $misc["no_toot_default"] = true;
         $misc = json_encode($misc);
         $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, ?);");
         $stmt->bind_param('ssss', $name, $acct, $_SERVER["REMOTE_ADDR"], $misc);

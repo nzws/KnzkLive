@@ -180,10 +180,15 @@ html[data-page='live'] {
   }
 
   #toot {
-    border-radius: 0 0 0.25em 0.25em;
+    border-radius: 0 0 0 0.25em;
   }
 
   .alerts {
     margin-top: 10px;
+  }
+
+  .popover,
+  .popover-body {
+    color: #000 !important;
   }
 }

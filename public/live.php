@@ -112,9 +112,14 @@ $vote = loadVote($live["id"]);
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
 
+      <input type="hidden" id="no_toot" value="<?=(!empty($my["misc"]["no_toot_default"]) ? "1" : "")?>">
       <div class="comment_block">
-        <div class="form-group">
+        <div class="input-group">
           <input class="form-control" id="toot" placeholder="Enterでコメント..." type="text">
+          <div class="input-group-append">
+            <button class="btn btn-<?=!empty($my["misc"]["no_toot_default"]) ? "" : "outline-"?>primary" id="comment_local_button" onclick="live.comment.toggleLocal()"
+            data-toggle="popover" data-trigger="hover" data-placement="bottom" title="ローカルで投稿" data-content="これを有効にすると、<?=isset($_SESSION["account_provider"]) ? $_SESSION["account_provider"] : "SNS"?>には投稿せずにコメントします。"><?=i("home")?></button>
+          </div>
         </div>
       </div>
 

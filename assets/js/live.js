@@ -16,6 +16,7 @@ module.exports = {
         knzk.live.comment.post();
       }
     });
+    $('[data-toggle="popover"]').popover();
   },
   comment: require('./live/comment'),
   share: require('./live/share'),

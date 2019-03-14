@@ -35,6 +35,7 @@ if (empty($_GET["oauth_verifier"])) {
     $misc["avatar"] = $content["profile_image_url_https"];
     $misc["header"] = $content["profile_banner_url"];
     $misc["user_url"] = "https://twitter.com/" . s($content["screen_name"]);
+    $misc["no_toot_default"] = true;
     $misc = json_encode($misc);
 
     $stmt = $mysqli->prepare("INSERT INTO `users` (`name`, `acct`, `created_at`, `ip`, `misc`, `twitter_id`) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?);");

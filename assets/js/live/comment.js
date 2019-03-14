@@ -8,20 +8,42 @@ const toast = require('../components/toast');
 
 class comment {
   static check_limit() {
-    if (!config.account) return; //未ログイン
-    const d = kit.elemId('toot').value;
+    const toot = kit.elemId('toot');
+
+    if (!config.account) {
+      toot.value =
+        'コメントするにはログインするか、 #' +
+        config.live.hashtag_o +
+        ' でトゥートしてください。';
+      toot.disabled = true;
+      return;
+    }
+    const d = toot.value;
 
     const result =
       (config.account.domain === 'twitter.com' ? 140 : 500) -
       config.live.hashtag.length -
       d.length;
-    kit.elemId('toot').maxlength = result;
+    toot.maxlength = result;
+  }
+
+  static toggleLocal() {
+    const s = kit.elemId('no_toot');
+    const bt = kit.elemId('comment_local_button');
+    bt.classList.remove('btn-outline-primary', 'btn-primary');
+    if (s.value) {
+      s.value = '';
+      bt.classList.add('btn-outline-primary');
+    } else {
+      s.value = '1';
+      bt.classList.add('btn-primary');
+    }
   }
 
   static post() {
     const v = kit.elemId('toot').value;
     if (!v) return;
-    const isKnzk = kit.elemId('no_toot').checked;
+    const isKnzk = !!kit.elemId('no_toot').value;
 
     if (isKnzk || config.account.domain === 'twitter.com') {
       api
