@@ -68,7 +68,7 @@ class live {
       (now.getTime() - new Date(config.live.created_at).getTime()) / 1000
     );
 
-    let html = `<i class="fas fa-clock"></i> `;
+    let html = '';
     let hour = parseInt(datet / 3600);
     let min = parseInt((datet / 60) % 60);
     let sec = datet % 60;

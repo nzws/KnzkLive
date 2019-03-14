@@ -187,14 +187,14 @@ $vote = loadVote($live["id"]);
     </div>
     <div class="col-xl-3 col-lg-4" id="comment">
       <div>
-        <span class="live-info" id="time"></span>
-        <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
-        <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
+        <span class="text-secondary"><?=i("clock")?></span> <span class="live-info" id="time"></span>
+        <span class="live-info"><span class="text-secondary"><?=i("hat-wizard")?></span> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
+        <span class="live-info"><span class="text-secondary"><?=i("comments")?></span> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
         <span id="count_open">
-          <?=i("users")?> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+          <span class="text-secondary"><?=i("users")?></span> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
         </span>
         <span id="count_end" class="invisible">
-          <?=i("users")?> <span id="max_c"><?=$live["viewers_max_concurrent"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
+          <span class="text-secondary"><?=i("users")?></span> <span id="max_c"><?=$live["viewers_max_concurrent"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
         </span>
       </div>
 
