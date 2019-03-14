@@ -37,14 +37,15 @@ if ($_POST) {
 
   if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
     if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) exit("ERR: この配信者IDは使用できません。");
-    $userCache = null;
-    $my = getMe();
   }
 
   if ($require_auth_sl) {
     header("Location: " . u("auth/streamlabs"));
     exit();
   }
+
+  $userCache = null;
+  $my = getMe();
 }
 ?>
 <!doctype html>
