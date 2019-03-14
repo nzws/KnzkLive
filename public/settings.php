@@ -17,6 +17,7 @@ if ($_POST) {
   $my["misc"]["auto_close"] = isset($_POST["auto_close"]);
   $my["misc"]["auto_open_start"] = isset($_POST["auto_open_start"]);
   $my["misc"]["hide_watching_list"] = isset($_POST["hide_watching_list"]);
+  $my["misc"]["comment_classic"] = isset($_POST["comment_classic"]);
   $my["misc"]["webhook_url"] = $_POST["webhook_url"];
 
   if (!isset($_POST["donate_link"])) $_POST["donate_link"] = 1;
@@ -82,7 +83,17 @@ if ($_POST) {
           </label>
         </div>
       </div>
+
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="comment_classic" name="comment_classic" value="1" <?=(!empty($my["misc"]["comment_classic"]) ? "checked" : "")?>>
+          <label class="custom-control-label" for="comment_classic">
+            コメントを上から下に流す (クラシックモード)
+          </label>
+        </div>
+      </div>
     </div>
+
     <?php if ($my["broadcaster_id"]) : ?>
       <div class="box">
         <h4>配信者設定</h4>

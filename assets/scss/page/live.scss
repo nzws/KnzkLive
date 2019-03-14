@@ -20,6 +20,10 @@ html[data-page='live'] {
     height: calc(100vh - 130px);
   }
 
+  .disable_reverse#comments {
+    flex-direction: column;
+  }
+
   .hashtag {
     display: none;
   }

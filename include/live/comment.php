@@ -19,4 +19,4 @@
     </span>
   </p>
 </div>
-<div id="comments" class="comment_block mt-1"></div>
+<div id="comments" class="comment_block mt-1<?=!empty($my["misc"]["comment_classic"]) ? " disable_reverse" : null?>"></div>
