@@ -64,19 +64,26 @@ function use_ticket($user_id, $ticket_id) {
   return !$err;
 }
 
-function get_point_log($user_id) {
+function get_point_log($user_id, $type = "stat", $page = 0) {
   global $point_log_cache;
-  if (!empty($point_log_cache[$user_id])) return $point_log_cache[$user_id];
-  $ts = date('Ym');
+  if (!empty($point_log_cache[$type][$user_id])) return $point_log_cache[$type][$user_id];
+
   $mysqli = db_start();
-  $stmt = $mysqli->prepare("SELECT * FROM `point_log` WHERE `user_id` = ? AND DATE_FORMAT(created_at, '%Y%m') = ? ORDER BY id desc;");
-  $stmt->bind_param("ss", $user_id, $ts);
+  if ($type === "hist") {
+    $max_id = 10 * intval($page);
+    $stmt = $mysqli->prepare("SELECT * FROM `point_log` WHERE `user_id` = ? ORDER BY id desc LIMIT ?, 10;");
+    $stmt->bind_param("ss", $user_id, $max_id);
+  } else {
+    $ts = date('Ym');
+    $stmt = $mysqli->prepare("SELECT * FROM `point_log` WHERE `user_id` = ? AND DATE_FORMAT(created_at, '%Y%m') = ? ORDER BY id desc;");
+    $stmt->bind_param("ss", $user_id, $ts);
+  }
   $stmt->execute();
   $row = db_fetch_all($stmt);
   $stmt->close();
   $mysqli->close();
 
-  $point_log_cache[$user_id] = $row;
+  $point_log_cache[$type][$user_id] = $row;
   return isset($row[0]["id"]) ? $row : [];
 }
 

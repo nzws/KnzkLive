@@ -5,7 +5,6 @@ if (!$my) {
   http_response_code(403);
   exit("ERR:ログインしてください。");
 }
-$plog = get_point_log($my["id"]);
 
 if ($my["broadcaster_id"]) {
   $live_stat_times = getAllLiveTime($my["id"]);
@@ -330,8 +329,8 @@ if ($_POST) {
             <th>詳細</th>
           </tr>
           </thead>
-          <tbody>
-          <?php foreach ($plog as $item) :
+          <tbody id="point_hist">
+          <?php foreach (get_point_log($my["id"], "hist") as $item) :
             if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
             elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
             elseif ($item["type"] === "live") $item["type"] = "配信";
@@ -346,6 +345,7 @@ if ($_POST) {
           <?php endforeach; ?>
           </tbody>
         </table>
+        <button type="button" class="btn btn-outline-primary btn-block" onclick="knzk.settings.general.pointHistLoad()" id="point_hist_bt">もっと読み込む...</button>
       </div>
     </div>
   </div>
