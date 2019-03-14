@@ -1,6 +1,8 @@
 const kit = require('../components/kanzakit');
 const api = require('../components/api');
 
+const comment = require('./comment');
+
 class live {
   static watch() {
     api
@@ -112,6 +114,10 @@ class live {
       // Mastodon
       if (!kit.search(acct, '@')) acct += `@${config.main_domain}`;
     }
+    config.live.dropdown = {
+      id: id,
+      acct: acct
+    };
 
     $('.user-dropdown').remove();
     let html = '';
@@ -121,10 +127,10 @@ class live {
     if (config.live.is_broadcaster) {
       html += `
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item text-danger" href="#" onclick="open_blocking_modal('${acct}');return false">ユーザーブロック</a>
+      <a class="dropdown-item text-danger open_blocking_modal" href="#">ユーザーブロック</a>
       `;
       if (id)
-        html += `<a class="dropdown-item text-danger" href="#" onclick="live.comment.delete('${id}', '${acct}');return false">投稿を削除</a>`;
+        html += `<a class="dropdown-item text-danger comment_delete" href="#">投稿を削除</a>`;
     }
 
     $(obj).popover({
@@ -143,6 +149,14 @@ class live {
       html: true
     });
     $(obj).popover('show');
+
+    $('.user-dropdown .open_blocking_modal').on('click', function() {
+      open_blocking_modal(config.live.dropdown.acct);
+    });
+
+    $('.user-dropdown .comment_delete').on('click', function() {
+      comment.delete(config.live.dropdown.id, config.live.dropdown.acct);
+    });
 
     $('.user-dropdown').on('click', function() {
       $('.user-dropdown').popover('dispose');
