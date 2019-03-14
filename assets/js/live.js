@@ -17,6 +17,7 @@ module.exports = {
       }
     });
     $('[data-toggle="popover"]').popover();
+    $('[data-tooltip="1"]').tooltip();
   },
   comment: require('./live/comment'),
   share: require('./live/share'),

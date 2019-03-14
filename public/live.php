@@ -119,6 +119,17 @@ $vote = loadVote($live["id"]);
           <div class="input-group-append">
             <button class="btn btn-<?=!empty($my["misc"]["no_toot_default"]) ? "" : "outline-"?>primary" id="comment_local_button" onclick="live.comment.toggleLocal()"
             data-toggle="popover" data-trigger="hover" data-placement="bottom" title="ローカルで投稿" data-content="これを有効にすると、<?=isset($_SESSION["account_provider"]) ? $_SESSION["account_provider"] : "SNS"?>には投稿せずにコメントします。"><?=i("home")?></button>
+
+            <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
+              <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal" data-tooltip="1" title="アイテムを投下"><i class="fas fa-hat-wizard"></i></button>
+            <?php endif; ?>
+
+            <?php if (donation_url($liveUser["id"], false) && $live["is_live"] !== 0) : ?>
+              <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal" data-tooltip="1" title="支援 (コメントハイライト)"><i class="fas fa-donate"></i></button>
+            <?php elseif (donation_url($liveUser["id"])) : ?>
+              <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank" data-tooltip="1" title="支援"><i class="fas fa-donate"></i></a>
+            <?php endif; ?>
+            <button type="button" class="btn btn-outline-info" onclick="live.share.share()" data-tooltip="1" title="配信を共有"><i class="fas fa-share-square"></i></button>
           </div>
         </div>
       </div>
@@ -185,19 +196,6 @@ $vote = loadVote($live["id"]);
         <span id="count_end" class="invisible">
           総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人    最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
         </span>
-      </div>
-
-      <div class="btn-group btn-block" role="group">
-        <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
-          <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
-        <?php endif; ?>
-
-        <?php if (donation_url($liveUser["id"], false) && $live["is_live"] !== 0) : ?>
-          <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal"><i class="fas fa-donate"></i> 支援 (CH)</button>
-        <?php elseif (donation_url($liveUser["id"])) : ?>
-          <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
-        <?php endif; ?>
-        <button type="button" class="btn btn-outline-info" onclick="live.share.share()"><i class="fas fa-share-square"></i> 共有</button>
       </div>
 
       <?php include "../include/live/comment.php"; ?>
