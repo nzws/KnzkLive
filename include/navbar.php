@@ -92,7 +92,10 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
           </div>
           <input type="text" class="form-control" placeholder="ex) <?=$env["masto_login"]["domain"]?>" id="login_domain" list="domain_list">
         </div>
-        <small><?=$env["masto_login"]["domain"]?>以外のアカウントでログインすると一部のアカウントではコメントが表示できない可能性があります。<a href="<?=u("help")?>#help1" target="_blank">理由</a></small><br>
+        <small>
+          <?=$env["masto_login"]["domain"]?>以外のアカウントでログインすると一部のアカウントではコメントが表示できない可能性があります。
+          <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_faq#外部インスタンスから投稿したコメントトゥートが表示できない" target="_blank">理由</a>
+        </small><br>
         <small>KnzkLiveではアクセストークンをデータベースに保管しません。また、認証とコメント以外に使用する事はありません。</small>
       </div>
       <div class="modal-footer">
