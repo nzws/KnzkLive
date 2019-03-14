@@ -191,10 +191,10 @@ $vote = loadVote($live["id"]);
         <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
         <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
         <span id="count_open">
-          <i class="fas fa-users"></i> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+          <?=i("users")?> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
         </span>
         <span id="count_end" class="invisible">
-          総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人    最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+          <?=i("users")?> <span id="max_c"><?=$live["viewers_max_concurrent"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
         </span>
       </div>
 
