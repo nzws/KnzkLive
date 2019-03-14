@@ -27,7 +27,7 @@ class live {
 
         kit.elemId('is_not_started').className = json['is_started']
           ? 'invisible'
-          : 'text-warning';
+          : 'bg-warning text-dark';
 
         if (json['name'] !== config.live.watch_data['name']) {
           kit.elemId('live-name').innerText = json['name'];

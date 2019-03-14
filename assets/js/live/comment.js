@@ -15,7 +15,7 @@ class comment {
       (config.account.domain === 'twitter.com' ? 140 : 500) -
       config.live.hashtag.length -
       d.length;
-    kit.elemId('limit').innerText = result;
+    kit.elemId('toot').maxlength = result;
   }
 
   static post() {
@@ -34,7 +34,6 @@ class comment {
         .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
-            comment.check_limit();
           }
         });
     } else {
@@ -59,7 +58,6 @@ class comment {
         .then(json => {
           if (json) {
             kit.elemId('toot').value = '';
-            comment.check_limit();
           }
         })
         .catch(error => {

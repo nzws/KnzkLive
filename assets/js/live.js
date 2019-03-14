@@ -1,4 +1,5 @@
 const common_comment = require('./comment_loader');
+const kit = require('./components/kanzakit');
 
 module.exports = {
   ready() {
@@ -12,7 +13,7 @@ module.exports = {
     setInterval(this.live.date, 1000);
 
     $('#toot').keydown(({ keyCode, ctrlKey, metaKey }) => {
-      if (keyCode === 13 && (ctrlKey || metaKey)) {
+      if (keyCode === 13) {
         knzk.live.comment.post();
       }
     });

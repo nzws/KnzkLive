@@ -107,54 +107,31 @@ $vote = loadVote($live["id"]);
 <?php else : ?>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-9">
-      <div id="err_live" class="text-warning"></div>
-      <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
-      <?php if ($my["id"] === $live["user_id"]) : ?>
-        <div class="text-warning">* これは自分の放送です。ハウリング防止の為自動でミュートしています。</div>
-      <?php endif; ?>
+    <div class="col-xl-9 col-lg-8">
       <div class="embed-responsive embed-responsive-16by9" id="live">
         <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
       </div>
-      <span class="float-right">
-        <span class="live-info" id="time"></span>
-        <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
-        <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
 
-        <span id="count_open">
-          <i class="fas fa-users"></i> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
-        </span>
-        <span id="count_end" class="invisible">
-          総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人    最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
-        </span>
-      </span>
-      <br>
-      <div class="float-right">
-        <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
-          <button type="button" class="btn btn-outline-warning live_edit invisible" onclick="live.admin.undoEditLive()"><i class="fas fa-times"></i> 編集廃棄</button>
-          <button type="button" class="btn btn-outline-success live_edit invisible" onclick="live.admin.editLive()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
-        <?php endif; ?>
-        <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
-          <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
-        <?php endif; ?>
-
-        <?php if (donation_url($liveUser["id"], false) && $live["is_live"] !== 0) : ?>
-          <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal"><i class="fas fa-donate"></i> 支援 (CH)</button>
-        <?php elseif (donation_url($liveUser["id"])) : ?>
-          <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
-        <?php endif; ?>
-
-        <button type="button" class="btn btn-link side-buttons" onclick="live.share.share()"><i class="fas fa-share-square"></i> 共有</button>
+      <div class="comment_block">
+        <div class="form-group">
+          <input class="form-control" id="toot" placeholder="Enterでコメント..." type="text">
+        </div>
       </div>
-      <p></p>
+
+      <div class="alerts">
+        <div id="err_live" class="bg-warning text-dark"></div>
+        <div id="is_not_started" class="invisible">* この配信はまだ開始されていません。現在はあなたのみ視聴できます。<a href="<?=u("live_manage")?>">配信開始はこちらから</a></div>
+      </div>
+
       <h4 id="live-name" class="live_info"><?=$live["name"]?></h4>
 
-      <div class="input-group col-md-6 invisible live_edit" style="margin-bottom:20px">
+      <div class="input-group col-md-6 invisible live_edit">
         <div class="input-group-prepend">
           <span class="input-group-text" id="edit_title_label">タイトル</span>
         </div>
         <input type="text" class="form-control" placeholder="タイトル (100文字以下)" value="<?=$live["name"]?>" id="edit_name">
       </div>
+
       <span class="text-secondary">
         <?php if ($live["is_live"] !== 0) : ?>
           <?=date("Y/m/d H:i", strtotime($live["created_at"]))?> に開始
@@ -162,6 +139,7 @@ $vote = loadVote($live["id"]);
           <?=date("Y/m/d H:i", strtotime($live["created_at"]))?> - <?=date("Y/m/d H:i", strtotime($live["ended_at"]))?>
         <?php endif; ?>
       </span>
+
       <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
 
       <div class="input-group col-md-8 invisible live_edit">
@@ -171,19 +149,51 @@ $vote = loadVote($live["id"]);
         <textarea class="form-control" id="edit_desc" rows="4"><?=$live["description"]?></textarea>
       </div>
 
+      <div class="live_edit invisible">
+        <button type="button" class="btn btn-outline-warning" onclick="live.admin.undoEditLive()"><i class="fas fa-times"></i> 編集廃棄</button>
+        <button type="button" class="btn btn-outline-success" onclick="live.admin.editLive()" style="margin-right:10px"><i class="fas fa-check"></i> 編集完了</button>
+      </div>
+
       <?php if ($live["is_live"] !== 0 && $my["id"] === $live["user_id"]) : ?>
-      <hr>
-      <?php include "../include/live/broadcaster_panel.php"; ?>
+        <hr>
+        <?php include "../include/live/broadcaster_panel.php"; ?>
       <?php endif; ?>
+
       <?php if (is_admin($my["id"])) : ?>
-      <hr>
-      <?php include "../include/live/admin_panel.php"; ?>
+        <hr>
+        <?php include "../include/live/admin_panel.php"; ?>
       <?php endif; ?>
+
       <p>
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
       </p>
     </div>
-    <div class="col-md-3" id="comment">
+    <div class="col-xl-3 col-lg-4" id="comment">
+      <div>
+        <span class="live-info" id="time"></span>
+        <span class="live-info"><i class="fas fa-hat-wizard"></i> <b class="point_count"><?=$live["point_count"]?></b>KP</span>
+        <span class="live-info"><i class="fas fa-comments"></i> <b id="comment_count"><?=s($live["comment_count"])?></b></span>
+        <span id="count_open">
+          <i class="fas fa-users"></i> <b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span>
+        </span>
+        <span id="count_end" class="invisible">
+          総視聴者数: <span class="max"><?=$live["viewers_max"]?></span>人    最大同時視聴者数: <span id="max_c"><?=$live["viewers_max_concurrent"]?></span>人
+        </span>
+      </div>
+
+      <div class="btn-group btn-block" role="group">
+        <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
+          <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal"><i class="fas fa-hat-wizard"></i> アイテム</button>
+        <?php endif; ?>
+
+        <?php if (donation_url($liveUser["id"], false) && $live["is_live"] !== 0) : ?>
+          <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#chModal"><i class="fas fa-donate"></i> 支援 (CH)</button>
+        <?php elseif (donation_url($liveUser["id"])) : ?>
+          <a class="btn btn-outline-warning" href="<?=donation_url($liveUser["id"])?>" target="_blank"><i class="fas fa-donate"></i> 支援</a>
+        <?php endif; ?>
+        <button type="button" class="btn btn-outline-info" onclick="live.share.share()"><i class="fas fa-share-square"></i> 共有</button>
+      </div>
+
       <?php include "../include/live/comment.php"; ?>
     </div>
   </div>
