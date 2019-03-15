@@ -69,7 +69,7 @@ function leaveWatcher($ip, $watch_id) {
 
 function addWatchingPoint($user_id, $start, $end, $live_id) {
   $point = intval(($end - $start) / 600);
-  $point = $point * 20;
+  $point = $point * 10;
   if ($point > 0) $n = add_point($user_id, $point, "live", "配信ID: " . $live_id . " の視聴特典");
 }
 
