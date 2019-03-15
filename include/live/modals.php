@@ -110,7 +110,7 @@
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">1</span>KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">2</span>KPで投下</button>
           </div>
         </div>
 
