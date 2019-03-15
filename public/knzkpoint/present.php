@@ -8,13 +8,13 @@ if (!$my) {
 
 if ($_POST) {
   if (mb_strlen($_POST["comment"]) > 500) exit("ERR:文字数制限オーバー");
-  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 0 || !is_numeric($_POST["point"])) exit("ERR:ポイントが不正です。");
+  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 1 || !is_numeric($_POST["point"])) exit("ERR:ポイントが不正です。");
   $u = getUser($_POST["user"], "acct");
   if ($u["id"] === $my["id"]) exit("ERR:自分自身には送信できません");
   if ($u) {
     $n = add_point($my["id"], $_POST["point"] * -1, "user", $u["acct"] . "にプレゼント");
     if ($n) {
-      $o = add_point($u["id"], $_POST["point"], "user", $my["acct"] . "からのプレゼント  コメント: " . s($_POST["comment"]));
+      $o = add_point($u["id"], intval($_POST["point"] * 0.85), "user", $my["acct"] . "からのプレゼント  コメント: " . s($_POST["comment"]));
       if ($o) header("Location: " . u("settings"));
       else exit("例外エラー");
     }
@@ -43,12 +43,13 @@ if ($_POST) {
         <div class="form-group">
           <label for="point">プレゼントするポイント数</label>
           <div class="input-group">
-            <input type="number" class="form-control" max="<?=$my["point_count"]?>" min="1" id="point" name="point"  aria-describedby="kp" required>
+            <input type="number" class="form-control" max="<?=$my["point_count"]?>" min="2" id="point" name="point"  aria-describedby="kp" required onkeyup="calcPoint(this)">
             <div class="input-group-append">
               <span class="input-group-text" id="kp">KP</span>
             </div>
           </div>
-          <small id="emailHelp" class="form-text text-muted">1 ~ <?=$my["point_count"]?>KPまで送信できます</small>
+          <small id="emailHelp" class="form-text text-muted">2 ~ <?=$my["point_count"]?>KP</small>
+          <small class="text-warning">15%が手数料として回収されます。 (<span id="fee">0</span>KP * 0.85 = <b id="fee_result">0</b>KP)</small>
         </div>
         <div class="form-group">
           <label for="user">プレゼントするユーザー</label>
@@ -108,6 +109,17 @@ if ($_POST) {
       alert("例外エラーが発生");
       console.error(error);
     });
+  }
+
+  function calcPoint(obj) {
+    const base = document.getElementById('fee');
+    const result = document.getElementById('fee_result');
+    const point = parseInt(obj.value);
+
+    if (point) {
+      base.textContent = point;
+      result.textContent = parseInt(point * 0.85);
+    }
   }
 </script>
 </body>
