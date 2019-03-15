@@ -24,6 +24,7 @@ class items {
             if (bt) {
               bt.classList.remove('btn-warning');
               bt.classList.add('btn-primary');
+              bt.textContent = '追加';
             }
 
             toast.new('削除しました。', '.bg-success');
