@@ -14,6 +14,18 @@ class items {
             const elem = kit.elemId(`${type}_${id}`);
             if (elem) kit.elemRemove(elem);
 
+            const slot = kit.elemId(`${type}_slot`);
+            slot.textContent = parseInt(slot.textContent) + 1;
+
+            const alert = kit.elemId(`${type}_alert`);
+            if (alert) kit.elemRemove(alert);
+
+            const bt = kit.elemId(`${type}_bt`);
+            if (bt) {
+              bt.classList.remove('btn-warning');
+              bt.classList.add('btn-primary');
+            }
+
             toast.new('削除しました。', '.bg-success');
           } else {
             toast.new(

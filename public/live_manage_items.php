@@ -4,6 +4,12 @@ $my = getMe();
 if (!$my) showError('ログインしてください。', 403);
 if (!$my["broadcaster_id"]) showError('あなたには配信権限がありません。', 403);
 
+if (!isset($my["misc"]["voice_slot"]) || !isset($my["misc"]["emoji_slot"])) {
+  $my["misc"]["voice_slot"] = isset($my["misc"]["voice_slot"]) ? $my["misc"]["voice_slot"] : 0;
+  $my["misc"]["emoji_slot"] = isset($my["misc"]["emoji_slot"]) ? $my["misc"]["emoji_slot"] : 1;
+  setConfig($my["id"], $my["misc"]);
+}
+
 if (!empty($_POST)) {
   $name = s($_POST["word"]);
   if (!checkV($name, 1, 20)) showError('バリデーションエラー: name', 400);
@@ -13,7 +19,7 @@ if (!empty($_POST)) {
     $able_item = null;
     $able_comment = null;
     $point = intval($_POST["point"]);
-    if (!($point >= 0 && $point <= 10000)) showError('バリデーションエラー: point', 400);
+    if (!($point >= 1 && $point <= 10000)) showError('バリデーションエラー: point', 400);
   } elseif ($_POST["type"] === "emoji") {
     if (!ctype_alnum($name)) showError("バリデーションエラー: 英数字", 400);
     $able_item = isset($_POST["emoji_type_item"]) && $_POST["emoji_type_item"] == 1 ? 1 : 0;
@@ -22,6 +28,10 @@ if (!empty($_POST)) {
   } else {
     showError("バリデーションエラー: type", 400);
   }
+  if (!checkItemSlot($my["id"], $_POST["type"])) showError('ポイントが足りません', 403);
+  $userCache = null;
+  $cacheItems = null;
+  $my = getMe();
 
   $s3 = uploadFlie($_FILES["file"], $_POST["type"], $my["id"]);
   if (!$s3["success"]) showError($s3["error"], 500);
@@ -39,6 +49,9 @@ if (!empty($_POST)) {
     showError('DB登録エラー', 500);
   }
 }
+
+$voice_limit = $my["misc"]["voice_slot"] - count(getItems($my["id"], 'voice'));
+$emoji_limit = $my["misc"]["emoji_slot"] - count(getItems($my["id"], 'emoji'));
 ?>
 <!doctype html>
 <html lang="ja" data-page="live_manage_items">
@@ -57,7 +70,7 @@ if (!empty($_POST)) {
   </nav>
   <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="se">
-    <h4>カスタムSE管理</h4>
+    <h4>カスタムSE管理 <small>(残り<span id="voice_slot"><?=$voice_limit?></span>枠)</small></h4>
     あなたの配信上のアイテムで使用できるSEを追加できます。<br>
     リスナーがアイテムよりSEを投下すると、リスナー全員にその音声が再生されます。<br>
     また、投下に必要なポイントの一定割合が配信者に還元されます。<br>
@@ -87,9 +100,17 @@ if (!empty($_POST)) {
             <span class="input-group-text" id="kp">KP</span>
           </div>
         </div>
-        <small class="form-text text-muted">0~10000KPまで</small>
+        <small class="form-text text-muted">1~10000KPまで</small>
       </div>
-      <button class="btn btn-primary btn-block" type="submit">追加</button>
+      <?php if ($voice_limit > 0) : ?>
+        <button class="btn btn-primary btn-block" type="submit">追加</button>
+      <?php else : ?>
+        <div class="alert alert-warning" role="alert" id="voice_alert">
+          <b>カスタムSEの空き枠が不足しています。</b><br>
+          1枠1500KPで解放できます。
+        </div>
+        <button class="btn btn-warning btn-block" type="submit" id="voice_bt">1500KP消費して追加</button>
+      <?php endif; ?>
     </form>
 
     <div class="table-responsive">
@@ -115,7 +136,7 @@ if (!empty($_POST)) {
     </div>
 
     <div class="tab-pane fade" id="emoji">
-      <h4>カスタム絵文字管理</h4>
+      <h4>カスタム絵文字管理 <small>(残り<span id="emoji_slot"><?=$emoji_limit?></span>枠)</small></h4>
       あなたの配信上のコメントやアイテムで使用できる絵文字を追加できます。
 
       <form method="post" class="mt-4 mb-4 col-md-7" enctype="multipart/form-data">
@@ -152,7 +173,15 @@ if (!empty($_POST)) {
             </div>
         </div>
 
-        <button class="btn btn-primary btn-block" type="submit">追加</button>
+        <?php if ($emoji_limit > 0) : ?>
+          <button class="btn btn-primary btn-block" type="submit">追加</button>
+         <?php else : ?>
+          <div class="alert alert-warning" role="alert" id="emoji_alert">
+            <b>カスタム絵文字の空き枠が不足しています。</b><br>
+            1枠500KPで解放できます。
+          </div>
+          <button class="btn btn-warning btn-block" type="submit" id="emoji_bt">500KP消費して追加</button>
+         <?php endif; ?>
       </form>
 
       <div class="table-responsive">

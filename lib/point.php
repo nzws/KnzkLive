@@ -5,6 +5,9 @@ function add_point($user_id, $point, $type, $data) {
     $point = 10000 - $user["point_count"];
     $data .= " (上限超過)";
   }
+  if (($point + $user["point_count"]) < 0) {
+    return false;
+  }
 
   $point = intval($point);
   $mysqli = db_start();
