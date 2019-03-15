@@ -34,6 +34,14 @@ if (isset($_GET["id"]) && isset($_POST["use"])) {
       <?php if (isset($_GET["id"])) : ?>
         <b><?=s($u["name"])?> (<?=s($u["acct"])?>)</b> さんのチケットを使用してもよろしいですか？<br>
         <b><?=s($t["point"])?>KP</b>があなたの残高に追加されます。
+
+        <?php if (($t["point"] + $my["point_count"]) > 10000) : ?>
+        <div class="alert alert-danger" role="alert">
+          <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+          このままチケットを使用すると超過分が受け取れません。
+        </div>
+        <?php endif; ?>
+
         <form method="post">
           <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
           <input type="hidden" name="use" value="1">

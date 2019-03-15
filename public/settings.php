@@ -285,6 +285,16 @@ if ($_POST) {
         <b>KPが足りない...！</b>そんな欲しがりさんにも安心。<br>
         翌日0時に<b>100KPまで回復</b>されます！
       </div>
+      <?php elseif ($my["point_count"] === 10000) : ?>
+      <div class="alert alert-danger" role="alert">
+        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+        新規に獲得する事ができません。
+      </div>
+      <?php elseif ($my["point_count"] >= 9000) : ?>
+      <div class="alert alert-warning" role="alert">
+        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+        早めに使い切りましょう！
+      </div>
       <?php endif; ?>
       <h5>あなたの獲得した統計</h5>
       <div class="table-responsive">

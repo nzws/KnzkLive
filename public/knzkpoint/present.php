@@ -72,13 +72,14 @@ if ($_POST) {
   function p_submit() {
     const bt = document.getElementById("submit_bt");
     const user = document.getElementById("user").value;
+    const point = document.getElementById("point").value;
     if (now_point < document.getElementById("point").value) {
       alert("保有ポイント以上をプレゼントする事はできません。");
       return false;
     }
     bt.disabled = true;
     bt.textContent = "やってます...";
-    fetch('<?=u("api/client/get_acct_name")?>?acct=' + user, {
+    fetch('<?=u("api/client/get_acct_name")?>?acct=' + user + '&point=' + point, {
       method: 'GET',
       credentials: 'include',
     }).then(function(response) {
@@ -94,7 +95,10 @@ if ($_POST) {
         bt.textContent = "送信";
         return false;
       }
-      if (confirm(`「${json["name"]}」(${json["acct"]})に送信してもよろしいですか？`)) {
+
+      const noti = json.will_excess ? "\n* 相手のポイント残高が超過する可能性があります。本当によろしいですか？" : "";
+
+      if (confirm(`「${json["name"]}」(${json["acct"]})に送信してもよろしいですか？` + noti)) {
         document.getElementById("knzkpoint").submit();
       } else {
         bt.disabled = false;

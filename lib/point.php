@@ -1,5 +1,11 @@
 <?php
 function add_point($user_id, $point, $type, $data) {
+  $user = getUser($user_id);
+  if (($point + $user["point_count"]) > 10000) {
+    $point = 10000 - $user["point_count"];
+    $data .= " (上限超過)";
+  }
+
   $point = intval($point);
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) VALUES (?, ?, ?, ?);");
