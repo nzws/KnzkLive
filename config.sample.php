@@ -48,3 +48,8 @@ $env["report_discord_webhook_url"] = "";
 
 // 管理者のID (配列)
 $env["admin_ids"] = [1];
+
+// アナウンスメント
+$env["announcement"]["date"] = ""; // 日付
+$env["announcement"]["text"] = ""; // テキスト
+$env["announcement"]["link"] = ""; // リンク (オプション)

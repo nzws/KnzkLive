@@ -14,6 +14,24 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
   </button>
 </div>
 <?php endif; ?>
+
+<?php if (!empty($env["announcement"]["date"])) : ?>
+<div class="alert alert-info alert-dismissible fade show rounded-0" role="alert" id="announcement_alert">
+  <b><?=$env["announcement"]["date"]?>:</b>
+  <?php if (!empty($env["announcement"]["link"])) : ?>
+    <a href="<?=s($env["announcement"]["link"])?>" target="_blank"><?=$env["announcement"]["text"]?></a>
+  <?php else : ?>
+    <?=$env["announcement"]["text"]?>
+  <?php endif; ?>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="localStorage['accouncement'] = '<?=s($env["announcement"]["date"])?>';">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<script>
+  if (localStorage['accouncement'] === '<?=s($env["announcement"]["date"])?>') document.getElementById('announcement_alert').className = "invisible";
+</script>
+<?php endif; ?>
+
 <div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
   <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
     <a class="col-auto header-brand" href="<?=u("")?>">
