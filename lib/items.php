@@ -89,3 +89,20 @@ function getEmojis($user_id, $type) {
 
   return $d;
 }
+
+function checkItemSlot($user_id, $type) {
+  $my = getUser($user_id);
+
+  $limit = $my["misc"][$type . "_slot"] - count(getItems($my["id"], $type));
+  if ($limit > 0) {
+    return true;
+  }
+
+  if (!add_point($my["id"], $type === "emoji" ? -500 : -1500, "slot", "スロット追加: " . $type)) {
+    return false;
+  }
+
+  $my["misc"][$type . "_slot"]++;
+  setConfig($my["id"], $my["misc"]);
+  return true;
+}

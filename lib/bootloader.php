@@ -49,7 +49,7 @@ require_once($libpt."donate.php");
 require_once($libpt."file.php");
 require_once($libpt."items.php");
 
-$toot_get_limit = 200;
+$toot_get_limit = 100;
 /*
 $max_filesize = return_bytes(ini_get('upload_max_filesize'));
 $_8mb = 8388608;

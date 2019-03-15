@@ -81,16 +81,16 @@
           </div>
           <div class="col-sm-4">
             方向:
-            <select class="form-control" id="item_emoji_dir">
+            <select class="form-control" id="item_emoji_dir" onchange="live.item.updateMoneyDisp('emoji')">
               <option value="right-to-left">右から左</option>
               <option value="left-to-right">左から右</option>
               <option value="top-to-bottom">上から下</option>
               <option value="bottom-to-top">下から上</option>
-              <option value="random">ランダムに散らばる</option>
+              <option value="random">ランダムに散らばる (+<b>10</b>KP)</option>
             </select>
           </div>
           <div class="col-sm-4">
-            個数 <small>(1~100, <b>n*5</b>KP)</small>:
+            個数 <small>(1~100, <b>n*2</b>KP)</small>:
             <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="live.item.updateMoneyDisp('emoji')" onchange="live.item.updateMoneyDisp('emoji')">
           </div>
         </div>
@@ -99,18 +99,18 @@
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="item_emoji_spin" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_spin">
-                回転あり (+<b>30</b>KP)<br>
+                回転あり (+<b>10</b>KP)<br>
               </label>
             </div>
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="item_emoji_big" onchange="live.item.updateMoneyDisp('emoji')">
               <label class="custom-control-label" for="item_emoji_big">
-                大きさ二倍盛り (+<b>30</b>KP)<br>
+                大きさ二倍盛り (+<b>10</b>KP)<br>
               </label>
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">5</span>KPで投下</button>
+            <button class="btn btn-success" onclick="live.item.buyItem('emoji')"><span id="item_emoji_point">2</span>KPで投下</button>
           </div>
         </div>
 

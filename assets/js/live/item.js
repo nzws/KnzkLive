@@ -5,9 +5,10 @@ class item {
   static updateMoneyDisp(item) {
     let point = 0;
     if (item === 'emoji') {
-      point += parseInt(kit.elemId('item_emoji_count').value) * 5;
-      point += kit.elemId('item_emoji_spin').checked ? 30 : 0;
-      point += kit.elemId('item_emoji_big').checked ? 30 : 0;
+      point += parseInt(kit.elemId('item_emoji_count').value) * 2;
+      point += kit.elemId('item_emoji_dir').value === 'random' ? 10 : 0;
+      point += kit.elemId('item_emoji_spin').checked ? 10 : 0;
+      point += kit.elemId('item_emoji_big').checked ? 10 : 0;
     } else if (item === 'voice') {
       const id = kit.elemId('item_voice').value;
       point = kit.elemId('item_voice_' + id).dataset.point;

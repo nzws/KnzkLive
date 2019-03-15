@@ -280,6 +280,22 @@ if ($_POST) {
       <p>
         <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
       </p>
+      <?php if ($my["point_count"] < 100) : ?>
+      <div class="alert alert-info" role="alert">
+        <b>KPが足りない...！</b>そんな欲しがりさんにも安心。<br>
+        翌日0時に<b>100KPまで回復</b>されます！
+      </div>
+      <?php elseif ($my["point_count"] === 10000) : ?>
+      <div class="alert alert-danger" role="alert">
+        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+        新規に獲得する事ができません。
+      </div>
+      <?php elseif ($my["point_count"] >= 9000) : ?>
+      <div class="alert alert-warning" role="alert">
+        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+        早めに使い切りましょう！
+      </div>
+      <?php endif; ?>
       <h5>あなたの獲得した統計</h5>
       <div class="table-responsive">
         <table class="table">
@@ -293,7 +309,7 @@ if ($_POST) {
           </thead>
           <tbody>
           <tr>
-            <td><a href="#" onclick="alert('公開トゥート/配信でコメントすると、1投稿あたり2KPゲットできます。（1日<?=$toot_get_limit?>KPまで）\n獲得したポイントは次の日から使用できます。\nトゥートは「公開」に設定されていて、なおかつリプライでないものが対象です。ワーカーの状態によって取りこぼす場合があります。');return false">トゥート/コメント</a></td>
+            <td><a href="#" onclick="alert('配信でコメントすると、1投稿あたり2KPゲットできます。（1日<?=$toot_get_limit?>KPまで）\n獲得したポイントは次の日から使用できます。');return false">トゥート/コメント</a></td>
             <td><?=($my["point_count_today_toot"] > $toot_get_limit ? $toot_get_limit : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
             <td><?=get_point_log_stat($my["id"], "toot", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "toot", "month")?></td>
@@ -305,7 +321,7 @@ if ($_POST) {
             <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
           </tr>
           <tr>
-            <td><a href="#" onclick="alert('配信を視聴すると10分あたり20KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
+            <td><a href="#" onclick="alert('配信を視聴すると10分あたり10KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
             <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
             <td><?=get_point_log_stat($my["id"], "live", "month")?></td>

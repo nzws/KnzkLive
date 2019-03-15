@@ -50,6 +50,10 @@ function merge_toot_point() {
   $sql = "start transaction;";
   $sql .= "INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) SELECT id, 'toot', '', CASE WHEN point_count_today_toot > {$limit} THEN {$limit} ELSE point_count_today_toot END FROM `users` WHERE point_count_today_toot > 0;";
   $sql .= "UPDATE `users` SET `point_count` = `point_count` + CASE WHEN point_count_today_toot > {$limit} THEN {$limit} ELSE point_count_today_toot END, `point_count_today_toot` = 0 WHERE point_count_today_toot > 0;";
+  $sql .= "UPDATE `users` SET `point_count` = 10000 WHERE point_count > 10000;";
+
+  $sql .= "INSERT INTO `point_log` (`user_id`, `type`, `data`, `point`) SELECT id, 'daily', '', 100 - point_count FROM `users` WHERE point_count < 100;";
+  $sql .= "UPDATE `users` SET `point_count` = 100 WHERE point_count < 100;";
   $sql .= "commit;";
 
   $mysqli = db_start();
