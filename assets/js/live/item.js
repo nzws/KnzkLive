@@ -5,7 +5,7 @@ class item {
   static updateMoneyDisp(item) {
     let point = 0;
     if (item === 'emoji') {
-      point += parseInt(kit.elemId('item_emoji_count').value);
+      point += parseInt(kit.elemId('item_emoji_count').value) * 2;
       point += kit.elemId('item_emoji_dir').value === 'random' ? 10 : 0;
       point += kit.elemId('item_emoji_spin').checked ? 10 : 0;
       point += kit.elemId('item_emoji_big').checked ? 10 : 0;

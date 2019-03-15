@@ -90,7 +90,7 @@
             </select>
           </div>
           <div class="col-sm-4">
-            個数 <small>(1~100, <b>n*1</b>KP)</small>:
+            個数 <small>(1~100, <b>n*2</b>KP)</small>:
             <input type="number" class="form-control" id="item_emoji_count" value="1" min="1" max="100" onkeyup="live.item.updateMoneyDisp('emoji')" onchange="live.item.updateMoneyDisp('emoji')">
           </div>
         </div>

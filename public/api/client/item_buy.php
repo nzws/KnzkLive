@@ -24,7 +24,7 @@ if ($_POST["type"] === "emoji") {
   if ($emoji_id === false)
     api_json(["error" => "エラー: 絵文字が不正です。"]);
 
-  $point = (intval($_POST["count"]) * 1) + ($_POST["spin"] == 1 ? 10 : 0) + ($_POST["big"] == 1 ? 10 : 0) + ($_POST["dir"] === "random" ? 10 : 0);
+  $point = (intval($_POST["count"]) * 2) + ($_POST["spin"] == 1 ? 10 : 0) + ($_POST["big"] == 1 ? 10 : 0) + ($_POST["dir"] === "random" ? 10 : 0);
 } else if ($_POST["type"] === "voice") {
   $item = getItem($_POST["voice"]);
   if (!$item) api_json(["error" => "エラー: IDが不正です。"]);
