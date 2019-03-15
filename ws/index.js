@@ -346,17 +346,6 @@ function StartWorker() {
               json['account']['acct'] =
                 json['account']['acct'] + '@' + config.domain;
 
-            if (conf.acct.indexOf(json['account']['acct']) !== -1) {
-              db.query(
-                'UPDATE `users` SET `point_count_today_toot` = `point_count_today_toot` + 2 WHERE acct = ?',
-                json['account']['acct'],
-                function(error, results, fields) {
-                  if (error) throw error;
-                  console.log('[Detect User]', json['account']['acct']);
-                }
-              );
-            }
-
             if (json['tags'] && json['tags'][0]) {
               for (let i of json['tags']) {
                 if (conf.hashtag.indexOf(i['name']) !== -1) {
@@ -372,6 +361,17 @@ function StartWorker() {
                     if (error) throw error;
                     console.log('[Detect Hashtag] ' + i['name']);
                   });
+
+                  if (conf.acct.indexOf(json['account']['acct']) !== -1) {
+                    db.query(
+                      'UPDATE `users` SET `point_count_today_toot` = `point_count_today_toot` + 2 WHERE acct = ?',
+                      json['account']['acct'],
+                      function(error, results, fields) {
+                        if (error) throw error;
+                        console.log('[Detect User]', json['account']['acct']);
+                      }
+                    );
+                  }
                 }
               }
             }
