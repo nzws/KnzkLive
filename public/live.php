@@ -187,20 +187,20 @@ $vote = loadVote($live["id"]);
     </div>
     <div class="col-xl-3 col-lg-4" id="comment">
       <div class="row text-left justify-content-md-center box-sizing bg-dark border border-dark rounded">
-        <span class="col-6" data-toggle="tooltip" title="配信時間">
+        <span class="col-6" data-tooltip="1" title="配信時間">
           <span class="text-secondary ml-3"><?=i("clock")?></span>
           <span id="time"></span>
         </span>
-        <span class="col-6" data-toggle="tooltip" title="使用されたKP">
+        <span class="col-6" data-tooltip="1" title="使用されたKP">
           <span class="text-secondary ml-3"><?=i("hat-wizard")?> </span>
           <span class="point_count"><?=$live["point_count"]?></span>KP
         </span>
         <div class="col-11 border-bottom"></div>
-        <span class="col-6" data-toggle="tooltip" title="コメント数">
+        <span class="col-6" data-tooltip="1" title="コメント数">
           <span class="text-secondary ml-3"><?=i("comments")?> </span>
           <span id="comment_count"><?=s($live["comment_count"])?></span>
         </span>
-        <span class="col-6" data-toggle="tooltip" title="視聴中 / 累計">
+        <span class="col-6" data-tooltip="1" title="視聴中 / 累計">
           <span id="count_open">
             <span class="text-secondary ml-3"><?=i("users")?> </span>
             <span class="count"><?=$live["viewers_count"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
