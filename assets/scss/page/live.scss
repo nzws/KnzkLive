@@ -18,9 +18,8 @@ html[data-page='live'] {
     overflow-x: hidden;
     display: flex;
     flex-direction: column-reverse;
-    height: calc(100vh - 145px);
-    margin: 0 -8px 0 0;
-    box-shadow: 1px 20px 10px 1px rgba(0, 0, 0, 0.4) inset;
+    height: calc(100vh - 155px);
+    margin: 10px -8px 0 0;
   }
 
   .disable_reverse#comments {
