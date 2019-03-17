@@ -18,7 +18,8 @@ html[data-page='live'] {
     overflow-x: hidden;
     display: flex;
     flex-direction: column-reverse;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 155px);
+    margin: 10px -8px 0 0;
   }
 
   .disable_reverse#comments {
@@ -89,6 +90,7 @@ html[data-page='live'] {
   .comment {
     display: block;
     background-color: #393f4f;
+    z-index: -1;
   }
 
   .comment .avatar {
@@ -160,8 +162,9 @@ html[data-page='live'] {
     margin-top: 0.1rem;
   }
 
-  .live-info {
-    margin-right: 15px;
+  .box-sizing {
+    margin: 0;
+    cursor: pointer;
   }
 
   .comment-option {
