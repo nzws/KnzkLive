@@ -59,11 +59,6 @@ class comment {
           content_tw: v + config.live.hashtag
         })
         .catch(error => {
-          console.log(error);
-          toast.new(
-            'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',
-            '.bg-danger'
-          );
           box.value = v;
         });
     } else {
