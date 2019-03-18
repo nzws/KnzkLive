@@ -56,7 +56,6 @@
     "lint-staged": "8.1.5",
     "log-symbols": "2.2.0",
     "mini-css-extract-plugin": "0.5.0",
-    "node-sass": "4.11.0",
     "npm-run-all": "4.1.5",
     "postcss-loader": "3.0.0",
     "prettier": "1.16.4",
