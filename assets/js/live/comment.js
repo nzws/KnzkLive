@@ -41,11 +41,13 @@ class comment {
   }
 
   static post() {
-    const v = kit.elemId('toot').value;
+    const box = kit.elemId('toot');
+    const v = box.value;
+    box.value = '';
 
     const space = v.replace(/ /gi, '').replace(/　/gi, '');
-
     if (!space) return;
+
     const isKnzk = !!kit.elemId('no_toot').value;
 
     if (isKnzk || config.account.domain === 'twitter.com') {
@@ -56,10 +58,13 @@ class comment {
           is_local: isKnzk ? 1 : 0,
           content_tw: v + config.live.hashtag
         })
-        .then(json => {
-          if (json) {
-            kit.elemId('toot').value = '';
-          }
+        .catch(error => {
+          console.log(error);
+          toast.new(
+            'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',
+            '.bg-danger'
+          );
+          box.value = v;
         });
     } else {
       fetch(`https://${config.account.domain}/api/v1/statuses`, {
@@ -91,6 +96,7 @@ class comment {
             'サーバーと通信中にエラーが発生しました。通信環境が正常かお確かめください。',
             '.bg-danger'
           );
+          box.value = v;
         });
     }
   }
