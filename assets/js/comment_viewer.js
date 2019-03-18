@@ -21,14 +21,10 @@ class comment_viewer {
 
     if (ws_resdata.event === 'update') {
       const tmpl = Handlebars.compile(kit.elemId('com_tmpl').innerHTML);
-      if (ws_reshtml['id']) {
-        ws_reshtml['account']['display_name'] = kit.escape(
-          ws_reshtml['account']['display_name']
+      if (ws_reshtml['id'] && knzk.comment_loader.checkData(ws_reshtml)) {
+        $('#comments').prepend(
+          tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
         );
-        kit.elemId('comments').innerHTML =
-          (knzk.comment_loader.checkData(ws_reshtml)
-            ? tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
-            : '') + kit.elemId('comments').innerHTML;
       }
     } else if (ws_resdata.event === 'delete') {
       kit.elemRemove(kit.elemId(`post_${ws_resdata.payload}`));

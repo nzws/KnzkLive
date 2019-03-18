@@ -30,8 +30,6 @@ class comment_loader {
         }
       })
       .then(json => {
-        let reshtml = '';
-
         config.live.websocket.mastodon = new WebSocket(
           `wss://${config.main_domain}/api/v1/streaming/?stream=hashtag&tag=${
             config.live.hashtag_o
@@ -214,16 +212,17 @@ class comment_loader {
                 document.getElementById('com_tmpl').innerHTML
               );
               while (json[i]) {
-                if (!config.np.includes(json[i]['id'])) {
-                  reshtml += comment_loader.checkData(json[i])
-                    ? tmpl(comment_loader.buildCommentData(json[i]))
-                    : '';
+                if (
+                  !config.np.includes(json[i]['id']) &&
+                  comment_loader.checkData(json[i])
+                ) {
+                  $('#comments').append(
+                    tmpl(comment_loader.buildCommentData(json[i]))
+                  );
                 }
                 i++;
               }
             }
-
-            kit.elemId('comments').innerHTML = reshtml;
           })
           .catch(error => {
             console.error(error);

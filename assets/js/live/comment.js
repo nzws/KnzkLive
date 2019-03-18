@@ -143,9 +143,9 @@ class comment {
         );
 
         if (knzk.comment_loader.checkData(ws_reshtml)) {
-          kit.elemId('comments').innerHTML =
-            tmpl(knzk.comment_loader.buildCommentData(ws_reshtml)) +
-            kit.elemId('comments').innerHTML;
+          $('#comments').prepend(
+            tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
+          );
           kit
             .elemId('iframe')
             .contentWindow.knzk.live_embed.danmaku.comment_view(
