@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const Fiber = require('fibers');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -24,10 +25,13 @@ module.exports = {
         test: /\.(scss)$/,
         exclude: /node_modules/,
         use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader' },
+          { loader: 'postcss-loader' },
+          {
+            loader: 'sass-loader',
+            options: { implementation: require('sass'), fiber: Fiber }
+          }
         ]
       },
       {
