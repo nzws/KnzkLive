@@ -1,4 +1,3 @@
 labels:
-  - - dependencies
-    - minor
+  - [dependencies, minor]
   - auto_merge
