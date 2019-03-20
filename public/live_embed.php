@@ -100,7 +100,7 @@ $mode = $_SESSION["watch_type"];
   window.config = {
     type: '<?=s($mode)?>',
     myLive: <?=$myLive ? "true" : "false"?>,
-    flv: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
+    flv: 'ws<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
     hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8',
     heartbeat: null,
     delay_sec: 3,
