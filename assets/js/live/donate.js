@@ -2,25 +2,26 @@ const kit = require('../components/kanzakit');
 
 class donate {
   static add(data) {
+    kit.elemId('comment').classList.add('have_donation');
     $('#donators').show();
     $('#donators').prepend(
       `<span class="badge badge-pill donator" onclick="live.live.userDropdown(this, null, '${
-        data['account']['acct']
-      }', '${data['account']['url']}')" id="donate_${
-        data['id']
-      }" style="background:${data['color']}"><img src="${
-        data['account']['avatar_url']
-      }" height="30" width="30" class="rounded-circle avatar"/> ${
-        data['amount']
-      }${data['currency']}</span>`
+        data.account.acct
+      }', '${data.account.url}')" id="donate_${data.id}" style="background:${
+        data.color
+      }"><img src="${
+        data.account.avatar_url
+      }" height="30" width="30" class="rounded-circle avatar"/> ${data.amount}${
+        data.currency
+      }</span>`
     );
-    config.dn[data['id']] = data;
+    config.dn[data.id] = data;
 
     const datet = parseInt(
-      new Date(data['ended_at']).getTime() - new Date().getTime()
+      new Date(data.ended_at).getTime() - new Date().getTime()
     );
     setTimeout(() => {
-      donate.delete(data['id']);
+      donate.delete(data.id);
     }, datet);
   }
 
@@ -30,6 +31,7 @@ class donate {
     if (Object.keys(config.dn).length <= 0) {
       const dn = kit.elemId('donators');
       if (dn) $(dn).hide();
+      kit.elemId('comment').classList.remove('have_donation');
     }
   }
 }
