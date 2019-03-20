@@ -1,3 +1,5 @@
+merge_type: squash
+delete_branch: delete
 labels:
   - [dependencies, minor]
   - auto_merge
