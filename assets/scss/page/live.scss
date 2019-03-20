@@ -90,6 +90,14 @@ html[data-page='live'] {
   .comment {
     display: block;
     background-color: #393f4f;
+    position: relative;
+    animation: comment_animation 0.75s cubic-bezier(0.6, -0.2, 0.7, 0.05)
+      reverse;
+  }
+
+  .disable_reverse .comment {
+    animation: disable_reverse_comment 0.75s cubic-bezier(0.6, -0.2, 0.7, 0.05)
+      reverse;
   }
 
   .comment .avatar {

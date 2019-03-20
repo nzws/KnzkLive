@@ -31,3 +31,25 @@
     opacity: 0;
   }
 }
+
+@keyframes comment_animation {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+
+@keyframes disable_reverse_comment {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
