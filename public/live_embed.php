@@ -27,8 +27,6 @@ $mode = $_SESSION["watch_type"];
 <html data-page="live_embed">
 <head>
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/solid.css" integrity="sha384-osqezT+30O6N/vsMqwW8Ch6wKlMofqueuia2H7fePy42uC05rm1G+BUPSd2iBSJL" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/fontawesome.css" integrity="sha384-BzCy2fixOYd0HObpx3GMefNqdbA7Qjcc91RgYeDjrHTIEXqiF00jKvgQG0+zY/7I" crossorigin="anonymous">
   <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/bundle/bundle.css")?>">
 </head>
 
@@ -93,7 +91,6 @@ $mode = $_SESSION["watch_type"];
   </div>
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
@@ -103,8 +100,8 @@ $mode = $_SESSION["watch_type"];
   window.config = {
     type: '<?=s($mode)?>',
     myLive: <?=$myLive ? "true" : "false"?>,
-    flv: '<?=(empty($_SERVER["HTTPS"]) ? "ws" : "wss")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
-    hls: '<?=(empty($_SERVER["HTTPS"]) ? "http" : "https")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8',
+    flv: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
+    hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8',
     heartbeat: null,
     delay_sec: 3,
     hover: 0
