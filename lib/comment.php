@@ -20,7 +20,8 @@ function comment_post($content, $user_id, $live_id, $is_html = false) {
 
   if ($err) return "データベースエラー";
 
-  comment_count_add($live_id, $my["id"]);
+  if (!$is_html) comment_count_add($live_id, $my["id"]);
+  // is_html が true なら大体システムメッセージなのでカウントする必要が無い
 
   $data = [
     "id" => "knzklive_".$id,
