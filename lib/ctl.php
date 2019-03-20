@@ -1,10 +1,10 @@
 <?php
 function load($argv) {
-  if ($argv[1] === "worker:daily") {
+  if ($argv[1] === "job:daily") {
     merge_toot_point();
   } elseif ($argv[1] === "management:rebuild_stat") {
     rebuild_stat();
-  } elseif ($argv[1] === "worker:tipknzk") {
+  } elseif ($argv[1] === "job:tipknzk") {
     $my = getUser($argv[3], "acct");
     if (empty($my)) exit("[Error] あなたのアカウントは存在しません。 https://live.knzk.me/ にログインしてください。");
     if (intval($argv[2]) > $my["point_count"] || intval($argv[2]) <= 0 || !$argv[2] || !is_numeric($argv[2])) exit("[Error] 残高が足りないかデータが不正です！ you don't have enough point!");
@@ -20,7 +20,7 @@ function load($argv) {
     } else {
       exit("[Error] 相手のKnzkPointアカウントが存在しません！　https://live.knzk.me/ にログインする必要があります！");
     }
-  } elseif ($argv[1] === "worker:donate") {
+  } elseif ($argv[1] === "job:donate") {
     if ($argv[3] === "testing") {
       comment_post("<div class=\"alert alert-warning\">DonationAlerts: テストOK</div>", getLive($argv[2])["user_id"], s($argv[2]), true);
     } else {

@@ -191,7 +191,7 @@ function closeSLConnect(token) {
 
 function donateTest(live_id) {
   exec(
-    `php ${__dirname}/../knzkctl worker:donate ${live_id} testing`,
+    `php ${__dirname}/../knzkctl job:donate ${live_id} testing`,
     (err, stdout, stderr) => {
       if (err) {
         console.log(err);
@@ -213,7 +213,7 @@ function donateRun(username, live_id, amount, currency) {
     if (error) throw error;
     const user_id = results[0] ? results[0]['id'] : 0;
     exec(
-      `php ${__dirname}/../knzkctl worker:donate ${live_id} ${user_id} ${parseInt(
+      `php ${__dirname}/../knzkctl job:donate ${live_id} ${user_id} ${parseInt(
         amount
       )} ${currency}`,
       (err, stdout, stderr) => {
@@ -432,9 +432,9 @@ function StartTIPKnzk() {
           const data = striptags(json['content']).split(' ');
           if (data[1] === 'tip') {
             exec(
-              `php ${__dirname}/../knzkctl worker:tipknzk ${parseInt(
-                data[3]
-              )} ${json['account']['acct']} ${to_acct}`,
+              `php ${__dirname}/../knzkctl job:tipknzk ${parseInt(data[3])} ${
+                json['account']['acct']
+              } ${to_acct}`,
               (err, stdout, stderr) => {
                 if (err) {
                   console.log(err);

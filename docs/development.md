@@ -17,7 +17,7 @@ cd KnzkLive
 
 ### 2. 設定
 
-`config.sample.php` を `config.php` に、  
+`config.sample.php` を `config.php` に、
 `config.sample.json` を `config.json` にコピーしてください。
 
 開発環境の場合、 `config.php` の `$env["is_testing"]` は `true` にしてください。
@@ -44,3 +44,16 @@ php -S localhost:10213 -t public/
 ```bash
 yarn ws:start
 ```
+
+### コマンド集
+
+| コマンド                                                   | 説明                                                                                                     |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `php knzkctl management:rebuild_stat`                      | 配信者統計の再計算を行います。                                                                           |
+| `php knzkctl job:daily`                                    | デイリーワーカーを起動します。現在、ポイントの自動回復とコメント数による付与が行われます。               |
+| `php knzkctl job:donate <配信ID> <ユーザID> <金額> <通貨>` | `<配信ID>` で `<ユーザID>` の コメントハイライトを有効化します。 `<通貨>` は `JPY, USD, RUB, EUR` です。 |
+| `yarn ws:start`                                            | Streaming API や、TIPKnzk などのワーカーを起動します。                                                   |
+| `yarn build`                                               | アセットをビルドします。(本番環境用)                                                                     |
+| `yarn watch`                                               | アセットをビルドし、変更を監視します。(開発環境用)                                                       |
+
+_その他よくわからないコマンドがあるかも_
