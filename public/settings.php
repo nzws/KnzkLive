@@ -96,7 +96,7 @@ if ($_POST) {
         <p>* この設定は過去、未来全ての配信に適用されます。</p>
 
         <ul>
-        <li><a href="<?=u("live_manage_items")?>">カスタムSE/絵文字設定</a></li>
+          <li><a href="<?=u("live_manage_items")?>">カスタムSE/絵文字設定</a></li>
           <li><a href="<?=u("live_manage_ngword")?>">NGワード設定</a></li>
           <li><a href="<?=u("live_manage_blocking")?>">ユーザーブロック設定</a></li>
         </ul>
@@ -205,32 +205,32 @@ if ($_POST) {
         </div>
 
         <div id="donate_link4_body" <?=!empty($my["misc"]["donation_alerts_token"]) ? "" : "style=display:none"?>>
-            <label for="conf_donation_alerts_name">DonationAlerts ユーザID</label>
-            <input type="text" class="form-control" id="conf_donation_alerts_name" name="donation_alerts_name" value="<?=!empty($my["misc"]["donation_alerts_name"]) ? s($my["misc"]["donation_alerts_name"]) : ""?>">
-            <small class="form-text text-muted">
-              https://www.donationalerts.com/r/~~ の ~~ を入力
-            </small>
+          <label for="conf_donation_alerts_name">DonationAlerts ユーザID</label>
+          <input type="text" class="form-control" id="conf_donation_alerts_name" name="donation_alerts_name" value="<?=!empty($my["misc"]["donation_alerts_name"]) ? s($my["misc"]["donation_alerts_name"]) : ""?>">
+          <small class="form-text text-muted">
+            https://www.donationalerts.com/r/~~ の ~~ を入力
+          </small>
 
-            <label for="conf_donation_alerts_token">DonationAlerts トークン</label>
-            <input type="text" class="form-control" id="conf_donation_alerts_token" name="donation_alerts_token" value="<?=!empty($my["misc"]["donation_alerts_token"]) ? s($my["misc"]["donation_alerts_token"]) : ""?>">
-            <small class="form-text text-muted">
-              <a href="https://www.donationalerts.com/" target="_blank">DonationAlerts</a>を使用した支援を設定すると、自動的にコメントハイライトが反映されるようになります。<br>
-              トークンは<a href="https://www.donationalerts.com/dashboard/general" target="_blank">General settings</a>の「Secret token」から入手できます。
-            </small>
-          </div>
+          <label for="conf_donation_alerts_token">DonationAlerts トークン</label>
+          <input type="text" class="form-control" id="conf_donation_alerts_token" name="donation_alerts_token" value="<?=!empty($my["misc"]["donation_alerts_token"]) ? s($my["misc"]["donation_alerts_token"]) : ""?>">
+          <small class="form-text text-muted">
+            <a href="https://www.donationalerts.com/" target="_blank">DonationAlerts</a>を使用した支援を設定すると、自動的にコメントハイライトが反映されるようになります。<br>
+            トークンは<a href="https://www.donationalerts.com/dashboard/general" target="_blank">General settings</a>の「Secret token」から入手できます。
+          </small>
+        </div>
 
         <div id="donate_link5_body" <?=!empty($my["misc"]["streamlabs_token"]) ? "" : "style=display:none"?>>
-            <label for="conf_streamlabs_name">StreamLabs リンクID</label>
-            <input type="text" class="form-control" id="conf_streamlabs_name" name="streamlabs_name" value="<?=!empty($my["misc"]["streamlabs_name"]) ? s($my["misc"]["streamlabs_name"]) : ""?>">
-            <small class="form-text text-muted">
-              https://streamlabs.com/~~ の ~~ を入力
-            </small>
+          <label for="conf_streamlabs_name">StreamLabs リンクID</label>
+          <input type="text" class="form-control" id="conf_streamlabs_name" name="streamlabs_name" value="<?=!empty($my["misc"]["streamlabs_name"]) ? s($my["misc"]["streamlabs_name"]) : ""?>">
+          <small class="form-text text-muted">
+            https://streamlabs.com/~~ の ~~ を入力
+          </small>
 
-            <small class="form-text text-muted">
-              <a href="https://streamlabs.com/" target="_blank">StreamLabs</a>を使用した支援を設定すると、自動的にコメントハイライトが反映されるようになります。<br>
-              <span class="text-warning">StreamLabsを有効化した場合、設定保存時に認証画面へ移動します。</span>
-            </small>
-          </div>
+          <small class="form-text text-muted">
+            <a href="https://streamlabs.com/" target="_blank">StreamLabs</a>を使用した支援を設定すると、自動的にコメントハイライトが反映されるようになります。<br>
+            <span class="text-warning">StreamLabsを有効化した場合、設定保存時に認証画面へ移動します。</span>
+          </small>
+        </div>
       </div>
     <?php else : ?>
       <div class="box">
@@ -244,148 +244,149 @@ if ($_POST) {
     <hr>
 
     <?php if ($my["broadcaster_id"]) : ?>
-      <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
-      <div class="box" id="opener-token">
-        <h4>Openerトークン</h4>
-        <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
-        <div class="col-md-5 mt-2 mb-2">
-          <div class="input-group">
-            <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">
-            <div class="input-group-append">
-              <button class="btn btn-outline-danger" type="button" id="openertoken-bt" onclick="location.href = '?openertoken=regen'">再生成</button>
-            </div>
+    <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
+    <div class="box" id="opener-token">
+      <h4>Openerトークン</h4>
+      <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
+      <div class="col-md-5 mt-2 mb-2">
+        <div class="input-group">
+          <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">
+          <div class="input-group-append">
+            <button class="btn btn-outline-danger" type="button" id="openertoken-bt" onclick="location.href = '?openertoken=regen'">再生成</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <h5 class="mt-4">あなたの配信者ステータス</h5>
-      配信終了時に更新されます
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-          <tr>
-            <th></th>
-            <th>累計</th>
-            <th>最高</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>配信時間</td>
-            <td><?=dispSecDate($my["misc"]["time_all"])?></td>
-            <td><?=dispSecDate($my["misc"]["time_max"])?></td>
-          </tr>
-          <tr>
-            <td>視聴者数</td>
-            <td><?=$my["misc"]["viewers_max"]?>人</td>
-            <td><?=$my["misc"]["viewers_max_concurrent"]?>人 <small>(同時)</small> / <?=$my["misc"]["viewers_count_max"]?>人 <small>(来場)</small></td>
-          </tr>
-          <tr>
-            <td>コメント数</td>
-            <td><?=$my["misc"]["comment_count_all"]?>コメ</td>
-            <td><?=$my["misc"]["comment_count_max"]?>コメ</td>
-          </tr>
-          <tr>
-            <td>ポイント数</td>
-            <td><?=$my["misc"]["point_count_all"]?>KP</td>
-            <td><?=$my["misc"]["point_count_max"]?>KP</td>
-          </tr>
-          </tbody>
-        </table>
+    <h5 class="mt-4">あなたの配信者ステータス</h5>
+    配信終了時に更新されます
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th></th>
+          <th>累計</th>
+          <th>最高</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>配信時間</td>
+          <td><?=dispSecDate($my["misc"]["time_all"])?></td>
+          <td><?=dispSecDate($my["misc"]["time_max"])?></td>
+        </tr>
+        <tr>
+          <td>視聴者数</td>
+          <td><?=$my["misc"]["viewers_max"]?>人</td>
+          <td><?=$my["misc"]["viewers_max_concurrent"]?>人 <small>(同時)</small> / <?=$my["misc"]["viewers_count_max"]?>人 <small>(来場)</small></td>
+        </tr>
+        <tr>
+          <td>コメント数</td>
+          <td><?=$my["misc"]["comment_count_all"]?>コメ</td>
+          <td><?=$my["misc"]["comment_count_max"]?>コメ</td>
+        </tr>
+        <tr>
+          <td>ポイント数</td>
+          <td><?=$my["misc"]["point_count_all"]?>KP</td>
+          <td><?=$my["misc"]["point_count_max"]?>KP</td>
+        </tr>
+        </tbody>
+      </table>
       <hr>
-    <?php endif; ?>
-    <div class="box">
-      <h4>KnzkPoint</h4>
-      神崎ポイントを貯めると、配信のアイテムと交換したり、ユーザー間でプレゼントしたりできます。<br>
-      <?php if ($my["point_count"] > 0) : ?>
-      <a href="<?=u("knzkpoint/new")?>" class="badge badge-info">チケットを発行</a> · <a href="<?=u("knzkpoint/present")?>" class="badge badge-info">KPをプレゼント</a> ·
       <?php endif; ?>
-      <a href="<?=u("ticket")?>" class="badge badge-info">チケットを使用</a><br><br>
-      <p>
-        <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
-      </p>
-      <?php if ($my["point_count"] < 100) : ?>
-      <div class="alert alert-info" role="alert">
-        <b>KPが足りない...！</b>そんな欲しがりさんにも安心。<br>
-        翌日0時に<b>100KPまで回復</b>されます！
-      </div>
-      <?php elseif ($my["point_count"] === 10000) : ?>
-      <div class="alert alert-danger" role="alert">
-        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
-        新規に獲得する事ができません。
-      </div>
-      <?php elseif ($my["point_count"] >= 9000) : ?>
-      <div class="alert alert-warning" role="alert">
-        <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
-        早めに使い切りましょう！
-      </div>
-      <?php endif; ?>
-      <h5>あなたの獲得した統計</h5>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-          <tr>
-            <th></th>
-            <th>今日</th>
-            <th>昨日</th>
-            <th>今月</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td><a href="#" onclick="alert('配信でコメントすると、1投稿あたり2KPゲットできます。（1日<?=$toot_get_limit?>KPまで）\n獲得したポイントは次の日から使用できます。');return false">トゥート/コメント</a></td>
-            <td><?=($my["point_count_today_toot"] > $toot_get_limit ? $toot_get_limit : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
-            <td><?=get_point_log_stat($my["id"], "toot", "today")?></td>
-            <td><?=get_point_log_stat($my["id"], "toot", "month")?></td>
-          </tr>
-          <tr>
-            <td><a href="#" onclick="alert('他のユーザーによって作成されたチケットを残高に追加したり、プレゼントしてもらう事ができます。');return false">チケット/プレゼント</a></td>
-            <td><?=get_point_log_stat($my["id"], "user", "today")?></td>
-            <td><?=get_point_log_stat($my["id"], "user", "yesterday")?></td>
-            <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
-          </tr>
-          <tr>
-            <td><a href="#" onclick="alert('配信を視聴すると10分あたり10KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
-            <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
-            <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
-            <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
-          </tr>
-          <tr>
-            <td>その他</td>
-            <td><?=get_point_log_stat($my["id"], "other", "today")?></td>
-            <td><?=get_point_log_stat($my["id"], "other", "yesterday")?></td>
-            <td><?=get_point_log_stat($my["id"], "other", "month")?></td>
-          </tr>
-          </tbody>
-        </table>
-
-        <h5>獲得・使用履歴</h5>
-        <table class="table">
-          <thead>
-          <tr>
-            <th>日時</th>
-            <th>増減</th>
-            <th>タイプ</th>
-            <th>詳細</th>
-          </tr>
-          </thead>
-          <tbody id="point_hist">
-          <?php foreach (get_point_log($my["id"], "hist") as $item) :
-            if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
-            elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
-            elseif ($item["type"] === "live") $item["type"] = "配信";
-            else $item["type"] = "その他";
-            ?>
+      <div class="box">
+        <h4>KnzkPoint</h4>
+        神崎ポイントを貯めると、配信のアイテムと交換したり、ユーザー間でプレゼントしたりできます。<br>
+        <?php if ($my["point_count"] > 0) : ?>
+          <a href="<?=u("knzkpoint/new")?>" class="badge badge-info">チケットを発行</a> · <a href="<?=u("knzkpoint/present")?>" class="badge badge-info">KPをプレゼント</a> ·
+        <?php endif; ?>
+        <a href="<?=u("ticket")?>" class="badge badge-info">チケットを使用</a><br><br>
+        <p>
+          <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
+        </p>
+        <?php if ($my["point_count"] < 100) : ?>
+          <div class="alert alert-info" role="alert">
+            <b>KPが足りない...！</b>そんな欲しがりさんにも安心。<br>
+            翌日0時に<b>100KPまで回復</b>されます！
+          </div>
+        <?php elseif ($my["point_count"] === 10000) : ?>
+          <div class="alert alert-danger" role="alert">
+            <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+            新規に獲得する事ができません。
+          </div>
+        <?php elseif ($my["point_count"] >= 9000) : ?>
+          <div class="alert alert-warning" role="alert">
+            <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+            早めに使い切りましょう！
+          </div>
+        <?php endif; ?>
+        <h5>あなたの獲得した統計</h5>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
             <tr>
-              <td><?=s($item["created_at"])?></td>
-              <td><?=s($item["point"])?></td>
-              <td><?=s($item["type"])?></td>
-              <td><?=s($item["data"])?></td>
+              <th></th>
+              <th>今日</th>
+              <th>昨日</th>
+              <th>今月</th>
             </tr>
-          <?php endforeach; ?>
-          </tbody>
-        </table>
-        <button type="button" class="btn btn-outline-primary btn-block" onclick="knzk.settings.general.pointHistLoad()" id="point_hist_bt">もっと読み込む...</button>
+            </thead>
+            <tbody>
+            <tr>
+              <td><a href="#" onclick="alert('配信でコメントすると、1投稿あたり2KPゲットできます。（1日<?=$toot_get_limit?>KPまで）\n獲得したポイントは次の日から使用できます。');return false">トゥート/コメント</a></td>
+              <td><?=($my["point_count_today_toot"] > $toot_get_limit ? $toot_get_limit : s($my["point_count_today_toot"]))?> <small>(予定)</small></td>
+              <td><?=get_point_log_stat($my["id"], "toot", "today")?></td>
+              <td><?=get_point_log_stat($my["id"], "toot", "month")?></td>
+            </tr>
+            <tr>
+              <td><a href="#" onclick="alert('他のユーザーによって作成されたチケットを残高に追加したり、プレゼントしてもらう事ができます。');return false">チケット/プレゼント</a></td>
+              <td><?=get_point_log_stat($my["id"], "user", "today")?></td>
+              <td><?=get_point_log_stat($my["id"], "user", "yesterday")?></td>
+              <td><?=get_point_log_stat($my["id"], "user", "month")?></td>
+            </tr>
+            <tr>
+              <td><a href="#" onclick="alert('配信を視聴すると10分あたり10KPゲットできます。また、配信をすると配信でリスナーから送られたアイテムのポイントの一定割合が貰えます。');return false">配信</a></td>
+              <td><?=get_point_log_stat($my["id"], "live", "today")?></td>
+              <td><?=get_point_log_stat($my["id"], "live", "yesterday")?></td>
+              <td><?=get_point_log_stat($my["id"], "live", "month")?></td>
+            </tr>
+            <tr>
+              <td>その他</td>
+              <td><?=get_point_log_stat($my["id"], "other", "today")?></td>
+              <td><?=get_point_log_stat($my["id"], "other", "yesterday")?></td>
+              <td><?=get_point_log_stat($my["id"], "other", "month")?></td>
+            </tr>
+            </tbody>
+          </table>
+
+          <h5>獲得・使用履歴</h5>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>日時</th>
+              <th>増減</th>
+              <th>タイプ</th>
+              <th>詳細</th>
+            </tr>
+            </thead>
+            <tbody id="point_hist">
+            <?php foreach (get_point_log($my["id"], "hist") as $item) :
+              if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
+              elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
+              elseif ($item["type"] === "live") $item["type"] = "配信";
+              else $item["type"] = "その他";
+              ?>
+              <tr>
+                <td><?=s($item["created_at"])?></td>
+                <td><?=s($item["point"])?></td>
+                <td><?=s($item["type"])?></td>
+                <td><?=s($item["data"])?></td>
+              </tr>
+            <?php endforeach; ?>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-outline-primary btn-block" onclick="knzk.settings.general.pointHistLoad()" id="point_hist_bt">もっと読み込む...</button>
+        </div>
       </div>
     </div>
   </div>
