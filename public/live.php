@@ -228,7 +228,7 @@ $vote = loadVote($live["id"]);
       <div class="float-right card-text">
         <span onclick="live.live.userDropdown(this, '{{id}}', '{{account.acct}}', '{{account.url}}')" class="name text-truncate">
           {{#if donator_color}}
-          <span class="badge badge-pill" style="background:{{donator_color}}">
+          <span class="badge badge-pill donator_name" style="background:{{donator_color}}">
           {{/if}}
           <b>{{account.display_name}}</b>
           {{#if donator_color}}
