@@ -173,12 +173,19 @@ function end_live($live_id) {
     setSlot($live["slot_id"], 0);
     setUserLive(0, $my["id"]);
 
-    if ($my["misc"]["viewers_max_concurrent"]) {
+    if (isset($my["misc"]["viewers_max_concurrent"])) {
       if ($live["viewers_max_concurrent"] > $my["misc"]["viewers_max_concurrent"])
         $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
     } else {
       $my["misc"]["viewers_max"] = 0;
       $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
+    }
+
+    if (isset($my["misc"]["viewers_count_max"])) {
+      if ($live["viewers_max"] > $my["misc"]["viewers_count_max"])
+        $my["misc"]["viewers_count_max"] = $live["viewers_max"];
+    } else {
+      $my["misc"]["viewers_count_max"] = $live["viewers_max"];
     }
 
     if (isset($my["misc"]["comment_count_max"])) {

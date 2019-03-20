@@ -258,12 +258,40 @@ if ($_POST) {
         </div>
       </div>
 
-      <h4 class="mt-4">あなたの配信者ステータス</h4>
-      <small>配信終了時に更新されます</small><br>
-      累積配信時間: <?=dispSecDate($my["misc"]["time_all"])?> · 最高配信時間: <?=dispSecDate($my["misc"]["time_max"])?><br>
-      累積視聴者数: <?=$my["misc"]["viewers_max"]?>人 · 最高同時視聴者数: <?=$my["misc"]["viewers_max_concurrent"]?>人<br>
-      累積コメント数: <?=$my["misc"]["comment_count_all"]?>コメ · 最高コメント数: <?=$my["misc"]["comment_count_max"]?>コメ<br>
-      累積ポイント取得数: <?=$my["misc"]["point_count_all"]?>KP · 最高ポイント取得数: <?=$my["misc"]["point_count_max"]?>KP
+      <h5 class="mt-4">あなたの配信者ステータス</h5>
+      配信終了時に更新されます
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>累計</th>
+            <th>最高</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>配信時間</td>
+            <td><?=dispSecDate($my["misc"]["time_all"])?></td>
+            <td><?=dispSecDate($my["misc"]["time_max"])?></td>
+          </tr>
+          <tr>
+            <td>視聴者数</td>
+            <td><?=$my["misc"]["viewers_max"]?>人</td>
+            <td><?=$my["misc"]["viewers_max_concurrent"]?>人 <small>(同時)</small> / <?=$my["misc"]["viewers_count_max"]?>人 <small>(来場)</small></td>
+          </tr>
+          <tr>
+            <td>コメント数</td>
+            <td><?=$my["misc"]["comment_count_all"]?>コメ</td>
+            <td><?=$my["misc"]["comment_count_max"]?>コメ</td>
+          </tr>
+          <tr>
+            <td>ポイント数</td>
+            <td><?=$my["misc"]["point_count_all"]?>KP</td>
+            <td><?=$my["misc"]["point_count_max"]?>KP</td>
+          </tr>
+          </tbody>
+        </table>
       <hr>
     <?php endif; ?>
     <div class="box">

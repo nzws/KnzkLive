@@ -200,7 +200,7 @@ $vote = loadVote($live["id"]);
           <span class="text-secondary ml-2"><?=i("comments")?> </span>
           <span id="comment_count"><?=s($live["comment_count"])?></span>
         </span>
-        <span class="col-6" data-tooltip="1" title="視聴中 / 累計">
+        <span class="col-6" data-tooltip="1" title="視聴中(最高同時) / 累計">
           <span id="count_open">
             <span class="text-secondary ml-2"><?=i("users")?> </span>
             <span class="count"><?=$live["viewers_count"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>

@@ -85,6 +85,7 @@ function rebuild_stat() {
     if (!isset($data[$item["user_id"]]))
       $data[$item["user_id"]] = [
         "viewers_max_concurrent" => 0,
+        "viewers_count_max" => 0,
         "viewers_max" => 0,
         "comment_count_max" => 0,
         "comment_count_all" => 0,
@@ -102,7 +103,8 @@ function rebuild_stat() {
     $data[$item["user_id"]]["point_count_all"] += $item["point_count"];
     $data[$item["user_id"]]["time_all"] += $time;
 
-    if ($item["viewers_max"] > $data[$item["user_id"]]["viewers_max_concurrent"]) $data[$item["user_id"]]["viewers_max_concurrent"] = $item["viewers_max_concurrent"];
+    if ($item["viewers_max_concurrent"] > $data[$item["user_id"]]["viewers_max_concurrent"]) $data[$item["user_id"]]["viewers_max_concurrent"] = $item["viewers_max_concurrent"]; //同時
+    if ($item["viewers_max"] > $data[$item["user_id"]]["viewers_count_max"]) $data[$item["user_id"]]["viewers_count_max"] = $item["viewers_max"]; //来場
     if ($item["comment_count"] > $data[$item["user_id"]]["comment_count_max"]) $data[$item["user_id"]]["comment_count_max"] = $item["comment_count"];
     if ($item["point_count"] > $data[$item["user_id"]]["point_count_max"]) $data[$item["user_id"]]["point_count_max"] = $item["point_count"];
     if ($time > $data[$item["user_id"]]["time_max"]) $data[$item["user_id"]]["time_max"] = $time;
