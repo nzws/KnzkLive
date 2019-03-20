@@ -3,6 +3,12 @@ function createVote($live_id, $title, $data, $hashtag, $user_id) {
   global $env;
   if (empty($title) || empty($data[0]) || empty($data[1])) return false;
 
+  $title = s($title);
+  $data[0] = s($data[0]);
+  $data[1] = s($data[1]);
+  $data[2] = s($data[2]);
+  $data[3] = s($data[3]);
+
   $mysqli = db_start();
   $stmt = $mysqli->prepare("INSERT INTO `prop_vote` (`live_id`, `title`, `v1`, `v2`, `v3`, `v4`) VALUES (?, ?, ?, ?, ?, ?);");
   $stmt->bind_param('ssssss', $live_id, $title, $data[0], $data[1], $data[2], $data[3]);
@@ -41,7 +47,7 @@ function createVote($live_id, $title, $data, $hashtag, $user_id) {
 EOF;
 
     if ($_SESSION["prop_vote_is_post"]) toot($text);
-    else comment_post("<p class='vote_alert'>". s($text) . "</p>", $user_id, $live_id, true);
+    else comment_post("<p class='vote_alert'>". HTMLHelper($text) . "</p>", $user_id, $live_id, true);
 
   return empty($err);
 }
@@ -71,7 +77,7 @@ EOF;
   if (!empty($v["v3"])) $res .= "\n{$v["v3"]}: {$v["v3_count"]}票";
   if (!empty($v["v4"])) $res .= "\n{$v["v4"]}: {$v["v4_count"]}票";
   if ($_SESSION["prop_vote_is_post"]) toot($res);
-  else comment_post("<p class='vote_alert'>". s($res) . "</p>", $user_id, $live_id, true);
+  else comment_post("<p class='vote_alert'>". HTMLHelper($res) . "</p>", $user_id, $live_id, true);
 
   $mysqli = db_start();
   $stmt = $mysqli->prepare("UPDATE `prop_vote` SET `is_ended` = 1 WHERE `live_id` = ? AND `is_ended` = 0;");

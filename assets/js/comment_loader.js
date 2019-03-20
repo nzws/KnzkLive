@@ -7,7 +7,7 @@ const livepage_comment = require('./live/comment');
 
 const comment_viewer = require('./comment_viewer');
 
-const reg = new RegExp(/(<br>|<br \/>)/, 'gm');
+const brRegExp = new RegExp(/(<br>|<br \/>)/, 'gm');
 
 class comment_loader {
   static load() {
@@ -347,10 +347,6 @@ class comment_loader {
     return result;
   }
 
-  static msgreplace(str, reg) {
-    return str.replace(reg, ' ');
-  }
-
   static buildCommentData(data) {
     const acct =
       data['account']['acct'] !== data['account']['username']
@@ -364,9 +360,11 @@ class comment_loader {
       );
     });
 
-    data['donator_color'] = comment_loader.checkDonator(acct);
+    data.donator_color = comment_loader.checkDonator(acct);
 
-    data.content = comment_loader.msgreplace(data.content, reg);
+    if (!data.is_knzklive) {
+      data.content = data.content.replace(brRegExp, ' ');
+    }
 
     return data;
   }
