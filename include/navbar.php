@@ -32,7 +32,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 </script>
 <?php endif; ?>
 
-<div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container">
+<div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container wide_hide">
   <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
     <a class="col-auto header-brand" href="<?=u("")?>">
       <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>

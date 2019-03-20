@@ -62,7 +62,7 @@ html[data-page='live'] {
     overflow: hidden;
   }
 
-  .is_wide .nav-container {
+  .is_wide .wide_hide {
     display: none;
   }
 
@@ -79,12 +79,20 @@ html[data-page='live'] {
     background: rgba(0, 0, 0, 0.3);
   }
 
-  .is_wide footer {
-    display: none;
-  }
-
   .is_wide #comments {
     height: calc(100% - 250px);
+  }
+
+  .is_wide .comment_box {
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    z-index: 10;
+
+    @include media(lg, max) {
+      left: 0;
+      bottom: 125px;
+    }
   }
 
   .admin_panel {

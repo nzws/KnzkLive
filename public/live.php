@@ -113,7 +113,7 @@ $vote = loadVote($live["id"]);
       </div>
 
       <input type="hidden" id="no_toot" value="<?=(!empty($my["misc"]["no_toot_default"]) ? "1" : "")?>">
-      <div class="comment_block">
+      <div class="comment_block comment_box">
         <div class="input-group">
           <input class="form-control" id="toot" placeholder="Enterでコメント..." type="text">
           <div class="input-group-append">

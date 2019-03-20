@@ -1,4 +1,4 @@
-<div class="card admin_panel">
+<div class="card admin_panel wide_hide">
   <div class="card-header">
     配信管理
   </div>
