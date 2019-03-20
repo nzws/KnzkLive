@@ -97,7 +97,7 @@ html[data-page='live'] {
 
   .disable_reverse .comment {
     animation: disable_reverse_comment 0.75s cubic-bezier(0.6, -0.2, 0.7, 0.05)
-      reverse !important;
+      reverse;
   }
 
   .comment .avatar {
