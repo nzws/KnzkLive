@@ -197,9 +197,20 @@ function end_live($live_id) {
       $my["misc"]["point_count_max"] = $live["point_count"];
     }
 
+    $time = time() - strtotime($live["created_at"]);
+    if ($time < 0) $time = 0;
+    if (isset($my["misc"]["time_max"])) {
+      if ($time > $my["misc"]["time_max"])
+        $my["misc"]["time_max"] = $time;
+    } else {
+      $my["misc"]["time_all"] = 0;
+      $my["misc"]["time_max"] = $time;
+    }
+
     $my["misc"]["viewers_max"] += $live["viewers_max"];
     $my["misc"]["comment_count_all"] += $live["comment_count"];
     $my["misc"]["point_count_all"] += $live["point_count"];
+    $my["misc"]["time_all"] += $time;
 
     setConfig($my["id"], $my["misc"]);
     deleteAllWatcher($live["id"]);

@@ -1,8 +1,10 @@
 <?php
 function load($argv) {
-  if ($argv[1] === "daily") {
+  if ($argv[1] === "worker:daily") {
     merge_toot_point();
-  } elseif ($argv[1] === "tipknzk") {
+  } elseif ($argv[1] === "management:rebuild_stat") {
+    rebuild_stat();
+  } elseif ($argv[1] === "worker:tipknzk") {
     $my = getUser($argv[3], "acct");
     if (empty($my)) exit("[Error] あなたのアカウントは存在しません。 https://live.knzk.me/ にログインしてください。");
     if (intval($argv[2]) > $my["point_count"] || intval($argv[2]) <= 0 || !$argv[2] || !is_numeric($argv[2])) exit("[Error] 残高が足りないかデータが不正です！ you don't have enough point!");
@@ -18,7 +20,7 @@ function load($argv) {
     } else {
       exit("[Error] 相手のKnzkPointアカウントが存在しません！　https://live.knzk.me/ にログインする必要があります！");
     }
-  } elseif ($argv[1] === "donate") {
+  } elseif ($argv[1] === "worker:donate") {
     if ($argv[3] === "testing") {
       comment_post("<div class=\"alert alert-warning\">DonationAlerts: テストOK</div>", getLive($argv[2])["user_id"], s($argv[2]), true);
     } else {
@@ -62,4 +64,68 @@ function merge_toot_point() {
   $mysqli->close();
   if ($err) disp_log($name, 2);
   else disp_log($name, 1);
+}
+
+function rebuild_stat() {
+  disp_log("management:rebuild_stat", 0);
+
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE is_live = 0 AND is_started = 1;");
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+
+  $data = [];
+  $all_length = count($row);
+
+  foreach ($row as $index => $item) {
+    echo "[Analyzing] " . ($index + 1) . " / " . $all_length . "...\n";
+
+    if (!isset($data[$item["user_id"]]))
+      $data[$item["user_id"]] = [
+        "viewers_max_concurrent" => 0,
+        "viewers_max" => 0,
+        "comment_count_max" => 0,
+        "comment_count_all" => 0,
+        "point_count_max" => 0,
+        "point_count_all" => 0,
+        "time_max" => 0,
+        "time_all" => 0
+      ];
+
+    $time = strtotime($item["ended_at"]) - strtotime($item["created_at"]);
+    if ($time < 0) $time = 0;
+
+    $data[$item["user_id"]]["viewers_max"] += $item["viewers_max"];
+    $data[$item["user_id"]]["comment_count_all"] += $item["comment_count"];
+    $data[$item["user_id"]]["point_count_all"] += $item["point_count"];
+    $data[$item["user_id"]]["time_all"] += $time;
+
+    if ($item["viewers_max"] > $data[$item["user_id"]]["viewers_max_concurrent"]) $data[$item["user_id"]]["viewers_max_concurrent"] = $item["viewers_max_concurrent"];
+    if ($item["comment_count"] > $data[$item["user_id"]]["comment_count_max"]) $data[$item["user_id"]]["comment_count_max"] = $item["comment_count"];
+    if ($item["point_count"] > $data[$item["user_id"]]["point_count_max"]) $data[$item["user_id"]]["point_count_max"] = $item["point_count"];
+    if ($time > $data[$item["user_id"]]["time_max"]) $data[$item["user_id"]]["time_max"] = $time;
+  }
+
+  $mysqli = db_start();
+  $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `broadcaster_id` IS NOT NULL;");
+  $stmt->execute();
+  $row = db_fetch_all($stmt);
+  $stmt->close();
+  $mysqli->close();
+  $all_length = count($row);
+
+  foreach ($row as $index => $value) {
+    echo "[Saving] " . ($index + 1) . " / " . $all_length . "...\n";
+    if (!isset($data[$value["id"]])) {
+      echo "[Skipping]\n";
+      continue;
+    }
+    $value["misc"] = json_decode($value["misc"], true);
+    $value["misc"] = $data[$value["id"]] + $value["misc"];
+    setConfig($value["id"], $value["misc"]);
+  }
+
+  disp_log("management:rebuild_stat", 1);
 }
