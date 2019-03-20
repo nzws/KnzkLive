@@ -186,27 +186,27 @@ $vote = loadVote($live["id"]);
       <?php include "../include/footer.php"; ?>
     </div>
     <div class="col-xl-3 col-lg-4" id="comment">
-      <div class="row text-left justify-content-md-center box-sizing bg-dark border border-dark rounded">
+      <div class="row text-left box-sizing bg-dark border border-dark rounded">
         <span class="col-6" data-tooltip="1" title="配信時間">
-          <span class="text-secondary ml-3"><?=i("clock")?></span>
+          <span class="text-secondary ml-2"><?=i("clock")?></span>
           <span id="time"></span>
         </span>
         <span class="col-6" data-tooltip="1" title="使用されたKP">
-          <span class="text-secondary ml-3"><?=i("hat-wizard")?> </span>
+          <span class="text-secondary ml-2"><?=i("hat-wizard")?> </span>
           <span class="point_count"><?=$live["point_count"]?></span>KP
         </span>
-        <div class="col-11 border-bottom"></div>
+        <div class="col-11 mx-auto border-top border-bottom"></div>
         <span class="col-6" data-tooltip="1" title="コメント数">
-          <span class="text-secondary ml-3"><?=i("comments")?> </span>
+          <span class="text-secondary ml-2"><?=i("comments")?> </span>
           <span id="comment_count"><?=s($live["comment_count"])?></span>
         </span>
         <span class="col-6" data-tooltip="1" title="視聴中 / 累計">
           <span id="count_open">
-            <span class="text-secondary ml-3"><?=i("users")?> </span>
+            <span class="text-secondary ml-2"><?=i("users")?> </span>
             <span class="count"><?=$live["viewers_count"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
           <span id="count_end" class="invisible">
-            <span class="text-secondary ml-3"><?=i("users")?> </span>
+            <span class="text-secondary ml-2"><?=i("users")?> </span>
             <span id="max_c"><?=$live["viewers_max_concurrent"]?></span> / <span class="max"><?=$live["viewers_max"]?></span>
           </span>
         </span>
