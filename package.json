@@ -7,6 +7,7 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
+    "start": "php -S localhost:10213 -t public/",
     "ws:start": "node ws/index.js",
     "lint:css": "stylelint **/*.scss",
     "lint": "npm-run-all lint:* -s",

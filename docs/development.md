@@ -34,7 +34,7 @@ composer install
 ### 4. 起動
 
 ```bash
-php -S localhost:10213 -t public/
+yarn start
 ```
 
 で、PHP のビルトインウェブサーバーを起動できます。 http://localhost:10213 からアクセスできます。
