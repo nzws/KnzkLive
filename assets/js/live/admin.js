@@ -205,6 +205,46 @@ class admin {
         });
     }
   }
+
+  static openCollaboModal() {
+    if (!config.live.is_broadcaster) return false;
+    $('#collaboModal').modal('show');
+
+    api
+      .request('client/collabo/member', 'POST', {
+        live_id: config.live.id
+      })
+      .then(json => {
+        if (json) {
+          let html = '';
+          for (let item of json) {
+            item.name = kit.escape(item.name);
+            html += `<tr onclick="live.admin.manageCollabo('remove', ${
+              item.id
+            })"><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${
+              item.name
+            }</b> <small>@${item.acct}</small></td></tr>`;
+          }
+          kit.elemId('collabo_list').innerHTML = html;
+        }
+      });
+  }
+
+  static manageCollabo(type, id = null) {
+    if (!config.live.is_broadcaster) return false;
+
+    api
+      .request('client/collabo/member', 'POST', {
+        type: type,
+        user_id: id,
+        user_acct: kit.elemId('addcollabo_acct').value,
+        live_id: config.live.id
+      })
+      .then(json => {
+        toast.new('設定しました。', '.bg-success');
+        admin.openCollaboModal();
+      });
+  }
 }
 
 module.exports = admin;

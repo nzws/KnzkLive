@@ -217,7 +217,8 @@ html[data-page='live'] {
     margin: 5px;
   }
 
-  #listener_list td {
+  #listener_list td,
+  #collabo_list td {
     color: $black;
   }
 

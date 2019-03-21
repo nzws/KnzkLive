@@ -210,6 +210,49 @@
 </div>
 
 <?php if ($my["id"] === $live["user_id"]) : ?>
+<div class="modal fade" id="collaboModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">コラボ管理</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <b>コラボレータ</b>を追加すると、同じ配信枠で一緒に配信したり、コメントの管理権限を貸し出す事ができます。<br>
+          最大3人まで追加できます。
+        </p>
+        <p class="text-danger">
+          コラボレータはKnzkLiveで配信権限を持っていないユーザでも追加する事が出来ます。<br>
+          そのため、信頼できる人を選び、<a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> や <a href="" target="_blank">コラボレータガイド</a> をしっかり見てもらうようにしてください。
+        </p>
+        <div class="form-group">
+          <label for="blocking_acct">ユーザID</label>
+          <div class="input-group">
+            <input type="email" class="form-control" id="addcollabo_acct" placeholder="ex) knzk@knzk.me">
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" onclick="live.admin.manageCollabo('add')">追加</button>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <h5>コラボレータ一覧</h5>
+        クリックして削除
+
+        <div class="table-responsive">
+          <table class="table">
+            <tbody id="collabo_list">
+            <tr><td>読み込み中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="enqueteModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

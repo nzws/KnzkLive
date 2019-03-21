@@ -48,6 +48,7 @@ require_once($libpt."point.php");
 require_once($libpt."donate.php");
 require_once($libpt."file.php");
 require_once($libpt."items.php");
+require_once($libpt."collabo.php");
 
 $toot_get_limit = 100;
 /*
