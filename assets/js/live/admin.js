@@ -96,7 +96,7 @@ class admin {
       });
   }
 
-  static addBlocking() {
+  static addBlocking(live_id = null) {
     const acct = kit.elemId('blocking_acct').value;
     if (confirm(`「${acct}」をブロックします。\nよろしいですか？`)) {
       api
@@ -106,7 +106,8 @@ class admin {
           is_permanent: kit.elemId('blocking_permanent').checked ? 1 : 0,
           is_blocking_watch: kit.elemId('blocking_blocking_watch').checked
             ? 1
-            : 0
+            : 0,
+          live_id: live_id
         })
         .then(json => {
           if (json['success']) {

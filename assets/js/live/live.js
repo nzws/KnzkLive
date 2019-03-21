@@ -145,7 +145,7 @@ class live {
     if (url)
       html += `<a class="dropdown-item" href="${url}" target="_blank">ウェブページに移動</a>`;
 
-    if (config.live.is_broadcaster) {
+    if (config.live.is_broadcaster || config.live.is_collabo) {
       html += `
       <div class="dropdown-divider"></div>
       <a class="dropdown-item text-danger open_blocking_modal" href="#">ユーザーブロック</a>

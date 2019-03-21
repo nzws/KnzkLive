@@ -230,7 +230,7 @@ $vote = loadVote($live["id"]);
 </div>
 
 <?php include "../include/live/modals.php"; ?>
-<?php if ($my["id"] === $live["user_id"]) include "../include/live/add_blocking.php"; ?>
+<?php if ($my["id"] === $live["user_id"] || is_admin($my["id"]) || is_collabo($my["id"], $live["id"])) include "../include/live/add_blocking.php"; ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment card mb-2">
     <div class="content card-body">

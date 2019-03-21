@@ -97,7 +97,7 @@ class comment {
   }
 
   static delete(id, acct) {
-    if (!config.live.is_broadcaster) return false;
+    if (!config.live.is_broadcaster && !config.live.is_collabo) return false;
 
     if (
       confirm(
