@@ -9,6 +9,7 @@ class toast {
     text,
     bgcolor = '.bg-primary',
     textcolor = '#fff',
+    allow_html = false,
     close_delay = 3500
   ) {
     if (!text) {
@@ -22,9 +23,15 @@ class toast {
     element.className = `${
       bgcolor.includes('.') ? bgcolor.replace('.', '') : ''
     } knzk_toast`;
-    element.innerText = text;
     element.style.background = !bgcolor.includes('.') ? bgcolor : '';
     element.style.color = textcolor;
+
+    if (allow_html) {
+      element.innerHTML = text;
+    } else {
+      element.textContent = text;
+    }
+
     document.body.appendChild(element);
 
     if (close_delay > 0) {

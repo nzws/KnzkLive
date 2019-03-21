@@ -8,7 +8,7 @@ if (!$live || $_GET["authorization"] !== $env["publish_auth"] || $live["is_live"
 
 if (strpos($_GET["live"], 'collabo') !== false) { // collabo
   $collabo_id = strstr(str_replace($id . 'stream', '', $key), 'collabo', true);
-  if ($_GET["token"] !== $live["misc"]["collabo_conf"]["token"][$collabo_id]) showError('Authentication failed.', 403);
+  if ($_GET["token"] !== $live["misc"]["collabo"][$collabo_id]["token"]) showError('Authentication failed.', 403);
 
   if ($_GET["mode"] === "pre_publish") { //配信開始
     setCollaboLiveStatus($collabo_id, $live["id"], 2);

@@ -156,7 +156,7 @@
       </div>
       <div class="modal-body">
         この先、配信はセンシティブな内容を含む可能性があります。続行しますか？
-        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="document.getElementById('iframe').src = config.live.frame_url">:: 視聴する ::</button>
+        <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal" onclick="live.live.reloadLive()">:: 視聴する ::</button>
       </div>
     </div>
   </div>
@@ -226,7 +226,7 @@
         </p>
         <p class="text-danger">
           コラボレータはKnzkLiveで配信権限を持っていないユーザでも追加する事が出来ます。<br>
-          そのため、信頼できる人を選び、<a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> や <a href="" target="_blank">コラボレータガイド</a> をしっかり見てもらうようにしてください。
+          そのため、信頼できる人を選び、<a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> や <a href="https://knzklive-docs.knzk.me/#/docs/streamer/collaboration.md" target="_blank">コラボレータガイド</a> をしっかり見てもらうようにしてください。
         </p>
         <div class="form-group">
           <label for="blocking_acct">ユーザID</label>
@@ -340,7 +340,7 @@
 </script>
 
 <div class="modal fade" id="listenerModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">　
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">リスナー一覧 <span class="badge badge-info"><b class="count"><?=$live["viewers_count"]?></b> / <span class="max"><?=$live["viewers_max"]?></span></span></h5>

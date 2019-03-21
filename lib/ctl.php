@@ -4,6 +4,8 @@ function load($argv) {
     merge_toot_point();
   } elseif ($argv[1] === "management:rebuild_stat") {
     rebuild_stat();
+  } elseif ($argv[1] === "debug:add_collabo") {
+    setCollaboLiveStatus($argv[3], $argv[2], $argv[4]);
   } elseif ($argv[1] === "job:tipknzk") {
     $my = getUser($argv[3], "acct");
     if (empty($my)) exit("[Error] あなたのアカウントは存在しません。 https://live.knzk.me/ にログインしてください。");

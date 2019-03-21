@@ -1,5 +1,6 @@
 const kit = require('../components/kanzakit');
 const api = require('../components/api');
+const toast = require('../components/toast');
 
 const comment = require('./comment');
 
@@ -13,19 +14,25 @@ class live {
 
         if (json['live_status'] === 1)
           err.innerHTML = '配信者のプッシュを待っています...';
-        if (json['live_status'] === 0) {
+        if (
+          json['live_status'] === 0 &&
+          config.live.watch_data['live_status'] !== 0
+        ) {
           err.innerHTML = 'この配信は終了しました。';
           live.widemode('hide');
           kit.elemId('count_open').className = 'invisible';
           kit.elemId('count_end').className = '';
-          if (config.live.watch_data['live_status'] !== 0)
-            kit.elemId('iframe').contentWindow.knzk.live_embed.player.end();
+
+          const frames = document.querySelectorAll('iframe');
+          frames.forEach(frame => {
+            frame.contentWindow.knzk.live_embed.player.end();
+          });
         }
         if (
           json['live_status'] === 2 &&
           config.live.watch_data['live_status'] !== 2
         )
-          live.reloadLive();
+          live.reloadLive(true);
 
         kit.elemId('is_not_started').className = json['is_started']
           ? 'invisible'
@@ -91,15 +98,29 @@ class live {
     return api.request('client/update_watching', 'GET', { id: config.live.id });
   }
 
-  static reloadLive() {
-    kit.elemId('iframe').src = kit.elemId('iframe').src;
+  static reloadLive(only_main = false) {
+    if (only_main) {
+      const frame = kit.elemId('mainiframe');
+      frame.src = frame.dataset.src;
+    } else {
+      const frames = document.querySelectorAll('iframe');
+      frames.forEach(frame => {
+        frame.src = frame.dataset.src;
+      });
+    }
   }
 
   static widemode(mode) {
-    document.body.className =
-      (document.body.className === 'is_wide' && !mode) || mode === 'hide'
-        ? ''
-        : 'is_wide';
+    const is_wide =
+      (document.body.className === 'is_wide' && !mode) || mode === 'hide';
+    document.body.className = is_wide ? '' : 'is_wide';
+
+    if (document.querySelectorAll('iframe').length > 1 && !is_wide)
+      toast.new(
+        '現在ワイドビューはメイン配信者にのみ対応しています。',
+        '.bg-info',
+        '#fff'
+      );
   }
 
   static userDropdown(obj, id, acct, url) {

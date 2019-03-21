@@ -22,18 +22,21 @@ if (isset($_POST["type"])) {
     if ($user["id"] === $my["id"]) api_json(["error" => "エラー: 自分自身は追加できません。"]);
     if (is_collabo($user["id"], $live["id"])) api_json(["error" => "エラー: 追加済みです。"]);
 
-    $live["misc"]["collabo"][] = $user["id"];
+    $live["misc"]["collabo"][$user["id"]] = [
+      "token" => generateHash(),
+      "status" => 1
+    ];
   } else {
     $user = getUser($_POST["user_id"]);
     if (!$user) api_json(["error" => "エラー: ユーザが見つかりません。"]);
 
-    $live["misc"]["collabo"] = array_values(array_diff($live["misc"]["collabo"], [$user["id"]]));
+    unset($live["misc"]["collabo"][$user["id"]]);
   }
   update_realtime_config("update_collabo", $user["id"], $live["id"]);
   api_json(["success" => setLiveConfig($live["id"], $live["misc"])]);
 } else {
   $user = [];
-  foreach ($live["misc"]["collabo"] as $user_id) {
+  foreach ($live["misc"]["collabo"] as $user_id => $data) {
     $user[] = user4Pub(getUser($user_id));
   }
 

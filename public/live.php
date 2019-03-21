@@ -13,7 +13,6 @@ if (!$live) {
   exit("ERR:この配信は存在しません。");
 }
 
-$slot = getSlot($live["slot_id"]);
 $my = getMe();
 $blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
 if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
@@ -109,8 +108,15 @@ $vote = loadVote($live["id"]);
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-9 col-lg-8 main">
-      <div class="embed-responsive embed-responsive-16by9" id="live">
-        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
+      <div class="embeds_box">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>" data-src="<?=u("live_embed")?>?id=<?=$id?>" id="mainiframe" allow="autoplay; fullscreen"></iframe>
+        </div>
+        <?php if (isset($live["misc"]["collabo"])) foreach ($live["misc"]["collabo"] as $collaboUser => $collaboFrame) : if ($collaboFrame["status"] === 2) : ?>
+          <div class="embed-responsive embed-responsive-16by9 wide_hide" id="iframe_collabo_<?=$collaboUser?>">
+            <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&collabo=<?=$collaboUser?>" data-src="<?=u("live_embed")?>?id=<?=$id?>&collabo=<?=$collaboUser?>" allow="autoplay; fullscreen"></iframe>
+          </div>
+        <?php endif; endforeach; ?>
       </div>
 
       <input type="hidden" id="no_toot" value="<?=(!empty($my["misc"]["no_toot_default"]) ? "1" : "")?>">

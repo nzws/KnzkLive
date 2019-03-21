@@ -148,7 +148,7 @@ class comment {
             tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
           );
           kit
-            .elemId('iframe')
+            .elemId('mainiframe')
             .contentWindow.knzk.live_embed.danmaku.comment_view(
               ws_reshtml['content']
             );

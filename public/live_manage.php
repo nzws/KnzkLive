@@ -25,9 +25,6 @@ if (isset($_GET["mode"])) {
   }
 
   if ($_GET["mode"] == "shutdown") {
-    if ($live["is_live"] === 2) {
-      disconnectClient($live);
-    }
     end_live($live["id"]);
     header("Location: ".u());
 

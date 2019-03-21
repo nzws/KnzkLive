@@ -10,6 +10,7 @@
 <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
   window.config = {
+    root_url: "<?=$env["RootUrl"]?>",
     endpoint: "<?=$env["RootUrl"]?>api/",
     suffix: "<?=$env["is_testing"] ? ".php" : ""?>",
     csrf_token: "<?=$_SESSION['csrf_token']?>",

@@ -173,6 +173,16 @@ function end_live($live_id) {
     setSlot($live["slot_id"], 0);
     setUserLive(0, $my["id"]);
 
+    if ($live["is_live"] === 2) {
+      disconnectClient($live["id"]);
+    }
+    foreach ($live["misc"]["collabo"] as $collaboId => $item) {
+      if ($item["status"] === 2) {
+        setSlot($item["slot"], 0);
+        disconnectClient($live["id"], $collaboId);
+      }
+    }
+
     if (isset($my["misc"]["viewers_max_concurrent"])) {
       if ($live["viewers_max_concurrent"] > $my["misc"]["viewers_max_concurrent"])
         $my["misc"]["viewers_max_concurrent"] = $live["viewers_max_concurrent"];
@@ -288,13 +298,20 @@ function get_all_blocking_user($live_user_id) {
   return isset($row[0]) ? $row : [];
 }
 
-function disconnectClient($live) {
+function disconnectClient($live_id, $collabo_id = null) {
   global $env;
-  $slot = getSlot($live["slot_id"]);
+  $live = getLive($live_id);
+  if (!empty($collabo_id)) {
+    $slot = getSlot($live["misc"]["collabo"][$collabo_id]["slot"]);
+    $stream = $live["id"] . "stream" . $collabo_id . "collabo";
+  } else {
+    $slot = getSlot($live["slot_id"]);
+    $stream = $live["id"] . "stream";
+  }
 
   $d = [
     "authorization" => $env["publish_auth"],
-    "live_id" => $live["id"],
+    "live_stream" => $stream,
   ];
 
   $options = array('http' => array(

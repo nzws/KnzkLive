@@ -253,6 +253,19 @@ class admin {
         admin.openCollaboModal();
       });
   }
+
+  static getCollaboSlot() {
+    api
+      .request('client/collabo/slot', 'POST', {
+        live_id: config.live.id
+      })
+      .then(json => {
+        alert(
+          '取得しました！今からページを再読み込みします。もう一度「配信に参加」をクリックしてください。'
+        );
+        location.reload();
+      });
+  }
 }
 
 module.exports = admin;

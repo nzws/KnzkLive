@@ -12,7 +12,50 @@
     <b>コラボレータ</b>は、この配信内で配信者さんに招待されたユーザが<b>コメント管理</b>や<b>配信に参加</b>することのできる権限です。<br>
     詳しくは配信者さんに聞いてください。
     <p>
-      <a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> / <a href="" target="_blank">コラボレータガイド</a>
+      <a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a> / <a href="https://knzklive-docs.knzk.me/#/docs/streamer/collaboration.md" target="_blank">コラボレータガイド</a>
     </p>
+  </div>
+</div>
+
+<div class="modal fade" id="startCollaboModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">コラボ配信に参加</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          コラボ配信に参加すると、このページで配信者さんと一緒に配信できます！配信者さんがKnzkLiveの配信権限を持っているため、あなたが配信権限を持っている必要はありません。<br>
+          進め方は<a href="https://knzklive-docs.knzk.me/#/docs/streamer/collaboration.md" target="_blank">コラボレータガイド</a>のコラボ配信の項目をお読みください。
+        </p>
+
+        <?php if (empty($live["misc"]["collabo"][$my["id"]]["slot"]) && getAbleSlot()) : ?>
+          <button class="btn btn-primary btn-block btn-bg" onclick="live.admin.getCollaboSlot()">コラボ配信に参加 <small>(配信枠を取得)</small></button>
+          <small class="text-danger">「コラボ配信に参加」をクリックした時点で、<a href="<?=u("terms")?>" target="_blank">利用規約とガイドライン</a>に同意したものとします。</small>
+        <?php elseif (!empty($live["misc"]["collabo"][$my["id"]]["slot"])) : ?>
+          <div class="form-group">
+            <label>URL</label>
+            <div class="input-group">
+              <input type="text" class="form-control" value="rtmp://<?=getSlot($live["misc"]["collabo"][$my["id"]]["slot"])["server_ip"]?>/live" readonly onclick="this.select(0,this.value.length)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>ストリームキー</label>
+            <div class="input-group">
+              <button onclick="window.prompt('ストリームキー', '<?=$live["id"]?>stream<?=$my["id"]?>collabo?token=<?=$live["misc"]["collabo"][$my["id"]]["token"]?>')" class="btn btn-secondary btn-block">クリックで表示</button>
+            </div>
+          </div>
+        <?php else : ?>
+          <div class="alert alert-danger">
+            現在、配信枠が不足しています。<br>
+            他のユーザの配信終了までお待ちください。
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 </div>

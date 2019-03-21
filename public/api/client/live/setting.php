@@ -23,9 +23,6 @@ if ($_POST["type"] === "sensitive") {
   $live["misc"]["able_comment"] = $force ? false : empty($live["misc"]["able_comment"]);
   $result = $live["misc"]["able_comment"];
 } else if ($_POST["type"] === "stop") {
-  if ($live["is_live"] === 2) {
-    disconnectClient($live);
-  }
   end_live($live["id"]);
 } else {
   api_json(["error" => "Error: type"]);

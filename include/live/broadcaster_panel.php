@@ -14,9 +14,6 @@
     <button type="button" class="btn admin-toggle btn-<?=($live["misc"]["able_comment"] ? "warning on" : "info off")?>" onclick="live.admin.toggle('comment')" id="admin_panel_comment_display"><i class="fas fa-comment-slash"></i> コメントを<span class="on">無効化</span><span class="off">有効化</span></button>
     <a class="btn btn-primary" href="<?=u("live_manage_ngword")?>" target="_blank"><i class="fas fa-comment-slash"></i> NGワード管理</a>
     <a class="btn btn-primary" href="<?=u("live_manage_blocking")?>" target="_blank"><i class="fas fa-user-slash"></i> ブロックユーザ管理</a>
-    <!--
-    <button type="button" class="btn btn-info" onclick="openEditLive()"><i class="fas fa-user-shield"></i> モデレータ管理</button>
-    -->
     <hr>
     <h5>ツール</h5>
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#enqueteModal" id="open_enquete_btn" <?=$vote ? 'style="display: none"' : null?>><i class="fas fa-poll-h"></i> アンケート</button>
