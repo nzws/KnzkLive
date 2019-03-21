@@ -149,6 +149,8 @@ class comment_loader {
                   }
                 } else if (msg.mode === 'ngs') {
                   comment_loader.getNgs();
+                } else if (msg.mode === 'update_collabo') {
+                  if (msg.result === config.account.id) location.reload();
                 }
 
                 const elem = kit.elemId(`admin_panel_${msg.mode}_display`);

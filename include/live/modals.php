@@ -238,8 +238,7 @@
           </div>
         </div>
         <hr>
-        <h5>コラボレータ一覧</h5>
-        クリックして削除
+        <h5 class="mb-2">コラボレータ一覧</h5>
 
         <div class="table-responsive">
           <table class="table">

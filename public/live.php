@@ -59,6 +59,7 @@ $vote = loadVote($live["id"]);
       hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
       url: "<?=$liveurl?>",
       is_broadcaster: <?=$my && $live["user_id"] === $my["id"] ? "true" : "false"?>,
+      is_collabo: <?=$my && is_collabo($my["id"], $live["id"]) ? "true" : "false"?>,
       created_at: "<?=dateHelper($live["created_at"])?>",
       websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
       account: {
@@ -178,6 +179,11 @@ $vote = loadVote($live["id"]);
       <?php if (is_admin($my["id"])) : ?>
         <hr>
         <?php include "../include/live/admin_panel.php"; ?>
+      <?php endif; ?>
+
+      <?php if (is_collabo($my["id"], $live["id"])) : ?>
+        <hr>
+        <?php include "../include/live/collabo_panel.php"; ?>
       <?php endif; ?>
 
       <p>

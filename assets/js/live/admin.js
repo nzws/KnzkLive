@@ -6,7 +6,8 @@ const live = require('./live');
 
 class admin {
   static toggle(mode, is_force = false) {
-    if (!config.live.is_broadcaster && !is_force) return false;
+    if (!config.live.is_broadcaster && !config.live.is_collabo && !is_force)
+      return false;
 
     if (confirm('よろしいですか？')) {
       if (
@@ -219,11 +220,15 @@ class admin {
           let html = '';
           for (let item of json) {
             item.name = kit.escape(item.name);
-            html += `<tr onclick="live.admin.manageCollabo('remove', ${
+            html += `<tr><td><img src="${
+              item.avatar_url
+            }" width="25" height="25"/> <b>${item.name}</b> <small>@${
+              item.acct
+            }</small>
+            <button onclick="live.admin.manageCollabo('remove', ${
               item.id
-            })"><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${
-              item.name
-            }</b> <small>@${item.acct}</small></td></tr>`;
+            })" class="btn btn-danger btn-sm float-right">削除</button>
+            </td></tr>`;
           }
           kit.elemId('collabo_list').innerHTML = html;
         }
@@ -232,6 +237,8 @@ class admin {
 
   static manageCollabo(type, id = null) {
     if (!config.live.is_broadcaster) return false;
+    if (type === 'remove' && !confirm('削除します。よろしいですか？'))
+      return false;
 
     api
       .request('client/collabo/member', 'POST', {
@@ -241,6 +248,7 @@ class admin {
         live_id: config.live.id
       })
       .then(json => {
+        if (type === 'add') kit.elemId('addcollabo_acct').value = '';
         toast.new('設定しました。', '.bg-success');
         admin.openCollaboModal();
       });

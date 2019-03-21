@@ -15,10 +15,12 @@ if (!isset($live["misc"]["collabo"])) $live["misc"]["collabo"] = [];
 
 if (isset($_POST["type"])) {
   if ($_POST["type"] === "add") {
-    if (count($live["misc"]["collabo"]) > 3) api_json(["error" => "エラー: コラボレータに登録できるのは3人までです。"]);
+    if (count($live["misc"]["collabo"]) > 2) api_json(["error" => "エラー: コラボレータに登録できるのは3人までです。"]);
 
     $user = getUser($_POST["user_acct"], "acct");
     if (!$user) api_json(["error" => "エラー: ユーザが見つかりません。\n* 合ってるのにも関わらず表示される場合は、相手にKnzkLiveに一度ログインしてもらってください。"]);
+    if ($user["id"] === $my["id"]) api_json(["error" => "エラー: 自分自身は追加できません。"]);
+    if (is_collabo($user["id"], $live["id"])) api_json(["error" => "エラー: 追加済みです。"]);
 
     $live["misc"]["collabo"][] = $user["id"];
   } else {
@@ -27,7 +29,7 @@ if (isset($_POST["type"])) {
 
     $live["misc"]["collabo"] = array_values(array_diff($live["misc"]["collabo"], [$user["id"]]));
   }
-
+  update_realtime_config("update_collabo", $user["id"], $live["id"]);
   api_json(["success" => setLiveConfig($live["id"], $live["misc"])]);
 } else {
   $user = [];
