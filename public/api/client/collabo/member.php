@@ -30,6 +30,10 @@ if (isset($_POST["type"])) {
     $user = getUser($_POST["user_id"]);
     if (!$user) api_json(["error" => "エラー: ユーザが見つかりません。"]);
 
+    setSlot($live["misc"]["collabo"][$user["id"]]["slot"], 0);
+    if ($live["misc"]["collabo"][$user["id"]]["status"] === 2) {
+      disconnectClient($live["id"], $user["id"]);
+    }
     unset($live["misc"]["collabo"][$user["id"]]);
   }
   update_realtime_config("update_collabo", $user["id"], $live["id"]);

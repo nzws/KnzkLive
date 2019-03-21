@@ -177,8 +177,8 @@ function end_live($live_id) {
       disconnectClient($live["id"]);
     }
     foreach ($live["misc"]["collabo"] as $collaboId => $item) {
+      setSlot($item["slot"], 0);
       if ($item["status"] === 2) {
-        setSlot($item["slot"], 0);
         disconnectClient($live["id"], $collaboId);
       }
     }
