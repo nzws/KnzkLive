@@ -8,15 +8,18 @@ if (!$_GET["id"] || !$live) {
   header("HTTP/1.1 404 Not Found");
   exit();
 }
+
 if (!$my && $live["privacy_mode"] == "3") {
   http_response_code(403);
   exit("ERR:この配信は非公開です。");
 }
+
 $myLive = $my["id"] === $live["user_id"];
 if (!$myLive && $live["is_started"] == "0") {
   http_response_code(403);
   exit("ERR:この配信はまだ開始されていません。");
 }
+
 if (empty($_SESSION["watch_type"])) {
   $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
 }
@@ -27,6 +30,8 @@ $mode = $_SESSION["watch_type"];
 <html data-page="live_embed">
 <head>
   <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/bundle/bundle.css")?>">
 </head>
 

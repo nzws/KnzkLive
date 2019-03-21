@@ -8,3 +8,7 @@ function is_collabo($user_id, $live_id) {
 
   return array_search($user["id"], $live["misc"]["collabo"]) !== false;
 }
+
+function setCollaboLiveStatus($user_id, $live_id, $status = 0) {
+
+}
