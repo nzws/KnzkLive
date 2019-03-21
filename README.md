@@ -8,6 +8,17 @@
 
 > No ads, Unlimited, Open-Source Live Streaming Service.
 
+## Documentation
+
+You can find the KnzkLive documentation [on the website](https://knzklive-docs.knzk.me).
+
+The documentation is divided into several sections:
+
+- GUIDE
+- USER GUIDE
+- STREAMER GUIDE
+- DEVELOPMENT GUIDE
+
 ## See also
 
 https://github.com/yuzulabo/KnzkLive-Publish-Server
