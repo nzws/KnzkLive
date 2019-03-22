@@ -1,32 +1,31 @@
 <?php
 require_once("../lib/bootloader.php");
-$_GET["id"] = s($_GET["id"]);
-$live = getLive($_GET["id"]);
-$liveUser = getUser($live["user_id"]);
+$live = getLive(s($_GET["id"]));
+if (!$live) showError('この配信は存在しません。', 404);
+$liveUser = getUser(isset($_GET["collabo"]) ? $_GET["collabo"] : $live["user_id"]);
+if (!$liveUser) showError('値が不正です。', 500);
+$slot = getSlot(isset($_GET["collabo"]) ? $live["misc"]["collabo"][$_GET["collabo"]]["slot"] : $live["slot_id"]);
+
 $my = getMe();
-if (!$_GET["id"] || !$live) {
-  header("HTTP/1.1 404 Not Found");
-  exit();
-}
-if (!$my && $live["privacy_mode"] == "3") {
-  http_response_code(403);
-  exit("ERR:この配信は非公開です。");
-}
+if (!$my && $live["privacy_mode"] === 3) showError('この配信は非公開です。', 403);
+
 $myLive = $my["id"] === $live["user_id"];
-if (!$myLive && $live["is_started"] == "0") {
-  http_response_code(403);
-  exit("ERR:この配信はまだ開始されていません。");
-}
+if (!$myLive && $live["is_started"] == "0") showError('この配信はまだ開始されていません。', 403);
+
 if (empty($_SESSION["watch_type"])) {
   $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
 }
 if (isset($_GET["watch_type"])) $_SESSION["watch_type"] = $_GET["watch_type"] == 0 ? "FLV" : "HLS";
 $mode = $_SESSION["watch_type"];
+
+$stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]) . "collabo" : "");
 ?>
 <!DOCTYPE html>
 <html data-page="live_embed">
 <head>
   <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/bundle/bundle.css")?>">
 </head>
 
@@ -65,7 +64,7 @@ $mode = $_SESSION["watch_type"];
   <div class="footer hover" style="background: rgba(0,0,0,.5)">
     <div class="footer_content">
       <span id="video_status">LOADING</span>
-      <span> · <a href="?id=<?=$live["id"]?>&rtmp=<?=s($_GET["rtmp"])?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a></span>
+      <span> · <a href="?id=<?=$live["id"]?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a></span>
       <span class="right video_control">
         <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
 
@@ -100,8 +99,8 @@ $mode = $_SESSION["watch_type"];
   window.config = {
     type: '<?=s($mode)?>',
     myLive: <?=$myLive ? "true" : "false"?>,
-    flv: 'ws<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream.flv',
-    hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=s($_GET["rtmp"])?>/live/<?=$live["id"]?>stream/index.m3u8',
+    flv: 'ws<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>.flv',
+    hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>/index.m3u8',
     heartbeat: null,
     delay_sec: 3,
     hover: 0

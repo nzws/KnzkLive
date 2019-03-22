@@ -6,7 +6,8 @@ const live = require('./live');
 
 class admin {
   static toggle(mode, is_force = false) {
-    if (!config.live.is_broadcaster && !is_force) return false;
+    if (!config.live.is_broadcaster && !config.live.is_collabo && !is_force)
+      return false;
 
     if (confirm('よろしいですか？')) {
       if (
@@ -95,7 +96,7 @@ class admin {
       });
   }
 
-  static addBlocking() {
+  static addBlocking(live_id = null) {
     const acct = kit.elemId('blocking_acct').value;
     if (confirm(`「${acct}」をブロックします。\nよろしいですか？`)) {
       api
@@ -105,7 +106,8 @@ class admin {
           is_permanent: kit.elemId('blocking_permanent').checked ? 1 : 0,
           is_blocking_watch: kit.elemId('blocking_blocking_watch').checked
             ? 1
-            : 0
+            : 0,
+          live_id: live_id
         })
         .then(json => {
           if (json['success']) {
@@ -204,6 +206,66 @@ class admin {
           }
         });
     }
+  }
+
+  static openCollaboModal() {
+    if (!config.live.is_broadcaster) return false;
+    $('#collaboModal').modal('show');
+
+    api
+      .request('client/collabo/member', 'POST', {
+        live_id: config.live.id
+      })
+      .then(json => {
+        if (json) {
+          let html = '';
+          for (let item of json) {
+            item.name = kit.escape(item.name);
+            html += `<tr><td><img src="${
+              item.avatar_url
+            }" width="25" height="25"/> <b>${item.name}</b> <small>@${
+              item.acct
+            }</small>
+            <button onclick="live.admin.manageCollabo('remove', ${
+              item.id
+            })" class="btn btn-danger btn-sm float-right">削除</button>
+            </td></tr>`;
+          }
+          kit.elemId('collabo_list').innerHTML = html;
+        }
+      });
+  }
+
+  static manageCollabo(type, id = null) {
+    if (!config.live.is_broadcaster) return false;
+    if (type === 'remove' && !confirm('削除します。よろしいですか？'))
+      return false;
+
+    api
+      .request('client/collabo/member', 'POST', {
+        type: type,
+        user_id: id,
+        user_acct: kit.elemId('addcollabo_acct').value,
+        live_id: config.live.id
+      })
+      .then(json => {
+        if (type === 'add') kit.elemId('addcollabo_acct').value = '';
+        toast.new('設定しました。', '.bg-success');
+        admin.openCollaboModal();
+      });
+  }
+
+  static getCollaboSlot() {
+    api
+      .request('client/collabo/slot', 'POST', {
+        live_id: config.live.id
+      })
+      .then(json => {
+        alert(
+          '取得しました！今からページを再読み込みします。もう一度「配信に参加」をクリックしてください。'
+        );
+        location.reload();
+      });
   }
 }
 

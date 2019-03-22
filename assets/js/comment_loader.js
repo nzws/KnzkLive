@@ -128,18 +128,18 @@ class comment_loader {
                   }
                   return;
                 }
-                kit
-                  .elemId('iframe')
-                  .contentWindow.knzk.live_embed.danmaku.run_item(
+
+                const frames = document.querySelectorAll('iframe');
+                frames.forEach(frame => {
+                  frame.contentWindow.knzk.live_embed.danmaku.run_item(
                     msg.item_type,
                     msg.item,
                     10
                   );
+                });
               } else if (msg.type === 'change_config') {
                 if (msg.mode === 'sensitive' && msg.result) {
-                  const frame = kit.elemId('iframe');
-                  config.live.frame_url = frame.src;
-                  frame.src = '';
+                  $('iframe').attr('src', '');
                   $('#sensitiveModal').modal('show');
                 } else if (msg.mode === 'comment') {
                   if (msg.result) {
@@ -149,6 +149,26 @@ class comment_loader {
                   }
                 } else if (msg.mode === 'ngs') {
                   comment_loader.getNgs();
+                } else if (msg.mode === 'update_collabo') {
+                  if (msg.result === config.account.id) location.reload();
+                } else if (msg.mode === 'update_collabo_status') {
+                  if (msg.result.status === 2) {
+                    const link = `${config.root_url}live_embed${
+                      config.suffix
+                    }?id=${config.live.id}&collabo=${msg.result.user_id}`;
+                    const frame = `
+<div class="embed-responsive embed-responsive-16by9 wide_hide" id="iframe_collabo_${
+                      msg.result.user_id
+                    }">
+  <iframe class="embed-responsive-item" src="${link}" data-src="${link}" allow="autoplay; fullscreen"></iframe>
+</div>
+                    `;
+                    $('.embeds_box').append(frame);
+                  } else {
+                    kit.elemRemove(
+                      kit.elemId(`iframe_collabo_${msg.result.user_id}`)
+                    );
+                  }
                 }
 
                 const elem = kit.elemId(`admin_panel_${msg.mode}_display`);

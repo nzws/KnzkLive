@@ -85,8 +85,8 @@ function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false) {
 
   $mysqli = db_start();
   if ($is_knzklive) {
-    $stmt = $mysqli->prepare("UPDATE `comment` SET is_deleted = 1 WHERE id = ?;");
-    $stmt->bind_param('s', $comment_id);
+    $stmt = $mysqli->prepare("UPDATE `comment` SET is_deleted = ? WHERE id = ?;");
+    $stmt->bind_param('ss', $user_id, $comment_id);
   } else {
     $stmt = $mysqli->prepare("INSERT INTO `comment_delete` (`id`, `live_id`, `created_by`) VALUES (?, ?, ?);");
     $stmt->bind_param('sss', $comment_id, $live_id, $user_id);

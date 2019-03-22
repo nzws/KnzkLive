@@ -66,7 +66,7 @@ html[data-page='live'] {
     display: none;
   }
 
-  .is_wide #iframe {
+  .is_wide #mainiframe {
     width: 100%;
     position: fixed;
   }
@@ -217,7 +217,8 @@ html[data-page='live'] {
     margin: 5px;
   }
 
-  #listener_list td {
+  #listener_list td,
+  #collabo_list td {
     color: $black;
   }
 
@@ -232,5 +233,23 @@ html[data-page='live'] {
   .popover,
   .popover-body {
     color: #000 !important;
+  }
+
+  .embeds_box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    div {
+      flex-basis: 50%;
+
+      @include media(lg, max) {
+        flex-basis: 100%;
+      }
+    }
+
+    div:only-of-type {
+      flex-basis: 100%;
+    }
   }
 }

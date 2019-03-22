@@ -13,7 +13,6 @@ if (!$live) {
   exit("ERR:この配信は存在しません。");
 }
 
-$slot = getSlot($live["slot_id"]);
 $my = getMe();
 $blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
 if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
@@ -59,6 +58,7 @@ $vote = loadVote($live["id"]);
       hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
       url: "<?=$liveurl?>",
       is_broadcaster: <?=$my && $live["user_id"] === $my["id"] ? "true" : "false"?>,
+      is_collabo: <?=$my && is_collabo($my["id"], $live["id"]) ? "true" : "false"?>,
       created_at: "<?=dateHelper($live["created_at"])?>",
       websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
       account: {
@@ -108,8 +108,15 @@ $vote = loadVote($live["id"]);
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-9 col-lg-8 main">
-      <div class="embed-responsive embed-responsive-16by9" id="live">
-        <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&rtmp=<?=$slot["server"]?>" allowfullscreen id="iframe" allow="autoplay; fullscreen"></iframe>
+      <div class="embeds_box">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>" data-src="<?=u("live_embed")?>?id=<?=$id?>" id="mainiframe" allow="autoplay; fullscreen"></iframe>
+        </div>
+        <?php if (isset($live["misc"]["collabo"])) foreach ($live["misc"]["collabo"] as $collaboUser => $collaboFrame) : if ($collaboFrame["status"] === 2) : ?>
+          <div class="embed-responsive embed-responsive-16by9 wide_hide" id="iframe_collabo_<?=$collaboUser?>">
+            <iframe class="embed-responsive-item" src="<?=u("live_embed")?>?id=<?=$id?>&collabo=<?=$collaboUser?>" data-src="<?=u("live_embed")?>?id=<?=$id?>&collabo=<?=$collaboUser?>" allow="autoplay; fullscreen"></iframe>
+          </div>
+        <?php endif; endforeach; ?>
       </div>
 
       <input type="hidden" id="no_toot" value="<?=(!empty($my["misc"]["no_toot_default"]) ? "1" : "")?>">
@@ -180,6 +187,11 @@ $vote = loadVote($live["id"]);
         <?php include "../include/live/admin_panel.php"; ?>
       <?php endif; ?>
 
+      <?php if (is_collabo($my["id"], $live["id"])) : ?>
+        <hr>
+        <?php include "../include/live/collabo_panel.php"; ?>
+      <?php endif; ?>
+
       <p>
         <a href="<?=u("report")?>?liveid=<?=$live["id"]?>" target="_blank" class="text-danger">配信を通報する</a>
       </p>
@@ -218,7 +230,7 @@ $vote = loadVote($live["id"]);
 </div>
 
 <?php include "../include/live/modals.php"; ?>
-<?php if ($my["id"] === $live["user_id"]) include "../include/live/add_blocking.php"; ?>
+<?php if ($my["id"] === $live["user_id"] || is_admin($my["id"]) || is_collabo($my["id"], $live["id"])) include "../include/live/add_blocking.php"; ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
   <div id="post_{{id}}" class="comment card mb-2">
     <div class="content card-body">

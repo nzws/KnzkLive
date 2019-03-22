@@ -8,7 +8,7 @@ $live = getLive(s($_POST["live_id"]));
 if (empty($live))
   api_json(["error" => "エラー: 配信が見つかりません。"]);
 
-if ($my["live_current_id"] !== $live["id"] && !is_admin($my["id"]))
+if ($my["live_current_id"] !== $live["id"] && !is_admin($my["id"]) && !is_collabo($my["id"], $live["id"]))
   api_json(["error" => "エラー: あなたは現在配信していないか、編集権限がありません。"]);
 
 $force = $_POST["force"] === "1";
@@ -23,9 +23,6 @@ if ($_POST["type"] === "sensitive") {
   $live["misc"]["able_comment"] = $force ? false : empty($live["misc"]["able_comment"]);
   $result = $live["misc"]["able_comment"];
 } else if ($_POST["type"] === "stop") {
-  if ($live["is_live"] === 2) {
-    disconnectClient($live);
-  }
   end_live($live["id"]);
 } else {
   api_json(["error" => "Error: type"]);

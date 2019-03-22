@@ -14,6 +14,9 @@
         </div>
         <hr>
 
+        <?php if (isset($live) && is_collabo($my["id"], $live["id"])) : ?>
+        <input type="checkbox" class="invisible" id="blocking_permanent">
+        <?php else : ?>
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="blocking_permanent" value="1">
@@ -26,6 +29,7 @@
             </label>
           </div>
         </div>
+        <?php endif; ?>
 
         <div class="form-group">
           <div class="custom-control custom-checkbox">
@@ -44,7 +48,7 @@
         </small>
 
         <button type="submit"
-                onclick="knzk.live.admin.addBlocking()"
+                onclick="knzk.live.admin.addBlocking(<?=isset($live) ? $live["id"] : null?>)"
                 class="btn btn-danger btn-block">
           :: ブロックする ::
         </button>

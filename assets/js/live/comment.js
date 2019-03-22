@@ -97,7 +97,7 @@ class comment {
   }
 
   static delete(id, acct) {
-    if (!config.live.is_broadcaster) return false;
+    if (!config.live.is_broadcaster && !config.live.is_collabo) return false;
 
     if (
       confirm(
@@ -148,7 +148,7 @@ class comment {
             tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
           );
           kit
-            .elemId('iframe')
+            .elemId('mainiframe')
             .contentWindow.knzk.live_embed.danmaku.comment_view(
               ws_reshtml['content']
             );
