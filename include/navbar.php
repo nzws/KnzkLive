@@ -112,7 +112,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
         </div>
         <small>
           <?=$env["masto_login"]["domain"]?>以外のアカウントでログインすると一部のアカウントではコメントが表示できない可能性があります。
-          <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_faq#外部インスタンスから投稿したコメントトゥートが表示できない" target="_blank">理由</a>
+          <a href="https://knzklive-docs.knzk.me/#/docs/user/faq.md#外部インスタンスから投稿したコメントトゥートが表示できない" target="_blank">理由</a>
         </small><br>
         <small>KnzkLiveではアクセストークンをデータベースに保管しません。また、認証とコメント以外に使用する事はありません。</small>
       </div>

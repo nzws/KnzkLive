@@ -79,7 +79,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
 <?php include "../include/navbar.php"; ?>
 <div class="container">
   <p>
-    <a href="https://github.com/KnzkDev/KnzkLive/wiki/broadcast_intro" target="_blank">Wiki: 配信を始めるには</a>
+    <a href="https://knzklive-docs.knzk.me/#/docs/streamer/getting-started.md" target="_blank">Wiki: 配信を始めるには</a>
   </p>
   <form method="post">
     <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">

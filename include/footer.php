@@ -6,7 +6,7 @@
         <ul>
           <li><a href="<?=u()?>">ホーム</a></li>
           <li><a href="<?=u("terms")?>">利用規約とガイドライン</a></li>
-          <li><a href="https://github.com/KnzkDev/KnzkLive/wiki" target="_blank">Wiki</a></li>
+          <li><a href="https://knzklive-docs.knzk.me/" target="_blank">Wiki</a></li>
           <li><a href="https://knzk.me/@KnzkLiveNotification" target="_blank">プッシュ通知を有効化 <?=i("mastodon", "b")?></a></li>
           <li><a href="https://knzk.me/@TIPKnzk" target="_blank">@TIPKnzk <?=i("mastodon", "b")?></a></li>
           <li><a href="https://nzws.me/donate.html" target="_blank">KnzkLiveを支援</a></li>

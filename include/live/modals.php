@@ -174,7 +174,7 @@
       </div>
       <div class="modal-body">
         <p>
-          この配信者は<a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank"><b>コメントハイライト</b></a>機能を有効にしているため、下記の手順で支援すると、あなたがコメント欄で目立つように表示させる事が出来ます。<br>
+          この配信者は<a href="https://knzklive-docs.knzk.me/#/docs/user/comment-highlight.md" target="_blank"><b>コメントハイライト</b></a>機能を有効にしているため、下記の手順で支援すると、あなたがコメント欄で目立つように表示させる事が出来ます。<br>
         </p>
         <?php if (!empty($liveUser["donation_desc"])) : ?>
           <div class="input-group">

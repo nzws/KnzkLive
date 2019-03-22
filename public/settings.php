@@ -177,7 +177,7 @@ if ($_POST) {
             <label class="form-check-label" for="donate_link5">コメントハイライト (自動) <small>(StreamLabs)</small></label>
           </div>
 
-          <a href="https://github.com/KnzkDev/KnzkLive/wiki/listener_ch" target="_blank">コメントハイライトとは</a>
+          <a href="https://knzklive-docs.knzk.me/#/docs/user/comment-highlight.md" target="_blank">コメントハイライトとは</a>
         </div>
 
         <div class="mb-3">
