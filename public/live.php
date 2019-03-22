@@ -187,7 +187,7 @@ $vote = loadVote($live["id"]);
         <?php include "../include/live/admin_panel.php"; ?>
       <?php endif; ?>
 
-      <?php if (is_collabo($my["id"], $live["id"])) : ?>
+      <?php if ($live["is_live"] !== 0 && is_collabo($my["id"], $live["id"])) : ?>
         <hr>
         <?php include "../include/live/collabo_panel.php"; ?>
       <?php endif; ?>
