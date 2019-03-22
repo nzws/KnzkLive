@@ -31,6 +31,7 @@ if (isset($_POST["type"])) {
     if (!$user) api_json(["error" => "エラー: ユーザが見つかりません。"]);
 
     setSlot($live["misc"]["collabo"][$user["id"]]["slot"], 0);
+    setCollaboLiveStatus($user["id"], $live["id"], 1);
     if ($live["misc"]["collabo"][$user["id"]]["status"] === 2) {
       disconnectClient($live["id"], $user["id"]);
     }
