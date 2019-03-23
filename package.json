@@ -1,14 +1,13 @@
 {
   "name": "knzklive",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/KnzkDev/KnzkLive.git",
   "author": "KnzkDev Team <contact-knzklive@nzws.me>",
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
     "start": "php -S localhost:10213 -t public/",
-    "ws:start": "node ws/index.js",
+    "ws:start": "node worker/index.js",
     "lint:css": "stylelint **/*.scss",
     "lint": "npm-run-all lint:* -s",
     "fmt:md": "prettier --write '**/*.md'",

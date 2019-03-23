@@ -2,6 +2,7 @@ const app = require('express')();
 const http = require('http').Server(app);
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
+const ffmpeg = require('fluent-ffmpeg');
 const lastUpdate = {
   detect: null,
   tipknzk: null,
@@ -226,80 +227,10 @@ function donateRun(username, live_id, amount, currency) {
 }
 
 const WebSocketClient = require('websocket').client;
-const mysql = require('mysql');
 const striptags = require('striptags');
 const exec = require('child_process').exec;
 const fetch = require('node-fetch');
 const config = require('../config');
-let conf = {
-  hashtag: [],
-  acct: [],
-  hashtag_id: {}
-};
-
-const db = mysql.createPool({
-  host: config.db.host,
-  port: config.db.port,
-  user: config.db.user,
-  password: config.db.pass,
-  database: config.db.name
-});
-
-db.getConnection(function(err, connection) {
-  if (err) {
-    console.error('[DBERROR]', err);
-    db.end(function() {
-      process.exit();
-    });
-  } else {
-    connection.release();
-  }
-});
-
-db.query('SELECT * FROM `live` WHERE is_live = 1 OR is_live = 2', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    if (item['custom_hashtag']) {
-      conf.hashtag.push(item['custom_hashtag']);
-    } else {
-      conf.hashtag.push('knzklive_' + item['id']);
-      conf.hashtag_id['knzklive_' + item['id']] = item['id'];
-    }
-  }
-  console.log('[Worker Hashtag]', conf.hashtag, conf.hashtag_id);
-});
-
-db.query('SELECT * FROM `users` WHERE twitter_id IS NULL', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    conf.acct.push(item['acct']);
-  }
-  console.log('[Worker Users]', conf.acct);
-});
-
-db.query('SELECT * FROM `users` WHERE live_current_id != 0', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    const misc = JSON.parse(item['misc']);
-    if (misc['donation_alerts_token'])
-      startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
-    if (misc['streamlabs_token'])
-      startSLConnect(misc['streamlabs_token'], item['live_current_id']);
-  }
-  console.log('[Worker Donate]');
-});
 
 function reConnect($type = 'worker') {
   console.log('サーバとの接続が切れました。30秒後にリトライします...', $type);
@@ -466,48 +397,3 @@ function StartTIPKnzk() {
 
 StartWorker();
 StartTIPKnzk();
-
-function post(value, option = {}, visibility = 'public') {
-  var optiondata = {
-    status: value,
-    visibility: visibility
-  };
-
-  if (option.cw) {
-    optiondata.spoiler_text = option.cw;
-  }
-  if (option.in_reply_to_id) {
-    optiondata.in_reply_to_id = option.in_reply_to_id;
-  }
-  if (option.media_ids) {
-    optiondata.media_ids = option.media_ids;
-  }
-  if (option.sensitive) {
-    optiondata.sensitive = option.sensitive;
-  }
-  fetch('https://' + config.domain + '/api/v1/statuses', {
-    headers: {
-      'content-type': 'application/json',
-      Authorization: 'Bearer ' + config.tipknzk_token
-    },
-    method: 'POST',
-    body: JSON.stringify(optiondata)
-  })
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.warn('NG:POST:SERVER');
-        return null;
-      }
-    })
-    .then(function(json) {
-      if (json) {
-        if (json['id']) {
-          console.log('OK:POST');
-        } else {
-          console.warn('NG:POST:' + json);
-        }
-      }
-    });
-}
