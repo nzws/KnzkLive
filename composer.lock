@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca62b80fdd0ef1c7ad856c73bbb938c2",
+    "content-hash": "c4b49f996c3bdcab8e28231b2605ae4d",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -125,16 +125,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.90.7",
+            "version": "3.90.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5b188c9f5f21e87b4994bc1b477951eff4608547"
+                "reference": "bccb5b3509ed7517e50a75bba6b19ac4506aae70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5b188c9f5f21e87b4994bc1b477951eff4608547",
-                "reference": "5b188c9f5f21e87b4994bc1b477951eff4608547",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bccb5b3509ed7517e50a75bba6b19ac4506aae70",
+                "reference": "bccb5b3509ed7517e50a75bba6b19ac4506aae70",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-03-21T18:10:13+00:00"
+            "time": "2019-03-22T19:48:31+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1257,7 +1257,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
