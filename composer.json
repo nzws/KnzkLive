@@ -9,6 +9,9 @@
       "email": "contact-knzklive@nzws.me"
     }
   ],
+  "scripts": {
+    "fmt": "php-cs-fixer fix"
+  },
   "require": {
     "abraham/twitteroauth": "1.0.1",
     "ua-parser/uap-php": "3.8.6",
