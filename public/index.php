@@ -22,11 +22,11 @@ $lives = getAllLive();
         <div class="row">
           <?php
           if ($lives) {
-            $i = 0;
-            while (isset($lives[$i])) {
-              $url = liveUrl($lives[$i]["id"]);
-              $liveUser = getUser($lives[$i]["user_id"]);
-              echo <<< EOF
+              $i = 0;
+              while (isset($lives[$i])) {
+                  $url = liveUrl($lives[$i]["id"]);
+                  $liveUser = getUser($lives[$i]["user_id"]);
+                  echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
 <div class="card">
@@ -41,8 +41,8 @@ $lives = getAllLive();
 </a>
 </div>
 EOF;
-              $i++;
-            }
+                  $i++;
+              }
           }
           ?>
         </div>
@@ -56,9 +56,9 @@ EOF;
   <div class="row">
     <?php
     foreach (getLastLives() as $item) {
-      $liveUser = getUser($item["user_id"]);
-      $url = userUrl($liveUser["broadcaster_id"]);
-      echo <<< EOF
+        $liveUser = getUser($item["user_id"]);
+        $url = userUrl($liveUser["broadcaster_id"]);
+        echo <<< EOF
 <div class="col-md-3 card-base">
 <a href="{$url}">
 <div class="text-center">

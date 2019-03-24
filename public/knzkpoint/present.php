@@ -2,25 +2,34 @@
 require_once("../../lib/bootloader.php");
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if ($_POST) {
-  if (mb_strlen($_POST["comment"]) > 500) exit("ERR:文字数制限オーバー");
-  if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 1 || !is_numeric($_POST["point"])) exit("ERR:ポイントが不正です。");
-  $u = getUser($_POST["user"], "acct");
-  if ($u["id"] === $my["id"]) exit("ERR:自分自身には送信できません");
-  if ($u) {
-    $n = add_point($my["id"], $_POST["point"] * -1, "user", $u["acct"] . "にプレゼント");
-    if ($n) {
-      $o = add_point($u["id"], intval($_POST["point"] * 0.85), "user", $my["acct"] . "からのプレゼント  コメント: " . s($_POST["comment"]));
-      if ($o) header("Location: " . u("settings"));
-      else exit("例外エラー");
+    if (mb_strlen($_POST["comment"]) > 500) {
+        exit("ERR:文字数制限オーバー");
     }
-  } else {
-    exit("ERR:ユーザーが見つかりません。");
-  }
+    if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 1 || !is_numeric($_POST["point"])) {
+        exit("ERR:ポイントが不正です。");
+    }
+    $u = getUser($_POST["user"], "acct");
+    if ($u["id"] === $my["id"]) {
+        exit("ERR:自分自身には送信できません");
+    }
+    if ($u) {
+        $n = add_point($my["id"], $_POST["point"] * -1, "user", $u["acct"] . "にプレゼント");
+        if ($n) {
+            $o = add_point($u["id"], intval($_POST["point"] * 0.85), "user", $my["acct"] . "からのプレゼント  コメント: " . s($_POST["comment"]));
+            if ($o) {
+                header("Location: " . u("settings"));
+            } else {
+                exit("例外エラー");
+            }
+        }
+    } else {
+        exit("ERR:ユーザーが見つかりません。");
+    }
 }
 ?>
 <!doctype html>

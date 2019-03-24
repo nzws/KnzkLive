@@ -1,53 +1,67 @@
 <?php
 require_once("../lib/bootloader.php");
 $my = getMe();
-if (!$my) showError('ログインしてください。', 403);
-if (!$my["broadcaster_id"]) showError('あなたには配信権限がありません。', 403);
+if (!$my) {
+    showError('ログインしてください。', 403);
+}
+if (!$my["broadcaster_id"]) {
+    showError('あなたには配信権限がありません。', 403);
+}
 
 if (!isset($my["misc"]["voice_slot"]) || !isset($my["misc"]["emoji_slot"])) {
-  $my["misc"]["voice_slot"] = isset($my["misc"]["voice_slot"]) ? $my["misc"]["voice_slot"] : 0;
-  $my["misc"]["emoji_slot"] = isset($my["misc"]["emoji_slot"]) ? $my["misc"]["emoji_slot"] : 1;
-  setConfig($my["id"], $my["misc"]);
+    $my["misc"]["voice_slot"] = isset($my["misc"]["voice_slot"]) ? $my["misc"]["voice_slot"] : 0;
+    $my["misc"]["emoji_slot"] = isset($my["misc"]["emoji_slot"]) ? $my["misc"]["emoji_slot"] : 1;
+    setConfig($my["id"], $my["misc"]);
 }
 
 if (!empty($_POST)) {
-  $name = s($_POST["word"]);
-  if (!checkV($name, 1, 20)) showError('バリデーションエラー: name', 400);
-  $_POST["type"] = s($_POST["type"]);
+    $name = s($_POST["word"]);
+    if (!checkV($name, 1, 20)) {
+        showError('バリデーションエラー: name', 400);
+    }
+    $_POST["type"] = s($_POST["type"]);
 
-  if ($_POST["type"] === "voice") {
-    $able_item = null;
-    $able_comment = null;
-    $point = intval($_POST["point"]);
-    if (!($point >= 1 && $point <= 10000)) showError('バリデーションエラー: point', 400);
-  } elseif ($_POST["type"] === "emoji") {
-    if (!ctype_alnum($name)) showError("バリデーションエラー: 英数字", 400);
-    $able_item = isset($_POST["emoji_type_item"]) && $_POST["emoji_type_item"] == 1 ? 1 : 0;
-    $able_comment = isset($_POST["emoji_type_comment"]) && $_POST["emoji_type_comment"] == 1 ? 1 : 0;
-    $point = 0;
-  } else {
-    showError("バリデーションエラー: type", 400);
-  }
-  if (!checkItemSlot($my["id"], $_POST["type"])) showError('ポイントが足りません', 403);
-  $userCache = null;
-  $cacheItems = null;
-  $my = getMe();
+    if ($_POST["type"] === "voice") {
+        $able_item = null;
+        $able_comment = null;
+        $point = intval($_POST["point"]);
+        if (!($point >= 1 && $point <= 10000)) {
+            showError('バリデーションエラー: point', 400);
+        }
+    } elseif ($_POST["type"] === "emoji") {
+        if (!ctype_alnum($name)) {
+            showError("バリデーションエラー: 英数字", 400);
+        }
+        $able_item = isset($_POST["emoji_type_item"]) && $_POST["emoji_type_item"] == 1 ? 1 : 0;
+        $able_comment = isset($_POST["emoji_type_comment"]) && $_POST["emoji_type_comment"] == 1 ? 1 : 0;
+        $point = 0;
+    } else {
+        showError("バリデーションエラー: type", 400);
+    }
+    if (!checkItemSlot($my["id"], $_POST["type"])) {
+        showError('ポイントが足りません', 403);
+    }
+    $userCache = null;
+    $cacheItems = null;
+    $my = getMe();
 
-  $s3 = uploadFlie($_FILES["file"], $_POST["type"], $my["id"]);
-  if (!$s3["success"]) showError($s3["error"], 500);
+    $s3 = uploadFlie($_FILES["file"], $_POST["type"], $my["id"]);
+    if (!$s3["success"]) {
+        showError($s3["error"], 500);
+    }
 
-  $mysqli = db_start();
-  $stmt = $mysqli->prepare("INSERT INTO `items` (`type`, `user_id`, `name`, `point`, `file_name`, `able_item`, `able_comment`) VALUES (?, ?, ?, ?, ?, ?, ?);");
-  $stmt->bind_param('sssssss', $_POST["type"], $my["id"], $name, $point, $s3["file_name"], $able_item, $able_comment);
-  $stmt->execute();
-  $err = $stmt->error;
-  $stmt->close();
-  $mysqli->close();
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("INSERT INTO `items` (`type`, `user_id`, `name`, `point`, `file_name`, `able_item`, `able_comment`) VALUES (?, ?, ?, ?, ?, ?, ?);");
+    $stmt->bind_param('sssssss', $_POST["type"], $my["id"], $name, $point, $s3["file_name"], $able_item, $able_comment);
+    $stmt->execute();
+    $err = $stmt->error;
+    $stmt->close();
+    $mysqli->close();
 
-  if ($err) {
-    deleteFile($s3["file_name"], $_POST["type"]);
-    showError('DB登録エラー', 500);
-  }
+    if ($err) {
+        deleteFile($s3["file_name"], $_POST["type"]);
+        showError('DB登録エラー', 500);
+    }
 }
 
 $voice_limit = $my["misc"]["voice_slot"] - count(getItems($my["id"], 'voice'));

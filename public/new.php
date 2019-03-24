@@ -3,70 +3,70 @@ require_once("../lib/bootloader.php");
 
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if (!$my["broadcaster_id"]) {
-  http_response_code(403);
-  exit("ERR:あなたには配信権限がありません。");
+    http_response_code(403);
+    exit("ERR:あなたには配信権限がありません。");
 }
 
 if ($my["live_current_id"]) {
-  header("Location: ".u("live_manage"));
-  exit();
+    header("Location: ".u("live_manage"));
+    exit();
 }
 
 $slot = getAbleSlot();
 if (!$slot) {
-  http_response_code(503);
-  exit("ERR:現在、配信枠が不足しています。");
+    http_response_code(503);
+    exit("ERR:現在、配信枠が不足しています。");
 }
 
 if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["privacy_mode"])) {
-  if ($_POST["privacy_mode"] != "1" && $_POST["privacy_mode"] != "2" && $_POST["privacy_mode"] != "3") {
-    http_response_code(500);
-    exit();
-  }
-
-  $tag = !empty($_POST["tag_custom"]) ? s($_POST["tag_custom"]) : "";
-  if ($tag) {
-    // thx https://qiita.com/ma7ma7pipipi/items/f4759231390921fbacdd
-    if (!preg_match('/(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)/', $tag)) {
-      exit("ERR:このハッシュタグは使用できません。<a href=''>やり直す</a>");
+    if ($_POST["privacy_mode"] != "1" && $_POST["privacy_mode"] != "2" && $_POST["privacy_mode"] != "3") {
+        http_response_code(500);
+        exit();
     }
 
-    $tag = str_replace("#", "", $tag);
-  }
+    $tag = !empty($_POST["tag_custom"]) ? s($_POST["tag_custom"]) : "";
+    if ($tag) {
+        // thx https://qiita.com/ma7ma7pipipi/items/f4759231390921fbacdd
+        if (!preg_match('/(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)/', $tag)) {
+            exit("ERR:このハッシュタグは使用できません。<a href=''>やり直す</a>");
+        }
 
-  $random = bin2hex(random_bytes(32));
+        $tag = str_replace("#", "", $tag);
+    }
 
-  $misc["is_sensitive"] = isset($_POST["sensitive"]);
-  $misc["able_item"] = true;
-  $misc["able_comment"] = true;
-  $misc = json_encode($misc);
+    $random = bin2hex(random_bytes(32));
 
-  $mysqli = db_start();
-  $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `misc`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);");
-  $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $misc);
-  $stmt->execute();
-  $stmt->close();
-  $mysqli->close();
+    $misc["is_sensitive"] = isset($_POST["sensitive"]);
+    $misc["able_item"] = true;
+    $misc["able_comment"] = true;
+    $misc = json_encode($misc);
 
-  $mysqli = db_start();
-  $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE (is_live = 1 OR is_live = 2) AND user_id = ?;");
-  $stmt->bind_param("s", $my["id"]);
-  $stmt->execute();
-  $row = db_fetch_all($stmt);
-  $stmt->close();
-  $mysqli->close();
-  setUserLive($row[0]["id"], $my["id"]);
-  setSlot($slot, 1);
-  node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"], $my["id"]);
-  header("Location: ".u("live_manage") . "?new=open");
-  exit();
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `misc`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);");
+    $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $misc);
+    $stmt->execute();
+    $stmt->close();
+    $mysqli->close();
+
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE (is_live = 1 OR is_live = 2) AND user_id = ?;");
+    $stmt->bind_param("s", $my["id"]);
+    $stmt->execute();
+    $row = db_fetch_all($stmt);
+    $stmt->close();
+    $mysqli->close();
+    setUserLive($row[0]["id"], $my["id"]);
+    setSlot($slot, 1);
+    node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"], $my["id"]);
+    header("Location: ".u("live_manage") . "?new=open");
+    exit();
 } elseif ($my["misc"]["to_title"]) {
-  $last = getMyLastLive($my["id"]);
+    $last = getMyLastLive($my["id"]);
 }
 ?>
 <!doctype html>

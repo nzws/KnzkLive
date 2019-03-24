@@ -2,20 +2,22 @@
 require_once("../lib/bootloader.php");
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if (isset($_GET["liveid"])) {
-  $live = getLive($_GET["liveid"]);
-  if (!$live) exit("err: 配信が存在しません。");
-  $liveUser = getUser($live["user_id"]);
+    $live = getLive($_GET["liveid"]);
+    if (!$live) {
+        exit("err: 配信が存在しません。");
+    }
+    $liveUser = getUser($live["user_id"]);
 }
 
 if (isset($_POST["body"])) {
-  $id = bin2hex(openssl_random_pseudo_bytes(12));
+    $id = bin2hex(openssl_random_pseudo_bytes(12));
 
-  $data = [
+    $data = [
     "content" => $_POST["body"],
     "embeds" => [
       [
@@ -46,7 +48,9 @@ if (isset($_POST["body"])) {
     ]
   ];
 
-  if (!sendToDiscord($data)) exit("error: 送信に失敗しました。");
+    if (!sendToDiscord($data)) {
+        exit("error: 送信に失敗しました。");
+    }
 }
 ?>
 <!doctype html>

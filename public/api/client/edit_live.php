@@ -5,7 +5,7 @@ require_once("../../../lib/apiloader.php");
 $my = getMe();
 
 if ($my["live_current_id"] == 0) {
-  api_json(["error" => "エラー: あなたは現在配信していないか、配信権限がありません。"]);
+    api_json(["error" => "エラー: あなたは現在配信していないか、配信権限がありません。"]);
 }
 
 $live_id = s($my["live_current_id"]);
@@ -13,7 +13,7 @@ $title = s($_POST["name"]);
 $desc = s($_POST["description"]);
 
 if (!$title || !$desc) {
-  api_json(["error" => "エラー: 必要な値が入力されていません。"]);
+    api_json(["error" => "エラー: 必要な値が入力されていません。"]);
 }
 
 $mysqli = db_start();
@@ -24,7 +24,7 @@ $stmt->execute();
 $stmt->close();
 $mysqli->close();
 if ($err) {
-  api_json(["error" => "エラー: 登録中に不明なエラーが発生しました。文字数制限に引っかかっているかサーバーエラーの可能性があります。"]);
+    api_json(["error" => "エラー: 登録中に不明なエラーが発生しました。文字数制限に引っかかっているかサーバーエラーの可能性があります。"]);
 } else {
-  api_json(live4Pub(getLive($live_id)));
+    api_json(live4Pub(getLive($live_id)));
 }

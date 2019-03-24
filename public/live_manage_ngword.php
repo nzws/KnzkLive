@@ -2,13 +2,13 @@
 require_once("../lib/bootloader.php");
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if (!$my["broadcaster_id"]) {
-  http_response_code(403);
-  exit("ERR:あなたには配信権限がありません。");
+    http_response_code(403);
+    exit("ERR:あなたには配信権限がありません。");
 }
 ?>
 <!doctype html>

@@ -119,7 +119,7 @@
         <h5>カスタムSE</h5>
         リスナー全員に音を投下できます。
         <select class="form-control" id="item_voice">
-          <?php foreach(getItems($liveUser["id"], "voice") as $item) : ?>
+          <?php foreach (getItems($liveUser["id"], "voice") as $item) : ?>
             <option value="<?=$item["id"]?>" data-point="<?=$item["point"]?>" id="item_voice_<?=$item["id"]?>"><?=$item["name"]?> (<?=$item["point"]?>KP)</option>
           <?php endforeach; ?>
         </select>

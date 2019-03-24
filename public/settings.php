@@ -2,45 +2,52 @@
 require_once("../lib/bootloader.php");
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if ($_POST) {
-  $my["misc"]["to_title"] = isset($_POST["to_title"]);
-  $my["misc"]["no_toot_default"] = isset($_POST["no_toot_default"]);
-  $my["misc"]["auto_close"] = isset($_POST["auto_close"]);
-  $my["misc"]["auto_open_start"] = isset($_POST["auto_open_start"]);
-  $my["misc"]["hide_watching_list"] = isset($_POST["hide_watching_list"]);
-  $my["misc"]["comment_classic"] = isset($_POST["comment_classic"]);
-  $my["misc"]["webhook_url"] = $_POST["webhook_url"];
+    $my["misc"]["to_title"] = isset($_POST["to_title"]);
+    $my["misc"]["no_toot_default"] = isset($_POST["no_toot_default"]);
+    $my["misc"]["auto_close"] = isset($_POST["auto_close"]);
+    $my["misc"]["auto_open_start"] = isset($_POST["auto_open_start"]);
+    $my["misc"]["hide_watching_list"] = isset($_POST["hide_watching_list"]);
+    $my["misc"]["comment_classic"] = isset($_POST["comment_classic"]);
+    $my["misc"]["webhook_url"] = $_POST["webhook_url"];
 
-  if (!isset($_POST["donate_link"])) $_POST["donate_link"] = 1;
-  $my["misc"]["donate_url"] = $_POST["donate_link"] == 2 ? $_POST["donate_url"] : null;
-  $my["donation_desc"] = $_POST["donate_link"] == 3 ? $_POST["donation_desc"] : null;
+    if (!isset($_POST["donate_link"])) {
+        $_POST["donate_link"] = 1;
+    }
+    $my["misc"]["donate_url"] = $_POST["donate_link"] == 2 ? $_POST["donate_url"] : null;
+    $my["donation_desc"] = $_POST["donate_link"] == 3 ? $_POST["donation_desc"] : null;
 
-  $my["misc"]["donation_alerts_token"] = $_POST["donate_link"] == 4 ? $_POST["donation_alerts_token"] : null;
-  $my["misc"]["donation_alerts_name"] = $_POST["donate_link"] == 4 ? $_POST["donation_alerts_name"] : null;
-  if ($_POST["donate_link"] == 4 && (!$_POST["donation_alerts_token"] || !$_POST["donation_alerts_name"]))
-    exit("ERR: 値が不足しています。");
+    $my["misc"]["donation_alerts_token"] = $_POST["donate_link"] == 4 ? $_POST["donation_alerts_token"] : null;
+    $my["misc"]["donation_alerts_name"] = $_POST["donate_link"] == 4 ? $_POST["donation_alerts_name"] : null;
+    if ($_POST["donate_link"] == 4 && (!$_POST["donation_alerts_token"] || !$_POST["donation_alerts_name"])) {
+        exit("ERR: 値が不足しています。");
+    }
 
-  $require_auth_sl = ($_POST["donate_link"] == 5 && $my["misc"]["streamlabs_name"] != $_POST["streamlabs_name"]);
-  $my["misc"]["streamlabs_name"] = $_POST["donate_link"] == 5 ? $_POST["streamlabs_name"] : null;
-  if ($_POST["donate_link"] != 5) $my["misc"]["streamlabs_token"] = null;
+    $require_auth_sl = ($_POST["donate_link"] == 5 && $my["misc"]["streamlabs_name"] != $_POST["streamlabs_name"]);
+    $my["misc"]["streamlabs_name"] = $_POST["donate_link"] == 5 ? $_POST["streamlabs_name"] : null;
+    if ($_POST["donate_link"] != 5) {
+        $my["misc"]["streamlabs_token"] = null;
+    }
 
-  setConfig($my["id"], $my["misc"], $my["donation_desc"]);
+    setConfig($my["id"], $my["misc"], $my["donation_desc"]);
 
-  if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
-    if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) exit("ERR: この配信者IDは使用できません。");
-  }
+    if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
+        if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) {
+            exit("ERR: この配信者IDは使用できません。");
+        }
+    }
 
-  if ($require_auth_sl) {
-    header("Location: " . u("auth/streamlabs"));
-    exit();
-  }
+    if ($require_auth_sl) {
+        header("Location: " . u("auth/streamlabs"));
+        exit();
+    }
 
-  $userCache = null;
-  $my = getMe();
+    $userCache = null;
+    $my = getMe();
 }
 ?>
 <!doctype html>
@@ -371,10 +378,15 @@ if ($_POST) {
             </thead>
             <tbody id="point_hist">
             <?php foreach (get_point_log($my["id"], "hist") as $item) :
-              if ($item["type"] === "toot") $item["type"] = "トゥート/コメント";
-              elseif ($item["type"] === "user") $item["type"] = "チケット/プレゼント";
-              elseif ($item["type"] === "live") $item["type"] = "配信";
-              else $item["type"] = "その他";
+              if ($item["type"] === "toot") {
+                  $item["type"] = "トゥート/コメント";
+              } elseif ($item["type"] === "user") {
+                  $item["type"] = "チケット/プレゼント";
+              } elseif ($item["type"] === "live") {
+                  $item["type"] = "配信";
+              } else {
+                  $item["type"] = "その他";
+              }
               ?>
               <tr>
                 <td><?=s($item["created_at"])?></td>

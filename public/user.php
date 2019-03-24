@@ -2,12 +2,14 @@
 require_once("../lib/bootloader.php");
 $user = getUser($_GET["id"], "broadcaster_id");
 if (empty($user)) {
-  http_response_code(404);
-  exit("ERR:このユーザーは存在しません。");
+    http_response_code(404);
+    exit("ERR:このユーザーは存在しません。");
 }
 
 $new_live = ($user["live_current_id"]) ? getLive($user["live_current_id"]) : null;
-if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) $new_live = null;
+if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) {
+    $new_live = null;
+}
 ?>
 <!doctype html>
 <html lang="ja" data-page="user">
@@ -60,9 +62,9 @@ if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_start
   <div class="row">
     <?php
     foreach (getUserLives($user["id"]) as $item) {
-      $url = liveUrl($item["id"]);
-      $date = date("Y/m/d H:i", strtotime($item["created_at"]));
-      echo <<< EOF
+        $url = liveUrl($item["id"]);
+        $date = date("Y/m/d H:i", strtotime($item["created_at"]));
+        echo <<< EOF
 <div class="col-md-3 live">
 <a href="{$url}">
 <div class="card">

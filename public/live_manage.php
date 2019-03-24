@@ -3,55 +3,55 @@ require_once("../lib/bootloader.php");
 
 $my = getMe();
 if (!isset($my)) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if (!$my["live_current_id"]) {
-  header("Location: ".u("new"));
-  exit();
+    header("Location: ".u("new"));
+    exit();
 }
 $live = getLive($my["live_current_id"]);
 if (!isset($live)) {
-  http_response_code(500);
-  exit("ERR:問題が発生しました。管理者にお問い合わせください。");
+    http_response_code(500);
+    exit("ERR:問題が発生しました。管理者にお問い合わせください。");
 }
 $slot = getSlot($live["slot_id"]);
 
 if (isset($_GET["mode"])) {
-  if ($_SESSION['csrf_token'] != $_GET['t']) {
-    http_response_code(403);
-    exit("ERROR: CSRF Challenge is failed");
-  }
+    if ($_SESSION['csrf_token'] != $_GET['t']) {
+        http_response_code(403);
+        exit("ERROR: CSRF Challenge is failed");
+    }
 
-  if ($_GET["mode"] == "shutdown") {
-    end_live($live["id"]);
-    header("Location: ".u());
+    if ($_GET["mode"] == "shutdown") {
+        end_live($live["id"]);
+        header("Location: ".u());
 
-    exit();
-  }
+        exit();
+    }
 }
 
 if (isset($_POST["type"])) {
-  if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5 && $live["is_started"] != 1) {
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("UPDATE `live` SET is_started = 1, created_at = CURRENT_TIMESTAMP WHERE id = ?;");
-    $stmt->bind_param('s', $live["id"]);
-    $stmt->execute();
-    $stmt->close();
-    $mysqli->close();
-    $live = getLive($live["id"]);
+    if ($_POST["type"] == "start" && $_POST["start_post"] > 0 && $_POST["start_post"] < 5 && $live["is_started"] != 1) {
+        $mysqli = db_start();
+        $stmt = $mysqli->prepare("UPDATE `live` SET is_started = 1, created_at = CURRENT_TIMESTAMP WHERE id = ?;");
+        $stmt->bind_param('s', $live["id"]);
+        $stmt->execute();
+        $stmt->close();
+        $mysqli->close();
+        $live = getLive($live["id"]);
 
-    if ($_POST["start_post"] < 4) {
-      $visibility = $_POST["start_post"] == 1 ? "public" :
+        if ($_POST["start_post"] < 4) {
+            $visibility = $_POST["start_post"] == 1 ? "public" :
         ($_POST["start_post"] == 2 ? "unlisted" :
           ($_POST["start_post"] == 3 ? "private" : ""));
-      postLiveStart($live, $_POST["start_push"], $visibility);
+            postLiveStart($live, $_POST["start_push"], $visibility);
+        }
+        if (!empty($my["misc"]["webhook_url"]) && isset($_POST["start_push"])) {
+            postWebHook($live);
+        }
     }
-    if (!empty($my["misc"]["webhook_url"]) && isset($_POST["start_push"])) {
-      postWebHook($live);
-    }
-  }
 }
 
 $liveurl = liveUrl($live["id"]);

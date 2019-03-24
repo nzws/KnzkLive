@@ -1,21 +1,31 @@
 <?php
 require_once("../lib/bootloader.php");
 $live = getLive(s($_GET["id"]));
-if (!$live) showError('この配信は存在しません。', 404);
+if (!$live) {
+    showError('この配信は存在しません。', 404);
+}
 $liveUser = getUser(isset($_GET["collabo"]) ? $_GET["collabo"] : $live["user_id"]);
-if (!$liveUser) showError('値が不正です。', 500);
+if (!$liveUser) {
+    showError('値が不正です。', 500);
+}
 $slot = getSlot(isset($_GET["collabo"]) ? $live["misc"]["collabo"][$_GET["collabo"]]["slot"] : $live["slot_id"]);
 
 $my = getMe();
-if (!$my && $live["privacy_mode"] === 3) showError('この配信は非公開です。', 403);
+if (!$my && $live["privacy_mode"] === 3) {
+    showError('この配信は非公開です。', 403);
+}
 
 $myLive = $my["id"] === $live["user_id"];
-if (!$myLive && $live["is_started"] == "0") showError('この配信はまだ開始されていません。', 403);
+if (!$myLive && $live["is_started"] == "0") {
+    showError('この配信はまだ開始されていません。', 403);
+}
 
 if (empty($_SESSION["watch_type"])) {
-  $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
+    $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
 }
-if (isset($_GET["watch_type"])) $_SESSION["watch_type"] = $_GET["watch_type"] == 0 ? "FLV" : "HLS";
+if (isset($_GET["watch_type"])) {
+    $_SESSION["watch_type"] = $_GET["watch_type"] == 0 ? "FLV" : "HLS";
+}
 $mode = $_SESSION["watch_type"];
 
 $stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]) . "collabo" : "");

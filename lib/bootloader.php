@@ -12,27 +12,27 @@ if (file_exists($confpath)) {
 }
 
 if ($env["is_testing"]) {
-  ini_set('display_errors', 1);
+    ini_set('display_errors', 1);
 }
 
 if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-  $_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    $_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
 }
 
 session_start();
 if (!isset($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token'])) {
-  http_response_code(403);
-  exit("ERROR: CSRF Challenge is failed");
+    http_response_code(403);
+    exit("ERROR: CSRF Challenge is failed");
 }
 $libpt = __DIR__ . "/";
 
 if (!file_exists($libpt."../vendor/autoload.php")) {
-  http_response_code(500);
-  exit("SERVER ERROR: Please install composer deps");
+    http_response_code(500);
+    exit("SERVER ERROR: Please install composer deps");
 }
 
 require_once($libpt."../vendor/autoload.php");
@@ -60,5 +60,5 @@ if ($_8mb < intval($max_filesize)) {
 */
 
 if ($env["is_maintenance"]) {
-  showError("現在メンテナンス中です。", 503);
+    showError("現在メンテナンス中です。", 503);
 }

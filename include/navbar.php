@@ -2,7 +2,9 @@
 <div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
 <?php endif; ?>
 <?php
-if (empty($_SESSION["UA_CONF"])) $_SESSION["UA_CONF"] = serialize(UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']));
+if (empty($_SESSION["UA_CONF"])) {
+    $_SESSION["UA_CONF"] = serialize(UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']));
+}
 $ua = unserialize($_SESSION["UA_CONF"]);
 if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 ?>
@@ -32,7 +34,9 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 </script>
 <?php endif; ?>
 
-<div class="container<?php if(isset($navmode)) echo "-fluid"; ?> nav-container wide_hide">
+<div class="container<?php if (isset($navmode)) {
+    echo "-fluid";
+} ?> nav-container wide_hide">
   <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
     <a class="col-auto header-brand" href="<?=u("")?>">
       <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>

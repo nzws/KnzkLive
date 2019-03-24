@@ -6,7 +6,7 @@ header('Access-Control-Allow-Origin: *');
 $live = getLive(s($_GET["id"]));
 
 if (!$live) {
-  api_json(["error" => "放送が見つかりません"]);
+    api_json(["error" => "放送が見つかりません"]);
 }
 
 $live["description"] = HTMLHelper($live["description"]);

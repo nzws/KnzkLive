@@ -2,21 +2,29 @@
 require_once("../../lib/bootloader.php");
 $my = getMe();
 if (!$my) {
-  http_response_code(403);
-  exit("ERR:ログインしてください。");
+    http_response_code(403);
+    exit("ERR:ログインしてください。");
 }
 
 if ($_POST) {
-  if (mb_strlen($_POST["comment"]) > 500) exit("ERR:文字数制限オーバー");
-  if (!check_point_true($my["point_count"], $_POST["point"]) || $_POST["point"] <= 1) exit("ERR:ポイントが足りないか不正です。");
+    if (mb_strlen($_POST["comment"]) > 500) {
+        exit("ERR:文字数制限オーバー");
+    }
+    if (!check_point_true($my["point_count"], $_POST["point"]) || $_POST["point"] <= 1) {
+        exit("ERR:ポイントが足りないか不正です。");
+    }
 
-  $hash = create_ticket($my["id"], intval($_POST["point"] * 0.85), $_POST["comment"]);
-  if (!$hash) exit("作成エラー");
-  $n = add_point($my["id"], $_POST["point"] * -1, "user", "チケット発行 チケットID: " . $hash);
-  if (!$n) exit("作成エラー (管理者にお問い合わせください)");
+    $hash = create_ticket($my["id"], intval($_POST["point"] * 0.85), $_POST["comment"]);
+    if (!$hash) {
+        exit("作成エラー");
+    }
+    $n = add_point($my["id"], $_POST["point"] * -1, "user", "チケット発行 チケットID: " . $hash);
+    if (!$n) {
+        exit("作成エラー (管理者にお問い合わせください)");
+    }
 
-  $userCache = null;
-  $my = getMe();
+    $userCache = null;
+    $my = getMe();
 }
 ?>
 <!doctype html>

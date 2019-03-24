@@ -6,8 +6,8 @@ $post = comment_get(s($_GET["id"]));
 
 $i = 0;
 while (isset($post[$i])) {
-  $acct[$i] = getUser($post[$i]["user_id"]);
-  $post[$i] = [
+    $acct[$i] = getUser($post[$i]["user_id"]);
+    $post[$i] = [
     "id" => "knzklive_".$post[$i]["id"],
     "live_id" => $post[$i]["live_id"],
     "is_knzklive" => true,
@@ -21,7 +21,7 @@ while (isset($post[$i])) {
     "content" => $post[$i]["content"],
     "created_at" => dateHelper($post[$i]["created_at"])
   ];
-  $i++;
+    $i++;
 }
 
 api_json($post === false ? [] : $post);
