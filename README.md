@@ -5,7 +5,7 @@
 [![code style: prettier](https://badgen.net/badge/code%20style/prettier/pink)](https://github.com/prettier/prettier)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/KnzkDev/KnzkLive.svg)](https://isitmaintained.com/project/KnzkDev/KnzkLive 'Average time to resolve an issue')
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/KnzkDev/KnzkLive.svg)](https://isitmaintained.com/project/KnzkDev/KnzkLive 'Percentage of issues still open')
-[![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](http://makeapullrequest.com)
+[![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](https://github.com/KnzkDev/KnzkLive/pulls)
 [![MIT License](https://badgen.net/badge/license/MPL-2.0/blue)](LICENSE)
 
 > No ads, Unlimited, Open-Source Live Streaming Service.
