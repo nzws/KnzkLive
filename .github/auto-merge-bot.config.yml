@@ -3,4 +3,4 @@ delete_branch: delete
 labels:
   - [Dependencies 📦, minor]
   - [Dependencies 📦, patch]
-  - auto_merge
+  - Auto merge 🔀
