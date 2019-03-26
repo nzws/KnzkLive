@@ -2,6 +2,7 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Fiber = require('fibers');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const Sass = require('sass');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackBar = require('webpackbar');
@@ -18,7 +19,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: ['babel-loader?cacheDirectory']
+        use: [{ loader: 'babel-loader', options: { cacheDirectory: true } }]
       },
       {
         test: /\.(scss)$/,
@@ -29,7 +30,7 @@ module.exports = {
           { loader: 'postcss-loader' },
           {
             loader: 'sass-loader',
-            options: { implementation: require('sass'), fiber: Fiber }
+            options: { implementation: Sass, fiber: Fiber }
           }
         ]
       },
