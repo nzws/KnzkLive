@@ -40,23 +40,23 @@ function node_update_conf($mode, $type, $value, $live_id, $user_id = null)
     $user = $user_id ? getUser($user_id) : null;
 
     $data = [
-    "mode" => $mode,
-    "type" => $type,
-    "value" => $value,
-    "live_id" => $live_id,
-    "da_token" => !empty($user["misc"]["donation_alerts_token"]) ? $user["misc"]["donation_alerts_token"] : null,
-    "sl_token" => !empty($user["misc"]["streamlabs_token"]) ? $user["misc"]["streamlabs_token"] : null
-  ];
+        "mode" => $mode,
+        "type" => $type,
+        "value" => $value,
+        "live_id" => $live_id,
+        "da_token" => !empty($user["misc"]["donation_alerts_token"]) ? $user["misc"]["donation_alerts_token"] : null,
+        "sl_token" => !empty($user["misc"]["streamlabs_token"]) ? $user["misc"]["streamlabs_token"] : null
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/update_conf", false, $options);
 }

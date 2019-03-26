@@ -35,9 +35,9 @@ if (isset($_POST["type"])) {
         }
 
         $live["misc"]["collabo"][$user["id"]] = [
-      "token" => generateHash(),
-      "status" => 1
-    ];
+            "token" => generateHash(),
+            "status" => 1
+        ];
     } else {
         $user = getUser($_POST["user_id"]);
         if (!$user) {

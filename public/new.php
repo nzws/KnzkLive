@@ -72,72 +72,72 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
 <!doctype html>
 <html lang="ja">
 <head>
-  <?php include "../include/header.php"; ?>
-  <title>配信を始める - <?=$env["Title"]?></title>
+    <?php include "../include/header.php"; ?>
+    <title>配信を始める - <?=$env["Title"]?></title>
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
 <div class="container">
-  <p>
-    <a href="https://knzklive-docs.knzk.me/#/docs/streamer/getting-started.md" target="_blank">Wiki: 配信を始めるには</a>
-  </p>
-  <form method="post">
-    <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-    <div class="form-group">
-      <label for="title">配信タイトル</label>
-      <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=isset($last["name"]) ? $last["name"] : null?>">
-      <small id="title_note" class="form-text text-muted">100文字以下</small>
-    </div>
+    <p>
+        <a href="https://knzklive-docs.knzk.me/#/docs/streamer/getting-started.md" target="_blank">Wiki: 配信を始めるには</a>
+    </p>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+        <div class="form-group">
+            <label for="title">配信タイトル</label>
+            <input type="text" class="form-control" id="title" name="title" aria-describedby="title_note" placeholder="タイトル" required value="<?=isset($last["name"]) ? $last["name"] : null?>">
+            <small id="title_note" class="form-text text-muted">100文字以下</small>
+        </div>
 
-    <div class="form-group">
-      <label for="description">配信の説明</label>
-      <textarea class="form-control" id="description" name="description" rows="4" required><?=isset($last["description"]) ? $last["description"] : null?></textarea>
-    </div>
+        <div class="form-group">
+            <label for="description">配信の説明</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required><?=isset($last["description"]) ? $last["description"] : null?></textarea>
+        </div>
 
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1">
-      <label class="form-check-label" for="sensitive">
-        センシティブな配信としてマークする<br>
-        <small>ユーザーが配信画面を開く際に警告が表示されます / 後から変更できます</small>
-      </label>
-    </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="sensitive" name="sensitive" value="1">
+            <label class="form-check-label" for="sensitive">
+                センシティブな配信としてマークする<br>
+                <small>ユーザーが配信画面を開く際に警告が表示されます / 後から変更できます</small>
+            </label>
+        </div>
 
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode1" value="1" checked>
-      <label class="form-check-label" for="privacy_mode1">
-        公開<br>
-        <small>トップページに表示され、誰でも視聴できます</small>
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode2" value="2">
-      <label class="form-check-label" for="privacy_mode2">
-        未収載<br>
-        <small>トップページに表示されませんが、URLがあれば誰でも視聴できます</small>
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode3" value="3">
-      <label class="form-check-label" for="privacy_mode3">
-        非公開<br>
-        <small>トップページに表示されず、視聴にはログインが必要です</small><br>
-        <small>* あなたのフォロワーでなくても、KnzkLiveにログインしていれば視聴できます</small>
-      </label>
-    </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode1" value="1" checked>
+            <label class="form-check-label" for="privacy_mode1">
+                公開<br>
+                <small>トップページに表示され、誰でも視聴できます</small>
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode2" value="2">
+            <label class="form-check-label" for="privacy_mode2">
+                未収載<br>
+                <small>トップページに表示されませんが、URLがあれば誰でも視聴できます</small>
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="privacy_mode" id="privacy_mode3" value="3">
+            <label class="form-check-label" for="privacy_mode3">
+                非公開<br>
+                <small>トップページに表示されず、視聴にはログインが必要です</small><br>
+                <small>* あなたのフォロワーでなくても、KnzkLiveにログインしていれば視聴できます</small>
+            </label>
+        </div>
 
-    <hr>
-    <b>コメントハッシュタグ設定:</b><br>
-    <small>他のユーザーが既に使用していないか確認した上で設定してください。</small><br>
-    空欄にすると #knzklive_(連番) が使用されます。<br>
-    <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)" value="<?=isset($last["custom_hashtag"]) ? $last["custom_hashtag"] : null?>">
-    <hr>
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="term" required>
-      <label class="form-check-label" for="term"><a href="<?=u("terms")?>" target="_blank">利用規約・ガイドライン</a>に同意する</label>
-    </div>
+        <hr>
+        <b>コメントハッシュタグ設定:</b><br>
+        <small>他のユーザーが既に使用していないか確認した上で設定してください。</small><br>
+        空欄にすると #knzklive_(連番) が使用されます。<br>
+        <input type="text" class="form-control" id="tag_custom" name="tag_custom" placeholder="ハッシュタグ名(#は必要なし)" value="<?=isset($last["custom_hashtag"]) ? $last["custom_hashtag"] : null?>">
+        <hr>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="term" required>
+            <label class="form-check-label" for="term"><a href="<?=u("terms")?>" target="_blank">利用規約・ガイドライン</a>に同意する</label>
+        </div>
 
-    <button type="submit" class="btn btn-primary">配信枠を取得</button>
-  </form>
+        <button type="submit" class="btn btn-primary">配信枠を取得</button>
+    </form>
 </div>
 
 <?php include "../include/footer.php"; ?>

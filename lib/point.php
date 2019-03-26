@@ -116,10 +116,10 @@ function get_point_log_stat($user_id, $type, $day_type)
     foreach ($l as $item) {
         if ($item["type"] === $type && $item["point"] > 0) {
             if (
-      ($day_type === "today" && date('Ymd') === date('Ymd', strtotime($item["created_at"]))) ||
-      ($day_type === "yesterday" && date('Ymd', strtotime("-1 day")) === date('Ymd', strtotime($item["created_at"]))) ||
-      ($day_type === "month" && date('Ym') === date('Ym', strtotime($item["created_at"])))
-      ) {
+            ($day_type === "today" && date('Ymd') === date('Ymd', strtotime($item["created_at"]))) ||
+            ($day_type === "yesterday" && date('Ymd', strtotime("-1 day")) === date('Ymd', strtotime($item["created_at"]))) ||
+            ($day_type === "month" && date('Ym') === date('Ym', strtotime($item["created_at"])))
+            ) {
                 $point += $item["point"];
             }
         }

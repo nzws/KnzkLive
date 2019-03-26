@@ -33,28 +33,28 @@ function comment_post($content, $user_id, $live_id, $is_html = false)
     // is_html が true なら大体システムメッセージなのでカウントする必要が無い
 
     $data = [
-    "id" => "knzklive_".$id,
-    "live_id" => $live_id,
-    "is_knzklive" => true,
-    "account" => [
-      "display_name" => $my["name"],
-      "acct" => $my["acct"]." (local)",
-      "username" => $my["acct"],
-      "avatar" => $my["misc"]["avatar"],
-      "url" => $my["misc"]["user_url"]
-    ],
-    "content" => $content,
-  ];
+        "id" => "knzklive_".$id,
+        "live_id" => $live_id,
+        "is_knzklive" => true,
+        "account" => [
+            "display_name" => $my["name"],
+            "acct" => $my["acct"]." (local)",
+            "username" => $my["acct"],
+            "avatar" => $my["misc"]["avatar"],
+            "url" => $my["misc"]["user_url"]
+        ],
+        "content" => $content,
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_comment", false, $options);
     return $id;
@@ -113,15 +113,15 @@ function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false)
     }
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode([
-      "live_id" => $live_id,
-      "delete_id" => ($is_knzklive ? "knzklive_" : "") . $comment_id
-    ]),
-    'header' => implode(PHP_EOL, [
-      'Content-Type: application/json'
-    ])
-  ));
+        'method' => 'POST',
+        'content' => json_encode([
+            "live_id" => $live_id,
+            "delete_id" => ($is_knzklive ? "knzklive_" : "") . $comment_id
+        ]),
+        'header' => implode(PHP_EOL, [
+            'Content-Type: application/json'
+        ])
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/delete_comment", false, $options);
     return true;

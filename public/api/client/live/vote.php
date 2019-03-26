@@ -16,8 +16,8 @@ $vote = loadVote($live["id"]);
 if (empty($vote) && !isset($_POST["end"])) {
     $_SESSION["prop_vote_is_post"] = $_POST["is_post"] == 0;
     $result = createVote($live["id"], $_POST["title"], [
-    $_POST["vote1"], $_POST["vote2"], $_POST["vote3"], $_POST["vote4"]
-  ], liveTag($live), $my["id"]);
+        $_POST["vote1"], $_POST["vote2"], $_POST["vote3"], $_POST["vote4"]
+    ], liveTag($live), $my["id"]);
     api_json(["success" => $result]);
 } elseif (isset($_POST["end"])) {
     api_json(["success" => endVote($live["id"], liveTag($live), $my["id"])]);

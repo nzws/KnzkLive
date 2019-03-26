@@ -55,7 +55,7 @@ $toot_get_limit = 100;
 $max_filesize = return_bytes(ini_get('upload_max_filesize'));
 $_8mb = 8388608;
 if ($_8mb < intval($max_filesize)) {
-  ini_set('upload_max_filesize', '1M');
+    ini_set('upload_max_filesize', '1M');
 }
 */
 

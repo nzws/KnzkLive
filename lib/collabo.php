@@ -21,9 +21,9 @@ function setCollaboLiveStatus($user_id, $live_id, $status = 0)
     }
 
     update_realtime_config("update_collabo_status", [
-    "user_id" => $user_id,
-    "status" => $status
-  ], $live["id"]);
+        "user_id" => $user_id,
+        "status" => $status
+    ], $live["id"]);
 
     $live["misc"]["collabo"][$user_id]["status"] = $status;
     setLiveConfig($live["id"], $live["misc"]);

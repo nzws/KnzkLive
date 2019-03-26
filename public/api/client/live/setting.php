@@ -34,33 +34,33 @@ $success = $_POST["type"] === "stop" ? true : setLiveConfig($live["id"], $live["
 
 if ($force) {
     $data = [
-    "embeds" => [
-      [
-        "title" => "サービスモデレータの操作",
-        "url" => liveUrl($live["id"]),
-        "color" => "16761095",
-        "author" => [
-          "name" => $my["name"] . " (" . $my["acct"] . ")",
-          "url" => $my["misc"]["user_url"],
-          "icon_url" => $my["misc"]["avatar"]
-        ],
-        "fields" => [
-          [
-            "name" => "Broadcast ID",
-            "value" => $live["id"]
-          ],
-          [
-            "name" => "IP",
-            "value" => $_SERVER["REMOTE_ADDR"]
-          ],
-          [
-            "name" => "Type",
-            "value" => $_POST["type"]
-          ]
+        "embeds" => [
+            [
+                "title" => "サービスモデレータの操作",
+                "url" => liveUrl($live["id"]),
+                "color" => "16761095",
+                "author" => [
+                    "name" => $my["name"] . " (" . $my["acct"] . ")",
+                    "url" => $my["misc"]["user_url"],
+                    "icon_url" => $my["misc"]["avatar"]
+                ],
+                "fields" => [
+                    [
+                        "name" => "Broadcast ID",
+                        "value" => $live["id"]
+                    ],
+                    [
+                        "name" => "IP",
+                        "value" => $_SERVER["REMOTE_ADDR"]
+                    ],
+                    [
+                        "name" => "Type",
+                        "value" => $_POST["type"]
+                    ]
+                ]
+            ]
         ]
-      ]
-    ]
-  ];
+    ];
     sendToDiscord($data);
 }
 

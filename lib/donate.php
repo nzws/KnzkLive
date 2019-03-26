@@ -55,25 +55,25 @@ function send_donate_ws($live_id, $user_id, $amount, $currency, $end, $color, $i
     global $env;
 
     $data = [
-    "id" => $id,
-    "type" => "donate",
-    "live_id" => $live_id,
-    "account" => user4Pub(getUser($user_id)),
-    "amount" => s($amount),
-    "currency" => s($currency),
-    "ended_at" => date("Y-m-d H:i:s", strtotime($end)),
-    "color" => $color
-  ];
+        "id" => $id,
+        "type" => "donate",
+        "live_id" => $live_id,
+        "account" => user4Pub(getUser($user_id)),
+        "amount" => s($amount),
+        "currency" => s($currency),
+        "ended_at" => date("Y-m-d H:i:s", strtotime($end)),
+        "color" => $color
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
     return !!$contents;
@@ -83,11 +83,11 @@ function ex_rate($amount, $currency)
 {
     //todo: どっかのAPIでリアタイ為替レート
     $rate = [
-    "USD" => 110,
-    "RUB" => 1.5,
-    "EUR" => 120,
-    "JPY" => 1
-  ];
+        "USD" => 110,
+        "RUB" => 1.5,
+        "EUR" => 120,
+        "JPY" => 1
+    ];
     return isset($rate[$currency]) ? intval($amount * $rate[$currency]) : false;
 }
 

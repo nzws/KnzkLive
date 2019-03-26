@@ -140,20 +140,20 @@ EOF;
     }
 
     $data = [
-    "status" => $text,
-    "visibility" => $visibility
-  ];
+        "status" => $text,
+        "visibility" => $visibility
+    ];
 
     $header = [
-    'Authorization: Bearer '.$env["notification_token"],
-    'Content-Type: application/json'
-  ];
+        'Authorization: Bearer '.$env["notification_token"],
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
 }
@@ -169,14 +169,14 @@ function postWebHook($live)
     $data["account"] = user4Pub($liveUser);
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     return file_get_contents($liveUser["misc"]["webhook_url"], false, $options);
 }
@@ -284,21 +284,21 @@ function update_realtime_config($mode, $result, $live_id)
 {
     global $env;
     $d = [
-    "type" => "change_config",
-    "mode" => $mode,
-    "result" => $result,
-    "live_id" => $live_id,
-  ];
+        "type" => "change_config",
+        "mode" => $mode,
+        "result" => $result,
+        "live_id" => $live_id,
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($d),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($d),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
 }
@@ -340,15 +340,15 @@ function disconnectClient($live_id, $collabo_id = null)
     }
 
     $d = [
-    "authorization" => $env["publish_auth"],
-    "live_stream" => $stream,
-  ];
+        "authorization" => $env["publish_auth"],
+        "live_stream" => $stream,
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($d),
-    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-  ));
+        'method' => 'POST',
+        'content' => json_encode($d),
+        'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents("http://" . $slot["server_ip"] . "/api/knzk/stop", false, $options);
 }
@@ -356,18 +356,18 @@ function disconnectClient($live_id, $collabo_id = null)
 function live4Pub($live)
 {
     return [
-    "id" => $live["id"],
-    "name" => $live["name"],
-    "description" => $live["description"],
-    "created_at" => $live["created_at"],
-    "ended_at" => $live["ended_at"],
-    "live_status" => $live["is_live"],
-    "viewers_count" => $live["viewers_count"],
-    "viewers_max" => $live["viewers_max"],
-    "viewers_max_concurrent" => $live["viewers_max_concurrent"],
-    "is_started" => $live["is_started"],
-    "point_count" => $live["point_count"],
-    "hashtag" => liveTag($live),
-    "is_knzklive" => true
-  ];
+        "id" => $live["id"],
+        "name" => $live["name"],
+        "description" => $live["description"],
+        "created_at" => $live["created_at"],
+        "ended_at" => $live["ended_at"],
+        "live_status" => $live["is_live"],
+        "viewers_count" => $live["viewers_count"],
+        "viewers_max" => $live["viewers_max"],
+        "viewers_max_concurrent" => $live["viewers_max_concurrent"],
+        "is_started" => $live["is_started"],
+        "point_count" => $live["point_count"],
+        "hashtag" => liveTag($live),
+        "is_knzklive" => true
+    ];
 }

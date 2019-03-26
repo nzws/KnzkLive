@@ -151,14 +151,14 @@ function getAllLiveTime($user_id)
 function user4Pub($u)
 {
     return [
-    "id" => $u["id"],
-    "name" => $u["name"],
-    "acct" => $u["acct"],
-    "created_at" => $u["created_at"],
-    "broadcaster_id" => !!$u["broadcaster_id"],
-    "live_current_id" => $u["live_current_id"],
-    "avatar_url" => $u["misc"]["avatar"],
-    "header_url" => $u["misc"]["header"],
-    "url" => !empty($u["misc"]["url"]) ? $u["misc"]["url"] : ""
-  ];
+        "id" => $u["id"],
+        "name" => $u["name"],
+        "acct" => $u["acct"],
+        "created_at" => $u["created_at"],
+        "broadcaster_id" => !!$u["broadcaster_id"],
+        "live_current_id" => $u["live_current_id"],
+        "avatar_url" => $u["misc"]["avatar"],
+        "header_url" => $u["misc"]["header"],
+        "url" => !empty($u["misc"]["url"]) ? $u["misc"]["url"] : ""
+    ];
 }

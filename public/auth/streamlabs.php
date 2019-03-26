@@ -8,18 +8,18 @@ if (!$my) {
 
 if (isset($_GET["code"])) {
     $data = [
-    "client_id" => $env["streamlabs"]["id"],
-    "client_secret" => $env["streamlabs"]["secret"],
-    "grant_type" => "authorization_code",
-    "redirect_uri" => $env["streamlabs"]["redirect_uri"],
-    "code" => $_GET["code"]
-  ];
+        "client_id" => $env["streamlabs"]["id"],
+        "client_secret" => $env["streamlabs"]["secret"],
+        "grant_type" => "authorization_code",
+        "redirect_uri" => $env["streamlabs"]["redirect_uri"],
+        "code" => $_GET["code"]
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents("https://streamlabs.com/api/v1.0/token", false, $options);
     $json = json_decode($contents, true);
@@ -29,9 +29,9 @@ if (isset($_GET["code"])) {
     $token = $json["access_token"];
 
     $options = array('http' => array(
-    'method' => 'GET',
-    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-  ));
+        'method' => 'GET',
+        'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents("https://streamlabs.com/api/v1.0/socket/token?access_token=" . $token, false, $options);
     $json = json_decode($contents, true);

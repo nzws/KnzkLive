@@ -102,16 +102,16 @@ function rebuild_stat()
 
         if (!isset($data[$item["user_id"]])) {
             $data[$item["user_id"]] = [
-        "viewers_max_concurrent" => 0,
-        "viewers_count_max" => 0,
-        "viewers_max" => 0,
-        "comment_count_max" => 0,
-        "comment_count_all" => 0,
-        "point_count_max" => 0,
-        "point_count_all" => 0,
-        "time_max" => 0,
-        "time_all" => 0
-      ];
+                "viewers_max_concurrent" => 0,
+                "viewers_count_max" => 0,
+                "viewers_max" => 0,
+                "comment_count_max" => 0,
+                "comment_count_all" => 0,
+                "point_count_max" => 0,
+                "point_count_all" => 0,
+                "time_max" => 0,
+                "time_all" => 0
+            ];
         }
 
         $time = strtotime($item["ended_at"]) - strtotime($item["created_at"]);
@@ -127,12 +127,12 @@ function rebuild_stat()
         if ($item["viewers_max_concurrent"] > $data[$item["user_id"]]["viewers_max_concurrent"]) {
             $data[$item["user_id"]]["viewers_max_concurrent"] = $item["viewers_max_concurrent"];
         } //同時
-    if ($item["viewers_max"] > $data[$item["user_id"]]["viewers_count_max"]) {
-        $data[$item["user_id"]]["viewers_count_max"] = $item["viewers_max"];
-    } //来場
-    if ($item["comment_count"] > $data[$item["user_id"]]["comment_count_max"]) {
-        $data[$item["user_id"]]["comment_count_max"] = $item["comment_count"];
-    }
+        if ($item["viewers_max"] > $data[$item["user_id"]]["viewers_count_max"]) {
+            $data[$item["user_id"]]["viewers_count_max"] = $item["viewers_max"];
+        } //来場
+        if ($item["comment_count"] > $data[$item["user_id"]]["comment_count_max"]) {
+            $data[$item["user_id"]]["comment_count_max"] = $item["comment_count"];
+        }
         if ($item["point_count"] > $data[$item["user_id"]]["point_count_max"]) {
             $data[$item["user_id"]]["point_count_max"] = $item["point_count"];
         }

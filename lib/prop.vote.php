@@ -21,21 +21,21 @@ function createVote($live_id, $title, $data, $hashtag, $user_id)
     $mysqli->close();
 
     $d = [
-    "type" => "vote_start",
-    "live_id" => $live_id,
-    "title" => $title,
-    "vote" => $data
-  ];
+        "type" => "vote_start",
+        "live_id" => $live_id,
+        "title" => $title,
+        "vote" => $data
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($d),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($d),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
 
@@ -103,19 +103,19 @@ EOF;
     $mysqli->close();
 
     $data = [
-    "type" => "vote_end",
-    "live_id" => $live_id,
-  ];
+        "type" => "vote_end",
+        "live_id" => $live_id,
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
 

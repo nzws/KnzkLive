@@ -62,20 +62,20 @@ if ($_POST["type"] === "emoji") {
     $desc = s($emojis[$emoji_id]["code"]) . "絵文字" . s($_POST["count"]);
     if ($_POST["dir"] === "random") {
         $data = [
-      "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
-      "repeat_num" => 1,
-      "count" => $_POST["count"],
-      "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
-      "type" => $_POST["dir"]
-    ];
+            "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
+            "repeat_num" => 1,
+            "count" => $_POST["count"],
+            "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
+            "type" => $_POST["dir"]
+        ];
         send_item($data, $live["id"], "emoji");
     } else {
         $data = [
-      "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
-      "repeat_num" => ($_POST["count"] < 6 ? $_POST["count"] : 6),
-      "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
-      "type" => $_POST["dir"]
-    ];
+            "repeat_html" => "<img src='{$emojis[$emoji_id]['url']}'/>",
+            "repeat_num" => ($_POST["count"] < 6 ? $_POST["count"] : 6),
+            "class" => ($_POST["spin"] == 1 ? "spin " : "") . ($_POST["big"] == 1 ? "big " : "") . $_POST["dir"],
+            "type" => $_POST["dir"]
+        ];
 
         for ($i = 0; $i < intval(ceil($_POST["count"] / 6)); $i++) {
             $data["style"] = ($_POST["dir"] === "left-to-right" || $_POST["dir"] === "right-to-left" ? "top" : "left") . ": " . rand(2, 98) . "%;animation-delay:" . rand(1, 2000) . "ms";
@@ -103,21 +103,21 @@ function send_item($item, $live_id, $type)
     global $env;
 
     $data = [
-    "type" => "item",
-    "item_type" => $type,
-    "live_id" => $live_id,
-    "item" => $item
-  ];
+        "type" => "item",
+        "item_type" => $type,
+        "live_id" => $live_id,
+        "item" => $item
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
     if ($contents === false) {

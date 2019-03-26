@@ -8,19 +8,19 @@ $i = 0;
 while (isset($post[$i])) {
     $acct[$i] = getUser($post[$i]["user_id"]);
     $post[$i] = [
-    "id" => "knzklive_".$post[$i]["id"],
-    "live_id" => $post[$i]["live_id"],
-    "is_knzklive" => true,
-    "account" => [
-      "display_name" => $acct[$i]["name"],
-      "acct" => $acct[$i]["acct"]." (local)",
-      "username" => $acct[$i]["acct"],
-      "avatar" => $acct[$i]["misc"]["avatar"],
-      "url" => $acct[$i]["misc"]["user_url"]
-    ],
-    "content" => $post[$i]["content"],
-    "created_at" => dateHelper($post[$i]["created_at"])
-  ];
+        "id" => "knzklive_".$post[$i]["id"],
+        "live_id" => $post[$i]["live_id"],
+        "is_knzklive" => true,
+        "account" => [
+            "display_name" => $acct[$i]["name"],
+            "acct" => $acct[$i]["acct"]." (local)",
+            "username" => $acct[$i]["acct"],
+            "avatar" => $acct[$i]["misc"]["avatar"],
+            "url" => $acct[$i]["misc"]["user_url"]
+        ],
+        "content" => $post[$i]["content"],
+        "created_at" => dateHelper($post[$i]["created_at"])
+    ];
     $i++;
 }
 

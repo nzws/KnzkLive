@@ -49,46 +49,46 @@ function getEmojis($user_id, $type)
     if ($type === "item") {
         $liveUser = getUser($user_id);
         $d = [
-      [
-        "url" => "https://twemoji.maxcdn.com/2/svg/1f44d.svg",
-        "code" => "default_good"
-      ],
-      [
-        "url" => "https://twemoji.maxcdn.com/2/svg/2764.svg",
-        "code" => "default_heart"
-      ],
-      [
-        "url" => "https://twemoji.maxcdn.com/2/svg/1f44f.svg",
-        "code" => "default_clapping"
-      ],
-      [
-        "url" => "https://twemoji.maxcdn.com/2/svg/1f389.svg",
-        "code" => "default_popper"
-      ],
-      [
-        "url" => "https://twemoji.maxcdn.com/2/svg/1f36e.svg",
-        "code" => "default_pudding"
-      ],
-      [
-        "url" => $liveUser["misc"]["avatar"],
-        "code" => "default_avatar_liver"
-      ]
-    ];
+            [
+                "url" => "https://twemoji.maxcdn.com/2/svg/1f44d.svg",
+                "code" => "default_good"
+            ],
+            [
+                "url" => "https://twemoji.maxcdn.com/2/svg/2764.svg",
+                "code" => "default_heart"
+            ],
+            [
+                "url" => "https://twemoji.maxcdn.com/2/svg/1f44f.svg",
+                "code" => "default_clapping"
+            ],
+            [
+                "url" => "https://twemoji.maxcdn.com/2/svg/1f389.svg",
+                "code" => "default_popper"
+            ],
+            [
+                "url" => "https://twemoji.maxcdn.com/2/svg/1f36e.svg",
+                "code" => "default_pudding"
+            ],
+            [
+                "url" => $liveUser["misc"]["avatar"],
+                "code" => "default_avatar_liver"
+            ]
+        ];
 
         if ($my = getMe()) {
             $d[] = [
-        "url" => $my["misc"]["avatar"],
-        "code" => "default_avatar_me"
-      ];
+                "url" => $my["misc"]["avatar"],
+                "code" => "default_avatar_me"
+            ];
         }
     }
 
     if (isset($row[0]["id"])) {
         foreach ($row as $item) {
             $d[] = [
-        "url" => $env["storage"]["root_url"] . "emoji/" . $item["file_name"],
-        "code" => $item["name"]
-      ];
+                "url" => $env["storage"]["root_url"] . "emoji/" . $item["file_name"],
+                "code" => $item["name"]
+            ];
         }
     }
 

@@ -93,10 +93,10 @@ function sendToDiscord($data)
     }
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, ['Content-Type: application/json'])
+    ));
 
     $options = stream_context_create($options);
     return file_get_contents($env["report_discord_webhook_url"], false, $options) !== false;

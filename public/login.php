@@ -14,11 +14,11 @@ $_SESSION["login_domain"] = $domain;
 $info = getMastodonAuth($domain);
 if (!$info) {
     $client_data = post("https://".$domain."/api/v1/apps", [
-    "scopes" => "read write",
-    "client_name" => "KnzkLive",
-    "redirect_uris" => $env["masto_login"]["redirect_uri"],
-    "website" => "https://". $env["domain"]
-  ]);
+        "scopes" => "read write",
+        "client_name" => "KnzkLive",
+        "redirect_uris" => $env["masto_login"]["redirect_uri"],
+        "website" => "https://". $env["domain"]
+    ]);
     if (!$client_data["client_id"] || !$client_data["client_secret"]) {
         exit("ERR: Mastodonから取得できませんでした");
     }
@@ -33,34 +33,34 @@ if (!$code) {
     exit();
 } else {
     $data = [
-    "client_id" => $client_data["client_id"],
-    "client_secret" => $client_data["client_secret"],
-    "grant_type" => "authorization_code",
-    "redirect_uri" => $env["masto_login"]["redirect_uri"],
-    "code" => $code
-  ];
+        "client_id" => $client_data["client_id"],
+        "client_secret" => $client_data["client_secret"],
+        "grant_type" => "authorization_code",
+        "redirect_uri" => $env["masto_login"]["redirect_uri"],
+        "code" => $code
+    ];
 
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents("https://".$domain."/oauth/token", false, $options);
     $json = json_decode($contents, true);
     if ($json["access_token"]) {
         $header = [
-      'Authorization: Bearer '.$json["access_token"],
-      'Content-Type: application/json'
-    ];
+            'Authorization: Bearer '.$json["access_token"],
+            'Content-Type: application/json'
+        ];
         $options = array('http' => array(
-      'method' => 'GET',
-      'header' => implode(PHP_EOL, $header)
-    ));
+            'method' => 'GET',
+            'header' => implode(PHP_EOL, $header)
+        ));
         $options = stream_context_create($options);
         $contents = file_get_contents("https://".$domain."/api/v1/accounts/verify_credentials", false, $options);
         $json_acct = json_decode($contents, true);
@@ -113,14 +113,14 @@ function err($type, $data)
 function post($url, $data)
 {
     $header = [
-    'Content-Type: application/json'
-  ];
+        'Content-Type: application/json'
+    ];
 
     $options = array('http' => array(
-    'method' => 'POST',
-    'content' => json_encode($data),
-    'header' => implode(PHP_EOL, $header)
-  ));
+        'method' => 'POST',
+        'content' => json_encode($data),
+        'header' => implode(PHP_EOL, $header)
+    ));
     $options = stream_context_create($options);
     $contents = file_get_contents($url, false, $options);
     return json_decode($contents, true);

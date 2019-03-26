@@ -24,49 +24,49 @@ if (isset($_GET["id"]) && isset($_POST["use"])) {
 <!doctype html>
 <html lang="ja">
 <head>
-  <?php include "../include/header.php"; ?>
-  <title>チケットを使用 - <?=$env["Title"]?></title>
+    <?php include "../include/header.php"; ?>
+    <title>チケットを使用 - <?=$env["Title"]?></title>
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
 <div class="container">
-  <div class="box">
-    <h4>チケットを使用</h4>
-    <div class="col-md-7">
-      <p>
-        <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
-      </p>
-      <?php if (isset($_GET["id"])) : ?>
-        <b><?=s($u["name"])?> (<?=s($u["acct"])?>)</b> さんのチケットを使用してもよろしいですか？<br>
-        <b><?=s($t["point"])?>KP</b>があなたの残高に追加されます。
+    <div class="box">
+        <h4>チケットを使用</h4>
+        <div class="col-md-7">
+            <p>
+                <b>現在の保有ポイント: <span class="badge badge-success"><?=$my["point_count"]?>KP</span></b>
+            </p>
+            <?php if (isset($_GET["id"])) : ?>
+                <b><?=s($u["name"])?> (<?=s($u["acct"])?>)</b> さんのチケットを使用してもよろしいですか？<br>
+                <b><?=s($t["point"])?>KP</b>があなたの残高に追加されます。
 
-        <?php if (($t["point"] + $my["point_count"]) > 10000) : ?>
-        <div class="alert alert-danger" role="alert">
-          <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
-          このままチケットを使用すると超過分が受け取れません。
+                <?php if (($t["point"] + $my["point_count"]) > 10000) : ?>
+                <div class="alert alert-danger" role="alert">
+                    <b>注意: 1つのアカウントでの所有上限は1万KPです。</b><br>
+                    このままチケットを使用すると超過分が受け取れません。
+                </div>
+                <?php endif; ?>
+
+                <form method="post">
+                    <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
+                    <input type="hidden" name="use" value="1">
+                    <button class="btn btn-success" type="submit">使用</button>
+                </form>
+            <?php else : ?>
+                <form method="get">
+                    <div class="form-group">
+                        <label for="id">チケットID</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="id" required>
+                        </div>
+                        <small class="form-text text-muted">/ticket?id=~~</small>
+                    </div>
+                    <button class="btn btn-primary" type="submit">送信</button>
+                </form>
+            <?php endif; ?>
         </div>
-        <?php endif; ?>
-
-        <form method="post">
-          <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-          <input type="hidden" name="use" value="1">
-          <button class="btn btn-success" type="submit">使用</button>
-        </form>
-      <?php else : ?>
-        <form method="get">
-          <div class="form-group">
-            <label for="id">チケットID</label>
-            <div class="input-group">
-              <input type="text" class="form-control" name="id" required>
-            </div>
-            <small class="form-text text-muted">/ticket?id=~~</small>
-          </div>
-          <button class="btn btn-primary" type="submit">送信</button>
-        </form>
-      <?php endif; ?>
     </div>
-  </div>
-  <hr>
+    <hr>
 </div>
 
 <?php include "../include/footer.php"; ?>
