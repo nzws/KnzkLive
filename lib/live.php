@@ -110,6 +110,11 @@ function setLiveStatus($id, $mode) {
   $err = $stmt->error;
   $stmt->close();
   $mysqli->close();
+
+  update_realtime_config("update_status", [
+    "status" => $mode
+  ], $id);
+
   return !$err;
 }
 

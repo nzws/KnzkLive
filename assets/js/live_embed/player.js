@@ -63,13 +63,11 @@ class player {
     let text = '';
     if (buffer > play && play && buffer) {
       //再生
+      text += `<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a>`;
+
       config.delay_sec = Math.round(buffer - play);
-      if (config.type !== 'HLS') {
-        text += `${`<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a> · ` +
-          config.delay_sec}s`;
-      } else {
-        text += 'LIVE';
-      }
+      if (config.type !== 'HLS') text += ` · ${config.delay_sec}s`;
+
       player.showSplash();
 
       if (video.paused) {
@@ -94,7 +92,7 @@ class player {
   static seekLive() {
     $('#play_button').hide();
     video.play();
-    video.currentTime = video.seekable.end(0) - 1;
+    video.currentTime = video.seekable.end(0) - (config.type === 'HLS' ? 3 : 1);
   }
 
   static mute(i = 0, no_save = false) {

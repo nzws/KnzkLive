@@ -59,6 +59,13 @@ app.post('/send_prop', function(req, res) {
       is_knzklive: true
     })
   );
+
+  if (req.body.mode === 'update_status') {
+    if (req.body.result.status === 1) {
+      setTimeout(() => StopLive(), 10 * 60 * 1000);
+    }
+  }
+
   res.end();
 });
 
