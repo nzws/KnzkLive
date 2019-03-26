@@ -1,5 +1,4 @@
 const path = require('path');
-const glob = require('glob');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Fiber = require('fibers');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -50,7 +49,7 @@ module.exports = {
       new TerserPlugin({
         cache: true,
         parallel: true,
-        terserOptions: { output: { comments: false } }
+        extractComments: true
       }),
       new MiniCssExtractPlugin({ filename: 'bundle.css' })
     ]
