@@ -37,8 +37,6 @@
             </div>
         </div>
         <p class="text-muted">
-            最新のGoogle Chrome / Windows環境で動作確認済みです。<br>
-            Assets served by <a href="https://www.fastly.com/" target="_blank">Fastly</a>.<br>
             <a href="https://github.com/KnzkDev/KnzkLive" target="_blank">KnzkLive Project</a> made with <?=i("heart")?> by <a href="https://github.com/KnzkDev" target="_blank">KnzkDev Team</a>.
         </p>
     </div>

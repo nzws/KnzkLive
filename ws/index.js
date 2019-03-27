@@ -2,6 +2,8 @@ const app = require('express')();
 const http = require('http').Server(app);
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
+const os = require('os');
+const ffmpeg = require('fluent-ffmpeg');
 const lastUpdate = {
   detect: null,
   tipknzk: null,
@@ -65,6 +67,32 @@ app.post('/send_prop', function(req, res) {
     if (liveTimerPool[req.body.live_id]) {
       clearTimeout(liveTimerPool[req.body.live_id]);
       liveTimerPool[req.body.live_id] = null;
+    }
+
+    if (req.body.result.status === 2) {
+      const dir = os.tmpdir();
+      exec(
+        `ffmpeg -y -i rtmp://${req.body.result.rtmp_server}/live/${
+          req.body.live_id
+        }stream -ss 1 -vframes 1 -s 960x540 -f image2 ${dir}/knzklive-thumbnail-${
+          req.body.live_id
+        }.png`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          exec(
+            `php ${__dirname}/../knzkctl job:send_thumbnail ${
+              req.body.live_id
+            } ${dir}`,
+            (err, stdout, stderr) => {
+              console.log(err, stdout, stderr);
+            }
+          );
+          console.log('thumbnail taken');
+        }
+      );
     }
 
     if (req.body.result.status === 1) {

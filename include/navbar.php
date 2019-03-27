@@ -1,5 +1,5 @@
 <?php if ($env["is_testing"]) : ?>
-<div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
+<div style="background:red;color:#fff" class="is_debug">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
 <?php endif; ?>
 <?php
 if (empty($_SESSION["UA_CONF"])) {
@@ -33,11 +33,13 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
     if (localStorage['accouncement'] === '<?=s($env["announcement"]["date"])?>') document.getElementById('announcement_alert').className = "invisible";
 </script>
 <?php endif; ?>
-
-<div class="container<?php if (isset($navmode)) {
-    echo "-fluid";
-} ?> nav-container wide_hide">
+<?php if (!empty($toppage)) : ?>
+<div>
+    <div class="row mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
+<?php else : ?>
+<div class="container<?=isset($navmode) ? $navmode : null?> nav-container wide_hide">
     <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
+<?php endif; ?>
         <a class="col-auto header-brand" href="<?=u("")?>">
             <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
         </a>

@@ -10,6 +10,14 @@ function load($argv) {
             end_live($live["id"]);
             comment_post("<div class=\"alert alert-danger\">【システム】未プッシュの状態が15分間続いたため自動的に枠を終了しました。</div>", $live["user_id"], $live["id"], true);
         }
+    } elseif ($argv[1] === "job:send_thumbnail") {
+        $r = uploadFlie([
+            "tmp_name" => s($argv[3]) . "/knzklive-thumbnail-" . s($argv[2]) . ".png"
+        ], "thumbnail", [
+            "ignore_check" => true,
+            "file_name" => s($argv[2]) . ".png",
+            "allow_already_exist" => true
+        ]);
     } elseif ($argv[1] === "debug:add_collabo") {
         setCollaboLiveStatus($argv[3], $argv[2], $argv[4]);
     } elseif ($argv[1] === "job:tipknzk") {

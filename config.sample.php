@@ -53,3 +53,6 @@ $env["admin_ids"] = [1];
 $env["announcement"]["date"] = ""; // 日付
 $env["announcement"]["text"] = ""; // テキスト
 $env["announcement"]["link"] = ""; // リンク (オプション)
+
+// トップページのサイト説明文
+// $env["top_about"] = "it's a cool website";

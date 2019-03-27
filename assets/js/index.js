@@ -1,9 +1,10 @@
 import $ from 'jquery';
-window.$ = $;
-
+import moment from 'moment';
 import 'popper.js';
 import 'bootstrap';
 import '../scss/index.scss';
+window.$ = $;
+window.moment = moment;
 
 window.knzk = {
   live: require('./live'),

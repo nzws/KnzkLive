@@ -30,6 +30,19 @@ class general {
         }
       });
   }
+
+  static loadMoment() {
+    moment.locale('ja');
+    Array.prototype.forEach.call(
+      document.getElementsByClassName('momentjs'),
+      object => {
+        const date = object.dataset.time;
+        const type = object.dataset.type;
+        if (!date) return;
+        object.textContent = type === 'fromNow' ? moment(date).fromNow() : null;
+      }
+    );
+  }
 }
 
 module.exports = general;
