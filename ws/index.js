@@ -3,7 +3,6 @@ const http = require('http').Server(app);
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const os = require('os');
-const ffmpeg = require('fluent-ffmpeg');
 const lastUpdate = {
   detect: null,
   tipknzk: null,
