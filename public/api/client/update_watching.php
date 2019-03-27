@@ -1,11 +1,12 @@
 <?php
-require_once("../../../lib/bootloader.php");
-require_once("../../../lib/apiloader.php");
+require_once "../../../lib/bootloader.php";
+require_once "../../../lib/apiloader.php";
 
 $my = getMe();
 $user_id = null;
-if (!empty($my) && (!isset($my["misc"]["hide_watching_list"]) || !$my["misc"]["hide_watching_list"]))
-  $user_id = $my["id"];
+if (!empty($my) && (!isset($my["misc"]["hide_watching_list"]) || !$my["misc"]["hide_watching_list"])) {
+    $user_id = $my["id"];
+}
 
 updateWatcher(s($_SERVER["REMOTE_ADDR"]), s($_GET["id"]), $user_id);
 checkLeftUsers();

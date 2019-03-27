@@ -9,21 +9,21 @@
 <link rel="stylesheet" href="<?=assetsUrl()?>bundle/bundle.css?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.css")?>">
 <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
-  window.config = {
-    root_url: "<?=$env["RootUrl"]?>",
-    endpoint: "<?=$env["RootUrl"]?>api/",
-    suffix: "<?=$env["is_testing"] ? ".php" : ""?>",
-    csrf_token: "<?=$_SESSION['csrf_token']?>",
-    main_domain: "<?=$env["masto_login"]["domain"]?>",
-    is_debug: <?=$env["is_testing"] ? "true" : "false"?>,
-    storage_url: "<?=$env["storage"]["root_url"]?>",
+    window.config = {
+        root_url: "<?=$env["RootUrl"]?>",
+        endpoint: "<?=$env["RootUrl"]?>api/",
+        suffix: "<?=$env["is_testing"] ? ".php" : ""?>",
+        csrf_token: "<?=$_SESSION['csrf_token']?>",
+        main_domain: "<?=$env["masto_login"]["domain"]?>",
+        is_debug: <?=$env["is_testing"] ? "true" : "false"?>,
+        storage_url: "<?=$env["storage"]["root_url"]?>",
 <?php if ($my = getMe()) : ?>
-    account: {
-      id: <?=$my["id"]?>,
-      domain: "<?=s($_SESSION["login_domain"])?>",
-      acct: "<?=$my["acct"]?>",
-      token: "<?=s($_SESSION["token"])?>"
-    }
+        account: {
+            id: <?=$my["id"]?>,
+            domain: "<?=s($_SESSION["login_domain"])?>",
+            acct: "<?=$my["acct"]?>",
+            token: "<?=s($_SESSION["token"])?>"
+        }
 <?php endif; ?>
-  };
+    };
 </script>

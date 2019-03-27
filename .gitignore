@@ -70,7 +70,9 @@ config.json
 .idea
 .vscode
 
-public/bundle/*
+# PHP-CS-Fixer cache
+.php_cs.cache
 
+public/bundle/*
 public/upload/*
 !public/upload/.gitkeep

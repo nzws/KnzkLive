@@ -9,6 +9,9 @@
       "email": "contact-knzklive@nzws.me"
     }
   ],
+  "scripts": {
+    "fmt": "php-cs-fixer fix"
+  },
   "require": {
     "abraham/twitteroauth": "1.0.1",
     "ua-parser/uap-php": "3.8.6",
@@ -16,6 +19,7 @@
     "league/flysystem": "1.0.50",
     "league/flysystem-aws-s3-v3": "1.0.22",
     "intervention/image": "2.4.2",
-    "php-ffmpeg/php-ffmpeg": "0.13.0"
+    "php-ffmpeg/php-ffmpeg": "0.13.0",
+    "friendsofphp/php-cs-fixer": "2.14"
   }
 }
