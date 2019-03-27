@@ -1,8 +1,8 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 
 // http://php.net/manual/ja/function.session-destroy.php
-$_SESSION = array();
+$_SESSION = [];
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(
@@ -16,4 +16,4 @@ if (ini_get("session.use_cookies")) {
         );
 }
 session_destroy();
-header("Location: ".$env["RootUrl"]);
+header("Location: " . $env["RootUrl"]);

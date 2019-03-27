@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $live = getLive(s($_GET["id"]));
 if (!$live) {
     showError('この配信は存在しません。', 404);

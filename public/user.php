@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $user = getUser($_GET["id"], "broadcaster_id");
 if (empty($user)) {
     http_response_code(404);

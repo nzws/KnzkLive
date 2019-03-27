@@ -1,6 +1,5 @@
 <?php
-function load($argv)
-{
+function load($argv) {
     if ($argv[1] === "job:daily") {
         merge_toot_point();
     } elseif ($argv[1] === "management:rebuild_stat") {
@@ -45,8 +44,7 @@ function load($argv)
     exit("\n✨ Done!\n\n");
 }
 
-function disp_log($name, $type)
-{
+function disp_log($name, $type) {
     if ($type === 0) {
         echo "⏳ Starting: " . $name . "...\n";
     } elseif ($type === 1) {
@@ -56,8 +54,7 @@ function disp_log($name, $type)
     }
 }
 
-function merge_toot_point()
-{
+function merge_toot_point() {
     global $toot_get_limit;
     $name = "merge-toot-point";
     disp_log($name, 0);
@@ -83,8 +80,7 @@ function merge_toot_point()
     }
 }
 
-function rebuild_stat()
-{
+function rebuild_stat() {
     disp_log("management:rebuild_stat", 0);
 
     $mysqli = db_start();

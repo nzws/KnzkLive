@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
     http_response_code(403);

@@ -1,6 +1,5 @@
 <?php
-function add_point($user_id, $point, $type, $data)
-{
+function add_point($user_id, $point, $type, $data) {
     $user = getUser($user_id);
     if (($point + $user["point_count"]) > 10000) {
         $point = 10000 - $user["point_count"];
@@ -33,8 +32,7 @@ function add_point($user_id, $point, $type, $data)
     return !$err;
 }
 
-function create_ticket($user_id, $point, $comment)
-{
+function create_ticket($user_id, $point, $comment) {
     $hash = bin2hex(openssl_random_pseudo_bytes(32));
     $hash = mb_substr($hash, 0, 10);
     $point = intval($point);
@@ -49,8 +47,7 @@ function create_ticket($user_id, $point, $comment)
     return !$err ? $hash : false;
 }
 
-function get_ticket($id)
-{
+function get_ticket($id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `point_ticket` WHERE `id` = ? AND `used_by` IS NULL;");
     $stmt->bind_param("s", $id);
@@ -62,8 +59,7 @@ function get_ticket($id)
     return isset($row[0]) ? $row[0] : false;
 }
 
-function use_ticket($user_id, $ticket_id)
-{
+function use_ticket($user_id, $ticket_id) {
     $t = get_ticket($ticket_id);
     if ($t["id"] !== $ticket_id) {
         return false;
@@ -83,8 +79,7 @@ function use_ticket($user_id, $ticket_id)
     return !$err;
 }
 
-function get_point_log($user_id, $type = "stat", $page = 0)
-{
+function get_point_log($user_id, $type = "stat", $page = 0) {
     global $point_log_cache;
     if (!empty($point_log_cache[$type][$user_id])) {
         return $point_log_cache[$type][$user_id];
@@ -109,8 +104,7 @@ function get_point_log($user_id, $type = "stat", $page = 0)
     return isset($row[0]["id"]) ? $row : [];
 }
 
-function get_point_log_stat($user_id, $type, $day_type)
-{
+function get_point_log_stat($user_id, $type, $day_type) {
     $l = get_point_log($user_id);
     $point = 0;
     foreach ($l as $item) {
@@ -127,13 +121,11 @@ function get_point_log_stat($user_id, $type, $day_type)
     return $point;
 }
 
-function check_point_true($now_have_point, $use_point)
-{
+function check_point_true($now_have_point, $use_point) {
     return !(intval($use_point) > $now_have_point || !$use_point || intval($use_point) <= 0 || !is_numeric($use_point));
 }
 
-function point_count_add($live_id, $point)
-{
+function point_count_add($live_id, $point) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET `point_count` = `point_count` + ? WHERE id = ?;");
     $stmt->bind_param("ss", $point, $live_id);

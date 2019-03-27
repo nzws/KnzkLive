@@ -1,5 +1,5 @@
 <?php
-require_once("../../lib/bootloader.php");
+require_once "../../lib/bootloader.php";
 
 if (isset($_GET["denied"])) {
     exit("ERR:ログイン拒否されました");
@@ -56,5 +56,5 @@ if (empty($_GET["oauth_verifier"])) {
     $_SESSION["account_provider"] = "twitter";
     $_SESSION["login_domain"] = "twitter.com";
 
-    header("Location: ".$env["RootUrl"]);
+    header("Location: " . $env["RootUrl"]);
 }

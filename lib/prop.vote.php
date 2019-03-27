@@ -1,6 +1,5 @@
 <?php
-function createVote($live_id, $title, $data, $hashtag, $user_id)
-{
+function createVote($live_id, $title, $data, $hashtag, $user_id) {
     global $env;
     if (empty($title) || empty($data[0]) || empty($data[1])) {
         return false;
@@ -31,13 +30,13 @@ function createVote($live_id, $title, $data, $hashtag, $user_id)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($d),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_prop", false, $options);
 
     $t = implode(" / ", $data);
 
@@ -52,14 +51,13 @@ EOF;
     if ($_SESSION["prop_vote_is_post"]) {
         toot($text);
     } else {
-        comment_post("<p class='vote_alert'>". HTMLHelper($text) . "</p>", $user_id, $live_id, true);
+        comment_post("<p class='vote_alert'>" . HTMLHelper($text) . "</p>", $user_id, $live_id, true);
     }
 
     return empty($err);
 }
 
-function loadVote($live_id)
-{
+function loadVote($live_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `prop_vote` WHERE `live_id` = ? AND `is_ended` = 0;");
     $stmt->bind_param("s", $live_id);
@@ -70,8 +68,7 @@ function loadVote($live_id)
     return isset($row[0]["id"]) ? $row[0] : null;
 }
 
-function endVote($live_id, $hashtag, $user_id)
-{
+function endVote($live_id, $hashtag, $user_id) {
     global $env;
 
     $v = loadVote($live_id);
@@ -91,7 +88,7 @@ EOF;
     if ($_SESSION["prop_vote_is_post"]) {
         toot($res);
     } else {
-        comment_post("<p class='vote_alert'>". HTMLHelper($res) . "</p>", $user_id, $live_id, true);
+        comment_post("<p class='vote_alert'>" . HTMLHelper($res) . "</p>", $user_id, $live_id, true);
     }
 
     $mysqli = db_start();
@@ -111,19 +108,18 @@ EOF;
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_prop", false, $options);
 
     return empty($err);
 }
 
-function addVote($live_id, $type)
-{
+function addVote($live_id, $type) {
     if (!empty($_SESSION["prop_vote_" . $live_id])) {
         return false;
     }
@@ -139,8 +135,7 @@ function addVote($live_id, $type)
     return empty($err);
 }
 
-function resetVoteHist($live_id)
-{
+function resetVoteHist($live_id) {
     if (empty(loadVote($live_id))) {
         $_SESSION["prop_vote_" . $live_id] = null;
     }

@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $my = getUser($_GET["id"]);
 if (!$my || !$my["live_current_id"]) {
     http_response_code(404);

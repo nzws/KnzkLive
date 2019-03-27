@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 
 $my = getMe();
 if (!isset($my)) {
@@ -8,7 +8,7 @@ if (!isset($my)) {
 }
 
 if (!$my["live_current_id"]) {
-    header("Location: ".u("new"));
+    header("Location: " . u("new"));
     exit();
 }
 $live = getLive($my["live_current_id"]);
@@ -26,7 +26,7 @@ if (isset($_GET["mode"])) {
 
     if ($_GET["mode"] == "shutdown") {
         end_live($live["id"]);
-        header("Location: ".u());
+        header("Location: " . u());
 
         exit();
     }
@@ -198,11 +198,11 @@ $vote = loadVote($live["id"]);
                 <b>配信をシェア(配信者用):</b><br>
                 <div class="btn-group btn-block mt-3" role="group">
                     <button class="btn btn-primary disabled">Mastodon</button>
-                    <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #".liveTag($live))?>" target="_blank" class="btn btn-primary">標準</a>
+                    <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("#KnzkLive で配信中！\n{$live["name"]}\n{$liveurl}\n\nコメントタグ: #" . liveTag($live))?>" target="_blank" class="btn btn-primary">標準</a>
                     <a href="https://<?=$env["masto_login"]["domain"]?>/share?text=<?=urlencode("{$liveurl}\n{$liveurl}\n{$liveurl}")?>" target="_blank" class="btn btn-primary">神崎</a>
                 </div>
                 <div class="btn-group btn-block" role="group">
-                    <a href="https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=<?=urlencode("{$live["name"]} - #KnzkLive で配信中！ #".liveTag($live))?>" target="_blank" class="btn btn-info">Twitterで投稿</a>
+                    <a href="https://twitter.com/intent/tweet?url=<?=urlencode($liveurl)?>&text=<?=urlencode("{$live["name"]} - #KnzkLive で配信中！ #" . liveTag($live))?>" target="_blank" class="btn btn-info">Twitterで投稿</a>
                 </div>
             </div>
             <div class="col-md-6">

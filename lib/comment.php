@@ -1,6 +1,5 @@
 <?php
-function comment_post($content, $user_id, $live_id, $is_html = false)
-{
+function comment_post($content, $user_id, $live_id, $is_html = false) {
     global $env;
     $content = $is_html ? $content : "<p>" . HTMLHelper($content, ["ignore_nl" => true]) . "</p>";
     $user_id = s($user_id);
@@ -33,12 +32,12 @@ function comment_post($content, $user_id, $live_id, $is_html = false)
     // is_html が true なら大体システムメッセージなのでカウントする必要が無い
 
     $data = [
-        "id" => "knzklive_".$id,
+        "id" => "knzklive_" . $id,
         "live_id" => $live_id,
         "is_knzklive" => true,
         "account" => [
             "display_name" => $my["name"],
-            "acct" => $my["acct"]." (local)",
+            "acct" => $my["acct"] . " (local)",
             "username" => $my["acct"],
             "avatar" => $my["misc"]["avatar"],
             "url" => $my["misc"]["user_url"]
@@ -50,18 +49,17 @@ function comment_post($content, $user_id, $live_id, $is_html = false)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_comment", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_comment", false, $options);
     return $id;
 }
 
-function comment_get($live_id)
-{
+function comment_get($live_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `comment` WHERE live_id = ? AND is_deleted = 0 ORDER BY id desc LIMIT 30;");
     $stmt->bind_param("s", $live_id);
@@ -72,8 +70,7 @@ function comment_get($live_id)
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function comment_count_add($live_id, $user_id = null)
-{
+function comment_count_add($live_id, $user_id = null) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET `comment_count` = `comment_count` + 1 WHERE id = ?;");
     $stmt->bind_param("s", $live_id);
@@ -91,8 +88,7 @@ function comment_count_add($live_id, $user_id = null)
     }
 }
 
-function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false)
-{
+function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false) {
     global $env;
 
     $mysqli = db_start();
@@ -112,7 +108,7 @@ function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false)
         return "データベースエラー";
     }
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode([
             "live_id" => $live_id,
@@ -121,14 +117,13 @@ function comment_delete($user_id, $live_id, $comment_id, $is_knzklive = false)
         'header' => implode(PHP_EOL, [
             'Content-Type: application/json'
         ])
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/delete_comment", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/delete_comment", false, $options);
     return true;
 }
 
-function get_comment_deleted_list($live_id)
-{
+function get_comment_deleted_list($live_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `comment_delete` WHERE live_id = ?;");
     $stmt->bind_param("s", $live_id);

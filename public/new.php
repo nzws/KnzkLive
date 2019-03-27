@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 
 $my = getMe();
 if (!$my) {
@@ -13,7 +13,7 @@ if (!$my["broadcaster_id"]) {
 }
 
 if ($my["live_current_id"]) {
-    header("Location: ".u("live_manage"));
+    header("Location: " . u("live_manage"));
     exit();
 }
 
@@ -23,7 +23,7 @@ if (!$slot) {
     exit("ERR:現在、配信枠が不足しています。");
 }
 
-if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["privacy_mode"])) {
+if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
     if ($_POST["privacy_mode"] != "1" && $_POST["privacy_mode"] != "2" && $_POST["privacy_mode"] != "3") {
         http_response_code(500);
         exit();
@@ -63,7 +63,7 @@ if (isset($_POST["title"]) && isset($_POST["description"]) && isset($_POST["priv
     setUserLive($row[0]["id"], $my["id"]);
     setSlot($slot, 1);
     node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"], $my["id"]);
-    header("Location: ".u("live_manage") . "?new=open");
+    header("Location: " . u("live_manage") . "?new=open");
     exit();
 } elseif ($my["misc"]["to_title"]) {
     $last = getMyLastLive($my["id"]);

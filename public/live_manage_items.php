@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
     showError('ログインしてください。', 403);

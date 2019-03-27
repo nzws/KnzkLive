@@ -1,5 +1,5 @@
 <?php
-require_once("../../../lib/bootloader.php");
+require_once "../../../lib/bootloader.php";
 $my = getUser($_GET["token"], "opener_token");
 if (empty($my)) {
     exit("トークンが見つかりません。 (ERROR:NOT_FOUND_TOKEN)");

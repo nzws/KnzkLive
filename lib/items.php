@@ -1,6 +1,5 @@
 <?php
-function getItems($user_id, $type)
-{
+function getItems($user_id, $type) {
     global $cacheItems;
     if (isset($cacheItems[$user_id][$type])) {
         return $cacheItems[$user_id][$type];
@@ -17,8 +16,7 @@ function getItems($user_id, $type)
     return isset($row[0]["id"]) ? $row : [];
 }
 
-function getItem($id)
-{
+function getItem($id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `items` WHERE id = ?;");
     $stmt->bind_param("s", $id);
@@ -29,8 +27,7 @@ function getItem($id)
     return isset($row[0]["id"]) ? $row[0] : false;
 }
 
-function getEmojis($user_id, $type)
-{
+function getEmojis($user_id, $type) {
     global $env;
 
     $mysqli = db_start();
@@ -95,8 +92,7 @@ function getEmojis($user_id, $type)
     return $d;
 }
 
-function checkItemSlot($user_id, $type)
-{
+function checkItemSlot($user_id, $type) {
     $my = getUser($user_id);
 
     $limit = $my["misc"][$type . "_slot"] - count(getItems($my["id"], $type));

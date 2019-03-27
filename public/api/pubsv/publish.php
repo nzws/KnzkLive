@@ -1,5 +1,5 @@
 <?php
-require_once("../../../lib/bootloader.php");
+require_once "../../../lib/bootloader.php";
 
 $key = str_replace('/live/', '', s($_GET["live"]));
 $id = strstr($key, 'stream', true);

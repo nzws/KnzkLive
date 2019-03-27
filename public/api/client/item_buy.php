@@ -1,6 +1,6 @@
 <?php
-require_once("../../../lib/bootloader.php");
-require_once("../../../lib/apiloader.php");
+require_once "../../../lib/bootloader.php";
+require_once "../../../lib/apiloader.php";
 $my = getMe();
 if (!$my) {
     api_json(["error" => "エラー: ログインしてください。"]);
@@ -97,9 +97,7 @@ if ($my["id"] !== $live["user_id"]) {
 comment_post("<div class=\"alert alert-primary\">{$desc} を投下しました！</div>", $my["id"], $live["id"], true);
 api_json(["success" => $n]);
 
-
-function send_item($item, $live_id, $type)
-{
+function send_item($item, $live_id, $type) {
     global $env;
 
     $data = [
@@ -113,13 +111,13 @@ function send_item($item, $live_id, $type)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_prop", false, $options);
     if ($contents === false) {
         api_json(["error" => "エラー: リアルタイム通信サーバーが応答しなかったため、中断されました。"]);
     }

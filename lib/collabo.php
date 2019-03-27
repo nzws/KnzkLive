@@ -1,6 +1,5 @@
 <?php
-function is_collabo($user_id, $live_id)
-{
+function is_collabo($user_id, $live_id) {
     $live = getLive($live_id);
     if (!$live) {
         return false;
@@ -9,8 +8,7 @@ function is_collabo($user_id, $live_id)
     return isset($live["misc"]["collabo"][$user_id]);
 }
 
-function setCollaboLiveStatus($user_id, $live_id, $status = 0)
-{
+function setCollaboLiveStatus($user_id, $live_id, $status = 0) {
     $live = getLive($live_id);
     if (!$live) {
         return false;

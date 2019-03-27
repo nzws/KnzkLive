@@ -1,56 +1,47 @@
 <?php
-function u($p = "")
-{
+function u($p = "") {
     global $env;
     if (!$p && $env["is_testing"]) {
         $p = "index";
     }
-    return $env["RootUrl"].$p.($env["is_testing"] ? ".php" : "");
+    return $env["RootUrl"] . $p . ($env["is_testing"] ? ".php" : "");
 }
 
-function s($p)
-{
+function s($p) {
     return htmlspecialchars($p, ENT_QUOTES|ENT_HTML5);
 }
 
-function liveUrl($id)
-{
+function liveUrl($id) {
     global $env;
-    return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $id;
+    return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . ($env["is_testing"] ?  u("live") . "?id=" : u("watch")) . $id;
 }
 
-function userUrl($id)
-{
+function userUrl($id) {
     global $env;
-    return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] .($env["is_testing"] ?  u("user") . "?id=" : $env["RootUrl"] . "user/") . $id;
+    return (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . ($env["is_testing"] ?  u("user") . "?id=" : $env["RootUrl"] . "user/") . $id;
 }
 
-function assetsUrl()
-{
+function assetsUrl() {
     global $env;
     return (empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"]);
 }
 
-function liveTag($live)
-{
-    return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_".$live["id"];
+function liveTag($live) {
+    return $live["custom_hashtag"] ? $live["custom_hashtag"] : "knzklive_" . $live["id"];
 }
 
-function HTMLHelper($text, $options = [])
-{
+function HTMLHelper($text, $options = []) {
     $text = s($text);
     $text = !empty($options["ignore_nl"]) ? $text : nl2br($text);
     $text = preg_replace("/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/", "<a href='\\1' rel='nofollow' target='_blank'>\\1</a>", $text);
     return $text;
 }
 
-function dateHelper($date)
-{
+function dateHelper($date) {
     return str_replace("-", "/", $date);
 }
 
-function dispSecDate($sec)
-{
+function dispSecDate($sec) {
     $text = "";
     $h = intval($sec / 3600);
     $m = intval(($sec / 60) % 60);
@@ -67,8 +58,7 @@ function dispSecDate($sec)
     return $text;
 }
 
-function showError($text, $http_status = null)
-{
+function showError($text, $http_status = null) {
     global $errortext;
 
     if (!empty($http_status)) {
@@ -78,43 +68,38 @@ function showError($text, $http_status = null)
     include __DIR__ . "/../include/errorpage.php";
 }
 
-function is_admin($user_id)
-{
+function is_admin($user_id) {
     global $env;
     return isset($env["admin_ids"]) && array_search($user_id, $env["admin_ids"]) !== false;
 }
 
-function sendToDiscord($data)
-{
+function sendToDiscord($data) {
     global $env;
 
     if (empty($env["report_discord_webhook_url"])) {
         return false;
     }
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-    ));
+    ]];
 
     $options = stream_context_create($options);
     return file_get_contents($env["report_discord_webhook_url"], false, $options) !== false;
 }
 
-function generateHash($retry = 0)
-{
+function generateHash($retry = 0) {
     $hash = bin2hex(openssl_random_pseudo_bytes(32, $is_secure));
     return $is_secure || $retry > 5 ? $hash : generateHash($retry + 1);
 }
 
-function i($name, $type = "s")
-{
+function i($name, $type = "s") {
     return "<i class='fa{$type} fa-{$name}'></i>";
 }
 
-function checkV($var, $min_length = 0, $max_length = 0)
-{
+function checkV($var, $min_length = 0, $max_length = 0) {
     $length = mb_strlen($var);
     return ($length >= $min_length && $length <= $max_length);
 }

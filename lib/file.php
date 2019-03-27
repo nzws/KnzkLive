@@ -1,6 +1,5 @@
 <?php
-function checkFileInfo($data)
-{
+function checkFileInfo($data) {
     $err = ["success" => false];
 
     if (!isset($data['error']) || !is_int($data['error'])) {
@@ -38,8 +37,7 @@ function checkFileInfo($data)
     return ["success" => true];
 }
 
-function checkMime($data, $allow_file_type)
-{
+function checkMime($data, $allow_file_type) {
     $err = ["success" => false];
 
     if (!isset($data['error']) || !is_int($data['error'])) {
@@ -85,9 +83,8 @@ function checkMime($data, $allow_file_type)
     return ["success" => true, "mime" => $mime, "ext" => $list[$mime]["ext"]];
 }
 
-function resizeImage($data)
-{
-    $manager = new \Intervention\Image\ImageManager(array('driver' => 'gd'));
+function resizeImage($data) {
+    $manager = new \Intervention\Image\ImageManager(['driver' => 'gd']);
     $img = $manager->make($data['tmp_name']);
     $width = $img->width();
     $height = $img->height();
@@ -102,8 +99,7 @@ function resizeImage($data)
     return $img->encode(); // this is blob
 }
 
-function convertAudio($data)
-{
+function convertAudio($data) {
     global $env;
 
     if (!empty($env["ignore_audio_check"])) {
@@ -119,8 +115,7 @@ function convertAudio($data)
     return file_get_contents($file); // this is blob
 }
 
-function initStorage()
-{
+function initStorage() {
     global $env;
 
     if ($env["storage"]["type"] === "s3") {
@@ -136,14 +131,13 @@ function initStorage()
 
         $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"]);
     } else {
-        $adapter = new League\Flysystem\Adapter\Local(__DIR__.'/../public/upload/');
+        $adapter = new League\Flysystem\Adapter\Local(__DIR__ . '/../public/upload/');
     }
 
     return new League\Flysystem\Filesystem($adapter);
 }
 
-function uploadFlie($data, $file_type)
-{
+function uploadFlie($data, $file_type) {
     global $env;
 
     $check = checkFileInfo($data);
@@ -203,8 +197,7 @@ function uploadFlie($data, $file_type)
     }
 }
 
-function deleteFile($file_name, $file_type)
-{
+function deleteFile($file_name, $file_type) {
     global $env;
 
     $path = $file_type . "/" . $file_name;

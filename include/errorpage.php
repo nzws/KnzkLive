@@ -1,8 +1,7 @@
 <?php
 require __DIR__ . "/../config.php";
 
-function assets()
-{
+function assets() {
     global $env;
     return (empty($env["assets_url"]) ? $env["RootUrl"] : $env["assets_url"]);
 }

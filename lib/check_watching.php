@@ -1,6 +1,5 @@
 <?php
-function updateWatcher($ip, $watch_id, $user_id = null)
-{
+function updateWatcher($ip, $watch_id, $user_id = null) {
     $live = getLive($watch_id);
     if ($live["is_live"] != 0) {
         $mysqli = db_start();
@@ -46,8 +45,7 @@ function updateWatcher($ip, $watch_id, $user_id = null)
     }
 }
 
-function leaveWatcher($ip, $watch_id)
-{
+function leaveWatcher($ip, $watch_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `users_watching` SET `watching_now` = 0 WHERE `ip` = ? AND `watch_id` = ?;");
     $stmt->bind_param('ss', $ip, $watch_id);
@@ -71,8 +69,7 @@ function leaveWatcher($ip, $watch_id)
     return true;
 }
 
-function addWatchingPoint($user_id, $start, $end, $live_id)
-{
+function addWatchingPoint($user_id, $start, $end, $live_id) {
     $point = intval(($end - $start) / 600);
     $point = $point * 10;
     if ($point > 0) {
@@ -80,8 +77,7 @@ function addWatchingPoint($user_id, $start, $end, $live_id)
     }
 }
 
-function setViewersCount($id, $add = false, $is_unique = true)
-{
+function setViewersCount($id, $add = false, $is_unique = true) {
     $mysqli = db_start();
     if ($add) {
         $stmt = $mysqli->prepare("UPDATE `live` SET viewers_count = viewers_count + 1 WHERE id = ? AND is_live != 0;");
@@ -107,8 +103,7 @@ function setViewersCount($id, $add = false, $is_unique = true)
     return !$err;
 }
 
-function checkLeftUsers()
-{
+function checkLeftUsers() {
     $mysqli = db_start();
     // 1分以上アップデートされていないユーザーは退出済みとみなす
     $stmt = $mysqli->prepare("SELECT * FROM `users_watching` WHERE `updated_at` < ( NOW() - INTERVAL 1 MINUTE ) AND watching_now = 1");
@@ -125,8 +120,7 @@ function checkLeftUsers()
     }
 }
 
-function deleteAllWatcher($live_id)
-{
+function deleteAllWatcher($live_id) {
     $live = getLive($live_id);
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `users_watching` WHERE `watch_id` = ?");

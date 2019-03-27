@@ -1,6 +1,6 @@
 <?php
-require_once("../../../lib/bootloader.php");
-require_once("../../../lib/apiloader.php");
+require_once "../../../lib/bootloader.php";
+require_once "../../../lib/apiloader.php";
 header('Access-Control-Allow-Origin: *');
 
 $live = getLive(s($_GET["id"]));

@@ -1,12 +1,12 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
     http_response_code(403);
     exit("ERR:ログインしてください。");
 }
 
-if (isset($_GET["id"]) && isset($_POST["use"])) {
+if (isset($_GET["id"], $_POST["use"])) {
     $n = use_ticket($my["id"], $_GET["id"]);
     if ($n) {
         header("Location: " . u("settings"));

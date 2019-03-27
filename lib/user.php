@@ -1,8 +1,7 @@
 <?php
-function getUser($id, $mode = "id")
-{
+function getUser($id, $mode = "id") {
     global $userCache;
-    if (isset($userCache[$mode]) && isset($userCache[$mode][$id])) {
+    if (isset($userCache[$mode], $userCache[$mode][$id])) {
         return $userCache[$mode][$id];
     }
     if (!$id) {
@@ -38,13 +37,11 @@ function getUser($id, $mode = "id")
     return $userCache[$mode][$id];
 }
 
-function getMe()
-{
+function getMe() {
     return isset($_SESSION["acct"]) ? getUser($_SESSION["acct"], "acct") : false;
 }
 
-function setUserLive($id, $user_id)
-{
+function setUserLive($id, $user_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `users` SET live_current_id = ? WHERE id = ?;");
     $stmt->bind_param("ss", $id, $user_id);
@@ -53,8 +50,7 @@ function setUserLive($id, $user_id)
     $mysqli->close();
 }
 
-function setConfig($id, $misc, $donate_desc = false)
-{
+function setConfig($id, $misc, $donate_desc = false) {
     $misc = json_encode($misc, true);
     $mysqli = db_start();
     if ($donate_desc !== false) {
@@ -69,8 +65,7 @@ function setConfig($id, $misc, $donate_desc = false)
     $mysqli->close();
 }
 
-function generateOpenerToken($id)
-{
+function generateOpenerToken($id) {
     $hash = bin2hex(random_bytes(32));
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `users` SET opener_token = ? WHERE id = ?;");
@@ -82,8 +77,7 @@ function generateOpenerToken($id)
     return $err ? false : $hash;
 }
 
-function getMyLastLive($user_id)
-{
+function getMyLastLive($user_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE user_id = ? ORDER BY id desc LIMIT 1;");
     $stmt->bind_param("s", $user_id);
@@ -94,8 +88,7 @@ function getMyLastLive($user_id)
     return isset($row[0]["id"]) ? $row[0] : false;
 }
 
-function setNgWords($words, $user_id)
-{
+function setNgWords($words, $user_id) {
     $words = json_encode($words, true);
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `users` SET ngwords = ? WHERE id = ?;");
@@ -108,8 +101,7 @@ function setNgWords($words, $user_id)
     return !$err;
 }
 
-function updateBroadcasterId($user_id, $new)
-{
+function updateBroadcasterId($user_id, $new) {
     $new = s($new);
     $exist_bid = getUser($new, "broadcaster_id");
     if (preg_match('/([^A-Za-z0-9@\.]+)/', $new) || !empty($exist_bid)) {
@@ -126,8 +118,7 @@ function updateBroadcasterId($user_id, $new)
     return !$err;
 }
 
-function getAllLiveTime($user_id)
-{
+function getAllLiveTime($user_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE user_id = ? AND is_live = 0 AND is_started = 1;");
     $stmt->bind_param("s", $user_id);
@@ -148,8 +139,7 @@ function getAllLiveTime($user_id)
     return $times;
 }
 
-function user4Pub($u)
-{
+function user4Pub($u) {
     return [
         "id" => $u["id"],
         "name" => $u["name"],

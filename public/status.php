@@ -1,10 +1,9 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 $dbstatus = !!db_start(true)->connect_errno;
 
-$worker = file_get_contents($env["websocket_url"]."/health", false);
+$worker = file_get_contents($env["websocket_url"] . "/health", false);
 $worker = json_decode($worker, true);
-
 
 $ok = '<span class="badge badge-success">OK</span>';
 $err = '<span class="badge badge-danger">ERROR</span>';

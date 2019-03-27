@@ -5,7 +5,7 @@ header('server: KnzkLive');
 header('X-Powered-By: KnzkDev <3');
 
 if (file_exists($confpath)) {
-    require_once($confpath);
+    require_once $confpath;
 } else {
     http_response_code(500);
     exit("SERVER ERROR: Config file is not found");
@@ -30,25 +30,25 @@ if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSIO
 }
 $libpt = __DIR__ . "/";
 
-if (!file_exists($libpt."../vendor/autoload.php")) {
+if (!file_exists($libpt . "../vendor/autoload.php")) {
     http_response_code(500);
     exit("SERVER ERROR: Please install composer deps");
 }
 
-require_once($libpt."../vendor/autoload.php");
-require_once($libpt."components.php");
-require_once($libpt."db.php");
-require_once($libpt."user.php");
-require_once($libpt."live.php");
-require_once($libpt."check_watching.php");
-require_once($libpt."comment.php");
-require_once($libpt."mastodon_auth.php");
-require_once($libpt."prop.vote.php");
-require_once($libpt."point.php");
-require_once($libpt."donate.php");
-require_once($libpt."file.php");
-require_once($libpt."items.php");
-require_once($libpt."collabo.php");
+require_once $libpt . "../vendor/autoload.php";
+require_once $libpt . "components.php";
+require_once $libpt . "db.php";
+require_once $libpt . "user.php";
+require_once $libpt . "live.php";
+require_once $libpt . "check_watching.php";
+require_once $libpt . "comment.php";
+require_once $libpt . "mastodon_auth.php";
+require_once $libpt . "prop.vote.php";
+require_once $libpt . "point.php";
+require_once $libpt . "donate.php";
+require_once $libpt . "file.php";
+require_once $libpt . "items.php";
+require_once $libpt . "collabo.php";
 
 $toot_get_limit = 100;
 /*

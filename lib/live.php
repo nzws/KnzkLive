@@ -1,6 +1,5 @@
 <?php
-function getAbleSlot()
-{
+function getAbleSlot() {
     global $env;
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live_slot` WHERE is_testing = ? AND used < `max`;");
@@ -17,8 +16,7 @@ function getAbleSlot()
     }
 }
 
-function setSlot($id, $mode)
-{
+function setSlot($id, $mode) {
     $mysqli = db_start();
     if ($mode) {
         $stmt = $mysqli->prepare("UPDATE `live_slot` SET used = used + 1 WHERE id = ?;");
@@ -31,8 +29,7 @@ function setSlot($id, $mode)
     $mysqli->close();
 }
 
-function getSlot($id)
-{
+function getSlot($id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live_slot` WHERE id = ?;");
     $stmt->bind_param("s", $id);
@@ -43,8 +40,7 @@ function getSlot($id)
     return isset($row[0]["id"]) ? $row[0] : false;
 }
 
-function getLive($id)
-{
+function getLive($id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE id = ?;");
     $stmt->bind_param("s", $id);
@@ -59,8 +55,7 @@ function getLive($id)
     return isset($row[0]["id"]) ? $row[0] : false;
 }
 
-function setLiveConfig($live_id, $misc)
-{
+function setLiveConfig($live_id, $misc) {
     $misc = json_encode($misc, true);
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET misc = ? WHERE id = ?;");
@@ -72,8 +67,7 @@ function setLiveConfig($live_id, $misc)
     return !$err;
 }
 
-function getAllLive($notId = 0, $is_history = false)
-{
+function getAllLive($notId = 0, $is_history = false) {
     $mysqli = db_start();
     if ($is_history) {
         $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_started = 1 AND id != ? ORDER BY ended_at desc LIMIT 0, 12;");
@@ -88,8 +82,7 @@ function getAllLive($notId = 0, $is_history = false)
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function getLastLives()
-{
+function getLastLives() {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 GROUP BY user_id ORDER BY id DESC) ORDER BY id DESC;");
     $stmt->execute();
@@ -99,8 +92,7 @@ function getLastLives()
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function getUserLives($user_id)
-{
+function getUserLives($user_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE privacy_mode = 1 AND is_started = 1 AND user_id = ? ORDER BY ended_at desc LIMIT 0, 30;");
     $stmt->bind_param("s", $user_id);
@@ -111,8 +103,7 @@ function getUserLives($user_id)
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function setLiveStatus($id, $mode)
-{
+function setLiveStatus($id, $mode) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("UPDATE `live` SET is_live = ? WHERE id = ?;");
     $stmt->bind_param("ss", $mode, $id);
@@ -123,8 +114,7 @@ function setLiveStatus($id, $mode)
     return !$err;
 }
 
-function postLiveStart($live, $is_notification, $visibility)
-{
+function postLiveStart($live, $is_notification, $visibility) {
     global $env;
     $liveUser = getUser($live["user_id"]);
     $url = liveUrl($live["id"]);
@@ -145,21 +135,20 @@ EOF;
     ];
 
     $header = [
-        'Authorization: Bearer '.$env["notification_token"],
+        'Authorization: Bearer ' . $env["notification_token"],
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
+    $contents = file_get_contents("https://" . $env["masto_login"]["domain"] . "/api/v1/statuses", false, $options);
 }
 
-function postWebHook($live)
-{
+function postWebHook($live) {
     $liveUser = getUser($live["user_id"]);
     if (empty($liveUser["misc"]["webhook_url"])) {
         return false;
@@ -172,17 +161,16 @@ function postWebHook($live)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
     return file_get_contents($liveUser["misc"]["webhook_url"], false, $options);
 }
 
-function end_live($live_id)
-{
+function end_live($live_id) {
     $live = getLive($live_id);
     $my = getUser($live["user_id"]);
 
@@ -280,8 +268,7 @@ function end_live($live_id)
     return false;
 }
 
-function update_realtime_config($mode, $result, $live_id)
-{
+function update_realtime_config($mode, $result, $live_id) {
     global $env;
     $d = [
         "type" => "change_config",
@@ -294,17 +281,16 @@ function update_realtime_config($mode, $result, $live_id)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($d),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_prop", false, $options);
 }
 
-function blocking_user($live_user_id, $ip = null, $user_acct = null)
-{
+function blocking_user($live_user_id, $ip = null, $user_acct = null) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ? AND (target_user_acct = ? OR target_user_acct IN (select acct from `users` WHERE ip = ?));");
     $stmt->bind_param("sss", $live_user_id, $user_acct, $ip);
@@ -315,8 +301,7 @@ function blocking_user($live_user_id, $ip = null, $user_acct = null)
     return isset($row[0]) ? $row[0] : null;
 }
 
-function get_all_blocking_user($live_user_id)
-{
+function get_all_blocking_user($live_user_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `users_blocking` WHERE live_user_id = ?;");
     $stmt->bind_param("s", $live_user_id);
@@ -327,8 +312,7 @@ function get_all_blocking_user($live_user_id)
     return isset($row[0]) ? $row : [];
 }
 
-function disconnectClient($live_id, $collabo_id = null)
-{
+function disconnectClient($live_id, $collabo_id = null) {
     global $env;
     $live = getLive($live_id);
     if (!empty($collabo_id)) {
@@ -344,17 +328,16 @@ function disconnectClient($live_id, $collabo_id = null)
         "live_stream" => $stream,
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($d),
         'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-    ));
+    ]];
     $options = stream_context_create($options);
     $contents = file_get_contents("http://" . $slot["server_ip"] . "/api/knzk/stop", false, $options);
 }
 
-function live4Pub($live)
-{
+function live4Pub($live) {
     return [
         "id" => $live["id"],
         "name" => $live["name"],

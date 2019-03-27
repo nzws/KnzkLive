@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 
 $code = filter_input(INPUT_GET, "code", FILTER_SANITIZE_STRING);
 $domain = filter_input(INPUT_GET, "domain", FILTER_SANITIZE_STRING);
@@ -13,11 +13,11 @@ if (!$domain) {
 $_SESSION["login_domain"] = $domain;
 $info = getMastodonAuth($domain);
 if (!$info) {
-    $client_data = post("https://".$domain."/api/v1/apps", [
+    $client_data = post("https://" . $domain . "/api/v1/apps", [
         "scopes" => "read write",
         "client_name" => "KnzkLive",
         "redirect_uris" => $env["masto_login"]["redirect_uri"],
-        "website" => "https://". $env["domain"]
+        "website" => "https://" . $env["domain"]
     ]);
     if (!$client_data["client_id"] || !$client_data["client_secret"]) {
         exit("ERR: Mastodonから取得できませんでした");
@@ -29,7 +29,7 @@ if (!$info) {
 }
 
 if (!$code) {
-    header("Location: https://".$domain."/oauth/authorize?response_type=code&redirect_uri=".$env["masto_login"]["redirect_uri"]."&scope=read+write&client_id=".$client_data["client_id"]);
+    header("Location: https://" . $domain . "/oauth/authorize?response_type=code&redirect_uri=" . $env["masto_login"]["redirect_uri"] . "&scope=read+write&client_id=" . $client_data["client_id"]);
     exit();
 } else {
     $data = [
@@ -44,30 +44,30 @@ if (!$code) {
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents("https://".$domain."/oauth/token", false, $options);
+    $contents = file_get_contents("https://" . $domain . "/oauth/token", false, $options);
     $json = json_decode($contents, true);
     if ($json["access_token"]) {
         $header = [
-            'Authorization: Bearer '.$json["access_token"],
+            'Authorization: Bearer ' . $json["access_token"],
             'Content-Type: application/json'
         ];
-        $options = array('http' => array(
+        $options = ['http' => [
             'method' => 'GET',
             'header' => implode(PHP_EOL, $header)
-        ));
+        ]];
         $options = stream_context_create($options);
-        $contents = file_get_contents("https://".$domain."/api/v1/accounts/verify_credentials", false, $options);
+        $contents = file_get_contents("https://" . $domain . "/api/v1/accounts/verify_credentials", false, $options);
         $json_acct = json_decode($contents, true);
         $name = s($json_acct["display_name"]);
         if ($json_acct["id"]) {
             $mysqli = db_start();
-            $acct = s($json_acct["acct"]."@".$domain);
+            $acct = s($json_acct["acct"] . "@" . $domain);
             if ($user = getUser($acct, "acct")) {
                 $misc = $user["misc"];
                 $misc["avatar"] = $json_acct["avatar_static"];
@@ -94,7 +94,7 @@ if (!$code) {
             $_SESSION["acct"] = $acct;
             $_SESSION["account_provider"] = "mastodon";
 
-            header("Location: ".$env["RootUrl"]);
+            header("Location: " . $env["RootUrl"]);
         } else {
             err(2, $contents);
         }
@@ -103,24 +103,22 @@ if (!$code) {
     }
 }
 
-function err($type, $data)
-{
+function err($type, $data) {
     http_response_code(500);
     var_dump($data);
-    exit("ERR:Mastodonからデータが取得できませんでした:".$type);
+    exit("ERR:Mastodonからデータが取得できませんでした:" . $type);
 }
 
-function post($url, $data)
-{
+function post($url, $data) {
     $header = [
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
     $contents = file_get_contents($url, false, $options);
     return json_decode($contents, true);

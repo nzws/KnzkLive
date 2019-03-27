@@ -1,6 +1,5 @@
 <?php
-function add_donate($live_id, $user_id, $amount, $currency)
-{
+function add_donate($live_id, $user_id, $amount, $currency) {
     $yen = ex_rate($amount, $currency);
     if (!$yen) {
         return false;
@@ -38,8 +37,7 @@ function add_donate($live_id, $user_id, $amount, $currency)
     return true;
 }
 
-function get_donate($live_id)
-{
+function get_donate($live_id) {
     $mysqli = db_start();
     $stmt = $mysqli->prepare("SELECT * FROM `donate` WHERE live_id = ? AND ended_at > NOW() ORDER BY id desc;");
     $stmt->bind_param("s", $live_id);
@@ -50,8 +48,7 @@ function get_donate($live_id)
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function send_donate_ws($live_id, $user_id, $amount, $currency, $end, $color, $id)
-{
+function send_donate_ws($live_id, $user_id, $amount, $currency, $end, $color, $id) {
     global $env;
 
     $data = [
@@ -69,18 +66,17 @@ function send_donate_ws($live_id, $user_id, $amount, $currency, $end, $color, $i
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/send_prop", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/send_prop", false, $options);
     return !!$contents;
 }
 
-function ex_rate($amount, $currency)
-{
+function ex_rate($amount, $currency) {
     //todo: どっかのAPIでリアタイ為替レート
     $rate = [
         "USD" => 110,
@@ -91,8 +87,7 @@ function ex_rate($amount, $currency)
     return isset($rate[$currency]) ? intval($amount * $rate[$currency]) : false;
 }
 
-function donation_url($user_id, $allow_nonech = true)
-{
+function donation_url($user_id, $allow_nonech = true) {
     $u = getUser($user_id);
     if (!$u) {
         return null;

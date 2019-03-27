@@ -1,6 +1,5 @@
 <?php
-function db_start($ignore_error = false)
-{
+function db_start($ignore_error = false) {
     global $env;
     $mysqli = new mysqli($env["database"]["host"], $env["database"]["user"], $env["database"]["pass"], $env["database"]["db"], $env["database"]["port"]);
     if ($mysqli->connect_errno && !$ignore_error) {
@@ -14,17 +13,16 @@ function db_start($ignore_error = false)
     return $mysqli;
 }
 
-function db_fetch_all(& $stmt)
-{
-    $hits = array();
-    $params = array();
+function db_fetch_all(& $stmt) {
+    $hits = [];
+    $params = [];
     $meta = $stmt->result_metadata();
     while ($field = $meta->fetch_field()) {
         $params[] = &$row[$field->name];
     }
-    call_user_func_array(array($stmt, 'bind_result'), $params);
+    call_user_func_array([$stmt, 'bind_result'], $params);
     while ($stmt->fetch()) {
-        $c = array();
+        $c = [];
         foreach ($row as $key => $val) {
             $c[$key] = $val;
         }
@@ -33,8 +31,7 @@ function db_fetch_all(& $stmt)
     return $hits;
 }
 
-function node_update_conf($mode, $type, $value, $live_id, $user_id = null)
-{
+function node_update_conf($mode, $type, $value, $live_id, $user_id = null) {
     global $env;
 
     $user = $user_id ? getUser($user_id) : null;
@@ -52,11 +49,11 @@ function node_update_conf($mode, $type, $value, $live_id, $user_id = null)
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents($env["websocket_url"]."/update_conf", false, $options);
+    $contents = file_get_contents($env["websocket_url"] . "/update_conf", false, $options);
 }

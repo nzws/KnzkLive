@@ -1,5 +1,5 @@
 <?php
-require_once("../../lib/bootloader.php");
+require_once "../../lib/bootloader.php";
 
 $my = getMe();
 if (!$my) {
@@ -15,11 +15,11 @@ if (isset($_GET["code"])) {
         "code" => $_GET["code"]
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-    ));
+    ]];
     $options = stream_context_create($options);
     $contents = file_get_contents("https://streamlabs.com/api/v1.0/token", false, $options);
     $json = json_decode($contents, true);
@@ -28,10 +28,10 @@ if (isset($_GET["code"])) {
     }
     $token = $json["access_token"];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'GET',
         'header' => implode(PHP_EOL, ['Content-Type: application/json'])
-    ));
+    ]];
     $options = stream_context_create($options);
     $contents = file_get_contents("https://streamlabs.com/api/v1.0/socket/token?access_token=" . $token, false, $options);
     $json = json_decode($contents, true);

@@ -1,6 +1,5 @@
 <?php
-function getMastodonAuth($domain)
-{
+function getMastodonAuth($domain) {
     $domain = mb_strtolower($domain, 'UTF-8');
 
     $mysqli = db_start();
@@ -13,8 +12,7 @@ function getMastodonAuth($domain)
     return isset($row[0]["domain"]) ? $row[0] : false;
 }
 
-function setMastodonAuth($domain, $id, $key)
-{
+function setMastodonAuth($domain, $id, $key) {
     $domain = mb_strtolower($domain, 'UTF-8');
     $id = s($id);
     $key = s($key);
@@ -27,8 +25,7 @@ function setMastodonAuth($domain, $id, $key)
     $mysqli->close();
 }
 
-function toot($text, $visibility = "public")
-{
+function toot($text, $visibility = "public") {
     global $env;
 
     $data = [
@@ -37,15 +34,15 @@ function toot($text, $visibility = "public")
     ];
 
     $header = [
-        'Authorization: Bearer '.$_SESSION["token"],
+        'Authorization: Bearer ' . $_SESSION["token"],
         'Content-Type: application/json'
     ];
 
-    $options = array('http' => array(
+    $options = ['http' => [
         'method' => 'POST',
         'content' => json_encode($data),
         'header' => implode(PHP_EOL, $header)
-    ));
+    ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents("https://".$env["masto_login"]["domain"]."/api/v1/statuses", false, $options);
+    $contents = file_get_contents("https://" . $env["masto_login"]["domain"] . "/api/v1/statuses", false, $options);
 }

@@ -1,6 +1,6 @@
 <?php
-require_once("../../../../lib/bootloader.php");
-require_once("../../../../lib/apiloader.php");
+require_once "../../../../lib/bootloader.php";
+require_once "../../../../lib/apiloader.php";
 
 $my = getMe();
 

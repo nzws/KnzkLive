@@ -1,4 +1,4 @@
-<?php require_once("../lib/bootloader.php"); ?>
+<?php require_once "../lib/bootloader.php"; ?>
 <!doctype html>
 <html lang="ja">
 <head>
