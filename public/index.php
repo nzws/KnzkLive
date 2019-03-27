@@ -39,7 +39,7 @@ if (isset($lives[0])) {
             <h5>KnzkLiveで <?=$live_count?>人が配信中, <?=$viewers_count?>人が視聴中</small></h5>
             <div class="row mt-3">
                 <?php foreach ($lives as $live) : $liveUser = getUser($live["user_id"]); ?>
-                    <div class="col-md-6">
+                    <div class="col-md-6 live_box">
                         <a href="<?=liveUrl($live["id"])?>" class="nodeco_link">
                             <div class="live_thumbnail mb-2">
                                 <?php if (empty($live["misc"]["exist_thumbnail"])) : ?>

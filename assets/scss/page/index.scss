@@ -54,4 +54,10 @@ html[data-page='index'] {
     padding: 15px;
     background: #333;
   }
+
+  .live_box {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

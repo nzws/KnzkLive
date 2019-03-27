@@ -84,7 +84,7 @@ function getAllLive($notId = 0, $is_history = false) {
 
 function getLastLives() {
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 GROUP BY user_id ORDER BY id DESC) ORDER BY id DESC LIMIT 0, 10;");
+    $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 AND is_live = 0 GROUP BY user_id ORDER BY id DESC) ORDER BY id DESC LIMIT 0, 10;");
     $stmt->execute();
     $row = db_fetch_all($stmt);
     $stmt->close();
