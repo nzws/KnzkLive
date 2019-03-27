@@ -1,5 +1,6 @@
 <?php
 require_once "../../../lib/bootloader.php";
+require_once("../../../lib/apiloader.php");
 
 $key = str_replace('/live/', '', s($_GET["live"]));
 $id = strstr($key, 'stream', true);
@@ -16,6 +17,7 @@ if (strpos($_GET["live"], 'collabo') !== false) { // collabo
 
     if ($_GET["mode"] === "pre_publish") { //配信開始
         setCollaboLiveStatus($collabo_id, $live["id"], 2);
+        api_json(["is_record" => false]);
     } elseif ($_GET["mode"] === "done_publish") { //配信終了
         setCollaboLiveStatus($collabo_id, $live["id"], 1);
     }
@@ -26,6 +28,7 @@ if (strpos($_GET["live"], 'collabo') !== false) { // collabo
 
     if ($_GET["mode"] === "pre_publish") { //配信開始
         setLiveStatus($live["id"], 2);
+        api_json(["is_record" => !empty($live["misc"]["is_record"])]);
     } elseif ($_GET["mode"] === "done_publish") { //配信終了
         $liveUser = getUser($live["user_id"]);
         if (isset($liveUser["misc"]["auto_close"]) && $liveUser["misc"]["auto_close"] && $live["is_started"] == 1) {

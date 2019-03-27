@@ -46,23 +46,28 @@ if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
     $misc["able_comment"] = true;
     $misc = json_encode($misc);
 
+    $title = s($_POST["title"]);
+    $desc = s($_POST["description"]);
+    $privacy_mode = s($_POST["privacy_mode"]);
+
     $mysqli = db_start();
     $stmt = $mysqli->prepare("INSERT INTO `live` (`name`, `description`, `user_id`, `slot_id`, `created_at`, `ended_at`, `ip`, `token`, `privacy_mode`, `custom_hashtag`, `misc`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);");
-    $stmt->bind_param('sssssssss', s($_POST["title"]), s($_POST["description"]), $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, s($_POST["privacy_mode"]), $tag, $misc);
+    $stmt->bind_param('sssssssss', $title, $desc, $my["id"], $slot, $_SERVER["REMOTE_ADDR"], $random, $privacy_mode, $tag, $misc);
     $stmt->execute();
+    $live_id = $stmt->insert_id;
+    $err = $stmt->error;
     $stmt->close();
     $mysqli->close();
 
-    $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM `live` WHERE (is_live = 1 OR is_live = 2) AND user_id = ?;");
-    $stmt->bind_param("s", $my["id"]);
-    $stmt->execute();
-    $row = db_fetch_all($stmt);
-    $stmt->close();
-    $mysqli->close();
-    setUserLive($row[0]["id"], $my["id"]);
+    if ($err || !$live_id) showError('登録中に致命的なエラーが発生しました', 500);
+
+    setUserLive($live_id, $my["id"]);
     setSlot($slot, 1);
-    node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $row[0]["id"], $my["id"]);
+    node_update_conf("add", "hashtag", empty($tag) ? "default" : $tag, $live_id, $my["id"]);
+    update_realtime_config("update_status", [
+        "status" => 1
+    ], $live_id);
+
     header("Location: " . u("live_manage") . "?new=open");
     exit();
 } elseif ($my["misc"]["to_title"]) {

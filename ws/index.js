@@ -7,6 +7,7 @@ const lastUpdate = {
   tipknzk: null,
   streaming: null
 };
+const liveTimerPool = {};
 
 app.get('/', function(req, res) {
   res.send('ok');
@@ -61,8 +62,22 @@ app.post('/send_prop', function(req, res) {
   );
 
   if (req.body.mode === 'update_status') {
+    if (liveTimerPool[req.body.live_id]) {
+      clearTimeout(liveTimerPool[req.body.live_id]);
+      liveTimerPool[req.body.live_id] = null;
+    }
+
     if (req.body.result.status === 1) {
-      setTimeout(() => StopLive(), 10 * 60 * 1000);
+      liveTimerPool[req.body.live_id] = setTimeout(() => {
+        exec(
+          `php ${__dirname}/../knzkctl job:stop_live ${req.body.live_id}`,
+          (err, stdout, stderr) => {
+            if (err) {
+              console.log(err);
+            }
+          }
+        );
+      }, 15 * 60 * 1000);
     }
   }
 

@@ -111,6 +111,11 @@ function setLiveStatus($id, $mode) {
     $err = $stmt->error;
     $stmt->close();
     $mysqli->close();
+
+    update_realtime_config("update_status", [
+        "status" => $mode
+    ], $id);
+
     return !$err;
 }
 
@@ -172,6 +177,7 @@ function postWebHook($live) {
 
 function end_live($live_id) {
     $live = getLive($live_id);
+    if (!$live) return false;
     $my = getUser($live["user_id"]);
 
     if (setLiveStatus($live["id"], 0)) {

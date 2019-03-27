@@ -4,6 +4,12 @@ function load($argv) {
         merge_toot_point();
     } elseif ($argv[1] === "management:rebuild_stat") {
         rebuild_stat();
+    } elseif ($argv[1] === "job:stop_live") {
+        $live = getLive($argv[2]);
+        if ($live && $live["is_live"] === 1) {
+            end_live($live["id"]);
+            comment_post("<div class=\"alert alert-danger\">【システム】未プッシュの状態が15分間続いたため自動的に枠を終了しました。</div>", $live["user_id"], $live["id"], true);
+        }
     } elseif ($argv[1] === "debug:add_collabo") {
         setCollaboLiveStatus($argv[3], $argv[2], $argv[4]);
     } elseif ($argv[1] === "job:tipknzk") {

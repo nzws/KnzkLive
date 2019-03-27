@@ -67,10 +67,17 @@ $vote = loadVote($live["id"]);
 </head>
 <body>
 <?php include "../include/navbar.php"; ?>
-<div class="container">
-    <a href="?" class="btn btn-info btn-sm">再読込</a>
+
+<?php if ($live["is_live"] === 1) : ?>
+<div class="container mt-2">
+    <div class="alert alert-warning" role="alert">
+        <b><?=i("exclamation-triangle")?> 連続で15分以上未プッシュ(配信クライアントが接続されていない)状態が続くと自動的に枠を終了します。</b><br>
+        <small>配信を続行するには<a href="https://knzklive-docs.knzk.me/#/docs/streamer/getting-started.md#3-配信ツールの設定を行う" target="_blank">配信クライアントを接続</a>してください。</small>
+    </div>
 </div>
-<?php if ($live["is_started"] == "0") : ?>
+<?php endif; ?>
+
+<?php if ($live["is_started"] === 0) : ?>
     <div class="container">
         <div class="box">
             <div class="alert alert-info" role="alert">
@@ -128,7 +135,6 @@ $vote = loadVote($live["id"]);
         </div>
     </div>
     <hr>
-<?php else : ?>
 <?php endif; ?>
 
 <div class="container">
