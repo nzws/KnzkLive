@@ -4,7 +4,7 @@ require_once("../lib/bootloader.php");
 $code = filter_input(INPUT_GET, "code", FILTER_SANITIZE_STRING);
 $domain = filter_input(INPUT_GET, "domain", FILTER_SANITIZE_STRING);
 
-if ($_SESSION["login_domain"] && !$domain) $domain = $_SESSION["login_domain"];
+if (isset($_SESSION["login_domain"]) && !$domain) $domain = $_SESSION["login_domain"];
 if (!$domain) exit("ERR: ドメインが入力されていません");
 $_SESSION["login_domain"] = $domain;
 $info = getMastodonAuth($domain);
