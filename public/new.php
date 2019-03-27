@@ -59,7 +59,9 @@ if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
     $stmt->close();
     $mysqli->close();
 
-    if ($err || !$live_id) showError('登録中に致命的なエラーが発生しました', 500);
+    if ($err || !$live_id) {
+        showError('登録中に致命的なエラーが発生しました', 500);
+    }
 
     setUserLive($live_id, $my["id"]);
     setSlot($slot, 1);

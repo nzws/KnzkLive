@@ -18,6 +18,15 @@ function load($argv) {
             "file_name" => s($argv[2]) . ".png",
             "allow_already_exist" => true
         ]);
+        if ($r["success"]) {
+            $live = getLive($argv[2]);
+            if (!$live) {
+                return false;
+            }
+
+            $live["misc"]["exist_thumbnail"] = true;
+            setLiveConfig($live["id"], $live["misc"]);
+        }
     } elseif ($argv[1] === "debug:add_collabo") {
         setCollaboLiveStatus($argv[3], $argv[2], $argv[4]);
     } elseif ($argv[1] === "job:tipknzk") {
