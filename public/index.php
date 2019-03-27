@@ -20,7 +20,18 @@ if (isset($lives[0])) {
 <body>
 <?php include "../include/navbar.php"; ?>
 
-<div class="container mt-4">
+<div class="container mt-3">
+    <?php if (empty($_SESSION["acct"])) : ?>
+        <div class="about">
+            <button type="button" class="close text-white" onclick="hideAbout()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h2>KnzkLive</h2>
+            <?=isset($env["top_about"]) ? $env["top_about"] : $env["Title"]?>
+        </div>
+        <hr class="mb-4">
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-lg-8">
             <h2><?=i("broadcast-tower")?> ライブ</h2>
@@ -84,15 +95,25 @@ if (isset($lives[0])) {
             </ul>
         </div>
     </div>
-    <hr class="mt-4">
-    <div class="jumbotron about" style="background-image: url(<?=assetsUrl()?>static/thumbnail.png)">
-        <div class="jumbotron-body rounded">
-            <h2 class="display-4">KnzkLive</h2>
-            <p class="lead"><?=isset($env["top_about"]) ? $env["top_about"] : $env["Title"]?></p>
-        </div>
-    </div>
-</div>
 
+    <?php if (!empty($_SESSION["acct"])) : ?>
+        <hr class="mt-4">
+        <div class="about">
+            <button type="button" class="close text-white" onclick="hideAbout()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h2>KnzkLive</h2>
+            <?=isset($env["top_about"]) ? $env["top_about"] : $env["Title"]?>
+        </div>
+    <?php endif; ?>
+</div>
+<script>
+    if (localStorage['hide_about']) $('.about').hide();
+    function hideAbout() {
+        $('.about').hide();
+        localStorage['hide_about'] = 1;
+    }
+</script>
 <?php include "../include/footer.php"; ?>
 </body>
 </html>

@@ -123,7 +123,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
                 <small>KnzkLiveではアクセストークンをデータベースに保管しません。また、認証とコメント以外に使用する事はありません。</small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="login()">ログイン</button>
+                <button type="button" class="btn btn-primary btn-block" onclick="login()">ログイン</button>
             </div>
         </div>
     </div>
