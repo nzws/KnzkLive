@@ -6,37 +6,34 @@ $finder = PhpCsFixer\Finder::create()
 return PhpCsFixer\Config::create()
     ->setRules([
         '@PSR2' => true,
-        'single_quote' => [ // 単純な文字列であれば ' を使用
-          'strings_containing_single_quote_chars' => true // "hoge 'hoge' " を 'hoge \'hoge\' 'に
-        ],
-        'array_syntax' => ['syntax' => 'short'], // array() を [] に
+        'array_syntax' => ['syntax' => 'short'],
         'braces' => [
-          'position_after_functions_and_oop_constructs' => 'same' // function後の {} を同じ行に
+          'position_after_functions_and_oop_constructs' => 'same'
         ],
         'cast_spaces' => [
-          'space' => 'single' // キャスト後にスペースを入れる
+          'space' => 'single'
         ],
-        'combine_consecutive_issets' => true, // isset(a) && isset(b) を isset(a, b) に
-        'combine_consecutive_unsets' => true, // unset
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
         'concat_space' => [
-          'spacing' => 'one' // 'hogehoge'.$hoge.'hoge2' の間にスペースを入れる
+              'spacing' => 'one'
         ],
-        'include' => true, // includeとrequireで () を使用しない
-        'lowercase_cast' => true, // キャストを小文字に
-        'class_attributes_separation' => true, // Class, trait and interface elements の前後に空白行を強制
-        'no_empty_comment' => true, // 空コメントを禁止
-        'no_empty_phpdoc' => true, // 空PHPDocを禁止
-        'no_empty_statement' => true, // 無駄なセミコロンを削除
+        'include' => true,
+        'lowercase_cast' => true,
+        'class_attributes_separation' => true,
+        'no_empty_comment' => true,
+        'no_empty_phpdoc' => true,
+        'no_empty_statement' => true,
         'no_extra_blank_lines' => [
-          'tokens' => ['extra'] // 無駄な空白行を削除
+            'tokens' => ['extra']
         ],
-        'no_leading_import_slash' => true, // use の先頭のスラッシュを削除
+        'no_leading_import_slash' => true,
         'no_mixed_echo_print' => [
-          'use' => 'echo' // echo に強制
+            'use' => 'echo'
         ],
-        'multiline_whitespace_before_semicolons' => true, // セミコロン前の改行を禁止
-        'no_singleline_whitespace_before_semicolons' => true, // セミコロン前の空白を禁止
-        'no_trailing_comma_in_singleline_array' => true, // 配列の余分なカンマを禁止
-        'no_unused_imports' => true, // 未使用の use を削除
+        'multiline_whitespace_before_semicolons' => true,
+        'no_singleline_whitespace_before_semicolons' => true,
+        'no_trailing_comma_in_singleline_array' => true,
+        'no_unused_imports' => true,
     ])
     ->setFinder($finder);
