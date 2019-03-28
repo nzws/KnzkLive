@@ -177,7 +177,9 @@ function postWebHook($live) {
 
 function end_live($live_id) {
     $live = getLive($live_id);
-    if (!$live) return false;
+    if (!$live) {
+        return false;
+    }
     $my = getUser($live["user_id"]);
 
     if (setLiveStatus($live["id"], 0)) {
