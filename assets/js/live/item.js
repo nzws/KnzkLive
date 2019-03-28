@@ -36,6 +36,7 @@ class item {
     } else if (type === 'voice') {
       body['voice'] = kit.elemId('item_voice').value;
     } else if (type === 'knzk_kongyo_kami') {
+    } else if (type === 'knzk_kongyo_kami2') {
     } else {
       return null;
     }
