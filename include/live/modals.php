@@ -140,11 +140,6 @@
                     </div>
                     <?php endif; ?>
                 <?php endif; ?>
-
-                <?php if ($my["id"] === 2 || $env["is_testing"]) : ?>
-                    <hr>
-                    <button class="btn btn-warning btn-lg btn-block" onclick="live.item.buyItem('knzk_kongyo_kami2')">1日用</button>
-                <?php endif; ?>
             </div>
         </div>
     </div>

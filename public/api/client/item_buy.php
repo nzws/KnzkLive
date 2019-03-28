@@ -43,11 +43,6 @@ if ($_POST["type"] === "emoji") {
     if ($live["user_id"] !== 2 && $live["user_id"] !== 84 && !$env["is_testing"]) {
         api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
     }
-} elseif ($_POST["type"] === "knzk_kongyo_kami2") {
-    $point = 1;
-    if ($my["id"] !== 2 && !$env["is_testing"]) {
-        api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
-    }
 } else {
     api_json(["error" => "エラー: このアイテムは存在しないか受付停止中です。"]);
 }
@@ -93,9 +88,6 @@ if ($_POST["type"] === "emoji") {
 } elseif ($_POST["type"] === "knzk_kongyo_kami") {
     $desc = "神　　崎　　爆　　弾";
     send_item([], $live["id"], "knzk_kongyo_kami");
-} elseif ($_POST["type"] === "knzk_kongyo_kami2") {
-    $desc = dataget('44Ko44Kk44OX44Oq44Or44OV44O844O844O844O844O844Or77yB77yB77yB77yB77yB77yB77yB');
-    send_item([], $live["id"], "knzk_kongyo_kami2");
 }
 
 $n = add_point($my["id"], $point * -1, "item", $desc);
@@ -129,8 +121,4 @@ function send_item($item, $live_id, $type) {
     if ($contents === false) {
         api_json(["error" => "エラー: リアルタイム通信サーバーが応答しなかったため、中断されました。"]);
     }
-}
-
-function dataget($t) {
-    return base64_decode($t);
 }

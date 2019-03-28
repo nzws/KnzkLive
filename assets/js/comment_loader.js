@@ -128,17 +128,6 @@ class comment_loader {
                   }
                   return;
                 }
-                if (msg.item_type === 'knzk_kongyo_kami2') {
-                  for (let i = 0; i < 130; i++) {
-                    const audio = new Audio(
-                      'https://static.knzk.me/knzklive/kongyo.mp3'
-                    );
-                    audio.volume = 1;
-                    audio.muted = 0;
-                    audio.play();
-                  }
-                  return;
-                }
 
                 const frames = document.querySelectorAll('iframe');
                 frames.forEach(frame => {
