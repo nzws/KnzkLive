@@ -82,14 +82,18 @@ function getAllLive($notId = 0, $is_history = false) {
     return isset($row[0]["id"]) ? $row : false;
 }
 
-function getLastLives() {
+function getLastLives(int $page = 1, int $per_page = 10) {
+    if ($page < 1 || $per_page < 1 || $per_page > 100) return false;
+    $limit = $page * $per_page;
+
     $mysqli = db_start();
-    $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 GROUP BY user_id ORDER BY id DESC) ORDER BY id DESC;");
+    $stmt = $mysqli->prepare("SELECT * FROM live WHERE id in (SELECT max(id) FROM live WHERE privacy_mode = 1 AND is_started = 1 AND is_live = 0 GROUP BY user_id ORDER BY id DESC) ORDER BY id DESC LIMIT ?, ?;");
+    $stmt->bind_param("ss", $limit, $per_page);
     $stmt->execute();
     $row = db_fetch_all($stmt);
     $stmt->close();
     $mysqli->close();
-    return isset($row[0]["id"]) ? $row : false;
+    return isset($row[0]["id"]) ? $row : [];
 }
 
 function getUserLives($user_id) {
