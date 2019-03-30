@@ -5478,6 +5478,11 @@ quick-lru@^1.0.0:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-1.1.0.tgz#4360b17c61136ad38078397ff11416e186dcfbb8"
   integrity sha1-Q2CxfGETatOAeDl/8RQW4Ybc+7g=
 
+quicklink@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/quicklink/-/quicklink-1.0.0.tgz#71cb32be603d0ded93a7a48cf3c7e101ea4b1f6d"
+  integrity sha512-Zk0+RLevrrrrPzcPO9IKBAbmtFrinDP0ifSxeft5AG9eI+lBsvQ2XFjH7kceuS+LNehtZatQX+3LyEDYAPpmrg==
+
 ramda@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"

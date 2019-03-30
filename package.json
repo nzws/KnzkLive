@@ -35,6 +35,7 @@
     "mysql": "2.16.0",
     "node-fetch": "2.3.0",
     "popper.js": "1.14.7",
+    "quicklink": "1.0.0",
     "socket.io-client": "2.2.0",
     "striptags": "3.1.1",
     "websocket": "1.0.28",

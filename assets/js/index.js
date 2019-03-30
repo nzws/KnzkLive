@@ -1,9 +1,11 @@
 import $ from 'jquery';
-window.$ = $;
-
+import quicklink from 'quicklink/dist/quicklink.mjs';
 import 'popper.js';
 import 'bootstrap';
 import '../scss/index.scss';
+
+window.$ = $;
+quicklink();
 
 window.knzk = {
   live: require('./live'),
