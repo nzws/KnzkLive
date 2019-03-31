@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fada498e622eacbeed531885e01380e5",
+    "content-hash": "3818032060d911832f710043666f21d9",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -2263,16 +2263,16 @@
         },
         {
             "name": "ua-parser/uap-php",
-            "version": "v3.8.6",
+            "version": "v3.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ua-parser/uap-php.git",
-                "reference": "f04d8fbe9aae8130e688a2bb325a40f4067c4dd7"
+                "reference": "3004c494d204c3b6d5e1e80a4ff78e4025e24e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ua-parser/uap-php/zipball/f04d8fbe9aae8130e688a2bb325a40f4067c4dd7",
-                "reference": "f04d8fbe9aae8130e688a2bb325a40f4067c4dd7",
+                "url": "https://api.github.com/repos/ua-parser/uap-php/zipball/3004c494d204c3b6d5e1e80a4ff78e4025e24e2f",
+                "reference": "3004c494d204c3b6d5e1e80a4ff78e4025e24e2f",
                 "shasum": ""
             },
             "require": {
@@ -2316,7 +2316,7 @@
                 }
             ],
             "description": "A multi-language port of Browserscope's user agent parser.",
-            "time": "2019-02-14T09:54:15+00:00"
+            "time": "2019-03-19T09:54:19+00:00"
         }
     ],
     "packages-dev": [],
