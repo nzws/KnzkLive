@@ -1,0 +1,50 @@
+html[data-page='knzkpay-index'] {
+  .top {
+    background: #303f6b no-repeat center center;
+    background-size: cover;
+
+    .logo {
+      max-width: 90%;
+      padding: 40px 0;
+    }
+
+    .text {
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    .button {
+      margin: 20px 0;
+
+      @include media(md, min) {
+        margin-bottom: 100px;
+      }
+    }
+
+    .screenshot {
+      width: 350px;
+      max-width: 90%;
+      margin-top: 30px;
+    }
+  }
+
+  .page {
+    padding: 100px 0;
+
+    @include media(md, min) {
+      padding-bottom: 180px;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    .guide {
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .screenshot {
+      height: 500px;
+    }
+  }
+}
