@@ -61,6 +61,12 @@ if ($_POST) {
 <form method="post">
     <input type="hidden" name="csrf_token" value="<?=$_SESSION['csrf_token']?>">
     <div class="container">
+        <?php if ($my["live_current_id"]) : ?>
+        <div class="alert alert-warning">
+            <b><?=i("exclamation-triangle")?> 配信枠を持っている状態では一部設定が保存されません。</b><br>
+            <small>全ての変更を適用するには配信枠を一度終了させてください。</small>
+        </div>
+        <?php endif; ?>
         <div class="box">
             <h4>プロフィール設定</h4>
             Mastodonで変更した後、KnzkLiveでログアウト→ログインすると更新されます。
