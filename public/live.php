@@ -130,8 +130,10 @@ $vote = loadVote($live["id"]);
                 <div class="input-group">
                     <input class="form-control" id="toot" placeholder="Enterでコメント..." type="text">
                     <div class="input-group-append">
+                        <?php if ($my) : ?>
                         <button class="btn btn-<?=!empty($my["misc"]["no_toot_default"]) ? "" : "outline-"?>primary" id="comment_local_button" onclick="live.comment.toggleLocal()"
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" title="ローカルで投稿" data-content="これを有効にすると、<?=isset($_SESSION["account_provider"]) ? $_SESSION["account_provider"] : "SNS"?>には投稿せずにコメントします。"><?=i("home")?></button>
+                        <?php endif; ?>
 
                         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
                             <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#itemModal" data-tooltip="1" title="アイテムを投下"><i class="fas fa-hat-wizard"></i></button>
