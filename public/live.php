@@ -74,7 +74,10 @@ $vote = loadVote($live["id"]);
 
         window.onload = function() {
             window.live = knzk.live;
+<?php if (!$live["misc"]["is_sensitive"] || isset($_SESSION["sensitive_allow"])) : ?>
             live.ready();
+<?php endif; ?>
+
 <?php if (!$live["misc"]["able_comment"]) : ?>
             $(".comment_block").hide();
 <?php endif; ?>
@@ -91,6 +94,7 @@ $vote = loadVote($live["id"]);
         </div>
     </div>
 <?php endif; ?>
+
 <?php if ($live["misc"]["is_sensitive"] && !isset($_SESSION["sensitive_allow"])) : ?>
 <div class="container">
     <h1>警告！</h1>
@@ -104,7 +108,9 @@ $vote = loadVote($live["id"]);
         <button type="submit" class="btn btn-danger btn-lg btn-block">:: 視聴する ::</button>
     </form>
 </div>
-<?php else : ?>
+</body>
+</html>
+<?php exit(); endif; // sensitive ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-9 col-lg-8 main">
@@ -255,6 +261,5 @@ $vote = loadVote($live["id"]);
     </div>
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<?php endif; // sensitive ?>
 </body>
 </html>
