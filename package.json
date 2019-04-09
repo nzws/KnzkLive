@@ -60,7 +60,7 @@
     "postcss-loader": "3.0.0",
     "prettier": "1.16.4",
     "pretty-quick": "1.10.0",
-    "sass": "1.17.4",
+    "sass": "1.18.0",
     "sass-loader": "7.1.0",
     "stylelint": "9.10.1",
     "stylelint-config-prettier": "5.0.0",
