@@ -1,7 +1,7 @@
-const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Fiber = require('fibers');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { join } = require('path');
 const Sass = require('sass');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -10,10 +10,7 @@ const WebpackBar = require('webpackbar');
 module.exports = {
   mode: 'production',
   entry: './assets/js/index.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.join(__dirname, 'public/bundle')
-  },
+  output: { filename: 'bundle.js', path: join(__dirname, 'public/bundle') },
   module: {
     rules: [
       {
@@ -42,17 +39,13 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({ filename: 'bundle.css' }),
     new StyleLintPlugin(),
     new WebpackBar({ profile: true, reporter: 'profile' })
   ],
   optimization: {
     minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        extractComments: true
-      }),
-      new MiniCssExtractPlugin({ filename: 'bundle.css' })
+      new TerserPlugin({ cache: true, parallel: true, extractComments: true })
     ]
   },
   stats: 'errors-only'
