@@ -211,13 +211,13 @@ ALTER TABLE users_watching DROP PRIMARY KEY;
 ALTER TABLE users_watching ADD user_id int(255) NULL;
 
 -- 2019-02-01
-ALTER TABLE live ADD misc text DEFAULT '{}' NULL;
+ALTER TABLE live ADD misc text NULL;
 ALTER TABLE live DROP is_sensitive;
 ALTER TABLE live ALTER COLUMN is_live SET DEFAULT 1;
 UPDATE `live` SET misc = '{"is_sensitive":false,"able_item":true,"able_comment":true}' WHERE misc = '{}';
 
 -- 2019-02-02
-ALTER TABLE users ADD ngwords longtext DEFAULT '[]' NOT NULL;
+ALTER TABLE users ADD ngwords longtext NULL;
 CREATE TABLE users_blocking
 (
   live_user_id int(255) NOT NULL,
@@ -324,7 +324,8 @@ create table migrations (
   version varchar(255) not null
 );
 
-INSERT INTO knzklive.migrations (version) VALUES ('20190414000000');
+INSERT INTO migrations (version) VALUES ('20190414000000');
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
