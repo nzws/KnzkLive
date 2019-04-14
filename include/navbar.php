@@ -38,7 +38,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
     echo "-fluid";
 } ?> nav-container wide_hide">
     <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
-        <a class="col-auto header-brand" href="<?=u("")?>">
+        <a class="col-auto header-brand" href="/">
             <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
         </a>
         <div class="btn-group col-3 d-md-none header-toggler">

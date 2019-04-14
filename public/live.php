@@ -40,6 +40,8 @@ $vote = loadVote($live["id"]);
 <html lang="ja" data-page="live">
 <head>
     <?php include "../include/header.php"; ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+
     <title id="title-name"><?=$live["name"]?> - <?=$env["Title"]?></title>
 
     <meta property="og:title" content="<?=$live["name"]?>"/>
@@ -50,39 +52,6 @@ $vote = loadVote($live["id"]);
     <meta property="og:site_name" content="<?=$env["Title"]?>"/>
     <meta property="og:description" content="<?=s($live["description"])?>"/>
     <meta name="description" content="<?=s($live["description"])?> by <?=s($liveUser["name"])?>">
-
-    <script>
-        window.config.live = {
-            id: <?=$live["id"]?>,
-            hashtag_o: "<?=liveTag($live)?>",
-            hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
-            url: "<?=$liveurl?>",
-            is_broadcaster: <?=$my && $live["user_id"] === $my["id"] ? "true" : "false"?>,
-            is_collabo: <?=$my && is_collabo($my["id"], $live["id"]) ? "true" : "false"?>,
-            created_at: "<?=dateHelper($live["created_at"])?>",
-            websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
-            account: {
-                id: <?=$liveUser["id"]?>,
-                acct: "<?=$liveUser["acct"]?>",
-                name: "<?=$liveUser["name"]?>"
-            },
-            watch_data: {},
-            websocket: {},
-            heartbeat: {},
-            page: "livepage"
-        }
-
-        window.onload = function() {
-            window.live = knzk.live;
-<?php if (!$live["misc"]["is_sensitive"] || isset($_SESSION["sensitive_allow"])) : ?>
-            live.ready();
-<?php endif; ?>
-
-<?php if (!$live["misc"]["able_comment"]) : ?>
-            $(".comment_block").hide();
-<?php endif; ?>
-        }
-    </script>
 </head>
 <body>
 <?php $navmode = "fluid"; include "../include/navbar.php"; ?>
@@ -262,6 +231,38 @@ $vote = loadVote($live["id"]);
         </div>
     </div>
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+
+<script>
+        window.config.live = {
+            id: <?=$live["id"]?>,
+            hashtag_o: "<?=liveTag($live)?>",
+            hashtag: " #<?=liveTag($live)?>" + (config.account && config.account.domain === "twitter.com" ? " - <?=$liveurl?>" : ""),
+            url: "<?=$liveurl?>",
+            is_broadcaster: <?=$my && $live["user_id"] === $my["id"] ? "true" : "false"?>,
+            is_collabo: <?=$my && is_collabo($my["id"], $live["id"]) ? "true" : "false"?>,
+            created_at: "<?=dateHelper($live["created_at"])?>",
+            websocket_url: "<?=($env["is_testing"] ? "ws://localhost:3000/api/streaming" : "wss://" . $env["domain"] . $env["RootUrl"] . "api/streaming")?>/live/<?=s($live["id"])?>",
+            account: {
+                id: <?=$liveUser["id"]?>,
+                acct: "<?=$liveUser["acct"]?>",
+                name: "<?=$liveUser["name"]?>"
+            },
+            watch_data: {},
+            websocket: {},
+            heartbeat: {},
+            page: "livepage"
+        }
+
+        window.ready = function() {
+            window.live = knzk.live;
+<?php if (!$live["misc"]["is_sensitive"] || isset($_SESSION["sensitive_allow"])) : ?>
+            live.ready();
+<?php endif; ?>
+
+<?php if (!$live["misc"]["able_comment"]) : ?>
+            $(".comment_block").hide();
+<?php endif; ?>
+        }
+</script>
 </body>
 </html>

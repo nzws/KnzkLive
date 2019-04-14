@@ -224,7 +224,7 @@ $vote = loadVote($live["id"]);
     <?php if (isset($_GET["new"]) && $my["misc"]["auto_open_start"]) : ?>
     window.open('<?=$liveurl?>');
     <?php endif; ?>
-    window.onload = function () {
+    window.ready = function () {
         const clipboard = new ClipboardJS('.copy');
     }
 </script>
