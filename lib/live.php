@@ -49,7 +49,7 @@ function getLive($id) {
     $stmt->close();
     $mysqli->close();
     if (isset($row[0]["id"])) {
-        $row[0]["misc"] = json_decode($row[0]["misc"], true);
+        $row[0]["misc"] = empty($row[0]["misc"]) ? [] : json_decode($row[0]["misc"], true);
     }
 
     return isset($row[0]["id"]) ? $row[0] : false;
