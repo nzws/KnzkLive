@@ -311,6 +311,14 @@ create index items_user_id_type_index
 create unique index items_type_user_id_name_uindex
   on items (type, user_id, name);
 
+-- 2019/04/14
+
+create table migrations (
+  version varchar(255) not null
+);
+
+INSERT INTO knzklive.migrations (version) VALUES ('20190414000000');
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
