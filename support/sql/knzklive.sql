@@ -1,3 +1,9 @@
+-- ======================================
+-- THIS FILE IS OUTDATED!
+-- Please **apply the SQL of 2019/04/14** and use 'yarn db:migrate' command.
+-- ======================================
+
+
 -- phpMyAdmin SQL Dump
 -- version 4.8.0.1
 -- https://www.phpmyadmin.net/
@@ -312,6 +318,7 @@ create unique index items_type_user_id_name_uindex
   on items (type, user_id, name);
 
 -- 2019/04/14
+-- Use phpmig migration
 
 create table migrations (
   version varchar(255) not null
