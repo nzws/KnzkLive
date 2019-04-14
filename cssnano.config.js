@@ -1,3 +1,1 @@
-module.exports = {
-  preset: ['default', { autoprefixer: false }]
-};
+module.exports = { preset: ['default', { autoprefixer: false }] };

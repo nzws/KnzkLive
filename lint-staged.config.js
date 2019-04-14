@@ -1,3 +1,1 @@
-module.exports = {
-  '*.scss': ['stylelint --fix', 'git add']
-};
+module.exports = { '*.scss': ['stylelint --fix', 'git add'] };
