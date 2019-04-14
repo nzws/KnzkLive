@@ -6,11 +6,13 @@ const chalk = require('chalk');
 const logSymbols = require('log-symbols');
 
 function validateDependencyObject(object) {
-  Object.keys(object).forEach(key => {
-    if (object[key][0] === '^' || object[key][0] === '~') {
+  const dependencies = Object.values(object);
+
+  dependencies.forEach(dependency => {
+    if (dependency[0] === '^' || dependency[0] === '~') {
       console.error(
         logSymbols.error,
-        `Dependency ${chalk.bold.bgRed(key)} should be pinned.`
+        `Dependency ${chalk.bold.bgRed(dependency)} should be pinned.`
       );
       process.exitCode = 1;
     }
