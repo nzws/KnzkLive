@@ -27,7 +27,7 @@ function getUser($id, $mode = "id") {
 
     if (isset($row[0]["id"])) {
         $row[0]["misc"] = json_decode($row[0]["misc"], true);
-        $row[0]["ngwords"] = json_decode($row[0]["ngwords"], true);
+        $row[0]["ngwords"] = empty($row[0]["ngwords"]) ? [] : json_decode($row[0]["ngwords"], true);
     }
 
     if (!isset($userCache[$mode])) {

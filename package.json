@@ -16,6 +16,7 @@
     "fmt:json": "prettier --write '**/*.json'",
     "fmt:css": "stylelint --fix **/*.scss && prettier --write '**/*.scss'",
     "fmt:js": "prettier --write '**/*.js'",
+    "fmt:php": "composer fmt",
     "fmt": "npm-run-all fmt:* -s",
     "check:deps": "node ./scripts/check-deps.js",
     "check:fmt:md": "prettier --check '**/*.md'",
@@ -25,7 +26,8 @@
     "check:fmt:js": "prettier --check '**/*.js'",
     "check:fmt": "npm-run-all check:fmt:* -s",
     "watch": "webpack --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "db:migrate": "composer phpmig migrate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.8.1",
