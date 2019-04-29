@@ -1,12 +1,16 @@
 ![KNZK LIVE](https://user-images.githubusercontent.com/38746192/54084345-d1668380-4372-11e9-96b9-42361b974953.gif)
 
-[![CircleCI](https://circleci.com/gh/KnzkDev/KnzkLive.svg?style=svg)](https://circleci.com/gh/KnzkDev/KnzkLive)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=KnzkDev/KnzkLive)](https://dependabot.com)
 [![code style: prettier](https://badgen.net/badge/code%20style/prettier/pink)](https://github.com/prettier/prettier)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/KnzkDev/KnzkLive.svg)](https://isitmaintained.com/project/KnzkDev/KnzkLive 'Average time to resolve an issue')
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/KnzkDev/KnzkLive.svg)](https://isitmaintained.com/project/KnzkDev/KnzkLive 'Percentage of issues still open')
 [![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](https://github.com/KnzkDev/KnzkLive/pulls)
 [![MIT License](https://badgen.net/badge/license/MPL-2.0/blue)](LICENSE)
+
+|                                                             Linux                                                              |
+| :----------------------------------------------------------------------------------------------------------------------------: |
+|        [![CircleCI](https://circleci.com/gh/KnzkDev/KnzkLive.svg?style=svg)](https://circleci.com/gh/KnzkDev/KnzkLive)         |
+| [![CircleCI](https://buildstats.info/circleci/chart/KnzkDev/KnzkLive?branch=master)](https://circleci.com/gh/KnzkDev/KnzkLive) |
 
 > No ads, Unlimited, Open-Source Live Streaming Service.
 
