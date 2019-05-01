@@ -35,7 +35,7 @@
     "express": "4.16.4",
     "jquery": "3.4.0",
     "mysql": "2.17.1",
-    "node-fetch": "2.4.1",
+    "node-fetch": "2.5.0",
     "popper.js": "1.15.0",
     "socket.io-client": "2.2.0",
     "striptags": "3.1.1",
