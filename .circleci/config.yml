@@ -10,7 +10,7 @@ jobs:
             - composer-v1-{{ checksum "composer.lock" }}
             - composer-v1-
       - run:
-          name: Install php dependences
+          name: Install php dependencies
           command: composer install -n --prefer-dist
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
@@ -21,7 +21,7 @@ jobs:
             - node-v1-{{ checksum "yarn.lock" }}
             - node-v1-
       - run:
-          name: Install node dependences
+          name: Install node dependencies
           command: yarn --frozen-lockfile
       - save_cache:
           key: node-v1-{{ checksum "yarn.lock" }}
