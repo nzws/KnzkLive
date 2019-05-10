@@ -37,6 +37,9 @@ jobs:
           name: Run check:deps
           command: yarn check:deps
       - run:
+          name: Run check:audit
+          command: yarn check:audit
+      - run:
           name: Install fossa-cli
           command: |
             curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash

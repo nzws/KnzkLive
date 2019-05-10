@@ -19,6 +19,7 @@
     "fmt:php": "composer fmt",
     "fmt": "npm-run-all fmt:* -s",
     "check:deps": "node ./scripts/check-deps.js",
+    "check:audit": "audit-ci --moderate",
     "check:fmt:md": "prettier --check '**/*.md'",
     "check:fmt:yml": "prettier --check '**/*.{yaml,yml}'",
     "check:fmt:json": "prettier --check '**/*.json'",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@babel/core": "7.4.4",
     "@babel/preset-env": "7.4.4",
+    "audit-ci": "^1.7.0",
     "autoprefixer": "9.5.1",
     "babel-loader": "8.0.5",
     "chalk": "2.4.2",
