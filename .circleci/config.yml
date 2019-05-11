@@ -37,8 +37,8 @@ jobs:
           name: Run check:deps
           command: yarn check:deps
       - run:
-          name: Run check:audit
-          command: yarn check:audit
+          name: Run audit
+          command: yarn audit
       - run:
           name: Install fossa-cli
           command: |
