@@ -147,11 +147,14 @@ class comment {
           $('#comments').prepend(
             tmpl(knzk.comment_loader.buildCommentData(ws_reshtml))
           );
-          kit
-            .elemId('mainiframe')
-            .contentWindow.knzk.live_embed.danmaku.comment_view(
-              ws_reshtml['content']
-            );
+
+          if (!document.hidden) {
+            kit
+              .elemId('mainiframe')
+              .contentWindow.knzk.live_embed.danmaku.comment_view(
+                ws_reshtml['content']
+              );
+          }
         }
       }
     } else if (ws_resdata.event === 'delete') {

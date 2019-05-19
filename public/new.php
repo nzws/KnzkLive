@@ -72,7 +72,7 @@ if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
 
     header("Location: " . u("live_manage") . "?new=open");
     exit();
-} elseif ($my["misc"]["to_title"]) {
+} elseif (!empty($my["misc"]["to_title"])) {
     $last = getMyLastLive($my["id"]);
 }
 ?>
