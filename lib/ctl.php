@@ -4,6 +4,9 @@ function load($argv) {
         merge_toot_point();
     } elseif ($argv[1] === "management:rebuild_stat") {
         rebuild_stat();
+    } elseif ($argv[1] === "management:add_broadcaster") {
+        $my = getUser($argv[2]);
+        echo updateBroadcasterId($my["id"], $my["acct"]);
     } elseif ($argv[1] === "job:stop_live") {
         $live = getLive($argv[2]);
         if ($live && $live["is_live"] === 1) {
