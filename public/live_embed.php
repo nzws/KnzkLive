@@ -109,11 +109,14 @@ $stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]
     window.config = {
         type: '<?=s($mode)?>',
         myLive: <?=$myLive ? "true" : "false"?>,
+        test_flv: '<?=empty($env["test_flv_server"]) ? '' : $env["test_flv_server"]?>',
         flv: 'ws<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>.flv',
         hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>/index.m3u8',
         heartbeat: null,
         delay_sec: 3,
-        hover: 0
+        hover: 0,
+        play_suc_cnt: 0,
+        play_err_cnt: 0
     };
 
     window.onload = function() {

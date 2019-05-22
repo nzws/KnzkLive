@@ -61,7 +61,7 @@ class player {
     } catch (e) {}
     const play = video.currentTime;
     let text = '';
-    if (buffer > play && play && buffer) {
+    if (buffer > play && play && buffer && window.config.played !== play) {
       //再生
       text += `<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a>`;
 
@@ -75,11 +75,48 @@ class player {
           $('#play_button').show();
         });
       }
+
+      if (
+        window.config.play_suc_cnt > 60 &&
+        config.delay_sec > 10 &&
+        !window.config.seek_sec
+      ) {
+        player.seekLive();
+      }
+
+      if (
+        window.config.play_suc_cnt > 120 &&
+        config.delay_sec > window.config.seek_sec &&
+        window.config.seek_sec
+      ) {
+        window.config.seek_sec = 0;
+        window.config.play_err_cnt = 0;
+
+        console.log('lowlatency: enable');
+      }
+
+      window.config.play_suc_cnt++;
     } else {
       //バッファ
       text += 'BUFFERING';
       player.showSplash('バッファしています...');
+
+      if (
+        window.config.play_err_cnt > 10 &&
+        !window.config.seek_sec &&
+        window.config.play_suc_cnt
+      ) {
+        window.config.seek_sec = 5;
+        window.config.play_suc_cnt = 0;
+
+        console.log('lowlatency: disable');
+        player.seekLive();
+      }
+
+      window.config.play_err_cnt++;
     }
+
+    window.config.played = play;
     kit.elemId('video_status').innerHTML = text;
   }
 
@@ -92,7 +129,13 @@ class player {
   static seekLive() {
     $('#play_button').hide();
     video.play();
-    video.currentTime = video.seekable.end(0) - (config.type === 'HLS' ? 3 : 1);
+
+    const delay = window.config.seek_sec
+      ? window.config.seek_sec
+      : config.type === 'HLS'
+      ? 3
+      : 1;
+    video.currentTime = video.buffered.end(0) - delay;
   }
 
   static mute(i = 0, no_save = false) {

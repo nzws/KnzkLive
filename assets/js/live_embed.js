@@ -13,12 +13,21 @@ module.exports = {
     });
 
     if (config.type !== 'HLS' && flvjs.isSupported()) {
-      //ws-flv
-      const flvPlayer = flvjs.createPlayer({
-        type: 'flv',
-        isLive: true,
-        url: config.flv
-      });
+      // https://github.com/bilibili/flv.js/blob/master/docs/api.md
+      const flvPlayer = flvjs.createPlayer(
+        {
+          type: 'flv',
+          isLive: true,
+          url: config.test_flv ? config.test_flv : config.flv
+        },
+        {
+          enableStashBuffer: false,
+          stashInitialSize: 1024 * 64, // 64KB
+          enableWorker: true,
+          autoCleanupSourceBuffer: true
+        }
+      );
+
       flvPlayer.attachMediaElement(video);
       this.player.startWatching(flvPlayer);
       flvPlayer.load();
