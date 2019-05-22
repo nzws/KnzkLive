@@ -70,7 +70,7 @@
     "stylelint-scss": "3.6.1",
     "stylelint-webpack-plugin": "0.10.5",
     "terser-webpack-plugin": "1.2.4",
-    "webpack": "4.32.0",
+    "webpack": "4.32.1",
     "webpack-cli": "3.3.2",
     "webpackbar": "3.2.0"
   }
