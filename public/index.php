@@ -37,7 +37,7 @@ if (isset($lives[0])) {
         <?php if (isset($lives[0])) : ?>
             <h5 class="text-muted">KnzkLiveで <?=$live_count?>人が配信中, <?=$viewers_count?>人が視聴中</small></h5>
 
-            <?php foreach ($lives as $live) : $liveUser = getUser($live["user_id"]); ?>
+            <?php foreach ($lives as $live) : $liveUser = getUser($live["user_id"]); $live["misc"] = json_decode($live["misc"], true); ?>
                 <div class="text_ellipsis media position-relative mb-4 live_box">
                     <div class="live_thumbnail mr-3">
                         <a href="<?=liveUrl($live["id"])?>" class="nodeco_link">
