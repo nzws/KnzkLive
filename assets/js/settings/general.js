@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const api = require('../components/api');
 const kit = require('../components/kanzakit');
 
@@ -29,6 +31,19 @@ class general {
           kit.elemId('point_hist_bt').classList.add('invisible');
         }
       });
+  }
+
+  static loadMoment() {
+    moment.locale('ja');
+    Array.prototype.forEach.call(
+      document.getElementsByClassName('momentjs'),
+      object => {
+        const date = object.dataset.time;
+        if (!date) return;
+        object.textContent =
+          object.dataset.type === 'fromNow' ? moment(date).fromNow() : null;
+      }
+    );
   }
 }
 

@@ -1,5 +1,9 @@
 <?php if ($env["is_testing"]) : ?>
-<div style="background:red;color:#fff;text-align:center">現在開発モードです。これが公開サーバーである場合はコンフィグファイルを確認してください。</div>
+<a style="background:red;color:#fff;position:fixed;bottom:0;left:0;padding:5px;z-index:100"
+    href="https://knzklive-docs.knzk.me/#/docs/development/setup.md"
+    target="_blank">
+    <marquee>Development Mode ∑Σ( °∀°ﾉ)ﾉ</marquee>
+</a>
 <?php endif; ?>
 <?php
 if (empty($_SESSION["UA_CONF"])) {
@@ -34,67 +38,63 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 </script>
 <?php endif; ?>
 
-<div class="container<?php if (isset($navmode)) {
-    echo "-fluid";
-} ?> nav-container wide_hide">
-    <div class="row rounded mx-auto bg-dark d-flex align-items-center justify-content-between navbar" style="background-color: #393f4f;">
-        <a class="col-auto header-brand" href="<?=u("")?>">
-            <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
-        </a>
-        <div class="btn-group col-3 d-md-none header-toggler">
-            <button type="button" class="btn btn-outline-secondary rounded header-toggler-btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <?php if ($my = getMe()) : ?>
-                    <div class="dropdown-item">
-                        <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
-                        <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
-                    </div>
-                        <?php if ($my["broadcaster_id"]) : ?>
-                            <a class="dropdown-item bg-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
-                        <?php endif; ?>
-                    <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
-                    <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
-                <?php else : ?>
-                    <h6 class="dropdown-header">次のアカウントでログイン:</h6>
-                    <button class="dropdown-item text-primary" data-toggle="modal" data-target="#loginModal"><i class="fab fa-mastodon"></i> Mastodon</button>
-                    <a class="dropdown-item text-info" href="<?=u("auth/twitter")?>"><i class="fab fa-twitter"></i> Twitter</a>
-                <?php endif; ?>
-            </div>
-        </div>
-        <div class="d-none d-md-flex align-items-center justify-content-end row col-6">
+<div class="wide_hide row mx-auto bg-dark d-flex align-items-center justify-content-between navbar mb-2" style="background-color: #393f4f;">
+    <a class="col-auto header-brand" href="<?=u("")?>">
+        <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
+    </a>
+    <div class="btn-group col-3 d-md-none header-toggler">
+        <button type="button" class="btn btn-outline-secondary rounded header-toggler-btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             <?php if ($my = getMe()) : ?>
-                <div class="header-items">
+                <div class="dropdown-item">
+                    <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
                     <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
                 </div>
-                    <?php if ($my["broadcaster_id"]) : ?>
-                            <div class="header-items">
-                                <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
-                            </div>
-                    <?php endif; ?>
-                    <div class="nav-item dropdown active header-items">
-                        <a class="nav-link header_avatar_dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="<?=(empty($my["broadcaster_id"]) ? "#" : userUrl($my["broadcaster_id"]))?>">
-                                <b><?=$my["name"]?></b><br>
-                                <small class="text-secondary"><?=$my["acct"]?></small>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
-                            <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
-                        </div>
-                    </div>
+                <?php if ($my["broadcaster_id"]) : ?>
+                    <a class="dropdown-item bg-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
+                <?php endif; ?>
+                <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
+                <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
             <?php else : ?>
-                <form class="header-items">
-                    Login:
-                    <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
-                    <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
-                </form>
+                <h6 class="dropdown-header">次のアカウントでログイン:</h6>
+                <button class="dropdown-item text-primary" data-toggle="modal" data-target="#loginModal"><i class="fab fa-mastodon"></i> Mastodon</button>
+                <a class="dropdown-item text-info" href="<?=u("auth/twitter")?>"><i class="fab fa-twitter"></i> Twitter</a>
             <?php endif; ?>
         </div>
+    </div>
+    <div class="d-none d-md-flex align-items-center justify-content-end row col-6">
+        <?php if ($my = getMe()) : ?>
+            <div class="header-items">
+                <a href="<?=u("settings")?>"><span class="badge badge-info"><b class="now_user_point"><?=$my["point_count"]?></b>KP</span></a>
+            </div>
+            <?php if ($my["broadcaster_id"]) : ?>
+                <div class="header-items">
+                    <a class="btn btn-outline-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
+                </div>
+            <?php endif; ?>
+            <div class="nav-item dropdown active header-items">
+                <a class="nav-link header_avatar_dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="<?=$my["misc"]["avatar"]?>" class="avatar_img_navbar rounded"/>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="<?=(empty($my["broadcaster_id"]) ? "#" : userUrl($my["broadcaster_id"]))?>">
+                        <b><?=$my["name"]?></b><br>
+                        <small class="text-secondary"><?=$my["acct"]?></small>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
+                    <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
+                </div>
+            </div>
+        <?php else : ?>
+            <form class="header-items">
+                Login:
+                <button type="button" class="btn btn-outline-primary ml-2" data-toggle="modal" data-target="#loginModal"><b>Mastodon</b></button>
+                <a class="btn btn-outline-info ml-2" href="<?=u("auth/twitter")?>"><b>Twitter</b></a>
+            </form>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -2,6 +2,7 @@ const app = require('express')();
 const http = require('http').Server(app);
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
+const os = require('os');
 const lastUpdate = {
   detect: null,
   tipknzk: null,
@@ -78,6 +79,32 @@ app.post('/send_prop', function(req, res) {
           }
         );
       }, 15 * 60 * 1000);
+    } else if (req.body.result.status === 2) {
+      const dir = os.tmpdir();
+
+      const liveRtmp = `rtmp://${req.body.result.rtmp_server}/live/${
+        req.body.live_id
+      }stream`;
+      const thumbnailPath = `${dir}/knzklive-thumbnail-${req.body.live_id}.png`;
+
+      exec(
+        `ffmpeg -y -i ${liveRtmp} -ss 1 -vframes 1 -s 960x540 -f image2 ${thumbnailPath}`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          exec(
+            `php ${__dirname}/../knzkctl job:send_thumbnail ${
+              req.body.live_id
+            } ${dir}`,
+            (err, stdout, stderr) => {
+              console.log(err, stdout, stderr);
+            }
+          );
+          console.log('thumbnail taken');
+        }
+      );
     }
   }
 

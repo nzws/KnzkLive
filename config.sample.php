@@ -53,3 +53,12 @@ $env["admin_ids"] = [1];
 $env["announcement"]["date"] = ""; // 日付
 $env["announcement"]["text"] = ""; // テキスト
 $env["announcement"]["link"] = ""; // リンク (オプション)
+
+// トップページのサイト説明文
+$env["top_about"] = <<< EOF
+<b>広告がなく, 無制限で, オープンソースな配信サイト KnzkLive</b>へようこそ！<br>
+他の配信サイトに搭載されている一般的な機能の他、<b>カスタムSEやカスタム絵文字、絵文字弾幕</b>といったユニークなアイテム機能など様々な機能が搭載されています。
+<p class="mt-2 mb-1">
+    <a href="#" target="_blank">配信を始める <i class="fas fa-chevron-right"></i></a>
+</p>
+EOF;

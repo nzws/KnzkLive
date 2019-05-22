@@ -15,6 +15,22 @@ function load($argv) {
         }
     } elseif ($argv[1] === "debug:add_collabo") {
         setCollaboLiveStatus($argv[3], $argv[2], $argv[4]);
+    } elseif ($argv[1] === "job:send_thumbnail") {
+        $r = uploadFlie([
+            "tmp_name" => s($argv[3]) . "/knzklive-thumbnail-" . s($argv[2]) . ".png"
+        ], "thumbnail", [
+            "ignore_check" => true,
+            "file_name" => s($argv[2]) . ".png",
+            "allow_already_exist" => true
+        ]);
+        if ($r["success"]) {
+            $live = getLive($argv[2]);
+            if (!$live) {
+                return false;
+            }
+            $live["misc"]["exist_thumbnail"] = true;
+            setLiveConfig($live["id"], $live["misc"]);
+        }
     } elseif ($argv[1] === "job:tipknzk") {
         $my = getUser($argv[3], "acct");
         if (empty($my)) {

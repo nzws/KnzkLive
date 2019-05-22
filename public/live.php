@@ -74,18 +74,18 @@ $vote = loadVote($live["id"]);
 
         window.onload = function() {
             window.live = knzk.live;
-<?php if (!$live["misc"]["is_sensitive"] || isset($_SESSION["sensitive_allow"])) : ?>
+            <?php if (!$live["misc"]["is_sensitive"] || isset($_SESSION["sensitive_allow"])) : ?>
             live.ready();
-<?php endif; ?>
+            <?php endif; ?>
 
-<?php if (!$live["misc"]["able_comment"]) : ?>
+            <?php if (!$live["misc"]["able_comment"]) : ?>
             $(".comment_block").hide();
-<?php endif; ?>
+            <?php endif; ?>
         }
     </script>
 </head>
 <body>
-<?php $navmode = "fluid"; include "../include/navbar.php"; ?>
+<?php include "../include/navbar.php"; ?>
 <?php if (!empty($new_live)) : ?>
     <div class="container">
         <div class="alert alert-info" role="alert">
@@ -131,8 +131,8 @@ $vote = loadVote($live["id"]);
                     <input class="form-control" id="toot" placeholder="Enterでコメント..." type="text">
                     <div class="input-group-append">
                         <?php if ($my) : ?>
-                        <button class="btn btn-<?=!empty($my["misc"]["no_toot_default"]) ? "" : "outline-"?>primary" id="comment_local_button" onclick="live.comment.toggleLocal()"
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" title="ローカルで投稿" data-content="これを有効にすると、<?=isset($_SESSION["account_provider"]) ? $_SESSION["account_provider"] : "SNS"?>には投稿せずにコメントします。"><?=i("home")?></button>
+                            <button class="btn btn-<?=!empty($my["misc"]["no_toot_default"]) ? "" : "outline-"?>primary" id="comment_local_button" onclick="live.comment.toggleLocal()"
+                                    data-toggle="popover" data-trigger="hover" data-placement="bottom" title="ローカルで投稿" data-content="これを有効にすると、<?=isset($_SESSION["account_provider"]) ? $_SESSION["account_provider"] : "SNS"?>には投稿せずにコメントします。"><?=i("home")?></button>
                         <?php endif; ?>
 
                         <?php if (!empty($my) && $live["is_live"] !== 0) : ?>
@@ -171,7 +171,7 @@ $vote = loadVote($live["id"]);
                 <?php endif; ?>
             </span>
 
-            <p id="live-description" class="live_info"><?=HTMLHelper($live["description"])?></p>
+            <p id="live-description" class="live_info text_wrap"><?=HTMLHelper($live["description"])?></p>
 
             <div class="input-group col-md-8 invisible live_edit">
                 <div class="input-group-prepend">

@@ -1,58 +1,70 @@
 html[data-page='index'] {
-  .card-base {
-    color: #212529;
-    margin-top: 5px;
+  .live_user_icon {
+    width: 40px;
+    height: 40px;
+  }
 
-    a {
-      text-decoration: none;
+  .live_thumbnail {
+    position: relative;
+    width: 350px;
+    max-width: 50%;
+
+    .status {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      padding-left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+      border-bottom-right-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
     }
   }
 
-  .top_lists {
-    width: 100%;
-    padding: 10px 0;
-    background: #333;
-
-    .no {
-      text-align: center;
-      color: #606984;
-      margin: 50px 0;
+  @include media(md, max) {
+    .live_box {
+      display: block;
     }
 
-    a {
-      color: initial;
+    .live_thumbnail {
+      width: 100%;
+      max-width: 100%;
     }
   }
 
-  .history .card-base {
-    margin-bottom: 10px;
+  .users {
+    list-style: none;
+    padding-left: 0;
 
-    .name {
+    img {
+      width: 45px;
+      height: 45px;
+    }
+
+    li {
+      margin: 8px 0;
+      width: 100%;
+      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-    }
-
-    a {
-      color: #fff;
     }
   }
 
-  .card-img-top {
-    width: 150px;
+  .nodeco_link {
+    color: #fff;
+    text-decoration: none;
   }
 
-  .card-img-div {
-    text-align: center;
-    background: #212121;
+  .knzk {
+    max-width: 90%;
+    width: 250px;
   }
 
-  .card-body,
-  .card-title {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-    overflow: hidden;
+  .about {
+    width: 100%;
+    padding: 15px;
+    background: #333;
   }
 }

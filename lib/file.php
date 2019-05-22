@@ -40,11 +40,6 @@ function checkFileInfo($data) {
 function checkMime($data, $allow_file_type) {
     $err = ["success" => false];
 
-    if (!isset($data['error']) || !is_int($data['error'])) {
-        $err["error"] = "パラメータが不正です";
-        return $err;
-    }
-
     $mime = mime_content_type($data['tmp_name']);
     $list = [
         "image/pjpeg" => "image/jpeg",
@@ -137,12 +132,14 @@ function initStorage() {
     return new League\Flysystem\Filesystem($adapter);
 }
 
-function uploadFlie($data, $file_type) {
+function uploadFlie($data, $file_type, $option = []) {
     global $env;
 
-    $check = checkFileInfo($data);
-    if (!$check["success"]) {
-        return ["success" => false, "error" => $check["error"]];
+    if (empty($option["ignore_check"])) {
+        $check = checkFileInfo($data);
+        if (!$check["success"]) {
+            return ["success" => false, "error" => $check["error"]];
+        }
     }
 
     switch ($file_type) {
@@ -150,6 +147,9 @@ function uploadFlie($data, $file_type) {
             $type = "audio";
             break;
         case "emoji":
+            $type = "image";
+            break;
+        case "thumbnail":
             $type = "image";
             break;
         default:
@@ -178,7 +178,7 @@ function uploadFlie($data, $file_type) {
 
     $storage = initStorage();
     try {
-        $file_name = generateHash() . "." . $mime["ext"];
+        $file_name = empty($option["file_name"]) ? generateHash() . "." . $mime["ext"] : $option["file_name"];
 
         /*
         $stream = fopen($data['tmp_name'], 'r');
@@ -186,7 +186,11 @@ function uploadFlie($data, $file_type) {
         fclose($stream);
         */
 
-        $result = $storage->write($file_type . "/" . $file_name, $blob);
+        if (empty($option["allow_already_exist"])) {
+            $result = $storage->write($file_type . "/" . $file_name, $blob);
+        } else {
+            $result = $storage->put($file_type . "/" . $file_name, $blob);
+        }
 
         return ["success" => $result, "file_name" => $file_name];
     } catch (\League\Flysystem\FileExistsException $e) {

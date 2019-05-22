@@ -20,15 +20,15 @@ html {
 .footer {
   background: #000;
   font-size: smaller;
-}
 
-.footer ul {
-  list-style: none;
-  padding: 0;
-}
+  ul {
+    list-style: none;
+    padding: 0;
+  }
 
-.footer li {
-  padding: 3px 0;
+  li {
+    padding: 3px 0;
+  }
 }
 
 .nav-container {
@@ -88,4 +88,15 @@ html {
 .donator_name.badge {
   font-size: 1rem;
   padding: 0.1em 0.4em;
+}
+
+.text_ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text_wrap {
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
