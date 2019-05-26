@@ -260,7 +260,7 @@ if ($_POST) {
         <?php $hash = (empty($my["opener_token"]) || isset($_GET["openertoken"])) ? generateOpenerToken($my["id"]) : $my["opener_token"]; ?>
         <div class="box" id="opener-token">
             <h4>Openerトークン</h4>
-            <a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
+            <a href="https://github.com/yuzulabo/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpenerについて</a>
             <div class="col-md-5 mt-2 mb-2">
                 <div class="input-group">
                     <input type="text" class="form-control" aria-describedby="openertoken-bt" readonly placeholder="クリックで表示" onclick="window.prompt('Openerトークン', '<?=$hash?>')">

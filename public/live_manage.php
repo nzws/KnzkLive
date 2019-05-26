@@ -169,7 +169,7 @@ $vote = loadVote($live["id"]);
 
     <div class="box">
         <b>配信サーバー情報:</b><br>
-        <small>Windows・OBS環境の方は<a href="https://github.com/KnzkDev/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpener</a>で自動設定ができます。</small><br>
+        <small>Windows・OBS環境の方は<a href="https://github.com/yuzulabo/KnzkLiveOBSOpener" target="_blank">KnzkLiveOBSOpener</a>で自動設定ができます。</small><br>
         <span class="text-danger">* この情報は漏洩すると第三者に配信を乗っ取られる可能性がありますので十分にご注意ください。</span><br>
         <div class="row">
             <div class="col-md-6">

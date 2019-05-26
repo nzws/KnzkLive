@@ -14,7 +14,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 ?>
 <div class="alert alert-danger alert-dismissible fade show rounded-0" role="alert">
     <b>mac Safari</b> または <b>iOS全般</b> の環境ではKnzkLiveを正常にご利用頂く事ができません。別の端末・ブラウザにてお試しください。<br>
-    <small>これらの環境でないにも関わらず表示されていますか？<a href="https://github.com/KnzkDev/KnzkLive/issues/new" target="_blank">私達に教えて下さい</a>。</small>
+    <small>これらの環境でないにも関わらず表示されていますか？<a href="https://github.com/yuzulabo/KnzkLive/issues/new" target="_blank">私達に教えて下さい</a>。</small>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>

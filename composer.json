@@ -1,12 +1,20 @@
 {
-  "name": "knzkdev/knzklive",
+  "name": "yuzulabo/knzklive",
   "description": "No ads, Unlimited Open-Source Live Streaming Service",
   "type": "project",
   "license": "MPL-2.0",
   "authors": [
     {
-      "name": "KnzkDev Team",
-      "email": "contact-knzklive@nzws.me"
+      "name": "nzws",
+      "email": "git@nzws.me"
+    },
+    {
+      "name": "imbsky",
+      "email": "me@bsky.moe"
+    },
+    {
+      "name": "haritaso",
+      "email": "me@haritaso.me"
     }
   ],
   "scripts": {

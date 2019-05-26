@@ -2,7 +2,7 @@
 $confpath = __DIR__ . "/../config.php";
 date_default_timezone_set('Asia/Tokyo');
 header('server: KnzkLive');
-header('X-Powered-By: KnzkDev <3');
+header('X-Powered-By: Team Knzk <3');
 
 if (file_exists($confpath)) {
     require_once $confpath;
