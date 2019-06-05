@@ -28,7 +28,7 @@
     "db:migrate": "composer phpmig migrate"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.8.2",
+    "@fortawesome/fontawesome-free": "5.9.0",
     "bootstrap": "4.3.1",
     "express": "4.17.1",
     "jquery": "3.4.1",
