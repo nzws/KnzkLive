@@ -31,7 +31,7 @@ class player {
       'canplay',
       () => {
         player.showSplash();
-        player.seekLive();
+        video.play();
       },
       false
     );
@@ -40,7 +40,7 @@ class player {
       'loadedmetadata',
       () => {
         player.showSplash();
-        player.seekLive();
+        video.play();
       },
       false
     );
