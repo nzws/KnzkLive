@@ -23,7 +23,7 @@ class player {
       'playing',
       () => {
         player.showSplash();
-        v.play();
+        player.seekLive();
       },
       false
     );
@@ -32,7 +32,7 @@ class player {
       'canplay',
       () => {
         player.showSplash();
-        v.play();
+        player.seekLive();
       },
       false
     );
@@ -41,7 +41,7 @@ class player {
       'loadedmetadata',
       () => {
         player.showSplash();
-        v.play();
+        player.seekLive();
       },
       false
     );
@@ -130,11 +130,7 @@ class player {
     $('#play_button').hide();
     video.play();
 
-    const delay = window.config.seek_sec
-      ? window.config.seek_sec
-      : config.type === 'HLS'
-      ? 3
-      : 1;
+    const delay = window.config.seek_sec ? window.config.seek_sec : 1;
     video.currentTime = video.buffered.end(0) - delay;
   }
 

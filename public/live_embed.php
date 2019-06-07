@@ -21,7 +21,8 @@ if (!$myLive && $live["is_started"] == "0") {
 }
 
 if (empty($_SESSION["watch_type"])) {
-    $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
+    // $_SESSION["watch_type"] = preg_match('/(iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT']) ? "HLS" : "FLV";
+    $_SESSION["watch_type"] = "HLS";
 }
 if (isset($_GET["watch_type"])) {
     $_SESSION["watch_type"] = $_GET["watch_type"] == 0 ? "FLV" : "HLS";
