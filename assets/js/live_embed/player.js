@@ -65,7 +65,7 @@ class player {
       text += `<a href="javascript:knzk.live_embed.player.seekLive()">LIVE</a>`;
 
       config.delay_sec = Math.round(buffer - play);
-      if (config.type !== 'HLS') text += ` · ${config.delay_sec}s`;
+      text += ` · ${config.delay_sec}s`;
 
       player.showSplash();
 
