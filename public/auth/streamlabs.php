@@ -3,7 +3,7 @@ require_once "../../lib/bootloader.php";
 
 $my = getMe();
 if (!$my) {
-    exit("ERR: 先にログインしてください。");
+    showError('ログインしてください。', 403);
 }
 
 if (isset($_GET["code"])) {

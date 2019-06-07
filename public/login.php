@@ -8,7 +8,7 @@ if (isset($_SESSION["login_domain"]) && !$domain) {
     $domain = $_SESSION["login_domain"];
 }
 if (!$domain) {
-    exit("ERR: ドメインが入力されていません");
+    showError('ドメインが入力されていません', 400);
 }
 $_SESSION["login_domain"] = $domain;
 $info = getMastodonAuth($domain);

@@ -2,8 +2,7 @@
 require_once "../../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError('ログインしてください。', 403);
 }
 
 if ($_POST) {
