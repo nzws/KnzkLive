@@ -133,7 +133,7 @@ class player {
       $('#play_button').show();
     });
 
-    const delay = window.config.seek_sec ? window.config.seek_sec : 1;
+    const delay = window.config.seek_sec ? window.config.seek_sec : 2;
     video.currentTime = video.buffered.end(0) - delay;
   }
 
