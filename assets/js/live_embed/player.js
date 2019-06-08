@@ -39,7 +39,10 @@ class player {
       'loadedmetadata',
       () => {
         player.showSplash();
-        setTimeout(() => player.seekLive(), 1000);
+        setTimeout(() => {
+          player.seekLive();
+          window.config.play_suc_cnt = 0;
+        }, 1000);
       },
       false
     );
@@ -100,7 +103,7 @@ class player {
       player.showSplash('バッファしています...');
 
       if (
-        window.config.play_err_cnt > 10 &&
+        window.config.play_err_cnt > 5 &&
         !window.config.seek_sec &&
         window.config.play_suc_cnt
       ) {
@@ -130,7 +133,7 @@ class player {
       $('#play_button').show();
     });
 
-    const delay = window.config.seek_sec ? window.config.seek_sec : 2;
+    const delay = window.config.seek_sec ? window.config.seek_sec : 1;
     video.currentTime = video.buffered.end(0) - delay;
   }
 
