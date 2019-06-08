@@ -82,9 +82,7 @@ app.post('/send_prop', function(req, res) {
     } else if (req.body.result.status === 2) {
       const dir = os.tmpdir();
 
-      const liveRtmp = `rtmp://${req.body.result.rtmp_server}/live/${
-        req.body.live_id
-      }stream`;
+      const liveRtmp = `rtmp://${req.body.result.rtmp_server}/live/${req.body.live_id}stream`;
       const thumbnailPath = `${dir}/knzklive-thumbnail-${req.body.live_id}.png`;
 
       exec(
@@ -95,9 +93,7 @@ app.post('/send_prop', function(req, res) {
             return;
           }
           exec(
-            `php ${__dirname}/../knzkctl job:send_thumbnail ${
-              req.body.live_id
-            } ${dir}`,
+            `php ${__dirname}/../knzkctl job:send_thumbnail ${req.body.live_id} ${dir}`,
             (err, stdout, stderr) => {
               console.log(err, stdout, stderr);
             }

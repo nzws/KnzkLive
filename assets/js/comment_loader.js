@@ -14,9 +14,7 @@ class comment_loader {
     kit.elemId('err_comment').className = 'invisible';
 
     fetch(
-      `https://${config.main_domain}/api/v1/timelines/tag/${
-        config.live.hashtag_o
-      }`,
+      `https://${config.main_domain}/api/v1/timelines/tag/${config.live.hashtag_o}`,
       {
         headers: { 'content-type': 'application/json' },
         method: 'GET'
@@ -31,9 +29,7 @@ class comment_loader {
       })
       .then(json => {
         config.live.websocket.mastodon = new WebSocket(
-          `wss://${config.main_domain}/api/v1/streaming/?stream=hashtag&tag=${
-            config.live.hashtag_o
-          }`
+          `wss://${config.main_domain}/api/v1/streaming/?stream=hashtag&tag=${config.live.hashtag_o}`
         );
         config.live.websocket.mastodon.onopen = () => {
           config.live.heartbeat.mastodon = setInterval(
@@ -99,9 +95,7 @@ class comment_loader {
               } else if (msg.type === 'vote_end') {
                 $('#prop_vote').hide();
                 fetch(
-                  `${config.endpoint}client/vote/reset${config.suffix}?id=${
-                    config.live.id
-                  }`,
+                  `${config.endpoint}client/vote/reset${config.suffix}?id=${config.live.id}`,
                   {
                     method: 'GET',
                     credentials: 'include'
@@ -153,13 +147,9 @@ class comment_loader {
                   if (msg.result === config.account.id) location.reload();
                 } else if (msg.mode === 'update_collabo_status') {
                   if (msg.result.status === 2) {
-                    const link = `${config.root_url}live_embed${
-                      config.suffix
-                    }?id=${config.live.id}&collabo=${msg.result.user_id}`;
+                    const link = `${config.root_url}live_embed${config.suffix}?id=${config.live.id}&collabo=${msg.result.user_id}`;
                     const frame = `
-<div class="embed-responsive embed-responsive-16by9 wide_hide" id="iframe_collabo_${
-                      msg.result.user_id
-                    }">
+<div class="embed-responsive embed-responsive-16by9 wide_hide" id="iframe_collabo_${msg.result.user_id}">
   <iframe class="embed-responsive-item" src="${link}" data-src="${link}" allow="autoplay; fullscreen"></iframe>
 </div>
                     `;

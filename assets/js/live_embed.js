@@ -38,11 +38,15 @@ module.exports = {
         hls.loadSource(config.hls);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
+          video.play().catch(e => {
+            $('#play_button').show();
+          });
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = config.hls;
         video.load();
+      } else {
+        console.log('あなたの端末ではHLS版KnzkLiveをご利用頂けません。');
       }
       this.player.startWatching(video);
     }

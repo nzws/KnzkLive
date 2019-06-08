@@ -34,15 +34,11 @@ class share {
     } else if (mode === 'line') {
       url = `http://line.me/R/msg/text/?${config.live.url}`;
     } else if (mode === 'weibo') {
-      url = `http://service.weibo.com/share/share.php?url=${
-        config.live.url
-      }&title=${text}`;
+      url = `http://service.weibo.com/share/share.php?url=${config.live.url}&title=${text}`;
     } else if (mode === 'skype') {
       url = `https://web.skype.com/share?url=${config.live.url}&text=${text}`;
     } else if (mode === 'flipboard') {
-      url = `https://share.flipboard.com/bookmarklet/popout?v=2&url=${
-        config.live.url
-      }&title=${text}`;
+      url = `https://share.flipboard.com/bookmarklet/popout?v=2&url=${config.live.url}&title=${text}`;
     }
     window.open(url);
   }

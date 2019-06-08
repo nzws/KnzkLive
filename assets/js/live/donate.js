@@ -5,15 +5,7 @@ class donate {
     kit.elemId('comment').classList.add('have_donation');
     $('#donators').show();
     $('#donators').prepend(
-      `<span class="badge badge-pill donator" onclick="live.live.userDropdown(this, null, '${
-        data.account.acct
-      }', '${data.account.url}')" id="donate_${data.id}" style="background:${
-        data.color
-      }"><img src="${
-        data.account.avatar_url
-      }" height="30" width="30" class="rounded-circle avatar"/> ${data.amount}${
-        data.currency
-      }</span>`
+      `<span class="badge badge-pill donator" onclick="live.live.userDropdown(this, null, '${data.account.acct}', '${data.account.url}')" id="donate_${data.id}" style="background:${data.color}"><img src="${data.account.avatar_url}" height="30" width="30" class="rounded-circle avatar"/> ${data.amount}${data.currency}</span>`
     );
     config.dn[data.id] = data;
 

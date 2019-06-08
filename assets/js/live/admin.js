@@ -41,11 +41,7 @@ class admin {
         let html = '';
         for (let item of json) {
           item.name = kit.escape(item.name);
-          html += `<tr><td><img src="${
-            item.avatar_url
-          }" width="25" height="25"/> <b>${item.name}</b> <small>@${
-            item.acct
-          }</small></td></tr>`;
+          html += `<tr><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${item.name}</b> <small>@${item.acct}</small></td></tr>`;
         }
         kit.elemId('listener_list').innerHTML = html;
       }
@@ -221,14 +217,8 @@ class admin {
           let html = '';
           for (let item of json) {
             item.name = kit.escape(item.name);
-            html += `<tr><td><img src="${
-              item.avatar_url
-            }" width="25" height="25"/> <b>${item.name}</b> <small>@${
-              item.acct
-            }</small>
-            <button onclick="live.admin.manageCollabo('remove', ${
-              item.id
-            })" class="btn btn-danger btn-sm float-right">削除</button>
+            html += `<tr><td><img src="${item.avatar_url}" width="25" height="25"/> <b>${item.name}</b> <small>@${item.acct}</small>
+            <button onclick="live.admin.manageCollabo('remove', ${item.id})" class="btn btn-danger btn-sm float-right">削除</button>
             </td></tr>`;
           }
           kit.elemId('collabo_list').innerHTML = html;

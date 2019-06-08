@@ -31,7 +31,6 @@ class player {
       'canplay',
       () => {
         player.showSplash();
-        video.play();
       },
       false
     );
@@ -40,7 +39,6 @@ class player {
       'loadedmetadata',
       () => {
         player.showSplash();
-        video.play();
       },
       false
     );
