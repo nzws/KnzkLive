@@ -38,9 +38,7 @@ module.exports = {
         hls.loadSource(config.hls);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play().catch(e => {
-            $('#play_button').show();
-          });
+          this.player.seekLive();
         });
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = config.hls;

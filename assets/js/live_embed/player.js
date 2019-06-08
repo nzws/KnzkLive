@@ -39,11 +39,12 @@ class player {
       'loadedmetadata',
       () => {
         player.showSplash();
+        setTimeout(() => player.seekLive(), 1000);
       },
       false
     );
 
-    player.volume(70, true);
+    player.volume(80, true);
     if (localStorage.getItem('kplayer_mute'))
       player.mute(localStorage.getItem('kplayer_mute'));
     if (localStorage.getItem('kplayer_volume'))
@@ -125,7 +126,9 @@ class player {
 
   static seekLive() {
     $('#play_button').hide();
-    video.play();
+    video.play().catch(e => {
+      $('#play_button').show();
+    });
 
     const delay = window.config.seek_sec ? window.config.seek_sec : 2;
     video.currentTime = video.buffered.end(0) - delay;
