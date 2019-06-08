@@ -16,13 +16,11 @@ if (!$live) {
 $my = getMe();
 $blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
 if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
-    http_response_code(403);
-    exit("ERR:この配信は非公開です。| " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
+    showError('この配信は非公開です。', 403);
 }
 
 if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
-    http_response_code(403);
-    exit("ERR:この配信はまだ開始されていません。 | " . ($my ? "" : "<a href='".u("login")."'>ログイン</a>"));
+    showError('この配信はまだ開始されていません。', 403);
 }
 
 if (isset($_POST["sensitive"])) $_SESSION["sensitive_allow"] = true;
