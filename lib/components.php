@@ -103,3 +103,11 @@ function checkV($var, $min_length = 0, $max_length = 0) {
     $length = mb_strlen($var);
     return ($length >= $min_length && $length <= $max_length);
 }
+
+function UAParser() {
+    if (empty($_SESSION["UA_CONF"])) {
+        $_SESSION["UA_CONF"] = serialize(UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']));
+    }
+
+    return unserialize($_SESSION["UA_CONF"]);
+}

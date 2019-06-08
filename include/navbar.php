@@ -6,10 +6,7 @@
 </a>
 <?php endif; ?>
 <?php
-if (empty($_SESSION["UA_CONF"])) {
-    $_SESSION["UA_CONF"] = serialize(UAParser\Parser::create()->parse($_SERVER['HTTP_USER_AGENT']));
-}
-$ua = unserialize($_SESSION["UA_CONF"]);
+$ua = UAParser();
 if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 ?>
 <div class="alert alert-danger alert-dismissible fade show rounded-0" role="alert">

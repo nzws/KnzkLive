@@ -77,7 +77,7 @@ class player {
 
       if (
         window.config.play_suc_cnt > 60 &&
-        config.delay_sec > 10 &&
+        config.delay_sec > 5 &&
         !window.config.seek_sec
       ) {
         player.seekLive();
