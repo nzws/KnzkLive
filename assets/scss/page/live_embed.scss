@@ -16,8 +16,10 @@ html[data-page='live_embed'] {
 
   a,
   a:hover {
-    color: #f3f3f3;
-    text-decoration: none;
+    &:not(.dropdown-item) {
+      color: #f3f3f3;
+      text-decoration: none;
+    }
   }
 
   video {
@@ -96,7 +98,7 @@ html[data-page='live_embed'] {
     float: right;
   }
 
-  .video_control a {
+  .video_control a:not(.dropdown-item) {
     margin-left: 10px;
   }
 

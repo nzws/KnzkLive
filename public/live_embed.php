@@ -75,9 +75,16 @@ $stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]
     <div class="footer hover" style="background: rgba(0,0,0,.5)">
         <div class="footer_content">
             <span id="video_status">LOADING</span>
-            <span> · <a href="?id=<?=$live["id"]?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>"><?=s($mode)?></a></span>
             <span class="right video_control">
                 <a href=""><i class="fas fa-sync-alt fa-fw"></i></a>
+
+                <span class="dropdown">
+                    <a data-toggle="dropdown"><?=i('cogs')?></a>
+                    <div class="dropdown-menu">
+                        <!-- <a class="dropdown-item" href="#">コメントを表示 <?=i('check-square')?></a> -->
+                        <a class="dropdown-item" href="?id=<?=$live["id"]?>&watch_type=<?=($mode === "HLS" ? 0 : 1)?>">配信モード: <b><?=s($mode)?></b></a>
+                    </div>
+                </span>
 
                 <a href="javascript:knzk.live_embed.player.mute()" id="mute" class="invisible"><i class="fas fa-volume-mute fa-fw"></i></a>
                 <a href="javascript:knzk.live_embed.player.mute(1)" id="volume"><i class="fas fa-volume-up fa-fw"></i></a>
