@@ -1,5 +1,5 @@
 import $ from 'jquery';
-window.$ = $;
+window.$ = window.jQuery = $;
 
 import 'popper.js';
 import 'bootstrap';

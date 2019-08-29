@@ -3,14 +3,12 @@ require_once("../lib/bootloader.php");
 
 $id = s($_GET["id"]);
 if (!$id) {
-    http_response_code(421);
-    exit("ERR:配信IDを入力してください。");
+    showError('配信IDを入力してください。', 421);
 }
 
 $live = getLive($id);
 if (!$live) {
-    http_response_code(404);
-    exit("ERR:この配信は存在しません。");
+    showError('この配信は存在しません。', 404);
 }
 
 $my = getMe();

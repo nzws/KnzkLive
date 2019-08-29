@@ -31,6 +31,56 @@ function db_fetch_all(& $stmt) {
     return $hits;
 }
 
+function db_get($sql, ...$args) {
+    $numargs = func_num_args() - 1;
+
+    if ($numargs > 0) {
+        $types = '';
+        for ($i = 0; $i < $numargs; $i++) {
+            $types .= 's';
+        }
+    }
+
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare($sql);
+    if ($numargs > 0) {
+        $stmt->bind_param($types, ...$args);
+    }
+    $stmt->execute();
+    $row = db_fetch_all($stmt);
+    $stmt->close();
+    $mysqli->close();
+
+    return $row;
+}
+
+function db_set($sql, ...$args) {
+    $numargs = func_num_args() - 1;
+
+    if ($numargs > 0) {
+        $types = '';
+        for ($i = 0; $i < $numargs; $i++) {
+            $types .= 's';
+        }
+    }
+
+    $mysqli = db_start();
+    $stmt = $mysqli->prepare($sql);
+    if ($numargs > 0) {
+        $stmt->bind_param($types, ...$args);
+    }
+    $stmt->execute();
+    $err = $stmt->error;
+    $stmt->close();
+    $mysqli->close();
+
+    return !$err;
+}
+
+function db_count($option, ...$args) {
+    return db_get('SELECT COUNT(*) as count FROM ' . $option, ...$args)[0]['count'];
+}
+
 function node_update_conf($mode, $type, $value, $live_id, $user_id = null) {
     global $env;
 

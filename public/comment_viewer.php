@@ -1,15 +1,17 @@
 <?php
 require_once "../lib/bootloader.php";
 $my = getUser($_GET["id"]);
-if (!$my || !$my["live_current_id"]) {
-    http_response_code(404);
-    exit("ERR:このユーザーは存在しないか、配信していません。ブラウザソースをリロードしてください。");
+if (!$my) {
+    showError('このユーザーは存在しません。', 404);
+}
+
+if (!$my["live_current_id"]) {
+    showError('配信枠が取得されていません。取得したら、ブラウザソースをリロードしてください。', 404);
 }
 
 $live = getLive($my["live_current_id"]);
 if (!$live) {
-    http_response_code(404);
-    exit("ERR:この配信は存在しません。");
+    showError('この配信は存在しません。', 404);
 }
 
 $liveUser = getUser($live["user_id"]);

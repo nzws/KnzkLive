@@ -96,7 +96,7 @@ function generateHash($retry = 0) {
 }
 
 function i($name, $type = "s") {
-    return "<i class='fa{$type} fa-{$name}'></i>";
+    return "<i class='fa{$type} fa-{$name} fa-fw'></i>";
 }
 
 function checkV($var, $min_length = 0, $max_length = 0) {

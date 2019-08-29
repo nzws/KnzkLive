@@ -1,0 +1,37 @@
+html[data-page='admin'] {
+  .list-group-item {
+    background-color: transparent;
+
+    &-action:hover {
+      background-color: #212529;
+    }
+  }
+
+  .brand {
+    img {
+      width: 90%;
+    }
+  }
+
+  // dashboard
+  .head {
+    margin-bottom: 8px;
+    font-weight: bold;
+
+    .number {
+      font-size: 2em;
+    }
+  }
+
+  // stream_info
+  .stream-thumbnail {
+    max-width: 100%;
+    width: 500px;
+  }
+
+  // account_info
+  .account-thumbnail {
+    max-width: 100%;
+    width: 200px;
+  }
+}

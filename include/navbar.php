@@ -52,6 +52,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
                 <?php if ($my["broadcaster_id"]) : ?>
                     <a class="dropdown-item bg-warning" href="<?=u("new")?>"><b>配信を<?=$my["live_current_id"] ? "管理" : "始める"?></b></a>
                 <?php endif; ?>
+                <?php if (is_admin($my["id"])) : ?><a class="dropdown-item bg-success text-white" href="<?=u("admincp/index")?>" target="_blank">管理者CP</a><?php endif; ?>
                 <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
                 <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
             <?php else : ?>
@@ -81,6 +82,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
                         <small class="text-secondary"><?=$my["acct"]?></small>
                     </a>
                     <div class="dropdown-divider"></div>
+                    <?php if (is_admin($my["id"])) : ?><a class="dropdown-item bg-success text-white" href="<?=u("admincp/index")?>" target="_blank">管理者CP</a><?php endif; ?>
                     <a class="dropdown-item" href="<?=u("settings")?>">ユーザー設定</a>
                     <a class="dropdown-item" href="<?=u("logout")?>">ログアウト</a>
                 </div>
