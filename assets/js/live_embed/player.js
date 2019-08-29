@@ -71,12 +71,6 @@ class player {
 
       player.showSplash();
 
-      if (video.paused) {
-        video.play().catch(e => {
-          $('#play_button').show();
-        });
-      }
-
       if (
         window.config.play_suc_cnt > 60 &&
         config.delay_sec > 5 &&
@@ -133,6 +127,11 @@ class player {
       $('#play_button').show();
     });
 
+    if (window.hls) {
+      video.currentTime = hls.liveSyncPosition;
+      return;
+    }
+
     const delay = window.config.seek_sec ? window.config.seek_sec : 2;
     video.currentTime = video.buffered.end(0) - delay;
   }
@@ -152,24 +151,10 @@ class player {
   }
 
   static full() {
-    const v = document.body;
-    let i;
-    if (document.webkitCancelFullScreen) i = document.webkitFullscreenElement;
-    else if (document.mozCancelFullscreen) i = document.mozFullScreenElement;
-    else if (document.msExitFullscreen) i = document.msFullScreenElement;
-    else if (document.exitFullscreen) i = document.fullscreenElement;
-
-    if (i) {
-      if (v.webkitRequestFullscreen) document.webkitCancelFullScreen();
-      else if (v.mozRequestFullscreen) document.mozCancelFullscreen();
-      else if (v.msRequestFullscreen) document.msExitFullscreen();
-      else if (v.requestFullscreen) document.exitFullscreen();
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
     } else {
-      if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
-      else if (v.mozRequestFullscreen) v.mozRequestFullscreen();
-      else if (v.requestFullscreen) v.requestFullscreen();
-      else if (v.msRequestFullscreen) v.msRequestFullscreen();
-      else if (document.exitFullscreen) i = document.fullscreenElement;
+      document.body.requestFullscreen();
     }
   }
 

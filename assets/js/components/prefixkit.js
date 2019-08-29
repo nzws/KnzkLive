@@ -9,4 +9,16 @@ module.exports = () => {
 
   document.hidden = (() =>
     document.hidden || document.webkitHidden || document.msHidden)();
+
+  document.exitFullscreen = (() =>
+    document.webkitCancelFullScreen ||
+    document.mozCancelFullscreen ||
+    document.msExitFullscreen ||
+    document.exitFullscreen)();
+
+  document.fullscreenElement = (() =>
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullScreenElement ||
+    document.fullscreenElement)();
 };

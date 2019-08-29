@@ -34,12 +34,15 @@ module.exports = {
     } else {
       //hls
       if (Hls.isSupported()) {
-        const hls = new Hls();
+        const hls = new Hls({
+          enableWorker: true
+        });
         hls.loadSource(config.hls);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           this.player.seekLive();
         });
+        window.hls = hls;
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = config.hls;
         video.load();

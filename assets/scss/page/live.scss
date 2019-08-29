@@ -60,38 +60,38 @@ html[data-page='live'] {
 
   .is_wide {
     overflow: hidden;
-  }
 
-  .is_wide .wide_hide {
-    display: none;
-  }
+    .wide_hide {
+      display: none;
+    }
 
-  .is_wide #mainiframe {
-    width: 100%;
-    position: fixed;
-  }
+    #mainiframe {
+      width: 100%;
+      position: fixed;
+    }
 
-  .is_wide #comment {
-    position: fixed;
-    right: 0;
-    top: 0;
-    height: calc(100% - 35px);
-    background: rgba(0, 0, 0, 0.3);
-  }
+    #comment {
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: calc(100% - 35px);
+      // background: rgba(0, 0, 0, 0.3);
+    }
 
-  .is_wide #comments {
-    height: calc(100% - 250px);
-  }
+    #comments {
+      height: calc(100% - 250px);
+    }
 
-  .is_wide .comment_box {
-    position: fixed;
-    bottom: 50px;
-    right: 0;
-    z-index: 10;
+    .comment_box {
+      position: fixed;
+      bottom: 50px;
+      right: 0;
+      z-index: 10;
 
-    @include media(lg, max) {
-      left: 0;
-      bottom: 80px;
+      @include media(lg, max) {
+        left: 0;
+        bottom: 80px;
+      }
     }
   }
 

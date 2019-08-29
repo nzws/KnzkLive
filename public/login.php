@@ -31,76 +31,76 @@ if (!$info) {
 if (!$code) {
     header("Location: https://" . $domain . "/oauth/authorize?response_type=code&redirect_uri=" . $env["masto_login"]["redirect_uri"] . "&scope=read+write&client_id=" . $client_data["client_id"]);
     exit();
-} else {
-    $data = [
-        "client_id" => $client_data["client_id"],
-        "client_secret" => $client_data["client_secret"],
-        "grant_type" => "authorization_code",
-        "redirect_uri" => $env["masto_login"]["redirect_uri"],
-        "code" => $code
-    ];
+}
 
+$data = [
+    "client_id" => $client_data["client_id"],
+    "client_secret" => $client_data["client_secret"],
+    "grant_type" => "authorization_code",
+    "redirect_uri" => $env["masto_login"]["redirect_uri"],
+    "code" => $code
+];
+
+$header = [
+    'Content-Type: application/json'
+];
+
+$options = ['http' => [
+    'method' => 'POST',
+    'content' => json_encode($data),
+    'header' => implode(PHP_EOL, $header)
+]];
+$options = stream_context_create($options);
+$contents = file_get_contents("https://" . $domain . "/oauth/token", false, $options);
+$json = json_decode($contents, true);
+if ($json["access_token"]) {
     $header = [
+        'Authorization: Bearer ' . $json["access_token"],
         'Content-Type: application/json'
     ];
-
     $options = ['http' => [
-        'method' => 'POST',
-        'content' => json_encode($data),
+        'method' => 'GET',
         'header' => implode(PHP_EOL, $header)
     ]];
     $options = stream_context_create($options);
-    $contents = file_get_contents("https://" . $domain . "/oauth/token", false, $options);
-    $json = json_decode($contents, true);
-    if ($json["access_token"]) {
-        $header = [
-            'Authorization: Bearer ' . $json["access_token"],
-            'Content-Type: application/json'
-        ];
-        $options = ['http' => [
-            'method' => 'GET',
-            'header' => implode(PHP_EOL, $header)
-        ]];
-        $options = stream_context_create($options);
-        $contents = file_get_contents("https://" . $domain . "/api/v1/accounts/verify_credentials", false, $options);
-        $json_acct = json_decode($contents, true);
-        $name = s($json_acct["display_name"]);
-        if ($json_acct["id"]) {
-            $mysqli = db_start();
-            $acct = s($json_acct["acct"] . "@" . $domain);
-            if ($user = getUser($acct, "acct")) {
-                $misc = $user["misc"];
-                $misc["avatar"] = $json_acct["avatar_static"];
-                $misc["header"] = $json_acct["header_static"];
-                $misc["user_url"] = $json_acct["url"];
-                $misc = json_encode($misc);
+    $contents = file_get_contents("https://" . $domain . "/api/v1/accounts/verify_credentials", false, $options);
+    $json_acct = json_decode($contents, true);
+    $name = s($json_acct["display_name"]);
+    if ($json_acct["id"]) {
+        $mysqli = db_start();
+        $acct = s($json_acct["acct"] . "@" . $domain);
+        if ($user = getUser($acct, "acct")) {
+            $misc = $user["misc"];
+            $misc["avatar"] = $json_acct["avatar_static"];
+            $misc["header"] = $json_acct["header_static"];
+            $misc["user_url"] = $json_acct["url"];
+            $misc = json_encode($misc);
 
-                $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `ip` = ?, `misc` = ?  WHERE `acct` = ?;");
-                $stmt->bind_param('ssss', $name, $_SERVER["REMOTE_ADDR"], $misc, $acct);
-            } else { //新規
-                $misc["avatar"] = $json_acct["avatar_static"];
-                $misc["header"] = $json_acct["header_static"];
-                $misc["user_url"] = $json_acct["url"];
-                $misc["no_toot_default"] = true;
-                $misc = json_encode($misc);
-                $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, ?);");
-                $stmt->bind_param('ssss', $name, $acct, $_SERVER["REMOTE_ADDR"], $misc);
-                node_update_conf("add", "user", $acct, "none");
-            }
-            $stmt->execute();
-            $stmt->close();
-            $mysqli->close();
-            $_SESSION["token"] = $json["access_token"];
-            $_SESSION["acct"] = $acct;
-            $_SESSION["account_provider"] = "mastodon";
-
-            header("Location: " . $env["RootUrl"]);
-        } else {
-            err(2, $contents);
+            $stmt = $mysqli->prepare("UPDATE `users` SET `name` = ?, `ip` = ?, `misc` = ?  WHERE `acct` = ?;");
+            $stmt->bind_param('ssss', $name, $_SERVER["REMOTE_ADDR"], $misc, $acct);
+        } else { //新規
+            $misc["avatar"] = $json_acct["avatar_static"];
+            $misc["header"] = $json_acct["header_static"];
+            $misc["user_url"] = $json_acct["url"];
+            $misc["no_toot_default"] = true;
+            $misc = json_encode($misc);
+            $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `name`, `acct`, `created_at`, `ip`, `misc`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP, ?, ?);");
+            $stmt->bind_param('ssss', $name, $acct, $_SERVER["REMOTE_ADDR"], $misc);
+            node_update_conf("add", "user", $acct, "none");
         }
+        $stmt->execute();
+        $stmt->close();
+        $mysqli->close();
+        $_SESSION["token"] = $json["access_token"];
+        $_SESSION["acct"] = $acct;
+        $_SESSION["account_provider"] = "mastodon";
+
+        header("Location: " . $env["RootUrl"]);
     } else {
-        err(1, $contents);
+        err(2, $contents);
     }
+} else {
+    err(1, $contents);
 }
 
 function err($type, $data) {
