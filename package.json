@@ -52,7 +52,7 @@
     "cssnano": "4.1.10",
     "fibers": "4.0.1",
     "file-loader": "4.2.0",
-    "husky": "3.0.4",
+    "husky": "3.0.5",
     "lint-staged": "9.2.5",
     "log-symbols": "3.0.0",
     "mini-css-extract-plugin": "0.8.0",
