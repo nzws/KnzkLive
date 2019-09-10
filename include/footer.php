@@ -17,11 +17,8 @@
         <hr>
         <p class="text-muted note">
             <b>KnzkLive</b><br>
-            No ads, Unlimited, Open-Source Live Streaming Service.
-        </p>
-        <p class="text-muted note">
-            Assets served by <a href="https://www.fastly.com/" target="_blank">Fastly</a>.<br>
-            <a href="https://github.com/yuzulabo/KnzkLive" target="_blank">KnzkLive Project</a> made with <?=i("heart")?>
+            No ads, Unlimited, Open-Source Live Streaming Service.<br>
+            <a href="https://github.com/yuzulabo/KnzkLive" target="_blank"><?=i('code')?> with <?=i("heart")?></a>
         </p>
     </div>
 </footer>

@@ -124,7 +124,9 @@ function initStorage() {
             ]
         ]);
 
-        $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"]);
+        $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"], '', [
+            'visibility' => 'public'
+        ]);
     } else {
         $adapter = new League\Flysystem\Adapter\Local(__DIR__ . '/../public/upload/');
     }
