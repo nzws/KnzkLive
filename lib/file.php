@@ -124,14 +124,14 @@ function initStorage() {
             ]
         ]);
 
-        $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"], '', [
-            'visibility' => 'public'
-        ]);
+        $adapter = new League\Flysystem\AwsS3v3\AwsS3Adapter($client, $env["storage"]["bucket"]);
     } else {
         $adapter = new League\Flysystem\Adapter\Local(__DIR__ . '/../public/upload/');
     }
 
-    return new League\Flysystem\Filesystem($adapter);
+    return new League\Flysystem\Filesystem($adapter, [
+        'visibility' => 'public'
+    ]);
 }
 
 function uploadFlie($data, $file_type, $option = []) {
