@@ -38,7 +38,7 @@
     "popper.js": "1.15.0",
     "socket.io-client": "2.2.0",
     "striptags": "3.1.1",
-    "websocket": "1.0.29",
+    "websocket": "1.0.30",
     "ws": "7.1.2"
   },
   "devDependencies": {
