@@ -63,7 +63,7 @@
     "sass": "1.23.0",
     "sass-loader": "7.3.1",
     "stylelint": "10.1.0",
-    "stylelint-config-prettier": "5.2.0",
+    "stylelint-config-prettier": "6.0.0",
     "stylelint-config-standard": "18.3.0",
     "stylelint-scss": "3.11.1",
     "stylelint-webpack-plugin": "0.10.5",
