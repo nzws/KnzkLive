@@ -42,7 +42,7 @@
     "ws": "7.1.2"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.4",
     "@babel/preset-env": "7.6.3",
     "autoprefixer": "9.6.4",
     "babel-loader": "8.0.6",
