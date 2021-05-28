@@ -107,8 +107,8 @@ $stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]
         {{repeat_helper}}
     </div>
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.4.2/flv.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.5.0/flv.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="<?=assetsUrl()?>bundle/bundle.js?t=<?=filemtime(__DIR__ . "/../public/bundle/bundle.js")?>"></script>
 <script>
@@ -118,8 +118,8 @@ $stream = $live["id"] . "stream" . (isset($_GET["collabo"]) ? s($_GET["collabo"]
         type: '<?=s($mode)?>',
         myLive: <?=$myLive ? "true" : "false"?>,
         test_flv: '<?=empty($env["test_flv_server"]) ? '' : $env["test_flv_server"]?>',
-        flv: 'ws<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>.flv',
-        hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>/index.m3u8',
+        flv: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>.flv',
+        hls: 'http<?=(empty($_SERVER["HTTPS"]) ? "" : "s")?>://<?=$slot["server"]?>/live/<?=$stream?>.m3u8',
         heartbeat: null,
         delay_sec: 3,
         hover: 0,

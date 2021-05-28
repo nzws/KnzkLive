@@ -126,11 +126,14 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
     </div>
 </div>
 <datalist id="domain_list">
+    <option value="don.nzws.me"></option>
     <option value="knzk.me"></option>
     <option value="mastodon.social"></option>
+    <option value="mastodon.online"></option>
     <option value="mstdn.jp"></option>
-    <option value="friends.nico"></option>
+    <option value="best-friends.chat"></option>
     <option value="pawoo.net"></option>
+    <option value="fedibird.com"></option>
 </datalist>
 <script>
     const domain = localStorage.getItem("knzklive_domain_last");
