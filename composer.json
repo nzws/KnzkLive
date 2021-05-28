@@ -31,6 +31,7 @@
     "php-ffmpeg/php-ffmpeg": "0.18.0",
     "friendsofphp/php-cs-fixer": "3.0.0",
     "davedevelopment/phpmig": "1.5",
-    "pimple/pimple": "3.4.0"
+    "pimple/pimple": "3.4.0",
+    "ext-json": "*"
   }
 }
