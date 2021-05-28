@@ -37,7 +37,7 @@ if ($ua->ua->family === "Safari" || $ua->os->family === "iOS") :
 
 <div class="wide_hide row mx-auto bg-dark d-flex align-items-center justify-content-between navbar mb-2" style="background-color: #393f4f;">
     <a class="col-auto header-brand" href="<?=u("")?>">
-        <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/>
+        <img src="<?=assetsUrl()?>static/knzklive_logo.png" height="28"/> <small>(第二世代)</small>
     </a>
     <div class="btn-group col-3 d-md-none header-toggler">
         <button type="button" class="btn btn-outline-secondary rounded header-toggler-btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

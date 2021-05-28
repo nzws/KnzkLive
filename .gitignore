@@ -71,7 +71,7 @@ config.json
 .vscode
 
 # PHP-CS-Fixer cache
-.php_cs.cache
+.php-cs-fixer.cache
 
 public/bundle/*
 public/upload/*

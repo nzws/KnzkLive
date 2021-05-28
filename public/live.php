@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/bootloader.php");
+require_once "../lib/bootloader.php";
 
 $id = s($_GET["id"]);
 if (!$id) {
@@ -21,12 +21,16 @@ if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
     showError('この配信はまだ開始されていません。', 403);
 }
 
-if (isset($_POST["sensitive"])) $_SESSION["sensitive_allow"] = true;
+if (isset($_POST["sensitive"])) {
+    $_SESSION["sensitive_allow"] = true;
+}
 
 $liveUser = getUser($live["user_id"]);
 
 $new_live = ($liveUser["live_current_id"] !== 0 && $liveUser["live_current_id"] !== $live["id"]) ? getLive($liveUser["live_current_id"]) : null;
-if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) $new_live = null;
+if (!empty($new_live) && ($new_live["privacy_mode"] !== 1 || $new_live["is_started"] !== 1)) {
+    $new_live = null;
+}
 
 $liveurl = liveUrl($live["id"]);
 
@@ -106,7 +110,7 @@ $vote = loadVote($live["id"]);
 </div>
 </body>
 </html>
-<?php exit(); endif; // sensitive ?>
+<?php exit(); endif; // sensitive?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-9 col-lg-8 main">
@@ -241,7 +245,9 @@ $vote = loadVote($live["id"]);
 </div>
 
 <?php include "../include/live/modals.php"; ?>
-<?php if ($my["id"] === $live["user_id"] || is_admin($my["id"]) || is_collabo($my["id"], $live["id"])) include "../include/live/add_blocking.php"; ?>
+<?php if ($my["id"] === $live["user_id"] || is_admin($my["id"]) || is_collabo($my["id"], $live["id"])) {
+    include "../include/live/add_blocking.php";
+} ?>
 <script id="com_tmpl" type="text/x-handlebars-template">
     <div id="post_{{id}}" class="comment card mb-2">
         <div class="content card-body">

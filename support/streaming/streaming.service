@@ -1,0 +1,15 @@
+[Unit]
+Description=Streaming
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/srs/trunk/objs/srs -c /home/ubuntu/main.conf
+WorkingDirectory=/home/ubuntu/srs/trunk
+KillMode=process
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

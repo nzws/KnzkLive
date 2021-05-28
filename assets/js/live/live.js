@@ -171,15 +171,15 @@ class live {
     });
     $(obj).popover('show');
 
-    $('.user-dropdown .open_blocking_modal').on('click', function() {
+    $('.user-dropdown .open_blocking_modal').on('click', function () {
       open_blocking_modal(config.live.dropdown.acct);
     });
 
-    $('.user-dropdown .comment_delete').on('click', function() {
+    $('.user-dropdown .comment_delete').on('click', function () {
       comment.delete(config.live.dropdown.id, config.live.dropdown.acct);
     });
 
-    $('.user-dropdown').on('click', function() {
+    $('.user-dropdown').on('click', function () {
       $('.user-dropdown').popover('dispose');
     });
   }

@@ -2,9 +2,7 @@ class share {
   static share() {
     if (navigator.share) {
       navigator.share({
-        title: `${config.live.watch_data['name']} by ${
-          config.live.account.name
-        } - KnzkLive`,
+        title: `${config.live.watch_data['name']} by ${config.live.account.name} - KnzkLive`,
         url: config.live.url
       });
     } else {
@@ -15,9 +13,7 @@ class share {
   static share_modal(mode) {
     let url = '';
     const text = encodeURIComponent(
-      `${config.live.watch_data['name']} by ${
-        config.live.account.name
-      } - #KnzkLive #${config.live.hashtag_o}`
+      `${config.live.watch_data['name']} by ${config.live.account.name} - #KnzkLive #${config.live.hashtag_o}`
     );
     if (mode === 'twitter') {
       url =

@@ -1,5 +1,4 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const Fiber = require('fibers');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { join } = require('path');
 const Sass = require('sass');
@@ -27,7 +26,7 @@ module.exports = {
           { loader: 'postcss-loader' },
           {
             loader: 'sass-loader',
-            options: { implementation: Sass, fiber: Fiber }
+            options: { implementation: Sass }
           }
         ]
       },
@@ -44,9 +43,7 @@ module.exports = {
     new WebpackBar({ profile: true, reporter: 'profile' })
   ],
   optimization: {
-    minimizer: [
-      new TerserPlugin({ cache: true, parallel: true, extractComments: true })
-    ]
+    minimizer: [new TerserPlugin({ parallel: true, extractComments: true })]
   },
   stats: 'errors-only'
 };

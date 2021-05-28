@@ -4,7 +4,7 @@ module.exports = {
 
     window.onmouseover = window.onclick = this.player.watchHover;
 
-    Handlebars.registerHelper('repeat_helper', function() {
+    Handlebars.registerHelper('repeat_helper', function () {
       let html = '';
       for (let i = 0; i < this.repeat_num; i++) {
         html += this.repeat_html;

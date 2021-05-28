@@ -129,10 +129,7 @@ class admin {
         })
         .then(json => {
           if (json['success']) {
-            $(obj)
-              .parent()
-              .parent()
-              .remove();
+            $(obj).parent().parent().remove();
           } else {
             toast.new(
               'エラーが発生しました。データベースに問題が発生している可能性があります。',
@@ -155,18 +152,10 @@ class admin {
           if (json['success']) {
             if (type) {
               $('tbody').prepend(
-                `<tr><td><a href="#" onclick="knzk.live.admin.updateNGWord('${
-                  json['word']
-                }', false, this);return false">削除</a>　${
-                  json['word']
-                }</td></tr>`
+                `<tr><td><a href="#" onclick="knzk.live.admin.updateNGWord('${json['word']}', false, this);return false">削除</a>　${json['word']}</td></tr>`
               );
               kit.elemId('word').value = '';
-            } else
-              $(obj)
-                .parent()
-                .parent()
-                .remove();
+            } else $(obj).parent().parent().remove();
           } else {
             toast.new(
               'エラーが発生しました。データベースに問題が発生している可能性があります。',

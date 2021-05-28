@@ -10,11 +10,11 @@ const lastUpdate = {
 };
 const liveTimerPool = {};
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.send('ok');
 });
 
-app.get('/health', function(req, res) {
+app.get('/health', function (req, res) {
   res.send(JSON.stringify(lastUpdate));
 });
 
@@ -25,7 +25,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.post('/send_comment', function(req, res) {
+app.post('/send_comment', function (req, res) {
   console.log('[KnzkLive WebSocket] Send Comment', req.body);
   send(
     req.body.live_id,
@@ -38,7 +38,7 @@ app.post('/send_comment', function(req, res) {
   res.end();
 });
 
-app.post('/delete_comment', function(req, res) {
+app.post('/delete_comment', function (req, res) {
   console.log('[KnzkLive WebSocket] Delete Comment', req.body);
   send(
     req.body.live_id,
@@ -51,7 +51,7 @@ app.post('/delete_comment', function(req, res) {
   res.end();
 });
 
-app.post('/send_prop', function(req, res) {
+app.post('/send_prop', function (req, res) {
   console.log('[KnzkLive WebSocket] Send prop', req.body);
   send(
     req.body.live_id,
@@ -107,7 +107,7 @@ app.post('/send_prop', function(req, res) {
   res.end();
 });
 
-app.post('/update_conf', function(req, res) {
+app.post('/update_conf', function (req, res) {
   console.log('[KnzkLive WebSocket] Update conf', req.body);
   const b = req.body;
   if (b.mode === 'add') {
@@ -146,23 +146,23 @@ app.post('/update_conf', function(req, res) {
 
 const ws = new WebSocket.Server({ server: http });
 
-ws.on('connection', function(c, req) {
+ws.on('connection', function (c, req) {
   console.log(new Date() + ' Connected.');
   c.url = req.url;
-  c.on('message', function(message) {
+  c.on('message', function (message) {
     c.send(JSON.stringify({ event: 'pong' }));
   });
 });
 
 function send(liveId, message) {
-  ws.clients.forEach(function(c) {
+  ws.clients.forEach(function (c) {
     if (c.readyState !== WebSocket.OPEN) return;
     if (c.url !== '/api/streaming/live/' + liveId) return;
     c.send(message);
   });
 }
 
-http.listen(3000, function() {
+http.listen(3000, function () {
   console.log('[KnzkLive WebSocket] listening on *:3000');
 });
 
@@ -181,11 +181,11 @@ function startDAConnect(token, live_id) {
     reconnectionDelay: 1000
   });
 
-  daData[token].on('connect', function() {
+  daData[token].on('connect', function () {
     daData[token].emit('add-user', { token: token, type: 'minor' });
   });
 
-  daData[token].on('donation', function(msg) {
+  daData[token].on('donation', function (msg) {
     const data = JSON.parse(msg);
     if (data['_is_test_alert']) {
       donateTest(live_id);
@@ -215,7 +215,7 @@ function startSLConnect(token, live_id) {
     reconnectionDelay: 1000
   });
 
-  slData[token].on('event', function(eventData) {
+  slData[token].on('event', function (eventData) {
     if (eventData.type === 'donation') {
       const msg = eventData.message[0];
       if (!msg) return false;
@@ -250,24 +250,24 @@ function donateRun(username, live_id, amount, currency) {
   username = parseInt(username.replace('knzklive_', ''));
   if (!username) return;
 
-  db.query('SELECT * FROM `users` WHERE id = ?', username, function(
-    error,
-    results,
-    fields
-  ) {
-    if (error) throw error;
-    const user_id = results[0] ? results[0]['id'] : 0;
-    exec(
-      `php ${__dirname}/../knzkctl job:donate ${live_id} ${user_id} ${parseInt(
-        amount
-      )} ${currency}`,
-      (err, stdout, stderr) => {
-        if (err) {
-          console.log(err);
+  db.query(
+    'SELECT * FROM `users` WHERE id = ?',
+    username,
+    function (error, results, fields) {
+      if (error) throw error;
+      const user_id = results[0] ? results[0]['id'] : 0;
+      exec(
+        `php ${__dirname}/../knzkctl job:donate ${live_id} ${user_id} ${parseInt(
+          amount
+        )} ${currency}`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+          }
         }
-      }
-    );
-  });
+      );
+    }
+  );
 }
 
 const WebSocketClient = require('websocket').client;
@@ -290,10 +290,10 @@ const db = mysql.createPool({
   database: config.db.name
 });
 
-db.getConnection(function(err, connection) {
+db.getConnection(function (err, connection) {
   if (err) {
     console.error('[DBERROR]', err);
-    db.end(function() {
+    db.end(function () {
       process.exit();
     });
   } else {
@@ -301,54 +301,51 @@ db.getConnection(function(err, connection) {
   }
 });
 
-db.query('SELECT * FROM `live` WHERE is_live = 1 OR is_live = 2', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    if (item['custom_hashtag']) {
-      conf.hashtag.push(item['custom_hashtag']);
-    } else {
-      conf.hashtag.push('knzklive_' + item['id']);
-      conf.hashtag_id['knzklive_' + item['id']] = item['id'];
+db.query(
+  'SELECT * FROM `live` WHERE is_live = 1 OR is_live = 2',
+  function (error, results, fields) {
+    if (error) throw error;
+    for (let item of results) {
+      if (item['custom_hashtag']) {
+        conf.hashtag.push(item['custom_hashtag']);
+      } else {
+        conf.hashtag.push('knzklive_' + item['id']);
+        conf.hashtag_id['knzklive_' + item['id']] = item['id'];
+      }
     }
+    console.log('[Worker Hashtag]', conf.hashtag, conf.hashtag_id);
   }
-  console.log('[Worker Hashtag]', conf.hashtag, conf.hashtag_id);
-});
+);
 
-db.query('SELECT * FROM `users` WHERE twitter_id IS NULL', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    conf.acct.push(item['acct']);
+db.query(
+  'SELECT * FROM `users` WHERE twitter_id IS NULL',
+  function (error, results, fields) {
+    if (error) throw error;
+    for (let item of results) {
+      conf.acct.push(item['acct']);
+    }
+    console.log('[Worker Users]', conf.acct);
   }
-  console.log('[Worker Users]', conf.acct);
-});
+);
 
-db.query('SELECT * FROM `users` WHERE live_current_id != 0', function(
-  error,
-  results,
-  fields
-) {
-  if (error) throw error;
-  for (let item of results) {
-    const misc = JSON.parse(item['misc']);
-    if (misc['donation_alerts_token'])
-      startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
-    if (misc['streamlabs_token'])
-      startSLConnect(misc['streamlabs_token'], item['live_current_id']);
+db.query(
+  'SELECT * FROM `users` WHERE live_current_id != 0',
+  function (error, results, fields) {
+    if (error) throw error;
+    for (let item of results) {
+      const misc = JSON.parse(item['misc']);
+      if (misc['donation_alerts_token'])
+        startDAConnect(misc['donation_alerts_token'], item['live_current_id']);
+      if (misc['streamlabs_token'])
+        startSLConnect(misc['streamlabs_token'], item['live_current_id']);
+    }
+    console.log('[Worker Donate]');
   }
-  console.log('[Worker Donate]');
-});
+);
 
 function reConnect($type = 'worker') {
   console.log('サーバとの接続が切れました。30秒後にリトライします...', $type);
-  setTimeout(function() {
+  setTimeout(function () {
     if ($type === 'worker') StartWorker();
     else StartTIPKnzk();
   }, 30000);
@@ -357,24 +354,24 @@ function reConnect($type = 'worker') {
 function StartWorker() {
   const client = new WebSocketClient();
 
-  client.on('connectFailed', function(error) {
+  client.on('connectFailed', function (error) {
     console.log('Connect Error: ' + error.toString());
     reConnect();
   });
 
-  client.on('connect', function(connection) {
+  client.on('connect', function (connection) {
     console.log('WebSocket Client Connected');
 
-    connection.on('error', function(error) {
+    connection.on('error', function (error) {
       console.log('Connection Error: ' + error.toString());
       reConnect();
     });
 
-    connection.on('close', function() {
+    connection.on('close', function () {
       reConnect();
     });
 
-    connection.on('message', function(message) {
+    connection.on('message', function (message) {
       try {
         if (message.type !== 'utf8') return;
 
@@ -442,24 +439,24 @@ function StartTIPKnzk() {
 
   const client = new WebSocketClient();
 
-  client.on('connectFailed', function(error) {
+  client.on('connectFailed', function (error) {
     console.log('Connect Error: ' + error.toString());
     reConnect('TIPKnzk');
   });
 
-  client.on('connect', function(connection) {
+  client.on('connect', function (connection) {
     console.log('WebSocket Client Connected');
 
-    connection.on('error', function(error) {
+    connection.on('error', function (error) {
       console.log('Connection Error: ' + error.toString());
       reConnect('TIPKnzk');
     });
 
-    connection.on('close', function() {
+    connection.on('close', function () {
       reConnect('TIPKnzk');
     });
 
-    connection.on('message', function(message) {
+    connection.on('message', function (message) {
       try {
         if (message.type !== 'utf8') return;
         lastUpdate['tipknzk'] = Date.now();
