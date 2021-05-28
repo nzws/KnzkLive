@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.2",
+    "@babel/preset-env": "7.14.4",
     "@nzws/prettier-config": "^1.0.1",
     "autoprefixer": "10.2.6",
     "babel-loader": "8.2.2",
