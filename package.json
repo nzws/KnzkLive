@@ -34,7 +34,7 @@
     "jquery": "3.4.1",
     "moment": "2.24.0",
     "mysql": "2.17.1",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "popper.js": "1.16.1",
     "socket.io-client": "2.3.0",
     "striptags": "3.1.1",
