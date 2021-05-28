@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.6.4",
-    "@babel/preset-env": "7.6.3",
+    "@babel/preset-env": "7.14.2",
     "autoprefixer": "9.6.5",
     "babel-loader": "8.2.2",
     "chalk": "2.4.2",
