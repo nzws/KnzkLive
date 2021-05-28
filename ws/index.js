@@ -57,7 +57,7 @@ app.post('/send_prop', function (req, res) {
     req.body.live_id,
     JSON.stringify({
       event: 'prop',
-      payload: JSON.stringify(req.body),
+      payload: JSON.stringify(req.body.mode === 'update_status' ? {} : req.body),
       is_knzklive: true
     })
   );
@@ -156,9 +156,13 @@ ws.on('connection', function (c, req) {
 
 function send(liveId, message) {
   ws.clients.forEach(function (c) {
-    if (c.readyState !== WebSocket.OPEN) return;
-    if (c.url !== '/api/streaming/live/' + liveId) return;
-    c.send(message);
+    if (c.url === '/api/streaming/live/' + liveId) {
+      try {
+        c.send(message);
+      } catch (e) {
+        //
+      }
+    }
   });
 }
 
