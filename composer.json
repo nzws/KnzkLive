@@ -27,7 +27,7 @@
     "aws/aws-sdk-php": "3.91.4",
     "league/flysystem": "1.0.51",
     "league/flysystem-aws-s3-v3": "1.0.29",
-    "intervention/image": "2.4.2",
+    "intervention/image": "2.5.1",
     "php-ffmpeg/php-ffmpeg": "0.18.0",
     "friendsofphp/php-cs-fixer": "3.0.0",
     "davedevelopment/phpmig": "1.7.0",
