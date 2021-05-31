@@ -30,7 +30,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.3",
     "bootstrap": "4",
-    "bootswatch": "4",
+    "bootswatch": "5",
     "express": "4.17.1",
     "jquery": "3.6.0",
     "moment": "2.29.1",
