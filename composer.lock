@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "970cfb8baae55ab6318f848932fa79f9",
+    "content-hash": "fad0371b3b402d3ea927e9bd297cfc7c",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -135,16 +135,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.183.11",
+            "version": "3.183.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f42dcf893227842aca11e8ea19f7b2123cf3244b"
+                "reference": "ee5225729f6428870b5168576b0450c0bb668976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f42dcf893227842aca11e8ea19f7b2123cf3244b",
-                "reference": "f42dcf893227842aca11e8ea19f7b2123cf3244b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ee5225729f6428870b5168576b0450c0bb668976",
+                "reference": "ee5225729f6428870b5168576b0450c0bb668976",
                 "shasum": ""
             },
             "require": {
@@ -219,9 +219,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.183.11"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.183.12"
             },
-            "time": "2021-06-02T18:14:10+00:00"
+            "time": "2021-06-03T18:12:48+00:00"
         },
         {
             "name": "composer/ca-bundle",
