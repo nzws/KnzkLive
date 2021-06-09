@@ -8,17 +8,17 @@ if (!$id) {
 
 $live = getLive($id);
 if (!$live) {
-    showError('この配信は存在しません。', 404);
+    showError('この配信は存在しないか、視聴制限をかけています。ログインをお試しください。', 404);
 }
 
 $my = getMe();
-$blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
-if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
-    showError('この配信は非公開です。', 403);
+if ($my["id"] !== $live["user_id"] && $live["is_started"] === 0) {
+    showError('この配信は存在しないか、視聴制限をかけています。ログインをお試しください。', 404);
 }
 
-if ($my["id"] != $live["user_id"] && $live["is_started"] == "0") {
-    showError('この配信はまだ開始されていません。', 403);
+$blocking = blocking_user($live["user_id"], $_SERVER["REMOTE_ADDR"], $my ? $my["acct"] : null);
+if ((!$my && $live["privacy_mode"] == "3") || !empty($blocking["is_blocking_watch"])) {
+    showError('この配信は存在しないか、視聴制限をかけています。ログインをお試しください。', 404);
 }
 
 if (isset($_POST["sensitive"])) {

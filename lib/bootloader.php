@@ -25,8 +25,7 @@ if (!isset($_SESSION['csrf_token'])) {
 }
 
 if ($_POST && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token'])) {
-    http_response_code(403);
-    exit("ERROR: CSRF Challenge is failed");
+    showError("CSRF Challenge is failed: クッキーを有効化してください", 403);
 }
 $libpt = __DIR__ . "/";
 

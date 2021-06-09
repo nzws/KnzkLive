@@ -2,25 +2,24 @@
 require_once "../../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if ($_POST) {
     if (mb_strlen($_POST["comment"]) > 500) {
-        exit("ERR:文字数制限オーバー");
+        showError("文字数制限オーバー", 400);
     }
     if (!check_point_true($my["point_count"], $_POST["point"]) || $_POST["point"] <= 1) {
-        exit("ERR:ポイントが足りないか不正です。");
+        showError("ポイント数が足りないか不正です。", 400);
     }
 
     $hash = create_ticket($my["id"], intval($_POST["point"] * 0.85), $_POST["comment"]);
     if (!$hash) {
-        exit("作成エラー");
+        showError("内部エラーが発生しました (チケット)", 500);
     }
     $n = add_point($my["id"], $_POST["point"] * -1, "user", "チケット発行 チケットID: " . $hash);
     if (!$n) {
-        exit("作成エラー (管理者にお問い合わせください)");
+        showError("内部エラーが発生しました (ポイント)", 500);
     }
 
     $userCache = null;

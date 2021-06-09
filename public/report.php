@@ -2,14 +2,13 @@
 require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if (isset($_GET["liveid"])) {
     $live = getLive($_GET["liveid"]);
     if (!$live) {
-        exit("err: 配信が存在しません。");
+        showError("配信が存在しません。", 404);
     }
     $liveUser = getUser($live["user_id"]);
 }
@@ -49,7 +48,7 @@ if (isset($_POST["body"])) {
     ];
 
     if (!sendToDiscord($data)) {
-        exit("error: 送信に失敗しました。");
+        showError("内部エラーが発生しました。", 500);
     }
 }
 ?>

@@ -2,8 +2,7 @@
 require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if (isset($_GET["id"], $_POST["use"])) {
@@ -11,12 +10,12 @@ if (isset($_GET["id"], $_POST["use"])) {
     if ($n) {
         header("Location: " . u("settings"));
     } else {
-        exit("例外エラー");
+        showError("内部エラーが発生しました。", 500);
     }
 } elseif (isset($_GET["id"])) {
     $t = get_ticket($_GET["id"]);
     if (!$t) {
-        exit("ERR: チケットが存在しません");
+        showError("チケットは存在しないか使用済みです", 404);
     }
     $u = getUser($t["user_id"]);
 }

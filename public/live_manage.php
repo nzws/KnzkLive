@@ -3,8 +3,7 @@ require_once "../lib/bootloader.php";
 
 $my = getMe();
 if (!isset($my)) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if (!$my["live_current_id"]) {
@@ -13,15 +12,13 @@ if (!$my["live_current_id"]) {
 }
 $live = getLive($my["live_current_id"]);
 if (!isset($live)) {
-    http_response_code(500);
-    exit("ERR:問題が発生しました。管理者にお問い合わせください。");
+    showError("内部エラーが発生しました。", 500);
 }
 $slot = getSlot($live["slot_id"]);
 
 if (isset($_GET["mode"])) {
     if ($_SESSION['csrf_token'] != $_GET['t']) {
-        http_response_code(403);
-        exit("ERROR: CSRF Challenge is failed");
+        showError("CSRF Challenge is failed", 403);
     }
 
     if ($_GET["mode"] == "shutdown") {

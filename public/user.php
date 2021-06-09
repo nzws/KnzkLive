@@ -2,8 +2,7 @@
 require_once "../lib/bootloader.php";
 $user = getUser($_GET["id"], "broadcaster_id");
 if (empty($user)) {
-    http_response_code(404);
-    exit("ERR:このユーザーは存在しません。");
+    showError("このユーザーは存在しません。", 404);
 }
 
 $new_live = ($user["live_current_id"]) ? getLive($user["live_current_id"]) : null;

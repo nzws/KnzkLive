@@ -2,8 +2,7 @@
 require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if ($_POST) {
@@ -37,7 +36,7 @@ if ($_POST) {
 
     if ($_POST["broadcaster_id"] !== $my["broadcaster_id"] && !empty($my["broadcaster_id"])) {
         if (!updateBroadcasterId($my["id"], $_POST["broadcaster_id"]) || !$_POST["broadcaster_id"]) {
-            exit("ERR: この配信者IDは使用できません。");
+            showError("この配信者IDは使用できません。", 400);
         }
     }
 

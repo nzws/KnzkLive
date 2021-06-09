@@ -2,13 +2,11 @@
 require_once "../lib/bootloader.php";
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if (!$my["broadcaster_id"]) {
-    http_response_code(403);
-    exit("ERR:あなたには配信権限がありません。");
+    showError("あなたには配信権限がありません。", 403);
 }
 
 $list = get_all_blocking_user($my["id"]);

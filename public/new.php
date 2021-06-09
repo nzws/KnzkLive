@@ -3,13 +3,11 @@ require_once "../lib/bootloader.php";
 
 $my = getMe();
 if (!$my) {
-    http_response_code(403);
-    exit("ERR:ログインしてください。");
+    showError("ログインしてください。", 403);
 }
 
 if (!$my["broadcaster_id"]) {
-    http_response_code(403);
-    exit("ERR:あなたには配信権限がありません。");
+    showError("あなたには配信権限がありません。", 403);
 }
 
 if ($my["live_current_id"]) {
@@ -19,8 +17,7 @@ if ($my["live_current_id"]) {
 
 $slot = getAbleSlot();
 if (!$slot) {
-    http_response_code(503);
-    exit("ERR:現在、配信枠が不足しています。");
+    showError("配信枠のリソースに空きがありません。管理者にお問い合わせください。", 503);
 }
 
 if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
@@ -33,7 +30,7 @@ if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
     if ($tag) {
         // thx https://qiita.com/ma7ma7pipipi/items/f4759231390921fbacdd
         if (!preg_match('/(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)/', $tag)) {
-            exit("ERR:このハッシュタグは使用できません。<a href=''>やり直す</a>");
+            showError("このハッシュタグは使用できません。", 400);
         }
 
         $tag = str_replace("#", "", $tag);
@@ -60,7 +57,7 @@ if (isset($_POST["title"], $_POST["description"], $_POST["privacy_mode"])) {
     $mysqli->close();
 
     if ($err || !$live_id) {
-        showError('登録中に致命的なエラーが発生しました', 500);
+        showError('内部エラーが発生しました。', 500);
     }
 
     setUserLive($live_id, $my["id"]);

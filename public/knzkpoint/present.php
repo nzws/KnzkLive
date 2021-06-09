@@ -7,14 +7,14 @@ if (!$my) {
 
 if ($_POST) {
     if (mb_strlen($_POST["comment"]) > 500) {
-        exit("ERR:文字数制限オーバー");
+        showError("コメントは500文字までです", 400);
     }
     if (intval($_POST["point"]) > $my["point_count"] || !$_POST["point"] || intval($_POST["point"]) <= 1 || !is_numeric($_POST["point"])) {
-        exit("ERR:ポイントが不正です。");
+        showError("ポイントの値が足りないか不正です。", 400);
     }
     $u = getUser($_POST["user"], "acct");
     if ($u["id"] === $my["id"]) {
-        exit("ERR:自分自身には送信できません");
+        showError("自分自身には送信できません", 400);
     }
     if ($u) {
         $n = add_point($my["id"], $_POST["point"] * -1, "user", $u["acct"] . "にプレゼント");
@@ -23,11 +23,11 @@ if ($_POST) {
             if ($o) {
                 header("Location: " . u("settings"));
             } else {
-                exit("例外エラー");
+                showError("内部エラーが発生しました", 500);
             }
         }
     } else {
-        exit("ERR:ユーザーが見つかりません。");
+        showError("ユーザーが見つかりません。", 404);
     }
 }
 ?>
