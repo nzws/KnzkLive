@@ -38,9 +38,9 @@
     "node-fetch": "2.6.1",
     "popper.js": "1.16.1",
     "socket.io-client": "4.1.2",
-    "striptags": "3.1.1",
+    "striptags": "3.2.0",
     "websocket": "1.0.34",
-    "ws": "7.1.2"
+    "ws": "7.4.6"
   },
   "devDependencies": {
     "@babel/core": "7.14.3",
