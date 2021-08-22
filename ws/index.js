@@ -10,6 +10,16 @@ const lastUpdate = {
 };
 const liveTimerPool = {};
 
+const config = require('../config');
+const mysql = require('mysql');
+const db = mysql.createPool({
+  host: config.db.host,
+  port: config.db.port,
+  user: config.db.user,
+  password: config.db.pass,
+  database: config.db.name
+});
+
 app.get('/', function (req, res) {
   res.send('ok');
 });
@@ -140,6 +150,31 @@ app.post('/update_conf', function (req, res) {
       if (b.da_token) closeDAConnect(b.da_token);
       if (b.sl_token) closeSLConnect(b.sl_token);
     }
+  }
+  res.end();
+});
+
+app.post('/v2', function (req, res) {
+  console.log('[KnzkLive WebSocket] v2 migrate API', req.body);
+  const b = req.body;
+  if (b.mode === 'add-origin') {
+    db.query(
+      'INSERT INTO `live_slot` (`id`, `used`, `max`, `server`, `server_ip`, `is_testing`) VALUES (NULL, 0, 1, ?, ?, 0)',
+      [b.domain, b.ipv4],
+      error => {
+        if (error) throw error;
+        console.log('[Add origin]', b);
+      }
+    );
+  } else if (b.mode === 'remove-origin') {
+    db.query(
+      'DELETE FROM live_slot WHERE server_ip = ?',
+      b.ipv4,
+      error => {
+        if (error) throw error;
+        console.log('[Delete origin]', b);
+      }
+    );
   }
   res.end();
 });
@@ -275,24 +310,14 @@ function donateRun(username, live_id, amount, currency) {
 }
 
 const WebSocketClient = require('websocket').client;
-const mysql = require('mysql');
 const striptags = require('striptags');
 const exec = require('child_process').exec;
 const fetch = require('node-fetch');
-const config = require('../config');
 let conf = {
   hashtag: [],
   acct: [],
   hashtag_id: {}
 };
-
-const db = mysql.createPool({
-  host: config.db.host,
-  port: config.db.port,
-  user: config.db.user,
-  password: config.db.pass,
-  database: config.db.name
-});
 
 db.getConnection(function (err, connection) {
   if (err) {
